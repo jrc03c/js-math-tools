@@ -20,6 +20,23 @@ Array.prototype.alphaSort = function(key){
   })
 }
 
+function vectorize(fn){
+  return function temp(){
+    if (Object.keys(arguments).map(key => isArray(arguments[key])).indexOf(true) > -1){
+      let out = []
+
+      for (let i=0; i<arguments[0].length; i++){
+        let args = Object.keys(arguments).map(key => arguments[key][i])
+        out.push(temp(...args))
+      }
+
+      return out
+    } else {
+      return fn(...arguments)
+    }
+  }
+}
+
 function print(x){
   return console.log(x)
 }
