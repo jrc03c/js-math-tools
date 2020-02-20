@@ -34,9 +34,13 @@ function vectorize(fn){
   return function temp(){
     if (Object.keys(arguments).map(key => isArray(arguments[key])).indexOf(true) > -1){
       let out = []
+      let maxLength = max(Object.keys(arguments).filter(key => isArray(arguments[key])).map(key => arguments[key].length))
 
-      for (let i=0; i<arguments[0].length; i++){
-        let args = Object.keys(arguments).map(key => arguments[key][i])
+      for (let i=0; i<maxLength; i++){
+        let args = Object.keys(arguments).map(key => {
+          if (isArray(arguments[key])) return arguments[key][i]
+          return arguments[key]
+        })
         out.push(temp(...args))
       }
 
@@ -47,22 +51,42 @@ function vectorize(fn){
   }
 }
 
+let apply = vectorize(function(x, fn){
+  return fn(x)
+})
+
 function print(x){
   return console.log(x)
 }
 
-function ones(n){
-  return range(0, n).map(v => 1)
+function ndarray(shape){
+  if (!isArray(shape)) shape = [shape]
+
+  if (shape.length === 1){
+    return range(0, shape[0]).map(v => 0)
+  } else {
+    let out = []
+    for (let i=0; i<shape[0]; i++) out.push(ndarray(shape.slice(1, shape.length)))
+    return out
+  }
 }
 
-function zeros(n){
-  return range(0, n).map(v => 0)
+function ones(shape){
+  return apply(ndarray(shape), v => 1)
 }
 
-function normal(){
-  let u1 = Math.random()
-  let u2 = Math.random()
-  return Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2)
+function zeros(shape){
+  return ndarray(shape)
+}
+
+function normal(shape){
+  function n(){
+    let u1 = Math.random()
+    let u2 = Math.random()
+    return Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2)
+  }
+
+  return apply(ndarray(shape), n)
 }
 
 function pause(ms){
