@@ -20,6 +20,16 @@ Array.prototype.alphaSort = function(key){
   })
 }
 
+function range(a, b, step=1){
+  let out = []
+  for (let i=a; i<b; i+=step) out.push(i)
+  return out
+}
+
+function isArray(obj){
+  return obj.push ? true : false
+}
+
 function vectorize(fn){
   return function temp(){
     if (Object.keys(arguments).map(key => isArray(arguments[key])).indexOf(true) > -1){
@@ -41,16 +51,18 @@ function print(x){
   return console.log(x)
 }
 
-function isArray(obj){
-  return obj.push ? true : false
-}
-
 function ones(n){
   return range(0, n).map(v => 1)
 }
 
 function zeros(n){
   return range(0, n).map(v => 0)
+}
+
+function normal(){
+  let u1 = Math.random()
+  let u2 = Math.random()
+  return Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2)
 }
 
 function pause(ms){
@@ -70,40 +82,14 @@ function downloadCanvas(canvas, filename){
   a.dispatchEvent(new MouseEvent("click"))
 }
 
-function round(x){
-  if (isArray(x)) return x.map(round)
-  return Math.round(x)
-}
-
-function floor(x){
-  if (isArray(x)) return x.map(floor)
-  return Math.floor(x)
-}
-
-function ceil(x){
-  if (isArray(x)) return x.map(ceil)
-  return Math.ceil(x)
-}
-
-function abs(x){
-  if (isArray(x)) return x.map(abs)
-  return Math.abs(x)
-}
-
-function sin(x){
-  if (isArray(x)) return x.map(sin)
-  return Math.sin(x)
-}
-
-function cos(x){
-  if (isArray(x)) return x.map(cos)
-  return Math.cos(x)
-}
-
-function tan(x){
-  if (isArray(x)) return x.map(tan)
-  return Math.tan(x)
-}
+let round = vectorize(Math.round)
+let floor = vectorize(Math.floor)
+let ceil = vectorize(Math.ceil)
+let abs = vectorize(Math.abs)
+let sin = vectorize(Math.sin)
+let cos = vectorize(Math.cos)
+let tan = vectorize(Math.tan)
+let sqrt = vectorize(Math.sqrt)
 
 function clamp(x, a, b){
   if (isArray(x)) return x.map(v => clamp(v, a, b))
@@ -117,11 +103,6 @@ function normalize(arr){
   let arrMax = max(arr)
   let arrRange = arrMax - arrMin
   return arr.map(v => (v - arrMin) / arrRange)
-}
-
-function sqrt(x){
-  if (isArray(x)) return x.map(sqrt)
-  return Math.sqrt(x)
 }
 
 function pow(x, p){
@@ -193,19 +174,8 @@ function correl(x, y){
   return cov(x, y) / (std(x) * std(y))
 }
 
-function normal(){
-  let u1 = Math.random()
-  let u2 = Math.random()
-  return Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2)
-}
-
-function range(a, b, step=1){
-  let out = []
-  for (let i=a; i<b; i+=step) out.push(i)
-  return out
-}
-
 function map(x, a, b, c, d){
+  if (isArray(x)) return x.map(v => map(v, a, b, c, d))
   return (d - c) * (x - a) / (b - a) + c
 }
 
