@@ -2,7 +2,7 @@
   "name": "js-math-tools",
   "version": "0.0.1",
   "description": "some math tools for JS",
-  "main": "dist/js-math-tools.js",
+  "main": "src/index.js",
   "scripts": {
     "build": "watchify -e src/index.js -o dist/js-math-tools.js"
   },
