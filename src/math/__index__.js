@@ -18,6 +18,7 @@ module.exports = {
   normalize: require("./normalize.js"),
   ones: require("./ones.js"),
   pow: require("./pow.js"),
+  random: require("./random.js"),
   range: require("./range.js"),
   round: require("./round.js"),
   sign: require("./sign.js"),

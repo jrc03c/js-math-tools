@@ -8,6 +8,7 @@ function normal(shape){
     return Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2)
   }
 
+  if (!shape) return n()
   return apply(ndarray(shape), n)
 }
 

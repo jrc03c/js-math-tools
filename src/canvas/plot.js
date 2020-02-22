@@ -1,3 +1,6 @@
+let map = require("../math/map.js")
+let downloadCanvas = require("./download-canvas.js")
+
 function Plot(canvas){
   let self = this
 
