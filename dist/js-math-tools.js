@@ -658,11 +658,12 @@ module.exports = zeros
 module.exports = {
   apply: require("./apply.js"),
   array: require("./array.js"),
+  downloadJSON: require("./download-json.js"),
   pause: require("./pause.js"),
   print: require("./print.js"),
 }
 
-},{"./apply.js":38,"./array.js":39,"./pause.js":40,"./print.js":41}],38:[function(require,module,exports){
+},{"./apply.js":38,"./array.js":39,"./download-json.js":40,"./pause.js":41,"./print.js":42}],38:[function(require,module,exports){
 let vectorize = require("../math/vectorize.js")
 
 let apply = vectorize(function(x, fn){
@@ -692,6 +693,16 @@ Array.prototype.alphaSort = function(key){
 }
 
 },{}],40:[function(require,module,exports){
+function downloadJSON(obj, filename){
+  let a = document.createElement("a")
+  a.href = `data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(obj, null, "\t"))}`
+  a.download = filename
+  a.dispatchEvent(new MouseEvent("click"))
+}
+
+module.exports = downloadJSON
+
+},{}],41:[function(require,module,exports){
 function pause(ms){
   return new Promise(function(resolve, reject){
     try {
@@ -704,7 +715,7 @@ function pause(ms){
 
 module.exports = pause
 
-},{}],41:[function(require,module,exports){
+},{}],42:[function(require,module,exports){
 function print(x){
   return console.log(x)
 }
