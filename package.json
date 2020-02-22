@@ -1,0 +1,14 @@
+{
+  "name": "js-math-tools",
+  "version": "0.0.1",
+  "description": "some math tools for JS",
+  "main": "dist/js-math-tools.js",
+  "scripts": {
+    "build": "watchify -e src/index.js -o dist/js-math-tools.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@gitlab.com/jrc03c/js-math-tools.git"
+  },
+  "author": "jrc03c"
+}
