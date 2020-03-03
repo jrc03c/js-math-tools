@@ -10,6 +10,7 @@ module.exports = {
   floor: require("./floor.js"),
   isArray: require("./is-array.js"),
   lerp: require("./lerp.js"),
+  log: require("./log.js"),
   map: require("./map.js"),
   max: require("./max.js"),
   mean: require("./mean.js"),

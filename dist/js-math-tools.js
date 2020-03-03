@@ -285,7 +285,7 @@ function Plot(canvas){
 
 module.exports = Plot
 
-},{"../math/map.js":17,"./download-canvas.js":2}],4:[function(require,module,exports){
+},{"../math/map.js":18,"./download-canvas.js":2}],4:[function(require,module,exports){
 let out = {
   canvas: require("./canvas/__index__.js"),
   math: require("./math/__index__.js"),
@@ -300,7 +300,7 @@ try {
   window.JSMathTools = out
 } catch(e){}
 
-},{"./canvas/__index__.js":1,"./math/__index__.js":5,"./misc/__index__.js":39}],5:[function(require,module,exports){
+},{"./canvas/__index__.js":1,"./math/__index__.js":5,"./misc/__index__.js":40}],5:[function(require,module,exports){
 module.exports = {
   abs: require("./abs.js"),
   add: require("./add.js"),
@@ -313,6 +313,7 @@ module.exports = {
   floor: require("./floor.js"),
   isArray: require("./is-array.js"),
   lerp: require("./lerp.js"),
+  log: require("./log.js"),
   map: require("./map.js"),
   max: require("./max.js"),
   mean: require("./mean.js"),
@@ -337,22 +338,22 @@ module.exports = {
   zeros: require("./zeros.js"),
 }
 
-},{"./abs.js":6,"./add.js":7,"./ceil.js":8,"./clamp.js":9,"./cohens-d.js":10,"./correl.js":11,"./cos.js":12,"./covariance.js":13,"./floor.js":14,"./is-array.js":15,"./lerp.js":16,"./map.js":17,"./max.js":18,"./mean.js":19,"./min.js":20,"./ndarray.js":21,"./normal.js":22,"./normalize.js":23,"./ones.js":24,"./pow.js":25,"./random.js":26,"./range.js":27,"./round.js":28,"./scale.js":29,"./sign.js":30,"./sin.js":31,"./sqrt.js":32,"./std.js":33,"./sum.js":34,"./tan.js":35,"./variance.js":36,"./vectorize.js":37,"./zeros.js":38}],6:[function(require,module,exports){
+},{"./abs.js":6,"./add.js":7,"./ceil.js":8,"./clamp.js":9,"./cohens-d.js":10,"./correl.js":11,"./cos.js":12,"./covariance.js":13,"./floor.js":14,"./is-array.js":15,"./lerp.js":16,"./log.js":17,"./map.js":18,"./max.js":19,"./mean.js":20,"./min.js":21,"./ndarray.js":22,"./normal.js":23,"./normalize.js":24,"./ones.js":25,"./pow.js":26,"./random.js":27,"./range.js":28,"./round.js":29,"./scale.js":30,"./sign.js":31,"./sin.js":32,"./sqrt.js":33,"./std.js":34,"./sum.js":35,"./tan.js":36,"./variance.js":37,"./vectorize.js":38,"./zeros.js":39}],6:[function(require,module,exports){
 let vectorize = require("./vectorize.js")
 let abs = vectorize(Math.abs)
 module.exports = abs
 
-},{"./vectorize.js":37}],7:[function(require,module,exports){
+},{"./vectorize.js":38}],7:[function(require,module,exports){
 let vectorize = require("./vectorize.js")
 let add = vectorize((a, b) => a + b)
 module.exports = add
 
-},{"./vectorize.js":37}],8:[function(require,module,exports){
+},{"./vectorize.js":38}],8:[function(require,module,exports){
 let vectorize = require("./vectorize.js")
 let ceil = vectorize(Math.ceil)
 module.exports = ceil
 
-},{"./vectorize.js":37}],9:[function(require,module,exports){
+},{"./vectorize.js":38}],9:[function(require,module,exports){
 let isArray = require("./is-array.js")
 
 function clamp(x, a, b){
@@ -378,7 +379,7 @@ function cohensd(arr1, arr2){
 
 module.exports = cohensd
 
-},{"./mean.js":19,"./sqrt.js":32,"./variance.js":36}],11:[function(require,module,exports){
+},{"./mean.js":20,"./sqrt.js":33,"./variance.js":37}],11:[function(require,module,exports){
 let covariance = require("./covariance.js")
 let std = require("./std.js")
 
@@ -388,12 +389,12 @@ function correl(x, y){
 
 module.exports = correl
 
-},{"./covariance.js":13,"./std.js":33}],12:[function(require,module,exports){
+},{"./covariance.js":13,"./std.js":34}],12:[function(require,module,exports){
 let vectorize = require("./vectorize.js")
 let cos = vectorize(Math.cos)
 module.exports = cos
 
-},{"./vectorize.js":37}],13:[function(require,module,exports){
+},{"./vectorize.js":38}],13:[function(require,module,exports){
 let mean = require("./mean.js")
 
 function covariance(x, y){
@@ -406,12 +407,12 @@ function covariance(x, y){
 
 module.exports = covariance
 
-},{"./mean.js":19}],14:[function(require,module,exports){
+},{"./mean.js":20}],14:[function(require,module,exports){
 let vectorize = require("./vectorize.js")
 let floor = vectorize(Math.floor)
 module.exports = floor
 
-},{"./vectorize.js":37}],15:[function(require,module,exports){
+},{"./vectorize.js":38}],15:[function(require,module,exports){
 function isArray(obj){
   return obj.push ? true : false
 }
@@ -426,6 +427,16 @@ function lerp(a, b, f){
 module.exports = lerp
 
 },{}],17:[function(require,module,exports){
+let vectorize = require("./vectorize.js")
+
+let log = vectorize(function(x, base){
+  base = typeof(base) === "undefined" ? Math.E : base
+  return Math.log(x) / Math.log(base)
+})
+
+module.exports = log
+
+},{"./vectorize.js":38}],18:[function(require,module,exports){
 let isArray = require("./is-array.js")
 
 function map(x, a, b, c, d){
@@ -435,7 +446,7 @@ function map(x, a, b, c, d){
 
 module.exports = map
 
-},{"./is-array.js":15}],18:[function(require,module,exports){
+},{"./is-array.js":15}],19:[function(require,module,exports){
 function max(arr){
   let out
 
@@ -450,7 +461,7 @@ function max(arr){
 
 module.exports = max
 
-},{}],19:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 let sum = require("./sum.js")
 
 function mean(arr){
@@ -459,7 +470,7 @@ function mean(arr){
 
 module.exports = mean
 
-},{"./sum.js":34}],20:[function(require,module,exports){
+},{"./sum.js":35}],21:[function(require,module,exports){
 function min(arr){
   let out
 
@@ -474,7 +485,7 @@ function min(arr){
 
 module.exports = min
 
-},{}],21:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 let isArray = require("./is-array.js")
 let range = require("./range.js")
 
@@ -492,7 +503,7 @@ function ndarray(shape){
 
 module.exports = ndarray
 
-},{"./is-array.js":15,"./range.js":27}],22:[function(require,module,exports){
+},{"./is-array.js":15,"./range.js":28}],23:[function(require,module,exports){
 let ndarray = require("./ndarray.js")
 let apply = require("../misc/apply.js")
 
@@ -509,7 +520,7 @@ function normal(shape){
 
 module.exports = normal
 
-},{"../misc/apply.js":40,"./ndarray.js":21}],23:[function(require,module,exports){
+},{"../misc/apply.js":41,"./ndarray.js":22}],24:[function(require,module,exports){
 let min = require("./min.js")
 let max = require("./max.js")
 
@@ -522,7 +533,7 @@ function normalize(arr){
 
 module.exports = normalize
 
-},{"./max.js":18,"./min.js":20}],24:[function(require,module,exports){
+},{"./max.js":19,"./min.js":21}],25:[function(require,module,exports){
 let ndarray = require("./ndarray.js")
 
 function ones(shape){
@@ -531,7 +542,7 @@ function ones(shape){
 
 module.exports = ones
 
-},{"./ndarray.js":21}],25:[function(require,module,exports){
+},{"./ndarray.js":22}],26:[function(require,module,exports){
 let isArray = require("./is-array.js")
 
 function pow(x, p){
@@ -541,7 +552,7 @@ function pow(x, p){
 
 module.exports = pow
 
-},{"./is-array.js":15}],26:[function(require,module,exports){
+},{"./is-array.js":15}],27:[function(require,module,exports){
 let ndarray = require("./ndarray.js")
 let apply = require("../misc/apply.js")
 
@@ -552,7 +563,7 @@ function random(shape){
 
 module.exports = random
 
-},{"../misc/apply.js":40,"./ndarray.js":21}],27:[function(require,module,exports){
+},{"../misc/apply.js":41,"./ndarray.js":22}],28:[function(require,module,exports){
 function range(a, b, step=1){
   let out = []
   for (let i=a; i<b; i+=step) out.push(i)
@@ -561,17 +572,17 @@ function range(a, b, step=1){
 
 module.exports = range
 
-},{}],28:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 let vectorize = require("./vectorize.js")
 let round = vectorize(Math.round)
 module.exports = round
 
-},{"./vectorize.js":37}],29:[function(require,module,exports){
+},{"./vectorize.js":38}],30:[function(require,module,exports){
 let vectorize = require("./vectorize.js")
 let scale = vectorize((a, b) => a * b)
 module.exports = scale
 
-},{"./vectorize.js":37}],30:[function(require,module,exports){
+},{"./vectorize.js":38}],31:[function(require,module,exports){
 let vectorize = require("./vectorize.js")
 
 let sign = vectorize(function(x){
@@ -582,17 +593,17 @@ let sign = vectorize(function(x){
 
 module.exports = sign
 
-},{"./vectorize.js":37}],31:[function(require,module,exports){
+},{"./vectorize.js":38}],32:[function(require,module,exports){
 let vectorize = require("./vectorize.js")
 let sin = vectorize(Math.sin)
 module.exports = sin
 
-},{"./vectorize.js":37}],32:[function(require,module,exports){
+},{"./vectorize.js":38}],33:[function(require,module,exports){
 let vectorize = require("./vectorize.js")
 let sqrt = vectorize(Math.sqrt)
 module.exports = sqrt
 
-},{"./vectorize.js":37}],33:[function(require,module,exports){
+},{"./vectorize.js":38}],34:[function(require,module,exports){
 let mean = require("./mean.js")
 let pow = require("./pow.js")
 let sqrt = require("./sqrt.js")
@@ -606,7 +617,7 @@ function std(arr){
 
 module.exports = std
 
-},{"./mean.js":19,"./pow.js":25,"./sqrt.js":32}],34:[function(require,module,exports){
+},{"./mean.js":20,"./pow.js":26,"./sqrt.js":33}],35:[function(require,module,exports){
 function sum(arr){
   let out = 0
   arr.forEach(v => out += v)
@@ -615,12 +626,12 @@ function sum(arr){
 
 module.exports = sum
 
-},{}],35:[function(require,module,exports){
+},{}],36:[function(require,module,exports){
 let vectorize = require("./vectorize.js")
 let tan = vectorize(Math.tan)
 module.exports = tan
 
-},{"./vectorize.js":37}],36:[function(require,module,exports){
+},{"./vectorize.js":38}],37:[function(require,module,exports){
 let pow = require("./pow.js")
 let std = require("./std.js")
 
@@ -630,7 +641,7 @@ function variance(arr){
 
 module.exports = variance
 
-},{"./pow.js":25,"./std.js":33}],37:[function(require,module,exports){
+},{"./pow.js":26,"./std.js":34}],38:[function(require,module,exports){
 let isArray = require("./is-array.js")
 let max = require("./max.js")
 
@@ -657,7 +668,7 @@ function vectorize(fn){
 
 module.exports = vectorize
 
-},{"./is-array.js":15,"./max.js":18}],38:[function(require,module,exports){
+},{"./is-array.js":15,"./max.js":19}],39:[function(require,module,exports){
 let ndarray = require("./ndarray.js")
 
 function zeros(shape){
@@ -666,7 +677,7 @@ function zeros(shape){
 
 module.exports = zeros
 
-},{"./ndarray.js":21}],39:[function(require,module,exports){
+},{"./ndarray.js":22}],40:[function(require,module,exports){
 module.exports = {
   apply: require("./apply.js"),
   array: require("./array.js"),
@@ -675,7 +686,7 @@ module.exports = {
   print: require("./print.js"),
 }
 
-},{"./apply.js":40,"./array.js":41,"./download-json.js":42,"./pause.js":43,"./print.js":44}],40:[function(require,module,exports){
+},{"./apply.js":41,"./array.js":42,"./download-json.js":43,"./pause.js":44,"./print.js":45}],41:[function(require,module,exports){
 let vectorize = require("../math/vectorize.js")
 
 let apply = vectorize(function(x, fn){
@@ -684,7 +695,7 @@ let apply = vectorize(function(x, fn){
 
 module.exports = apply
 
-},{"../math/vectorize.js":37}],41:[function(require,module,exports){
+},{"../math/vectorize.js":38}],42:[function(require,module,exports){
 Array.prototype.asyncForEach = async function(fn){
   for (let i=0; i<this.length; i++) await fn(this[i], i, this)
   return this
@@ -704,7 +715,7 @@ Array.prototype.alphaSort = function(key){
   })
 }
 
-},{}],42:[function(require,module,exports){
+},{}],43:[function(require,module,exports){
 function downloadJSON(obj, filename){
   let a = document.createElement("a")
   a.href = `data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(obj, null, "\t"))}`
@@ -714,7 +725,7 @@ function downloadJSON(obj, filename){
 
 module.exports = downloadJSON
 
-},{}],43:[function(require,module,exports){
+},{}],44:[function(require,module,exports){
 function pause(ms){
   return new Promise(function(resolve, reject){
     try {
@@ -727,7 +738,7 @@ function pause(ms){
 
 module.exports = pause
 
-},{}],44:[function(require,module,exports){
+},{}],45:[function(require,module,exports){
 function print(x){
   return console.log(x)
 }
