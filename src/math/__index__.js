@@ -1,5 +1,6 @@
 module.exports = {
   abs: require("./abs.js"),
+  add: require("./add.js"),
   ceil: require("./ceil.js"),
   clamp: require("./clamp.js"),
   cohensd: require("./cohens-d.js"),
@@ -21,6 +22,7 @@ module.exports = {
   random: require("./random.js"),
   range: require("./range.js"),
   round: require("./round.js"),
+  scale: require("./scale.js"),
   sign: require("./sign.js"),
   sin: require("./sin.js"),
   sqrt: require("./sqrt.js"),
