@@ -285,7 +285,7 @@ function Plot(canvas){
 
 module.exports = Plot
 
-},{"../math/map.js":18,"./download-canvas.js":2}],4:[function(require,module,exports){
+},{"../math/map.js":20,"./download-canvas.js":2}],4:[function(require,module,exports){
 let out = {
   canvas: require("./canvas/__index__.js"),
   math: require("./math/__index__.js"),
@@ -300,7 +300,7 @@ try {
   window.JSMathTools = out
 } catch(e){}
 
-},{"./canvas/__index__.js":1,"./math/__index__.js":5,"./misc/__index__.js":40}],5:[function(require,module,exports){
+},{"./canvas/__index__.js":1,"./math/__index__.js":5,"./misc/__index__.js":42}],5:[function(require,module,exports){
 module.exports = {
   abs: require("./abs.js"),
   add: require("./add.js"),
@@ -338,22 +338,215 @@ module.exports = {
   zeros: require("./zeros.js"),
 }
 
-},{"./abs.js":6,"./add.js":7,"./ceil.js":8,"./clamp.js":9,"./cohens-d.js":10,"./correl.js":11,"./cos.js":12,"./covariance.js":13,"./floor.js":14,"./is-array.js":15,"./lerp.js":16,"./log.js":17,"./map.js":18,"./max.js":19,"./mean.js":20,"./min.js":21,"./ndarray.js":22,"./normal.js":23,"./normalize.js":24,"./ones.js":25,"./pow.js":26,"./random.js":27,"./range.js":28,"./round.js":29,"./scale.js":30,"./sign.js":31,"./sin.js":32,"./sqrt.js":33,"./std.js":34,"./sum.js":35,"./tan.js":36,"./variance.js":37,"./vectorize.js":38,"./zeros.js":39}],6:[function(require,module,exports){
+},{"./abs.js":6,"./add.js":7,"./ceil.js":8,"./clamp.js":9,"./cohens-d.js":10,"./correl.js":11,"./cos.js":12,"./covariance.js":13,"./floor.js":14,"./is-array.js":15,"./lerp.js":18,"./log.js":19,"./map.js":20,"./max.js":21,"./mean.js":22,"./min.js":23,"./ndarray.js":24,"./normal.js":25,"./normalize.js":26,"./ones.js":27,"./pow.js":28,"./random.js":29,"./range.js":30,"./round.js":31,"./scale.js":32,"./sign.js":33,"./sin.js":34,"./sqrt.js":35,"./std.js":36,"./sum.js":37,"./tan.js":38,"./variance.js":39,"./vectorize.js":40,"./zeros.js":41}],6:[function(require,module,exports){
+let assert = require("../misc/assert.js")
 let vectorize = require("./vectorize.js")
-let abs = vectorize(Math.abs)
+let isArray = require("./is-array.js")
+let isNumber = require("./is-number.js")
+
+let abs = vectorize(function(x){
+  assert(isNumber(x), "The `abs` function only works on numbers!")
+  return Math.abs(x)
+})
+
 module.exports = abs
 
-},{"./vectorize.js":38}],7:[function(require,module,exports){
+// tests
+if (!module.parent){
+  let result = abs(3)
+  assert(result === 3, `abs(3) should be 3, but instead is ${result}!`)
+
+  result = abs(-3)
+  assert(result === 3, `abs(-3) should be 3, but instead is ${result}!`)
+
+  result = abs(17.25)
+  assert(result === 17.25, `abs(17.25) should be 17.25, but instead is ${result}!`)
+
+  result = abs(-101.5)
+  assert(result === 101.5, `abs(-101.5) should be 101.5, but instead is ${result}!`)
+
+  x = [-2, 3, -4]
+  yTrue = [2, 3, 4]
+  yPred = abs(x)
+
+  for (let i=0; i<yTrue.length; i++){
+    assert(yTrue[i] === yPred[i], `abs(${x[i]}) should be ${yTrue[i]}, but instead is ${yPred[i]}!`)
+  }
+
+  x = [
+    [1, -2, -3],
+    [4, -5, 6],
+    [-7, 8, -9],
+  ]
+
+  yTrue = [
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 9],
+  ]
+
+  yPred = abs(x)
+
+  for (let r=0; r<yTrue.length; r++){
+    for (let c=0; c<yTrue[r].length; c++){
+      assert(yTrue[r][c] === yPred[r][c], `abs(${x[r][c]}) should be ${yTrue[r][c]}, but instead is ${yPred[r][c]}!`)
+    }
+  }
+
+  let hasFailed = false
+
+  try {
+    abs("foo")
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `abs("foo") should have failed!`)
+
+  hasFailed = false
+
+  try {
+    abs(["foo", "bar", "baz"])
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `abs(["foo", "bar", "baz"]) should have failed!`)
+
+  hasFailed = false
+
+  try {
+    abs({x: 5})
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `abs({x: 5}) should have failed!`)
+
+  hasFailed = false
+
+  try {
+    abs(true)
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `abs(true) should have failed!`)
+
+  console.log("All tests passed!")
+}
+
+},{"../misc/assert.js":45,"./is-array.js":15,"./is-number.js":16,"./vectorize.js":40}],7:[function(require,module,exports){
+let assert = require("../misc/assert.js")
 let vectorize = require("./vectorize.js")
-let add = vectorize((a, b) => a + b)
+let isNumber = require("./is-number.js")
+let isString = require("./is-string.js")
+
+let add = vectorize(function(){
+  let out = 0
+  let argKeys = Object.keys(arguments)
+  let argValues = argKeys.map(key => arguments[key])
+  let argTypes = argValues.map(value => typeof(value))
+
+  argValues.forEach(value => assert(isNumber(value) || isString(value), "The `add` function only works on strings or numbers!"))
+
+  if (argTypes.indexOf("string") > -1) out = ""
+
+  argValues.forEach(x => out += x)
+
+  return out
+})
+
 module.exports = add
 
-},{"./vectorize.js":38}],8:[function(require,module,exports){
+// tests
+if (!module.parent){
+  let a = 3
+  let b = 4
+  cTrue = a + b
+  cPred = add(a, b)
+  assert(cTrue === cPred, `add(${a}, ${b}) should be ${cTrue}, but instead is ${cPred}!`)
+
+  a = -4
+  b = 22.5
+  cTrue = a + b
+  cPred = add(a, b)
+  assert(cTrue === cPred, `add(${a}, ${b}) should be ${cTrue}, but instead is ${cPred}!`)
+
+  a = [2, 3, 4]
+  b = -10
+  cTrue = [-8, -7, -6]
+  cPred = add(a, b)
+  for (let i=0; i<cTrue.length; i++) assert(cTrue[i] === cPred[i], `add(${a[i]}, ${b}) should be ${cTrue[i]}, but instead is ${cPred[i]}!`)
+
+  a = -10
+  b = [2, 3, 4]
+  cTrue = [-8, -7, -6]
+  cPred = add(a, b)
+  for (let i=0; i<cTrue.length; i++) assert(cTrue[i] === cPred[i], `add(${a}, ${b[i]}) should be ${cTrue[i]}, but instead is ${cPred[i]}!`)
+
+  a = [2, 3, 4]
+  b = [5, 6, 7]
+  cTrue = [7, 9, 11]
+  cPred = add(a, b)
+  for (let i=0; i<cTrue.length; i++) assert(cTrue[i] === cPred[i], `add(${a[i]}, ${b[i]}) should be ${cTrue[i]}, but instead is ${cPred[i]}!`)
+
+  a = [[2, 3, 4], [5, 6, 7]]
+  b = 10
+  cTrue = [[12, 13, 14], [15, 16, 17]]
+  cPred = add(a, b)
+
+  for (let row=0; row<cTrue.length; row++){
+    for (let col=0; col<cTrue[row].length; col++){
+      assert(cTrue[row][col] === cPred[row][col], `add(${a[row][col]}, ${b}) should be ${cTrue[row][col]}, but instead is ${cPred[row][col]}!`)
+    }
+  }
+
+  a = [[2, 3, 4], [5, 6, 7]]
+  b = [10, 20, 30]
+  let hasFailed = false
+
+  try {
+    add(a, b)
+  } catch(e){
+    hasFailed = true
+  }
+
+  if (!hasFailed) assert(false, `add(${a}, ${b}) should have failed!`)
+
+  a = "hello, "
+  b = ["foo", "bar", "baz"]
+  cTrue = ["hello, foo", "hello, bar", "hello, baz"]
+  cPred = add(a, b)
+  for (let i=0; i<cTrue.length; i++) assert(cTrue[i] === cPred[i], `add(${a}, ${b[i]}) should be ${cTrue[i]}, but instead is ${cPred[i]}!`)
+
+  a = true
+  b = 3
+  hasFailed = false
+
+  try {
+    add(a, b)
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `add(${a}, ${b}) should have failed!`)
+
+  a = [2, 3, 4]
+  b = [5, 6, "seven"]
+  cTrue = [7, 9, "4seven"]
+  cPred = add(a, b)
+  for (let i=0; i<cTrue.length; i++) assert(cTrue[i] === cPred[i], `add(${a[i]}, ${b[i]}) should be ${cTrue[i]}, but instead was ${cPred[i]}!`)
+
+  console.log("All tests passed!")
+}
+
+},{"../misc/assert.js":45,"./is-number.js":16,"./is-string.js":17,"./vectorize.js":40}],8:[function(require,module,exports){
 let vectorize = require("./vectorize.js")
 let ceil = vectorize(Math.ceil)
 module.exports = ceil
 
-},{"./vectorize.js":38}],9:[function(require,module,exports){
+},{"./vectorize.js":40}],9:[function(require,module,exports){
 let isArray = require("./is-array.js")
 
 function clamp(x, a, b){
@@ -379,7 +572,7 @@ function cohensd(arr1, arr2){
 
 module.exports = cohensd
 
-},{"./mean.js":20,"./sqrt.js":33,"./variance.js":37}],11:[function(require,module,exports){
+},{"./mean.js":22,"./sqrt.js":35,"./variance.js":39}],11:[function(require,module,exports){
 let covariance = require("./covariance.js")
 let std = require("./std.js")
 
@@ -389,12 +582,12 @@ function correl(x, y){
 
 module.exports = correl
 
-},{"./covariance.js":13,"./std.js":34}],12:[function(require,module,exports){
+},{"./covariance.js":13,"./std.js":36}],12:[function(require,module,exports){
 let vectorize = require("./vectorize.js")
 let cos = vectorize(Math.cos)
 module.exports = cos
 
-},{"./vectorize.js":38}],13:[function(require,module,exports){
+},{"./vectorize.js":40}],13:[function(require,module,exports){
 let mean = require("./mean.js")
 
 function covariance(x, y){
@@ -407,12 +600,12 @@ function covariance(x, y){
 
 module.exports = covariance
 
-},{"./mean.js":20}],14:[function(require,module,exports){
+},{"./mean.js":22}],14:[function(require,module,exports){
 let vectorize = require("./vectorize.js")
 let floor = vectorize(Math.floor)
 module.exports = floor
 
-},{"./vectorize.js":38}],15:[function(require,module,exports){
+},{"./vectorize.js":40}],15:[function(require,module,exports){
 function isArray(obj){
   return obj.push ? true : false
 }
@@ -420,13 +613,61 @@ function isArray(obj){
 module.exports = isArray
 
 },{}],16:[function(require,module,exports){
+let assert = require("../misc/assert.js")
+
+function isNumber(x){
+  return typeof(x) === "number"
+}
+
+module.exports = isNumber
+
+// tests
+if (!module.parent){
+  assert(isNumber(3), `3 is a number!`)
+  assert(isNumber(-3.5), `-3.5 is a number!`)
+  assert(isNumber(2573.2903482093482035023948, `2573.2903482093482035023948 is a number!`))
+  assert(!isNumber("35"), `"35" is not a number!`)
+  assert(!isNumber("foo"), `"foo" is not a number!`)
+  assert(!isNumber([2, 3, 4]), `[2, 3, 4] is not a number!`)
+  assert(!isNumber({x: 5}), "{x: 5} is not a number!")
+  assert(!isNumber(true), `true is not a number!`)
+  assert(!isNumber(false), `false is not a number!`)
+
+  console.log("All tests passed!")
+}
+
+},{"../misc/assert.js":45}],17:[function(require,module,exports){
+let assert = require("../misc/assert.js")
+
+function isString(s){
+  return typeof(s) === "string"
+}
+
+module.exports = isString
+
+// tests
+if (!module.parent){
+  assert(isString("hi"), `"hi" is a string!`)
+  assert(isString(""), `"" is a string!`)
+  assert(isString(``), `\`\` is a string!`)
+  assert(isString('foo', `'foo' is a string!`))
+  assert(!isString(3), `3 is not a string!`)
+  assert(!isString(true), `true is not a string!`)
+  assert(!isString(false), `false is not a string!`)
+  assert(!isString({x: 5}), `{x: 5} is not a string!`)
+  assert(!isString(["a", "b", "c"]), `["a", "b", "c"] is not a string!`)
+
+  console.log("All tests passed!")
+}
+
+},{"../misc/assert.js":45}],18:[function(require,module,exports){
 function lerp(a, b, f){
   return f * (b - a) + a
 }
 
 module.exports = lerp
 
-},{}],17:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 let vectorize = require("./vectorize.js")
 
 let log = vectorize(function(x, base){
@@ -436,7 +677,7 @@ let log = vectorize(function(x, base){
 
 module.exports = log
 
-},{"./vectorize.js":38}],18:[function(require,module,exports){
+},{"./vectorize.js":40}],20:[function(require,module,exports){
 let isArray = require("./is-array.js")
 
 function map(x, a, b, c, d){
@@ -446,7 +687,7 @@ function map(x, a, b, c, d){
 
 module.exports = map
 
-},{"./is-array.js":15}],19:[function(require,module,exports){
+},{"./is-array.js":15}],21:[function(require,module,exports){
 function max(arr){
   let out
 
@@ -461,7 +702,7 @@ function max(arr){
 
 module.exports = max
 
-},{}],20:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 let sum = require("./sum.js")
 
 function mean(arr){
@@ -470,7 +711,7 @@ function mean(arr){
 
 module.exports = mean
 
-},{"./sum.js":35}],21:[function(require,module,exports){
+},{"./sum.js":37}],23:[function(require,module,exports){
 function min(arr){
   let out
 
@@ -485,7 +726,7 @@ function min(arr){
 
 module.exports = min
 
-},{}],22:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 let isArray = require("./is-array.js")
 let range = require("./range.js")
 
@@ -503,7 +744,7 @@ function ndarray(shape){
 
 module.exports = ndarray
 
-},{"./is-array.js":15,"./range.js":28}],23:[function(require,module,exports){
+},{"./is-array.js":15,"./range.js":30}],25:[function(require,module,exports){
 let ndarray = require("./ndarray.js")
 let apply = require("../misc/apply.js")
 
@@ -520,7 +761,7 @@ function normal(shape){
 
 module.exports = normal
 
-},{"../misc/apply.js":41,"./ndarray.js":22}],24:[function(require,module,exports){
+},{"../misc/apply.js":43,"./ndarray.js":24}],26:[function(require,module,exports){
 let min = require("./min.js")
 let max = require("./max.js")
 
@@ -533,7 +774,7 @@ function normalize(arr){
 
 module.exports = normalize
 
-},{"./max.js":19,"./min.js":21}],25:[function(require,module,exports){
+},{"./max.js":21,"./min.js":23}],27:[function(require,module,exports){
 let ndarray = require("./ndarray.js")
 
 function ones(shape){
@@ -542,7 +783,7 @@ function ones(shape){
 
 module.exports = ones
 
-},{"./ndarray.js":22}],26:[function(require,module,exports){
+},{"./ndarray.js":24}],28:[function(require,module,exports){
 let isArray = require("./is-array.js")
 
 function pow(x, p){
@@ -552,7 +793,7 @@ function pow(x, p){
 
 module.exports = pow
 
-},{"./is-array.js":15}],27:[function(require,module,exports){
+},{"./is-array.js":15}],29:[function(require,module,exports){
 let ndarray = require("./ndarray.js")
 let apply = require("../misc/apply.js")
 
@@ -563,7 +804,7 @@ function random(shape){
 
 module.exports = random
 
-},{"../misc/apply.js":41,"./ndarray.js":22}],28:[function(require,module,exports){
+},{"../misc/apply.js":43,"./ndarray.js":24}],30:[function(require,module,exports){
 function range(a, b, step=1){
   let out = []
   for (let i=a; i<b; i+=step) out.push(i)
@@ -572,17 +813,17 @@ function range(a, b, step=1){
 
 module.exports = range
 
-},{}],29:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 let vectorize = require("./vectorize.js")
 let round = vectorize(Math.round)
 module.exports = round
 
-},{"./vectorize.js":38}],30:[function(require,module,exports){
+},{"./vectorize.js":40}],32:[function(require,module,exports){
 let vectorize = require("./vectorize.js")
 let scale = vectorize((a, b) => a * b)
 module.exports = scale
 
-},{"./vectorize.js":38}],31:[function(require,module,exports){
+},{"./vectorize.js":40}],33:[function(require,module,exports){
 let vectorize = require("./vectorize.js")
 
 let sign = vectorize(function(x){
@@ -593,17 +834,17 @@ let sign = vectorize(function(x){
 
 module.exports = sign
 
-},{"./vectorize.js":38}],32:[function(require,module,exports){
+},{"./vectorize.js":40}],34:[function(require,module,exports){
 let vectorize = require("./vectorize.js")
 let sin = vectorize(Math.sin)
 module.exports = sin
 
-},{"./vectorize.js":38}],33:[function(require,module,exports){
+},{"./vectorize.js":40}],35:[function(require,module,exports){
 let vectorize = require("./vectorize.js")
 let sqrt = vectorize(Math.sqrt)
 module.exports = sqrt
 
-},{"./vectorize.js":38}],34:[function(require,module,exports){
+},{"./vectorize.js":40}],36:[function(require,module,exports){
 let mean = require("./mean.js")
 let pow = require("./pow.js")
 let sqrt = require("./sqrt.js")
@@ -617,7 +858,7 @@ function std(arr){
 
 module.exports = std
 
-},{"./mean.js":20,"./pow.js":26,"./sqrt.js":33}],35:[function(require,module,exports){
+},{"./mean.js":22,"./pow.js":28,"./sqrt.js":35}],37:[function(require,module,exports){
 function sum(arr){
   let out = 0
   arr.forEach(v => out += v)
@@ -626,12 +867,12 @@ function sum(arr){
 
 module.exports = sum
 
-},{}],36:[function(require,module,exports){
+},{}],38:[function(require,module,exports){
 let vectorize = require("./vectorize.js")
 let tan = vectorize(Math.tan)
 module.exports = tan
 
-},{"./vectorize.js":38}],37:[function(require,module,exports){
+},{"./vectorize.js":40}],39:[function(require,module,exports){
 let pow = require("./pow.js")
 let std = require("./std.js")
 
@@ -641,7 +882,7 @@ function variance(arr){
 
 module.exports = variance
 
-},{"./pow.js":26,"./std.js":34}],38:[function(require,module,exports){
+},{"./pow.js":28,"./std.js":36}],40:[function(require,module,exports){
 let isArray = require("./is-array.js")
 let max = require("./max.js")
 
@@ -668,7 +909,7 @@ function vectorize(fn){
 
 module.exports = vectorize
 
-},{"./is-array.js":15,"./max.js":19}],39:[function(require,module,exports){
+},{"./is-array.js":15,"./max.js":21}],41:[function(require,module,exports){
 let ndarray = require("./ndarray.js")
 
 function zeros(shape){
@@ -677,7 +918,7 @@ function zeros(shape){
 
 module.exports = zeros
 
-},{"./ndarray.js":22}],40:[function(require,module,exports){
+},{"./ndarray.js":24}],42:[function(require,module,exports){
 module.exports = {
   apply: require("./apply.js"),
   array: require("./array.js"),
@@ -686,7 +927,7 @@ module.exports = {
   print: require("./print.js"),
 }
 
-},{"./apply.js":41,"./array.js":42,"./download-json.js":43,"./pause.js":44,"./print.js":45}],41:[function(require,module,exports){
+},{"./apply.js":43,"./array.js":44,"./download-json.js":46,"./pause.js":47,"./print.js":48}],43:[function(require,module,exports){
 let vectorize = require("../math/vectorize.js")
 
 let apply = vectorize(function(x, fn){
@@ -695,7 +936,7 @@ let apply = vectorize(function(x, fn){
 
 module.exports = apply
 
-},{"../math/vectorize.js":38}],42:[function(require,module,exports){
+},{"../math/vectorize.js":40}],44:[function(require,module,exports){
 Array.prototype.asyncForEach = async function(fn){
   for (let i=0; i<this.length; i++) await fn(this[i], i, this)
   return this
@@ -715,7 +956,12 @@ Array.prototype.alphaSort = function(key){
   })
 }
 
-},{}],43:[function(require,module,exports){
+},{}],45:[function(require,module,exports){
+module.exports = function(isTrue, message){
+  if (!isTrue) throw new Error(message)
+}
+
+},{}],46:[function(require,module,exports){
 function downloadJSON(obj, filename){
   let a = document.createElement("a")
   a.href = `data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(obj, null, "\t"))}`
@@ -725,7 +971,7 @@ function downloadJSON(obj, filename){
 
 module.exports = downloadJSON
 
-},{}],44:[function(require,module,exports){
+},{}],47:[function(require,module,exports){
 function pause(ms){
   return new Promise(function(resolve, reject){
     try {
@@ -738,7 +984,7 @@ function pause(ms){
 
 module.exports = pause
 
-},{}],45:[function(require,module,exports){
+},{}],48:[function(require,module,exports){
 function print(x){
   return console.log(x)
 }
