@@ -2,8 +2,10 @@ let assert = require("../misc/assert.js")
 let vectorize = require("./vectorize.js")
 let isArray = require("./is-array.js")
 let isNumber = require("./is-number.js")
+let isUndefined = require("./is-undefined.js")
 
 let abs = vectorize(function(x){
+  assert(!isUndefined(x), "You must pass exactly one number into the `abs` function!")
   assert(isNumber(x), "The `abs` function only works on numbers!")
   return Math.abs(x)
 })
@@ -91,6 +93,17 @@ if (!module.parent){
   }
 
   assert(hasFailed, `abs(true) should have failed!`)
+
+  hasFailed = false
+  let foo
+
+  try {
+    abs(foo)
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `abs(foo) should have failed!`)
 
   console.log("All tests passed!")
 }

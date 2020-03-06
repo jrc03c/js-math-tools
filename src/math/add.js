@@ -2,6 +2,7 @@ let assert = require("../misc/assert.js")
 let vectorize = require("./vectorize.js")
 let isNumber = require("./is-number.js")
 let isString = require("./is-string.js")
+let isUndefined = require("./is-undefined.js")
 
 let add = vectorize(function(){
   let out = 0
@@ -10,6 +11,8 @@ let add = vectorize(function(){
   let argTypes = argValues.map(value => typeof(value))
 
   argValues.forEach(value => assert(isNumber(value) || isString(value), "The `add` function only works on strings or numbers!"))
+
+  argValues.forEach(value => assert(!isUndefined(value), "The arguments for the `add` function cannot be undefined!"))
 
   if (argTypes.indexOf("string") > -1) out = ""
 
@@ -98,6 +101,17 @@ if (!module.parent){
   cTrue = [7, 9, "4seven"]
   cPred = add(a, b)
   for (let i=0; i<cTrue.length; i++) assert(cTrue[i] === cPred[i], `add(${a[i]}, ${b[i]}) should be ${cTrue[i]}, but instead was ${cPred[i]}!`)
+
+  hasFailed = false
+  let foo
+
+  try {
+    add(3, foo)
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `add(3, foo) should have failed!`)
 
   console.log("All tests passed!")
 }
