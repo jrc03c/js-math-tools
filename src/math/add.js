@@ -12,7 +12,7 @@ let add = vectorize(function(){
 
   argValues.forEach(value => assert(isNumber(value) || isString(value), "The `add` function only works on strings or numbers!"))
 
-  argValues.forEach(value => assert(!isUndefined(value), "The arguments for the `add` function cannot be undefined!"))
+  argValues.forEach(value => assert(!isUndefined(value), "You must pass numbers or equally-sized arrays of numbers into the `add` function!"))
 
   if (argTypes.indexOf("string") > -1) out = ""
 
@@ -68,9 +68,10 @@ if (!module.parent){
 
   a = [[2, 3, 4], [5, 6, 7]]
   b = [10, 20, 30]
-  let hasFailed = false
+  let hasFailed
 
   try {
+    hasFailed = false
     add(a, b)
   } catch(e){
     hasFailed = true
@@ -86,9 +87,9 @@ if (!module.parent){
 
   a = true
   b = 3
-  hasFailed = false
 
   try {
+    hasFailed = false
     add(a, b)
   } catch(e){
     hasFailed = true
@@ -102,10 +103,10 @@ if (!module.parent){
   cPred = add(a, b)
   for (let i=0; i<cTrue.length; i++) assert(cTrue[i] === cPred[i], `add(${a[i]}, ${b[i]}) should be ${cTrue[i]}, but instead was ${cPred[i]}!`)
 
-  hasFailed = false
   let foo
 
   try {
+    hasFailed = false
     add(3, foo)
   } catch(e){
     hasFailed = true

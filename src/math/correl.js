@@ -1,10 +1,12 @@
 let assert = require("../misc/assert.js")
 let isArray = require("./is-array.js")
 let isNumber = require("./is-number.js")
+let isUndefined = require("./is-undefined.js")
 let covariance = require("./covariance.js")
 let std = require("./std.js")
 
 function correl(x, y){
+  assert(!isUndefined(x) && !isUndefined(y), "You must pass two equally-sized arrays into the `correl` function!")
   assert(isArray(x) && isArray(y), "The `correl` function works on exactly two arrays!")
   assert(x.length === y.length, "The two arrays passed into the `correl` function must have the same length!")
 
@@ -38,9 +40,10 @@ if (!module.parent){
   r = correl(x, y)
   assert(r < -0.95, `correl(x, -x + 0.01 * normal([10000])) should be approximately -1, but instead was ${r}!`)
 
-  let hasFailed = false
+  let hasFailed
 
   try {
+    hasFailed = false
     correl(1, 2)
   } catch(e){
     hasFailed = true
@@ -48,9 +51,8 @@ if (!module.parent){
 
   assert(hasFailed, `correl(1, 2) should have failed!`)
 
-  hasFailed = false
-
   try {
+    hasFailed = false
     correl(true, false)
   } catch(e){
     hasFailed = true
@@ -58,9 +60,8 @@ if (!module.parent){
 
   assert(hasFailed, `correl(true, false) should have failed!`)
 
-  hasFailed = false
-
   try {
+    hasFailed = false
     correl([], {})
   } catch(e){
     hasFailed = true
@@ -68,9 +69,8 @@ if (!module.parent){
 
   assert(hasFailed, `correl([], {}) should have failed!`)
 
-  hasFailed = false
-
   try {
+    hasFailed = false
     correl("foo", "bar")
   } catch(e){
     hasFailed = true
@@ -78,9 +78,8 @@ if (!module.parent){
 
   assert(hasFailed, `correl("foo", "bar") should have failed!`)
 
-  hasFailed = false
-
   try {
+    hasFailed = false
     correl([2, 3, 4], ["a", "b", "c"])
   } catch(e){
     hasFailed = true
@@ -88,9 +87,8 @@ if (!module.parent){
 
   assert(hasFailed, `correl([2, 3, 4], ["a", "b", "c"]) should have failed!`)
 
-  hasFailed = false
-
   try {
+    hasFailed = false
     correl([[2, 3, 4], [5, 6, 7]], [[8, 9, 10], [11, 12, 13]])
   } catch(e){
     hasFailed = true
@@ -99,15 +97,25 @@ if (!module.parent){
   assert(hasFailed, `correl([[2, 3, 4], [5, 6, 7]], [[8, 9, 10], [11, 12, 13]]) should have failed!`)
 
   let fn = () => {}
-  hasFailed = false
 
   try {
+    hasFailed = false
     correl(fn, fn)
   } catch(e){
     hasFailed = true
   }
 
   assert(hasFailed, `correl(fn, fn) should have failed!`)
+
+  try {
+    let foo
+    hasFailed = false
+    correl(foo, foo)
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `correl(foo, foo) should have failed!`)
 
   assert(isNaN(correl([2, 3, 4], [1, 1, 1])), `correl([2, 3, 4], [1, 1, 1]) should have returned NaN!`)
 

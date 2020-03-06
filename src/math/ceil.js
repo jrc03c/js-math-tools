@@ -4,7 +4,7 @@ let isUndefined = require("./is-undefined.js")
 let vectorize = require("./vectorize.js")
 
 let ceil = vectorize(function(x){
-  assert(!isUndefined(x), "You must pass exactly one number into the `ceil` function!")
+  assert(!isUndefined(x), "You must pass a single number or a single array of numbers into the `ceil` function!")
   assert(isNumber(x), "The `ceil` function only works on numbers!")
   return Math.ceil(x)
 })
@@ -33,10 +33,11 @@ if (!module.parent){
   yPred = ceil(x)
   for (let i=0; i<yTrue.length; i++) assert(yTrue[i] === yPred[i], `ceil(${x[i]}) should be ${yTrue[i]}, but instead was ${yPred[i]}!`)
 
-  let hasFailed = false
+  let hasFailed
   x = "foo"
 
   try {
+    hasFailed = false
     ceil(x)
   } catch(e){
     hasFailed = true
@@ -44,10 +45,10 @@ if (!module.parent){
 
   assert(hasFailed, `ceil(${x}) should have failed!`)
 
-  hasFailed = false
   x = [true, 2, 3]
 
   try {
+    hasFailed = false
     ceil(x)
   } catch(e){
     hasFailed = true
@@ -55,10 +56,10 @@ if (!module.parent){
 
   assert(hasFailed, `ceil(${x}) should have failed!`)
 
-  hasFailed = false
   x = {x: 5}
 
   try {
+    hasFailed = false
     ceil(x)
   } catch(e){
     hasFailed = true
@@ -66,10 +67,10 @@ if (!module.parent){
 
   assert(hasFailed, `ceil(${x}) should have failed!`)
 
-  hasFailed = false
   let foo
 
   try {
+    hasFailed = false
     ceil(foo)
   } catch(e){
     hasFailed = true

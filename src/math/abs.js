@@ -54,9 +54,10 @@ if (!module.parent){
     }
   }
 
-  let hasFailed = false
+  let hasFailed
 
   try {
+    hasFailed = false
     abs("foo")
   } catch(e){
     hasFailed = true
@@ -64,9 +65,8 @@ if (!module.parent){
 
   assert(hasFailed, `abs("foo") should have failed!`)
 
-  hasFailed = false
-
   try {
+    hasFailed = false
     abs(["foo", "bar", "baz"])
   } catch(e){
     hasFailed = true
@@ -74,9 +74,8 @@ if (!module.parent){
 
   assert(hasFailed, `abs(["foo", "bar", "baz"]) should have failed!`)
 
-  hasFailed = false
-
   try {
+    hasFailed = false
     abs({x: 5})
   } catch(e){
     hasFailed = true
@@ -84,9 +83,8 @@ if (!module.parent){
 
   assert(hasFailed, `abs({x: 5}) should have failed!`)
 
-  hasFailed = false
-
   try {
+    hasFailed = false
     abs(true)
   } catch(e){
     hasFailed = true
@@ -94,10 +92,10 @@ if (!module.parent){
 
   assert(hasFailed, `abs(true) should have failed!`)
 
-  hasFailed = false
   let foo
 
   try {
+    hasFailed = false
     abs(foo)
   } catch(e){
     hasFailed = true

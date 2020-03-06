@@ -4,7 +4,7 @@ let isUndefined = require("./is-undefined.js")
 let vectorize = require("./vectorize.js")
 
 let clamp = vectorize(function(x, a, b){
-  assert(!isUndefined(x) && !isUndefined(a) && !isUndefined(b), "The arguments to the `clamp` function cannot be undefined!")
+  assert(!isUndefined(x) && !isUndefined(a) && !isUndefined(b), "You must pass exactly three numbers (or three equally-sized arrays of numbers) into the `clamp` function!")
 
   assert(isNumber(x), "The `clamp` function only works on numbers!")
   assert(isNumber(a), "The `clamp` function only works on numbers!")
@@ -92,6 +92,6 @@ if (!module.parent){
   }
 
   assert(hasFailed, `clamp(foo, foo, foo) should have failed!`)
-  
+
   console.log("All tests passed!")
 }
