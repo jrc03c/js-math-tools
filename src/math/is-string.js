@@ -1,5 +1,3 @@
-let assert = require("../misc/assert.js")
-
 function isString(s){
   return typeof(s) === "string"
 }
@@ -8,6 +6,8 @@ module.exports = isString
 
 // tests
 if (!module.parent){
+  let assert = require("../misc/assert.js")
+
   assert(isString("hi"), `"hi" is a string!`)
   assert(isString(""), `"" is a string!`)
   assert(isString(``), `\`\` is a string!`)
