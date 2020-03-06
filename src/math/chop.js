@@ -43,6 +43,12 @@ if (!module.parent){
   yPred = chop(x)
   for (let i=0; i<yTrue.length; i++) assert(yTrue[i] === yPred[i], `chop(x[i]) should be ${yTrue[i]}, but instead is ${yPred[i]}!`)
 
+  x = [1, 1, 1]
+  thresholds = [1e-1, 1e0, 1e1]
+  yTrue = [1, 1, 0]
+  yPred = chop(x, thresholds)
+  for (let i=0; i<yTrue.length; i++) assert(yTrue[i] === yPred[i], `chop(x[i]) should be ${yTrue[i]}, but instead is ${yPred[i]}!`)
+
   let hasFailed
 
   try {
@@ -99,6 +105,15 @@ if (!module.parent){
   }
 
   assert(hasFailed, `chop(foo) should have failed!`)
+
+  try {
+    hasFailed = false
+    chop([2, 3, 4], [5, 6, "seven"])
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `chop([2, 3, 4], [5, 6, "seven"]) should have failed!`)
 
   console.log("All tests passed!")
 }

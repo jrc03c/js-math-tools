@@ -6,12 +6,12 @@ let covariance = require("./covariance.js")
 let std = require("./std.js")
 
 function correl(x, y){
-  assert(!isUndefined(x) && !isUndefined(y), "You must pass two equally-sized arrays into the `correl` function!")
-  assert(isArray(x) && isArray(y), "The `correl` function works on exactly two arrays!")
-  assert(x.length === y.length, "The two arrays passed into the `correl` function must have the same length!")
+  assert(!isUndefined(x) && !isUndefined(y), "You must pass two equally-sized one-dimensional arrays into the `correl` function!")
+  assert(isArray(x) && isArray(y), "The `correl` function works on exactly two one-dimensional arrays!")
+  assert(x.length === y.length, "The two one-dimensional arrays passed into the `correl` function must have the same length!")
 
   x.concat(y).forEach(function(value){
-    assert(isNumber(value), "The two arrays passed into the `correl` function must contain only numbers!")
+    assert(isNumber(value), "The two one-dimensional arrays passed into the `correl` function must contain only numbers!")
   })
 
   return covariance(x, y) / (std(x) * std(y))
