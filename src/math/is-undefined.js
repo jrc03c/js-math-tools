@@ -1,5 +1,3 @@
-let assert = require("../misc/assert.js")
-
 function isUndefined(x){
   return x === null || typeof(x) === "undefined"
 }
@@ -8,6 +6,8 @@ module.exports = isUndefined
 
 // tests
 if (!module.parent){
+  let assert = require("../misc/assert.js")
+
   assert(!isUndefined("foo"), `isUndefined("foo") should be false, but instead was true!`)
   assert(!isUndefined({}), `isUndefined({}) should be false, but instead was true!`)
   assert(!isUndefined(3), `isUndefined(3) should be false, but instead was true!`)
@@ -19,9 +19,10 @@ if (!module.parent){
   let x
   assert(isUndefined(x), `isUndefined(x) should be true, but instead was false!`)
 
-  let hasFailed = false
+  let hasFailed
 
   try {
+    hasFailed = false
     isUndefined(foo)
   } catch(e){
     hasFailed = true
