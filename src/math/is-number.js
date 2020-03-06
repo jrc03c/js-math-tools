@@ -1,5 +1,3 @@
-let assert = require("../misc/assert.js")
-
 function isNumber(x){
   return typeof(x) === "number"
 }
@@ -8,6 +6,8 @@ module.exports = isNumber
 
 // tests
 if (!module.parent){
+  let assert = require("../misc/assert.js")
+
   assert(isNumber(3), `3 is a number!`)
   assert(isNumber(-3.5), `-3.5 is a number!`)
   assert(isNumber(2573.2903482093482035023948, `2573.2903482093482035023948 is a number!`))
