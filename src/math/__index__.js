@@ -9,6 +9,9 @@ module.exports = {
   covariance: require("./covariance.js"),
   floor: require("./floor.js"),
   isArray: require("./is-array.js"),
+  isNumber: require("./is-number.js"),
+  isString: require("./is-string.js"),
+  isUndefined: require("./is-undefined.js"),
   lerp: require("./lerp.js"),
   log: require("./log.js"),
   map: require("./map.js"),
@@ -33,4 +36,5 @@ module.exports = {
   variance: require("./variance.js"),
   vectorize: require("./vectorize.js"),
   zeros: require("./zeros.js"),
+
 }

@@ -312,6 +312,9 @@ module.exports = {
   covariance: require("./covariance.js"),
   floor: require("./floor.js"),
   isArray: require("./is-array.js"),
+  isNumber: require("./is-number.js"),
+  isString: require("./is-string.js"),
+  isUndefined: require("./is-undefined.js"),
   lerp: require("./lerp.js"),
   log: require("./log.js"),
   map: require("./map.js"),
@@ -336,9 +339,10 @@ module.exports = {
   variance: require("./variance.js"),
   vectorize: require("./vectorize.js"),
   zeros: require("./zeros.js"),
+
 }
 
-},{"./abs.js":6,"./add.js":7,"./ceil.js":8,"./clamp.js":9,"./cohens-d.js":10,"./correl.js":11,"./cos.js":12,"./covariance.js":13,"./floor.js":14,"./is-array.js":15,"./lerp.js":19,"./log.js":20,"./map.js":21,"./max.js":22,"./mean.js":23,"./min.js":24,"./ndarray.js":25,"./normal.js":26,"./normalize.js":27,"./ones.js":28,"./pow.js":29,"./random.js":30,"./range.js":31,"./round.js":32,"./scale.js":33,"./sign.js":34,"./sin.js":35,"./sqrt.js":36,"./std.js":37,"./sum.js":38,"./tan.js":39,"./variance.js":40,"./vectorize.js":41,"./zeros.js":42}],6:[function(require,module,exports){
+},{"./abs.js":6,"./add.js":7,"./ceil.js":8,"./clamp.js":9,"./cohens-d.js":10,"./correl.js":11,"./cos.js":12,"./covariance.js":13,"./floor.js":14,"./is-array.js":15,"./is-number.js":16,"./is-string.js":17,"./is-undefined.js":18,"./lerp.js":19,"./log.js":20,"./map.js":21,"./max.js":22,"./mean.js":23,"./min.js":24,"./ndarray.js":25,"./normal.js":26,"./normalize.js":27,"./ones.js":28,"./pow.js":29,"./random.js":30,"./range.js":31,"./round.js":32,"./scale.js":33,"./sign.js":34,"./sin.js":35,"./sqrt.js":36,"./std.js":37,"./sum.js":38,"./tan.js":39,"./variance.js":40,"./vectorize.js":41,"./zeros.js":42}],6:[function(require,module,exports){
 let assert = require("../misc/assert.js")
 let vectorize = require("./vectorize.js")
 let isArray = require("./is-array.js")
@@ -1149,12 +1153,13 @@ module.exports = zeros
 module.exports = {
   apply: require("./apply.js"),
   array: require("./array.js"),
+  assert: require("./assert.js"),
   downloadJSON: require("./download-json.js"),
   pause: require("./pause.js"),
   print: require("./print.js"),
 }
 
-},{"./apply.js":44,"./array.js":45,"./download-json.js":47,"./pause.js":48,"./print.js":49}],44:[function(require,module,exports){
+},{"./apply.js":44,"./array.js":45,"./assert.js":46,"./download-json.js":47,"./pause.js":48,"./print.js":49}],44:[function(require,module,exports){
 let vectorize = require("../math/vectorize.js")
 
 let apply = vectorize(function(x, fn){
