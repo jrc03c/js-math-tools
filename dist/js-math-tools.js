@@ -1744,21 +1744,140 @@ if (!module.parent){
 }
 
 },{"../misc/assert.js":47,"./is-number.js":17,"./is-undefined.js":19,"./vectorize.js":42}],23:[function(require,module,exports){
+let assert = require("../misc/assert.js")
+let isArray = require("./is-array.js")
+let isNumber = require("./is-number.js")
+let isUndefined = require("./is-undefined.js")
+
 function max(arr){
-  let out
+  assert(!isUndefined(arr), "You must pass one array of numbers into the `max` function!")
+
+  assert(isArray(arr), "You must pass one array of numbers into the `max` function!")
+
+  arr.forEach(function(value){
+    assert(isNumber(value) || isArray(value), "The `max` function only works on numbers or arrays of numbers!")
+  })
+
+  let out = -Infinity
 
   arr.forEach(function(x){
-    if (out === undefined || x > out){
+    if (isArray(x)){
+      let xMax = max(x)
+      if (xMax > out) out = xMax
+    } else if (isNumber(x) && x > out){
       out = x
     }
   })
 
-  return out
+  return out === -Infinity ? undefined : out
 }
 
 module.exports = max
 
-},{}],24:[function(require,module,exports){
+// tests
+if (!module.parent){
+  let normal = require("./normal.js")
+  let random = require("./random.js")
+  let min = require("./min.js")
+
+  let x = [2, 3, 4]
+  let y = max(x)
+  assert(y === 4, `max([2, 3, 4]) should be 4, but instead was ${y}!`)
+
+  x = [-10, -5, -20]
+  y = max(x)
+  assert(y === -5, `max([-10, -5, -20]) should be -5, but instead was ${y}!`)
+
+  x = random([10000])
+  y = max(x)
+  assert(y <= 1 && y >= 0, `max(random([10000])) should be >= 0 and <= 1!`)
+
+  x = normal([10000])
+  xMin = min(x)
+  xMax = max(x)
+  xRange = xMax - xMin
+  x = x.map(v => (v - xMin) / xRange)
+  assert(max(x) === 1, `max(normalizedData) should be 1!`)
+
+  let hasFailed
+
+  try {
+    hasFailed = false
+    max()
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `max() should have failed!`)
+
+  try {
+    hasFailed = false
+    max(2)
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `max(2) should have failed!`)
+
+  try {
+    hasFailed = false
+    max(true)
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `max(true) should have failed!`)
+
+  try {
+    hasFailed = false
+    max({})
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `max({}) should have failed!`)
+
+  try {
+    hasFailed = false
+    max(() => {})
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `max(() => {}) should have failed!`)
+
+  try {
+    hasFailed = false
+    max([1, 2, "three"])
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `max([1, 2, "three"]) should have failed!`)
+
+  try {
+    hasFailed = false
+    max("foo")
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `max("foo") should have failed!`)
+
+  try {
+    let foo
+    hasFailed = false
+    max(foo)
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `max(foo) should have failed!`)
+
+  console.log("All tests passed!")
+}
+
+},{"../misc/assert.js":47,"./is-array.js":16,"./is-number.js":17,"./is-undefined.js":19,"./min.js":25,"./normal.js":27,"./random.js":31}],24:[function(require,module,exports){
 let sum = require("./sum.js")
 
 function mean(arr){
@@ -1940,13 +2059,18 @@ module.exports = variance
 
 },{"./pow.js":30,"./std.js":38}],42:[function(require,module,exports){
 let isArray = require("./is-array.js")
-let max = require("./max.js")
 
 function vectorize(fn){
   return function temp(){
     if (Object.keys(arguments).map(key => isArray(arguments[key])).indexOf(true) > -1){
       let out = []
-      let maxLength = max(Object.keys(arguments).filter(key => isArray(arguments[key])).map(key => arguments[key].length))
+      let lengths = Object.keys(arguments).filter(key => isArray(arguments[key])).map(key => arguments[key].length)
+
+      let maxLength = lengths.sort(function(a, b){
+        if (a > b) return -1
+        if (a < b) return 1
+        return 0
+      })[0]
 
       for (let i=0; i<maxLength; i++){
         let args = Object.keys(arguments).map(key => {
@@ -1965,7 +2089,7 @@ function vectorize(fn){
 
 module.exports = vectorize
 
-},{"./is-array.js":16,"./max.js":23}],43:[function(require,module,exports){
+},{"./is-array.js":16}],43:[function(require,module,exports){
 let ndarray = require("./ndarray.js")
 
 function zeros(shape){
