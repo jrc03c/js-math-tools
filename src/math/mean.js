@@ -9,12 +9,13 @@ function mean(arr){
   assert(!isUndefined(arr), "You must pass one array of numbers into the `mean` function!")
   assert(isArray(arr), "You must pass one array of numbers into the `mean` function!")
 
-  arr.forEach(function(value){
-    assert(isNumber(value) || isArray(value), "The `mean` function only works on arrays of numbers!")
+  let temp = flatten(arr)
+
+  temp.forEach(function(value){
+    assert(isNumber(value), "The `mean` function only works on arrays of numbers!")
   })
 
-  arr = flatten(arr)
-  return sum(arr) / arr.length
+  return sum(temp) / temp.length
 }
 
 module.exports = mean

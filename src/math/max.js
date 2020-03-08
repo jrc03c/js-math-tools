@@ -2,23 +2,23 @@ let assert = require("../misc/assert.js")
 let isArray = require("./is-array.js")
 let isNumber = require("./is-number.js")
 let isUndefined = require("./is-undefined.js")
+let flatten = require("./flatten.js")
 
 function max(arr){
   assert(!isUndefined(arr), "You must pass one array of numbers into the `max` function!")
 
   assert(isArray(arr), "You must pass one array of numbers into the `max` function!")
 
-  arr.forEach(function(value){
-    assert(isNumber(value) || isArray(value), "The `max` function only works on numbers or arrays of numbers!")
+  let temp = flatten(arr)
+
+  temp.forEach(function(value){
+    assert(isNumber(value), "The `max` function only works on numbers or arrays of numbers!")
   })
 
   let out = -Infinity
 
-  arr.forEach(function(x){
-    if (isArray(x)){
-      let xMax = max(x)
-      if (xMax > out) out = xMax
-    } else if (isNumber(x) && x > out){
+  temp.forEach(function(x){
+    if (x > out){
       out = x
     }
   })

@@ -117,7 +117,7 @@ if (!module.parent){
 
   assert(hasFailed, `correl(foo, foo) should have failed!`)
 
-  assert(isNaN(correl([2, 3, 4], [1, 1, 1])), `correl([2, 3, 4], [1, 1, 1]) should have returned NaN!`)
+  assert(isNaN(correl([2, 3, 4], [1, 1, 1])), `correl([2, 3, 4], [1, 1, 1]) should be NaN!`)
 
   console.log("All tests passed!")
 }

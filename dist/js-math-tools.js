@@ -285,7 +285,7 @@ function Plot(canvas){
 
 module.exports = Plot
 
-},{"../math/map.js":23,"./download-canvas.js":2}],4:[function(require,module,exports){
+},{"../math/map.js":24,"./download-canvas.js":2}],4:[function(require,module,exports){
 let out = {
   canvas: require("./canvas/__index__.js"),
   math: require("./math/__index__.js"),
@@ -300,7 +300,7 @@ try {
   window.JSMathTools = out
 } catch(e){}
 
-},{"./canvas/__index__.js":1,"./math/__index__.js":5,"./misc/__index__.js":45}],5:[function(require,module,exports){
+},{"./canvas/__index__.js":1,"./math/__index__.js":5,"./misc/__index__.js":51}],5:[function(require,module,exports){
 module.exports = {
   abs: require("./abs.js"),
   add: require("./add.js"),
@@ -322,7 +322,9 @@ module.exports = {
   map: require("./map.js"),
   max: require("./max.js"),
   mean: require("./mean.js"),
+  median: require("./median.js"),
   min: require("./min.js"),
+  mode: require("./mode.js"),
   ndarray: require("./ndarray.js"),
   normal: require("./normal.js"),
   normalize: require("./normalize.js"),
@@ -344,7 +346,7 @@ module.exports = {
 
 }
 
-},{"./abs.js":6,"./add.js":7,"./ceil.js":8,"./chop.js":9,"./clamp.js":10,"./cohens-d.js":11,"./correl.js":12,"./cos.js":13,"./covariance.js":14,"./flatten.js":15,"./floor.js":16,"./is-array.js":17,"./is-number.js":18,"./is-string.js":19,"./is-undefined.js":20,"./lerp.js":21,"./log.js":22,"./map.js":23,"./max.js":24,"./mean.js":25,"./min.js":26,"./ndarray.js":27,"./normal.js":28,"./normalize.js":29,"./ones.js":30,"./pow.js":31,"./random.js":32,"./range.js":33,"./round.js":34,"./scale.js":35,"./sign.js":36,"./sin.js":37,"./sqrt.js":38,"./std.js":39,"./sum.js":40,"./tan.js":41,"./variance.js":42,"./vectorize.js":43,"./zeros.js":44}],6:[function(require,module,exports){
+},{"./abs.js":6,"./add.js":7,"./ceil.js":8,"./chop.js":9,"./clamp.js":10,"./cohens-d.js":11,"./correl.js":12,"./cos.js":13,"./covariance.js":15,"./flatten.js":16,"./floor.js":17,"./is-array.js":18,"./is-number.js":19,"./is-string.js":20,"./is-undefined.js":21,"./lerp.js":22,"./log.js":23,"./map.js":24,"./max.js":25,"./mean.js":26,"./median.js":27,"./min.js":28,"./mode.js":29,"./ndarray.js":30,"./normal.js":31,"./normalize.js":32,"./ones.js":33,"./pow.js":34,"./random.js":35,"./range.js":36,"./round.js":37,"./scale.js":38,"./sign.js":41,"./sin.js":42,"./sqrt.js":44,"./std.js":45,"./sum.js":46,"./tan.js":47,"./variance.js":48,"./vectorize.js":49,"./zeros.js":50}],6:[function(require,module,exports){
 let assert = require("../misc/assert.js")
 let vectorize = require("./vectorize.js")
 let isArray = require("./is-array.js")
@@ -453,7 +455,7 @@ if (!module.parent){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":48,"./is-array.js":17,"./is-number.js":18,"./is-undefined.js":20,"./vectorize.js":43}],7:[function(require,module,exports){
+},{"../misc/assert.js":54,"./is-array.js":18,"./is-number.js":19,"./is-undefined.js":21,"./vectorize.js":49}],7:[function(require,module,exports){
 let assert = require("../misc/assert.js")
 let vectorize = require("./vectorize.js")
 let isNumber = require("./is-number.js")
@@ -573,7 +575,7 @@ if (!module.parent){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":48,"./is-number.js":18,"./is-string.js":19,"./is-undefined.js":20,"./vectorize.js":43}],8:[function(require,module,exports){
+},{"../misc/assert.js":54,"./is-number.js":19,"./is-string.js":20,"./is-undefined.js":21,"./vectorize.js":49}],8:[function(require,module,exports){
 let assert = require("../misc/assert.js")
 let isNumber = require("./is-number.js")
 let isUndefined = require("./is-undefined.js")
@@ -657,7 +659,7 @@ if (!module.parent){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":48,"./is-number.js":18,"./is-undefined.js":20,"./vectorize.js":43}],9:[function(require,module,exports){
+},{"../misc/assert.js":54,"./is-number.js":19,"./is-undefined.js":21,"./vectorize.js":49}],9:[function(require,module,exports){
 let assert = require("../misc/assert.js")
 let isNumber = require("./is-number.js")
 let isUndefined = require("./is-undefined.js")
@@ -778,7 +780,7 @@ if (!module.parent){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":48,"./abs.js":6,"./is-number.js":18,"./is-undefined.js":20,"./vectorize.js":43}],10:[function(require,module,exports){
+},{"../misc/assert.js":54,"./abs.js":6,"./is-number.js":19,"./is-undefined.js":21,"./vectorize.js":49}],10:[function(require,module,exports){
 let assert = require("../misc/assert.js")
 let isNumber = require("./is-number.js")
 let isUndefined = require("./is-undefined.js")
@@ -877,7 +879,7 @@ if (!module.parent){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":48,"./is-number.js":18,"./is-undefined.js":20,"./vectorize.js":43}],11:[function(require,module,exports){
+},{"../misc/assert.js":54,"./is-number.js":19,"./is-undefined.js":21,"./vectorize.js":49}],11:[function(require,module,exports){
 let mean = require("./mean.js")
 let sqrt = require("./sqrt.js")
 let variance = require("./variance.js")
@@ -891,7 +893,7 @@ function cohensd(arr1, arr2){
 
 module.exports = cohensd
 
-},{"./mean.js":25,"./sqrt.js":38,"./variance.js":42}],12:[function(require,module,exports){
+},{"./mean.js":26,"./sqrt.js":44,"./variance.js":48}],12:[function(require,module,exports){
 let assert = require("../misc/assert.js")
 let isArray = require("./is-array.js")
 let isNumber = require("./is-number.js")
@@ -1011,12 +1013,12 @@ if (!module.parent){
 
   assert(hasFailed, `correl(foo, foo) should have failed!`)
 
-  assert(isNaN(correl([2, 3, 4], [1, 1, 1])), `correl([2, 3, 4], [1, 1, 1]) should have returned NaN!`)
+  assert(isNaN(correl([2, 3, 4], [1, 1, 1])), `correl([2, 3, 4], [1, 1, 1]) should be NaN!`)
 
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":48,"./abs.js":6,"./add.js":7,"./covariance.js":14,"./is-array.js":17,"./is-number.js":18,"./is-undefined.js":20,"./normal.js":28,"./scale.js":35,"./std.js":39}],13:[function(require,module,exports){
+},{"../misc/assert.js":54,"./abs.js":6,"./add.js":7,"./covariance.js":15,"./is-array.js":18,"./is-number.js":19,"./is-undefined.js":21,"./normal.js":31,"./scale.js":38,"./std.js":45}],13:[function(require,module,exports){
 let assert = require("../misc/assert.js")
 let isNumber = require("./is-number.js")
 let isUndefined = require("./is-undefined.js")
@@ -1119,7 +1121,14 @@ if (!module.parent){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":48,"./chop.js":9,"./is-number.js":18,"./is-undefined.js":20,"./max.js":24,"./min.js":26,"./normal.js":28,"./vectorize.js":43}],14:[function(require,module,exports){
+},{"../misc/assert.js":54,"./chop.js":9,"./is-number.js":19,"./is-undefined.js":21,"./max.js":25,"./min.js":28,"./normal.js":31,"./vectorize.js":49}],14:[function(require,module,exports){
+function count(arr, item){
+  return arr.filter(other => other === item).length
+}
+
+module.exports = count
+
+},{}],15:[function(require,module,exports){
 let assert = require("../misc/assert.js")
 let isArray = require("./is-array.js")
 let isUndefined = require("./is-undefined.js")
@@ -1165,7 +1174,7 @@ if (!module.parent){
   y = covariance(x, x)
   assert(y > 0.95, `covariance(x, x) should be approximately 1, but instead is ${y}!`)
 
-  assert(isNaN(covariance([], [])), `covariance([], []) should return NaN!`)
+  assert(isNaN(covariance([], [])), `covariance([], []) should be NaN!`)
 
   let hasFailed
 
@@ -1219,7 +1228,7 @@ if (!module.parent){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":48,"./abs.js":6,"./chop.js":9,"./is-array.js":17,"./is-number.js":18,"./is-undefined.js":20,"./mean.js":25,"./normal.js":28}],15:[function(require,module,exports){
+},{"../misc/assert.js":54,"./abs.js":6,"./chop.js":9,"./is-array.js":18,"./is-number.js":19,"./is-undefined.js":21,"./mean.js":26,"./normal.js":31}],16:[function(require,module,exports){
 let assert = require("../misc/assert.js")
 let isUndefined = require("./is-undefined.js")
 let isArray = require("./is-array.js")
@@ -1311,7 +1320,7 @@ if (!module.parent){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":48,"./is-array.js":17,"./is-undefined.js":20,"./normal.js":28}],16:[function(require,module,exports){
+},{"../misc/assert.js":54,"./is-array.js":18,"./is-undefined.js":21,"./normal.js":31}],17:[function(require,module,exports){
 let assert = require("../misc/assert.js")
 let isNumber = require("./is-number.js")
 let isUndefined = require("./is-undefined.js")
@@ -1403,7 +1412,7 @@ if (!module.parent){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":48,"./is-number.js":18,"./is-undefined.js":20,"./random.js":32,"./vectorize.js":43,"./zeros.js":44}],17:[function(require,module,exports){
+},{"../misc/assert.js":54,"./is-number.js":19,"./is-undefined.js":21,"./random.js":35,"./vectorize.js":49,"./zeros.js":50}],18:[function(require,module,exports){
 function isArray(obj){
   return obj instanceof Array
 }
@@ -1428,7 +1437,7 @@ if (!module.parent){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":48}],18:[function(require,module,exports){
+},{"../misc/assert.js":54}],19:[function(require,module,exports){
 function isNumber(x){
   return typeof(x) === "number"
 }
@@ -1452,7 +1461,7 @@ if (!module.parent){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":48}],19:[function(require,module,exports){
+},{"../misc/assert.js":54}],20:[function(require,module,exports){
 function isString(s){
   return typeof(s) === "string"
 }
@@ -1476,7 +1485,7 @@ if (!module.parent){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":48}],20:[function(require,module,exports){
+},{"../misc/assert.js":54}],21:[function(require,module,exports){
 function isUndefined(x){
   return x === null || typeof(x) === "undefined"
 }
@@ -1512,7 +1521,7 @@ if (!module.parent){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":48}],21:[function(require,module,exports){
+},{"../misc/assert.js":54}],22:[function(require,module,exports){
 let assert = require("../misc/assert.js")
 let isNumber = require("./is-number.js")
 let isUndefined = require("./is-undefined.js")
@@ -1616,7 +1625,7 @@ if (!module.parent){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":48,"./is-number.js":18,"./is-undefined.js":20,"./vectorize.js":43}],22:[function(require,module,exports){
+},{"../misc/assert.js":54,"./is-number.js":19,"./is-undefined.js":21,"./vectorize.js":49}],23:[function(require,module,exports){
 let assert = require("../misc/assert.js")
 let isNumber = require("./is-number.js")
 let isUndefined = require("./is-undefined.js")
@@ -1731,7 +1740,7 @@ if (!module.parent){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":48,"./abs.js":6,"./chop.js":9,"./is-number.js":18,"./is-undefined.js":20,"./vectorize.js":43}],23:[function(require,module,exports){
+},{"../misc/assert.js":54,"./abs.js":6,"./chop.js":9,"./is-number.js":19,"./is-undefined.js":21,"./vectorize.js":49}],24:[function(require,module,exports){
 let assert = require("../misc/assert.js")
 let isUndefined = require("./is-undefined.js")
 let isNumber = require("./is-number.js")
@@ -1836,28 +1845,28 @@ if (!module.parent){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":48,"./is-number.js":18,"./is-undefined.js":20,"./vectorize.js":43}],24:[function(require,module,exports){
+},{"../misc/assert.js":54,"./is-number.js":19,"./is-undefined.js":21,"./vectorize.js":49}],25:[function(require,module,exports){
 let assert = require("../misc/assert.js")
 let isArray = require("./is-array.js")
 let isNumber = require("./is-number.js")
 let isUndefined = require("./is-undefined.js")
+let flatten = require("./flatten.js")
 
 function max(arr){
   assert(!isUndefined(arr), "You must pass one array of numbers into the `max` function!")
 
   assert(isArray(arr), "You must pass one array of numbers into the `max` function!")
 
-  arr.forEach(function(value){
-    assert(isNumber(value) || isArray(value), "The `max` function only works on numbers or arrays of numbers!")
+  let temp = flatten(arr)
+
+  temp.forEach(function(value){
+    assert(isNumber(value), "The `max` function only works on numbers or arrays of numbers!")
   })
 
   let out = -Infinity
 
-  arr.forEach(function(x){
-    if (isArray(x)){
-      let xMax = max(x)
-      if (xMax > out) out = xMax
-    } else if (isNumber(x) && x > out){
+  temp.forEach(function(x){
+    if (x > out){
       out = x
     }
   })
@@ -1970,7 +1979,7 @@ if (!module.parent){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":48,"./is-array.js":17,"./is-number.js":18,"./is-undefined.js":20,"./min.js":26,"./normal.js":28,"./random.js":32}],25:[function(require,module,exports){
+},{"../misc/assert.js":54,"./flatten.js":16,"./is-array.js":18,"./is-number.js":19,"./is-undefined.js":21,"./min.js":28,"./normal.js":31,"./random.js":35}],26:[function(require,module,exports){
 let assert = require("../misc/assert.js")
 let isUndefined = require("./is-undefined.js")
 let isArray = require("./is-array.js")
@@ -1982,12 +1991,13 @@ function mean(arr){
   assert(!isUndefined(arr), "You must pass one array of numbers into the `mean` function!")
   assert(isArray(arr), "You must pass one array of numbers into the `mean` function!")
 
-  arr.forEach(function(value){
-    assert(isNumber(value) || isArray(value), "The `mean` function only works on arrays of numbers!")
+  let temp = flatten(arr)
+
+  temp.forEach(function(value){
+    assert(isNumber(value), "The `mean` function only works on arrays of numbers!")
   })
 
-  arr = flatten(arr)
-  return sum(arr) / arr.length
+  return sum(temp) / temp.length
 }
 
 module.exports = mean
@@ -2084,22 +2094,387 @@ if (!module.parent){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":48,"./abs.js":6,"./flatten.js":15,"./is-array.js":17,"./is-number.js":18,"./is-undefined.js":20,"./normal.js":28,"./random.js":32,"./sum.js":40}],26:[function(require,module,exports){
-function min(arr){
+},{"../misc/assert.js":54,"./abs.js":6,"./flatten.js":16,"./is-array.js":18,"./is-number.js":19,"./is-undefined.js":21,"./normal.js":31,"./random.js":35,"./sum.js":46}],27:[function(require,module,exports){
+let assert = require("../misc/assert.js")
+let isUndefined = require("./is-undefined.js")
+let isArray = require("./is-array.js")
+let isNumber = require("./is-number.js")
+let flatten = require("./flatten.js")
+let sort = require("./sort.js")
+
+function median(arr){
+  assert(!isUndefined(arr), "You must pass one array of numbers into the `median` function!")
+  assert(isArray(arr), "You must pass one array of numbers into the `median` function!")
+
+  let temp = flatten(arr)
+
+  temp.forEach(function(item){
+    assert(isNumber(item), "The `median` function only works on numbers!")
+  })
+
+  temp = sort(temp, function(a, b){
+    if (a < b) return -1
+    if (a > b) return 1
+    return 0
+  })
+
   let out
 
-  arr.forEach(function(x){
-    if (out === undefined || x < out){
-      out = x
-    }
-  })
+  if (temp.length % 2 === 0){
+    out = (temp[temp.length / 2 - 1] + temp[temp.length / 2]) / 2
+  } else {
+    out = temp[Math.floor(temp.length / 2)]
+  }
 
   return out
 }
 
+module.exports = median
+
+// tests
+if (!module.parent){
+  let shuffle = require("./shuffle.js")
+  let normal = require("./normal.js")
+  let random = require("./random.js")
+  let round = require("./round.js")
+  let scale = require("./scale.js")
+
+  let x = [2, 4, 3]
+  let yTrue = 3
+  let yPred = median(x)
+  assert(yTrue === yPred, `median([2, 4, 3]) should be 3, but instead was ${yPred}!`)
+
+  let x1 = round(scale(random([5, 5, 5, 5]), 100))
+  let x2 = shuffle(x1)
+  let x3 = shuffle(x1)
+  let x4 = shuffle(x1)
+  let y1 = median(x1)
+  let y2 = median(x2)
+  let y3 = median(x3)
+  let y4 = median(x4)
+  assert(y1 === y2 && y2 === y3 && y3 === y4, "The `median` function should return the same median for shuffled versions of the same array!")
+
+  assert(isNaN(median([])), `median([]) should be NaN!`)
+
+  let hasFailed
+
+  try {
+    hasFailed = false
+    median()
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `median() should have failed!`)
+
+  try {
+    hasFailed = false
+    median("foo")
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `median("foo") should have failed!`)
+
+  try {
+    hasFailed = false
+    median([1, 2, "three"])
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `median([1, 2, "three"]) should have failed!`)
+
+  try {
+    hasFailed = false
+    median([true])
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `median([true]) should have failed!`)
+
+  try {
+    hasFailed = false
+    median([{}])
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `median([{}]) should have failed!`)
+
+  try {
+    let foo
+    hasFailed = false
+    median([foo, foo, foo])
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `median([foo, foo, foo]) should have failed!`)
+
+  try {
+    let fn = () => {}
+    hasFailed = false
+    median([fn, fn, fn,])
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `median([fn, fn, fn]) should have failed!`)
+
+  console.log("All tests passed!")
+}
+
+},{"../misc/assert.js":54,"./flatten.js":16,"./is-array.js":18,"./is-number.js":19,"./is-undefined.js":21,"./normal.js":31,"./random.js":35,"./round.js":37,"./scale.js":38,"./shuffle.js":40,"./sort.js":43}],28:[function(require,module,exports){
+let assert = require("../misc/assert.js")
+let isUndefined = require("./is-undefined.js")
+let isArray = require("./is-array.js")
+let isNumber = require("./is-number.js")
+let flatten = require("./flatten.js")
+
+function min(arr){
+  assert(!isUndefined(arr), "You must pass one array of numbers into the `min` function!")
+  assert(isArray(arr), "You must pass one array of numbers into the `min` function!")
+
+  let temp = flatten(arr)
+
+  temp.forEach(function(item){
+    assert(isNumber(item), "The `min` function only works on arrays of numbers!")
+  })
+
+  let out = Infinity
+
+  temp.forEach(function(x){
+    if (x < out){
+      out = x
+    }
+  })
+
+  return out === Infinity ? undefined : out
+}
+
 module.exports = min
 
-},{}],27:[function(require,module,exports){
+// tests
+if (!module.parent){
+  let random = require("./random.js")
+
+  let x = [4, 2, 3]
+  let yTrue = 2
+  let yPred = min(x)
+  assert(yTrue === yPred, `min([4, 2, 3]) should be 2, but instead was ${yPred}!`)
+
+  x = [[-50, 50, 234], [100, -100, 0]]
+  yTrue = -100
+  yPred = min(x)
+  assert(yTrue === yPred, `min([[-50, 50, 234], [100, -100, 0]]) should be -100, but instead was ${yPred}!`)
+
+  x = random([2, 3, 4, 5])
+  yPred = min(x)
+  assert(yPred <= 1 && yPred >= 0, `min(random([2, 3, 4, 5])) should be >= 0 and <= 1!`)
+
+  let hasFailed
+
+  try {
+    hasFailed = false
+    min()
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `min() should have failed!`)
+
+  try {
+    hasFailed = false
+    min(234)
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `min(234) should have failed!`)
+
+  try {
+    hasFailed = false
+    min({})
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `min({}) should have failed!`)
+
+  try {
+    hasFailed = false
+    min("foo")
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `min("foo") should have failed!`)
+
+  try {
+    hasFailed = false
+    min(true)
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `min(true) should have failed!`)
+
+  try {
+    hasFailed = false
+    min([1, 2, "three"])
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `min([1, 2, "three"]) should have failed!`)
+
+  try {
+    hasFailed = false
+    min([() => {}])
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `min([() => {}]) should have failed!`)
+
+  try {
+    let foo
+    hasFailed = false
+    min([foo, foo, foo])
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `min([foo, foo, foo]) should have failed!`)
+
+  console.log("All tests passed!")
+}
+
+},{"../misc/assert.js":54,"./flatten.js":16,"./is-array.js":18,"./is-number.js":19,"./is-undefined.js":21,"./random.js":35}],29:[function(require,module,exports){
+let assert = require("../misc/assert.js")
+let isUndefined = require("./is-undefined.js")
+let isArray = require("./is-array.js")
+let flatten = require("./flatten.js")
+let count = require("./count.js")
+let set = require("./set.js")
+let sort = require("./sort.js")
+
+function mode(arr){
+  assert(!isUndefined(arr), "You must pass one array into the `mode` function!")
+  assert(isArray(arr), "You  must pass one array into the `mode` function!")
+
+  let temp = flatten(arr)
+  let counts = {}
+  let refs = {}
+  let tempSet = set(temp)
+
+  tempSet.forEach(function(item){
+    counts[item] = count(temp, item)
+    refs[item] = item
+  })
+
+  let sortedTempSet = sort(tempSet, function(a, b){
+    let count1 = counts[a]
+    let count2 = counts[b]
+
+    if (count1 > count2) return -1
+    if (count1 < count2) return 1
+    return 0
+  })
+
+  let mostCountedItem = sortedTempSet[0]
+  let out = sortedTempSet.filter(item => counts[item] === counts[mostCountedItem])
+  return out
+}
+
+module.exports = mode
+
+// tests
+if (!module.parent){
+  let random = require("./random.js")
+  let round = require("./round.js")
+  let shuffle = require("./shuffle.js")
+  let scale = require("./scale.js")
+
+  let x = [2, 3, 3, 3, 2, 4]
+  let yTrue = [3]
+  let yPred = mode(x)
+  for (let i=0; i<yTrue.length; i++) assert(yTrue[i] === yPred[i], `mode([2, 3, 3, 3, 2, 4]) should be 3, but instead was ${yPred}!`)
+
+  let x1 = round(scale(random([5, 5, 5, 5]), 100))
+  let x2 = shuffle(x1)
+  let x3 = shuffle(x1)
+  let x4 = shuffle(x1)
+  let y1 = mode(x1)
+  let y2 = mode(x2)
+  let y3 = mode(x3)
+  let y4 = mode(x4)
+  for (let i=0; i<y1.length; i++) assert(y1[i] === y2[i], "The `mode` function should return the same mode for shuffled versions of the same array!")
+  for (let i=0; i<y1.length; i++) assert(y2[i] === y3[i], "The `mode` function should return the same mode for shuffled versions of the same array!")
+  for (let i=0; i<y1.length; i++) assert(y3[i] === y4[i], "The `mode` function should return the same mode for shuffled versions of the same array!")
+
+  let hasFailed
+
+  try {
+    hasFailed = false
+    mode()
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `mode() should have failed!`)
+
+  try {
+    hasFailed = false
+    mode("foo")
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `mode("foo") should have failed!`)
+
+  try {
+    hasFailed = false
+    mode({})
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `mode({}) should have failed!`)
+
+  try {
+    hasFailed = false
+    mode(() => {})
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `mode(() => {}) should have failed!`)
+
+  try {
+    hasFailed = false
+    mode(true)
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `mode(true) should have failed!`)
+
+  try {
+    hasFailed = false
+    mode()
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `mode() should have failed!`)
+
+  console.log("All tests passed!")
+}
+
+},{"../misc/assert.js":54,"./count.js":14,"./flatten.js":16,"./is-array.js":18,"./is-undefined.js":21,"./random.js":35,"./round.js":37,"./scale.js":38,"./set.js":39,"./shuffle.js":40,"./sort.js":43}],30:[function(require,module,exports){
 let isArray = require("./is-array.js")
 let range = require("./range.js")
 
@@ -2117,7 +2492,7 @@ function ndarray(shape){
 
 module.exports = ndarray
 
-},{"./is-array.js":17,"./range.js":33}],28:[function(require,module,exports){
+},{"./is-array.js":18,"./range.js":36}],31:[function(require,module,exports){
 let ndarray = require("./ndarray.js")
 let apply = require("../misc/apply.js")
 
@@ -2134,7 +2509,7 @@ function normal(shape){
 
 module.exports = normal
 
-},{"../misc/apply.js":46,"./ndarray.js":27}],29:[function(require,module,exports){
+},{"../misc/apply.js":52,"./ndarray.js":30}],32:[function(require,module,exports){
 let min = require("./min.js")
 let max = require("./max.js")
 
@@ -2147,7 +2522,7 @@ function normalize(arr){
 
 module.exports = normalize
 
-},{"./max.js":24,"./min.js":26}],30:[function(require,module,exports){
+},{"./max.js":25,"./min.js":28}],33:[function(require,module,exports){
 let ndarray = require("./ndarray.js")
 
 function ones(shape){
@@ -2156,7 +2531,7 @@ function ones(shape){
 
 module.exports = ones
 
-},{"./ndarray.js":27}],31:[function(require,module,exports){
+},{"./ndarray.js":30}],34:[function(require,module,exports){
 let isArray = require("./is-array.js")
 
 function pow(x, p){
@@ -2166,7 +2541,7 @@ function pow(x, p){
 
 module.exports = pow
 
-},{"./is-array.js":17}],32:[function(require,module,exports){
+},{"./is-array.js":18}],35:[function(require,module,exports){
 let ndarray = require("./ndarray.js")
 let apply = require("../misc/apply.js")
 
@@ -2177,7 +2552,7 @@ function random(shape){
 
 module.exports = random
 
-},{"../misc/apply.js":46,"./ndarray.js":27}],33:[function(require,module,exports){
+},{"../misc/apply.js":52,"./ndarray.js":30}],36:[function(require,module,exports){
 function range(a, b, step=1){
   let out = []
   for (let i=a; i<b; i+=step) out.push(i)
@@ -2186,17 +2561,50 @@ function range(a, b, step=1){
 
 module.exports = range
 
-},{}],34:[function(require,module,exports){
+},{}],37:[function(require,module,exports){
 let vectorize = require("./vectorize.js")
 let round = vectorize(Math.round)
 module.exports = round
 
-},{"./vectorize.js":43}],35:[function(require,module,exports){
+},{"./vectorize.js":49}],38:[function(require,module,exports){
 let vectorize = require("./vectorize.js")
 let scale = vectorize((a, b) => a * b)
 module.exports = scale
 
-},{"./vectorize.js":43}],36:[function(require,module,exports){
+},{"./vectorize.js":49}],39:[function(require,module,exports){
+function set(arr){
+  let out = []
+
+  arr.forEach(function(item){
+    if (out.indexOf(item) < 0) out.push(item)
+  })
+
+  return out
+}
+
+module.exports = set
+
+},{}],40:[function(require,module,exports){
+let floor = require("./floor.js")
+let random = require("./random.js")
+
+function shuffle(arr){
+  let out = arr.slice()
+
+  for (let i=0; i<arr.length; i++){
+    let index1 = floor(random() * arr.length)
+    let index2 = floor(random() * arr.length)
+    let buffer = out[index1]
+    out[index1] = out[index2]
+    out[index2] = buffer
+  }
+
+  return out
+}
+
+module.exports = shuffle
+
+},{"./floor.js":17,"./random.js":35}],41:[function(require,module,exports){
 let vectorize = require("./vectorize.js")
 
 let sign = vectorize(function(x){
@@ -2207,17 +2615,26 @@ let sign = vectorize(function(x){
 
 module.exports = sign
 
-},{"./vectorize.js":43}],37:[function(require,module,exports){
+},{"./vectorize.js":49}],42:[function(require,module,exports){
 let vectorize = require("./vectorize.js")
 let sin = vectorize(Math.sin)
 module.exports = sin
 
-},{"./vectorize.js":43}],38:[function(require,module,exports){
+},{"./vectorize.js":49}],43:[function(require,module,exports){
+function sort(arr, fn){
+  let out = arr.slice()
+  out.sort(fn)
+  return out
+}
+
+module.exports = sort
+
+},{}],44:[function(require,module,exports){
 let vectorize = require("./vectorize.js")
 let sqrt = vectorize(Math.sqrt)
 module.exports = sqrt
 
-},{"./vectorize.js":43}],39:[function(require,module,exports){
+},{"./vectorize.js":49}],45:[function(require,module,exports){
 let mean = require("./mean.js")
 let pow = require("./pow.js")
 let sqrt = require("./sqrt.js")
@@ -2231,7 +2648,7 @@ function std(arr){
 
 module.exports = std
 
-},{"./mean.js":25,"./pow.js":31,"./sqrt.js":38}],40:[function(require,module,exports){
+},{"./mean.js":26,"./pow.js":34,"./sqrt.js":44}],46:[function(require,module,exports){
 function sum(arr){
   let out = 0
   arr.forEach(v => out += v)
@@ -2240,12 +2657,12 @@ function sum(arr){
 
 module.exports = sum
 
-},{}],41:[function(require,module,exports){
+},{}],47:[function(require,module,exports){
 let vectorize = require("./vectorize.js")
 let tan = vectorize(Math.tan)
 module.exports = tan
 
-},{"./vectorize.js":43}],42:[function(require,module,exports){
+},{"./vectorize.js":49}],48:[function(require,module,exports){
 let pow = require("./pow.js")
 let std = require("./std.js")
 
@@ -2255,7 +2672,7 @@ function variance(arr){
 
 module.exports = variance
 
-},{"./pow.js":31,"./std.js":39}],43:[function(require,module,exports){
+},{"./pow.js":34,"./std.js":45}],49:[function(require,module,exports){
 let isArray = require("./is-array.js")
 
 function vectorize(fn){
@@ -2287,7 +2704,7 @@ function vectorize(fn){
 
 module.exports = vectorize
 
-},{"./is-array.js":17}],44:[function(require,module,exports){
+},{"./is-array.js":18}],50:[function(require,module,exports){
 let ndarray = require("./ndarray.js")
 
 function zeros(shape){
@@ -2296,7 +2713,7 @@ function zeros(shape){
 
 module.exports = zeros
 
-},{"./ndarray.js":27}],45:[function(require,module,exports){
+},{"./ndarray.js":30}],51:[function(require,module,exports){
 module.exports = {
   apply: require("./apply.js"),
   array: require("./array.js"),
@@ -2306,7 +2723,7 @@ module.exports = {
   print: require("./print.js"),
 }
 
-},{"./apply.js":46,"./array.js":47,"./assert.js":48,"./download-json.js":49,"./pause.js":50,"./print.js":51}],46:[function(require,module,exports){
+},{"./apply.js":52,"./array.js":53,"./assert.js":54,"./download-json.js":55,"./pause.js":56,"./print.js":57}],52:[function(require,module,exports){
 let vectorize = require("../math/vectorize.js")
 
 let apply = vectorize(function(x, fn){
@@ -2315,7 +2732,7 @@ let apply = vectorize(function(x, fn){
 
 module.exports = apply
 
-},{"../math/vectorize.js":43}],47:[function(require,module,exports){
+},{"../math/vectorize.js":49}],53:[function(require,module,exports){
 Array.prototype.asyncForEach = async function(fn){
   for (let i=0; i<this.length; i++) await fn(this[i], i, this)
   return this
@@ -2335,12 +2752,12 @@ Array.prototype.alphaSort = function(key){
   })
 }
 
-},{}],48:[function(require,module,exports){
+},{}],54:[function(require,module,exports){
 module.exports = function(isTrue, message){
   if (!isTrue) throw new Error(message)
 }
 
-},{}],49:[function(require,module,exports){
+},{}],55:[function(require,module,exports){
 function downloadJSON(obj, filename){
   let a = document.createElement("a")
   a.href = `data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(obj, null, "\t"))}`
@@ -2350,7 +2767,7 @@ function downloadJSON(obj, filename){
 
 module.exports = downloadJSON
 
-},{}],50:[function(require,module,exports){
+},{}],56:[function(require,module,exports){
 function pause(ms){
   return new Promise(function(resolve, reject){
     try {
@@ -2363,7 +2780,7 @@ function pause(ms){
 
 module.exports = pause
 
-},{}],51:[function(require,module,exports){
+},{}],57:[function(require,module,exports){
 function print(x){
   return console.log(x)
 }

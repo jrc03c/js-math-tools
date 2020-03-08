@@ -43,7 +43,7 @@ if (!module.parent){
   y = covariance(x, x)
   assert(y > 0.95, `covariance(x, x) should be approximately 1, but instead is ${y}!`)
 
-  assert(isNaN(covariance([], [])), `covariance([], []) should return NaN!`)
+  assert(isNaN(covariance([], [])), `covariance([], []) should be NaN!`)
 
   let hasFailed
 
