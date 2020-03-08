@@ -39,9 +39,9 @@ if (!module.parent){
   yPred = mean(x)
   assert(yPred - 0.5 < 0.05, `mean(random([10000])) should be approximately 0.5, but instead was ${yPred}!`)
 
-  x = normal([10, 10, 10, 10, 10])
+  x = normal([10, 10, 10, 10])
   yPred = mean(x)
-  assert(abs(yPred) < 0.05, `mean(normal([10, 10, 10, 10, 10])) should be approximately 0, but instead was ${yPred}!`)
+  assert(abs(yPred) < 0.05, `mean(normal([10, 10, 10, 10])) should be approximately 0, but instead was ${yPred}!`)
 
   let hasFailed
 

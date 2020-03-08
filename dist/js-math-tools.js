@@ -2133,9 +2133,9 @@ if (!module.parent){
   yPred = mean(x)
   assert(yPred - 0.5 < 0.05, `mean(random([10000])) should be approximately 0.5, but instead was ${yPred}!`)
 
-  x = normal([10, 10, 10, 10, 10])
+  x = normal([10, 10, 10, 10])
   yPred = mean(x)
-  assert(abs(yPred) < 0.05, `mean(normal([10, 10, 10, 10, 10])) should be approximately 0, but instead was ${yPred}!`)
+  assert(abs(yPred) < 0.05, `mean(normal([10, 10, 10, 10])) should be approximately 0, but instead was ${yPred}!`)
 
   let hasFailed
 
@@ -2587,11 +2587,27 @@ if (!module.parent){
 }
 
 },{"../misc/assert.js":56,"./count.js":14,"./flatten.js":16,"./is-array.js":18,"./is-undefined.js":22,"./random.js":36,"./round.js":38,"./scale.js":39,"./set.js":40,"./shuffle.js":42,"./sort.js":45}],31:[function(require,module,exports){
+let assert = require("../misc/assert.js")
+let isUndefined = require("./is-undefined.js")
 let isArray = require("./is-array.js")
+let isNumber = require("./is-number.js")
+let floor = require("./floor.js")
 let range = require("./range.js")
 
+let error = "You must pass an integer or a one-dimensional array of integers into the `ndarray` function!"
+
 function ndarray(shape){
+  assert(!isUndefined(shape), error)
+
   if (!isArray(shape)) shape = [shape]
+
+  assert(shape.length > 0, error)
+
+  shape.forEach(function(x){
+    assert(isNumber(x), error)
+    assert(floor(x) === x, error)
+    assert(x >= 0, error)
+  })
 
   if (shape.length === 1){
     return range(0, shape[0]).map(v => 0)
@@ -2604,7 +2620,113 @@ function ndarray(shape){
 
 module.exports = ndarray
 
-},{"./is-array.js":18,"./range.js":37}],32:[function(require,module,exports){
+// tests
+if (!module.parent){
+  let flatten = require("./flatten.js")
+
+  assert(ndarray(3).length === 3, `ndarray(3) should have a length of 3!`)
+  assert(ndarray([3]).length === 3, `ndarray([3]) should have a length of 3!`)
+  assert(ndarray([3, 2]).length === 3, `ndarray([3, 2]) should have a length of 3!`)
+  assert(flatten(ndarray([2, 3, 4])).length === 24, `flatten(ndarray([2, 3, 4])) should have a length of 24!`)
+
+  let hasFailed
+
+  try {
+    hasFailed = false
+    ndarray()
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `ndarray() should have failed!`)
+
+  try {
+    hasFailed = false
+    ndarray("foo")
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `ndarray("foo") should have failed!`)
+
+  try {
+    hasFailed = false
+    ndarray(3.5)
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `ndarray(3.5) should have failed!`)
+
+  try {
+    hasFailed = false
+    ndarray(-10)
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `ndarray(-10) should have failed!`)
+
+  try {
+    hasFailed = false
+    ndarray({})
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `ndarray({}) should have failed!`)
+
+  try {
+    hasFailed = false
+    ndarray(true)
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `ndarray(true) should have failed!`)
+
+  try {
+    hasFailed = false
+    ndarray([])
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `ndarray([]) should have failed!`)
+
+  try {
+    hasFailed = false
+    ndarray(() => {})
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `ndarray(() => {}) should have failed!`)
+
+  try {
+    let foo
+    hasFailed = false
+    ndarray(foo)
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `ndarray(foo) should have failed!`)
+
+  try {
+    hasFailed = false
+    ndarray([1, 2, "three"])
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `ndarray([1, 2, "three"]) should have failed!`)
+
+  console.log("All tests passed!")
+}
+
+},{"../misc/assert.js":56,"./flatten.js":16,"./floor.js":17,"./is-array.js":18,"./is-number.js":20,"./is-undefined.js":22,"./range.js":37}],32:[function(require,module,exports){
+let isUndefined = require("./is-undefined.js")
 let ndarray = require("./ndarray.js")
 let apply = require("../misc/apply.js")
 
@@ -2615,13 +2737,48 @@ function normal(shape){
     return Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2)
   }
 
-  if (!shape) return n()
+  if (isUndefined(shape)) return n()
   return apply(ndarray(shape), n)
 }
 
 module.exports = normal
 
-},{"../misc/apply.js":54,"./ndarray.js":31}],33:[function(require,module,exports){
+// tests
+if (!module.parent){
+  let assert = require("../misc/assert.js")
+  let std = require("./std.js")
+  let mean = require("./mean.js")
+  let abs = require("./abs.js")
+
+  let x = normal([10000])
+  let m = mean(x)
+  let s = std(x)
+
+  assert(abs(m) < 0.05, `normal([10000]) should have a mean of approximately 0!`)
+  assert(abs(s - 1) < 0.05, `normal([10000]) should have a standard deviation of approximately 1!`)
+
+  x = normal([10, 10, 10, 10])
+  m = mean(x)
+  s = std(x)
+
+  assert(abs(m) < 0.05, `normal([10, 10, 10, 10]) should have a mean of approximately 0!`)
+  assert(abs(s - 1) < 0.05, `normal([10, 10, 10, 10]) should have a standard deviation of approximately 1!`)
+
+  let hasFailed
+
+  try {
+    hasFailed = false
+    normal("foo")
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `normal("foo") should have failed!`)
+
+  console.log("All tests passed!")
+}
+
+},{"../misc/apply.js":54,"../misc/assert.js":56,"./abs.js":6,"./is-undefined.js":22,"./mean.js":27,"./ndarray.js":31,"./std.js":47}],33:[function(require,module,exports){
 let min = require("./min.js")
 let max = require("./max.js")
 
@@ -2749,20 +2906,22 @@ let sqrt = vectorize(Math.sqrt)
 module.exports = sqrt
 
 },{"./vectorize.js":51}],47:[function(require,module,exports){
+let flatten = require("./flatten.js")
 let mean = require("./mean.js")
 let pow = require("./pow.js")
 let sqrt = require("./sqrt.js")
 
 function std(arr){
-  let m = mean(arr)
+  let temp = flatten(arr)
+  let m = mean(temp)
   let out = 0
-  arr.forEach(x => out += pow(x - m, 2))
-  return sqrt(out / arr.length)
+  temp.forEach(x => out += pow(x - m, 2))
+  return sqrt(out / temp.length)
 }
 
 module.exports = std
 
-},{"./mean.js":27,"./pow.js":35,"./sqrt.js":46}],48:[function(require,module,exports){
+},{"./flatten.js":16,"./mean.js":27,"./pow.js":35,"./sqrt.js":46}],48:[function(require,module,exports){
 function sum(arr){
   let out = 0
   arr.forEach(v => out += v)
