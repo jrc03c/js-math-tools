@@ -8,6 +8,7 @@ module.exports = {
   correl: require("./correl.js"),
   cos: require("./cos.js"),
   covariance: require("./covariance.js"),
+  flatten: require("./flatten.js"),
   floor: require("./floor.js"),
   isArray: require("./is-array.js"),
   isNumber: require("./is-number.js"),

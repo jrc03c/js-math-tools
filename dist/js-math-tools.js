@@ -311,6 +311,7 @@ module.exports = {
   correl: require("./correl.js"),
   cos: require("./cos.js"),
   covariance: require("./covariance.js"),
+  flatten: require("./flatten.js"),
   floor: require("./floor.js"),
   isArray: require("./is-array.js"),
   isNumber: require("./is-number.js"),
@@ -343,7 +344,7 @@ module.exports = {
 
 }
 
-},{"./abs.js":6,"./add.js":7,"./ceil.js":8,"./chop.js":9,"./clamp.js":10,"./cohens-d.js":11,"./correl.js":12,"./cos.js":13,"./covariance.js":14,"./floor.js":16,"./is-array.js":17,"./is-number.js":18,"./is-string.js":19,"./is-undefined.js":20,"./lerp.js":21,"./log.js":22,"./map.js":23,"./max.js":24,"./mean.js":25,"./min.js":26,"./ndarray.js":27,"./normal.js":28,"./normalize.js":29,"./ones.js":30,"./pow.js":31,"./random.js":32,"./range.js":33,"./round.js":34,"./scale.js":35,"./sign.js":36,"./sin.js":37,"./sqrt.js":38,"./std.js":39,"./sum.js":40,"./tan.js":41,"./variance.js":42,"./vectorize.js":43,"./zeros.js":44}],6:[function(require,module,exports){
+},{"./abs.js":6,"./add.js":7,"./ceil.js":8,"./chop.js":9,"./clamp.js":10,"./cohens-d.js":11,"./correl.js":12,"./cos.js":13,"./covariance.js":14,"./flatten.js":15,"./floor.js":16,"./is-array.js":17,"./is-number.js":18,"./is-string.js":19,"./is-undefined.js":20,"./lerp.js":21,"./log.js":22,"./map.js":23,"./max.js":24,"./mean.js":25,"./min.js":26,"./ndarray.js":27,"./normal.js":28,"./normalize.js":29,"./ones.js":30,"./pow.js":31,"./random.js":32,"./range.js":33,"./round.js":34,"./scale.js":35,"./sign.js":36,"./sin.js":37,"./sqrt.js":38,"./std.js":39,"./sum.js":40,"./tan.js":41,"./variance.js":42,"./vectorize.js":43,"./zeros.js":44}],6:[function(require,module,exports){
 let assert = require("../misc/assert.js")
 let vectorize = require("./vectorize.js")
 let isArray = require("./is-array.js")
