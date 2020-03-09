@@ -2883,6 +2883,7 @@ if (!module.parent){
 
 },{"../misc/apply.js":54,"../misc/assert.js":56,"./add.js":7,"./flatten.js":16,"./is-array.js":18,"./is-number.js":20,"./is-undefined.js":22,"./max.js":26,"./min.js":29,"./normal.js":32,"./random.js":36,"./scale.js":39}],34:[function(require,module,exports){
 let ndarray = require("./ndarray.js")
+let apply = require("../misc/apply.js")
 
 function ones(shape){
   return apply(ndarray(shape), v => 1)
@@ -2890,7 +2891,90 @@ function ones(shape){
 
 module.exports = ones
 
-},{"./ndarray.js":31}],35:[function(require,module,exports){
+// tests
+if (!module.parent){
+  let assert = require("../misc/assert.js")
+  let sum = require("./sum.js")
+  let mean = require("./mean.js")
+  let std = require("./std.js")
+  let flatten = require("./flatten.js")
+
+  let x = ones([2, 3, 4, 5])
+  assert(sum(x) === 2 * 3 * 4 * 5, `sum(ones([2, 3, 4, 5])) should be 2 * 3 * 4 * 5!`)
+  assert(mean(x) === 1, `mean(ones([2, 3, 4, 5])) should be 1!`)
+  assert(std(x) === 0, `std(ones([2, 3, 4, 5])) should be 0!`)
+  assert(sum(x) === flatten(x).length, `sum(ones([2, 3, 4, 5])) should be the same as flatten(ones([2, 3, 4, 5])).length!`)
+
+  let hasFailed
+
+  try {
+    hasFailed = false
+    ones()
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `ones() should have failed!`)
+
+  try {
+    hasFailed = false
+    ones("foo")
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `ones("foo") should have failed!`)
+
+  try {
+    hasFailed = false
+    ones(true)
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `ones(true) should have failed!`)
+
+  try {
+    hasFailed = false
+    ones({})
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `ones({}) should have failed!`)
+
+  try {
+    let foo
+    hasFailed = false
+    ones(foo)
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `ones(foo) should have failed!`)
+
+  try {
+    hasFailed = false
+    ones([1, 2, "three"])
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `ones([1, 2, "three"]) should have failed!`)
+
+  try {
+    hasFailed = false
+    ones(() => {})
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `ones(() => {}) should have failed!`)
+
+  console.log("All tests passed!")
+}
+
+},{"../misc/apply.js":54,"../misc/assert.js":56,"./flatten.js":16,"./mean.js":27,"./ndarray.js":31,"./std.js":47,"./sum.js":48}],35:[function(require,module,exports){
 let isArray = require("./is-array.js")
 
 function pow(x, p){
@@ -3012,15 +3096,17 @@ function std(arr){
 module.exports = std
 
 },{"./flatten.js":16,"./mean.js":27,"./pow.js":35,"./sqrt.js":46}],48:[function(require,module,exports){
+let flatten = require("./flatten.js")
+
 function sum(arr){
   let out = 0
-  arr.forEach(v => out += v)
+  flatten(arr).forEach(v => out += v)
   return out
 }
 
 module.exports = sum
 
-},{}],49:[function(require,module,exports){
+},{"./flatten.js":16}],49:[function(require,module,exports){
 let vectorize = require("./vectorize.js")
 let tan = vectorize(Math.tan)
 module.exports = tan
