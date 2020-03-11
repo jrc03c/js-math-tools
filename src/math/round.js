@@ -30,7 +30,12 @@ if (!module.parent){
   yPred = round(-3.75)
   assert(yTrue === yPred, `round(-3.75) should be -4, but instead was ${yPred}!`)
 
-  yPred = sort(set(round(random([10, 10, 10, 10]))))
+  yPred = sort(set(round(random([10, 10, 10, 10]))), function(a, b){
+    if (a < b) return -1
+    if (a > b) return 1
+    return 0
+  })
+
   assert(yPred[0] === 0 && yPred[1] === 1 && yPred.length === 2, `sort(set(round(random([10, 10, 10, 10])))) should be [0, 1]!`)
 
   let hasFailed
