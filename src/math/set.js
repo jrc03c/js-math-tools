@@ -1,9 +1,11 @@
 let assert = require("../misc/assert.js")
 let isUndefined = require("./is-undefined.js")
+let isArray = require("./is-array.js")
 let flatten = require("./flatten.js")
 
 function set(arr){
   assert(!isUndefined(arr), "You must pass an array into the `set` function!")
+  assert(isArray(arr), "You must pass an array into the `set` function!")
 
   let out = []
 
