@@ -10,10 +10,10 @@ let floor = require("./floor.js")
 function slice(arr, indices){
   assert(!isUndefined(arr), "You must pass an array into the `slice` function!")
   assert(isArray(arr), "You must pass an array into the `slice` function!")
-  
+
   if (isUndefined(indices)) return arr.slice()
 
-  assert(isArray(indices), "The indices passed into the `slice` function must be an array of integers or null values.")
+  assert(isArray(indices), "The indices passed into the `slice` function must be a one-dimensional array of integers or null values.")
 
   flatten(indices).forEach(function(idx){
     assert(isUndefined(idx) || (isNumber(idx) && floor(idx) === idx), "The indices passed into the `slice` function must be a one-dimensional array of integers or null values.")

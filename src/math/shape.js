@@ -15,6 +15,8 @@ module.exports = shape
 
 // tests
 if (!module.parent){
+  console.log("TO-DO: Assert that all rows are the same shape in every dimension in `shape`?")
+
   let normal = require("./normal.js")
 
   let yTrue = 500

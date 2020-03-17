@@ -11,6 +11,8 @@ module.exports = random
 
 // tests
 if (!module.parent){
+  console.log("TO-DO: Implement PRNG / seeding in `random`?")
+
   let assert = require("../misc/assert.js")
   let min = require("./min.js")
   let max = require("./max.js")
