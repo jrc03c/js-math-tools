@@ -4491,17 +4491,119 @@ if (!module.parent){
 }
 
 },{"../misc/assert.js":57,"./abs.js":6,"./add.js":7,"./flatten.js":17,"./is-array.js":19,"./is-number.js":21,"./is-undefined.js":23,"./mean.js":28,"./normal.js":33,"./pow.js":36,"./scale.js":40,"./sqrt.js":47}],49:[function(require,module,exports){
+let assert = require("../misc/assert.js")
+let isUndefined = require("./is-undefined.js")
+let isArray = require("./is-array.js")
+let isNumber = require("./is-number.js")
 let flatten = require("./flatten.js")
 
 function sum(arr){
+  assert(!isUndefined(arr), "You must pass an array of numbers into the `sum` function!")
+  assert(isArray(arr), "You must pass an array of numbers into the `sum` function!")
+
+  let temp = flatten(arr)
+
+  temp.forEach(function(v){
+    assert(isNumber(v), "You must pass an array of numbers into the `sum` function!")
+  })
+
   let out = 0
-  flatten(arr).forEach(v => out += v)
+  temp.forEach(v => out += v)
   return out
 }
 
 module.exports = sum
 
-},{"./flatten.js":17}],50:[function(require,module,exports){
+// tests
+if (!module.parent){
+  let range = require("./range.js")
+  let normal = require("./normal.js")
+  let abs = require("./abs.js")
+
+  let x = [2, 3, 4]
+  let yTrue = 9
+  let yPred = sum(x)
+  assert(yTrue === yPred, `sum([2, 3, 4]) should be 9, but instead is ${yPred}!`)
+
+  x = range(-100, 101)
+  yTrue = 0
+  yPred = sum(x)
+  assert(yTrue === yPred, `sum(range(-100, 101)) should be 0, but instead is ${yPred}!`)
+
+  x = []
+  yTrue = 0
+  yPred = sum(x)
+  assert(yTrue === yPred, `sum([]) should be 0, but instead was ${yPred}!`)
+
+  let hasFailed
+
+  try {
+    hasFailed = false
+    sum()
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `sum() should have failed!`)
+
+  try {
+    hasFailed = false
+    sum("foo")
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `sum("foo") should have failed!`)
+
+  try {
+    hasFailed = false
+    sum(123)
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `sum(123) should have failed!`)
+
+  try {
+    hasFailed = false
+    sum(true)
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `sum(true) should have failed!`)
+
+  try {
+    hasFailed = false
+    sum(() => {})
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `sum(() => {}) should have failed!`)
+
+  try {
+    hasFailed = false
+    sum({})
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `sum({}) should have failed!`)
+
+  try {
+    hasFailed = false
+    sum([1, 2, "three"])
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `sum([1, 2, "three"]) should have failed!`)
+
+  console.log("All tests passed!")
+}
+
+},{"../misc/assert.js":57,"./abs.js":6,"./flatten.js":17,"./is-array.js":19,"./is-number.js":21,"./is-undefined.js":23,"./normal.js":33,"./range.js":38}],50:[function(require,module,exports){
 let vectorize = require("./vectorize.js")
 let tan = vectorize(Math.tan)
 module.exports = tan
