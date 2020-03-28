@@ -1,13 +1,28 @@
 let assert = require("../misc/assert.js")
 let isUndefined = require("./is-undefined.js")
 let isArray = require("./is-array.js")
+let max = require("./max.js")
 
 function shape(arr){
   assert(!isUndefined(arr), "You must pass an array into the `shape` function!")
   assert(isArray(arr), "You must pass an array into the `shape` function!")
 
   let out = [arr.length]
-  if (isArray(arr[0])) out = out.concat(shape(arr[0]))
+  let childrenAreArrays = arr.map(x => isArray(x))
+
+  if (childrenAreArrays.indexOf(true) > -1){
+    assert(childrenAreArrays.indexOf(false) < 0, "The array passed into the `shape` function has some children that are not themselves arrays!")
+
+    let lengths = arr.map(x => x.length)
+    let maxLength = max(lengths)
+
+    lengths.forEach(function(length){
+      assert(length === maxLength, "The array passed into the `shape` function has some children of inconsistent length!")
+    })
+
+    out = out.concat(shape(arr[0]))
+  }
+
   return out
 }
 
@@ -15,8 +30,6 @@ module.exports = shape
 
 // tests
 if (!module.parent){
-  console.log("TO-DO: Assert that all rows are the same shape in every dimension in `shape`?")
-
   let normal = require("./normal.js")
 
   let yTrue = 500
@@ -92,6 +105,15 @@ if (!module.parent){
   }
 
   assert(hasFailed, `shape(foo) should have failed!`)
+
+  try {
+    hasFailed = false
+    shape([[2, 3, 4], [5, 6]])
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `shape([[2, 3, 4], [5, 6]]) should have failed!`)
 
   console.log("All tests passed!")
 }
