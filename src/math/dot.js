@@ -51,5 +51,116 @@ module.exports = dot
 
 // tests
 if (!module.parent){
+  let normal = require("./normal.js")
+
+  let a = [2, 3, 4]
+  let b = [5, 6, 7]
+  let yTrue = 56
+  let yPred = dot(a, b)
+  assert(isEqual(yTrue, yPred), `dot([2, 3, 4], [5, 6, 7]) should be 56!`)
+
+  a = [[2, 3], [4, 5], [6, 7]]
+  b = [[8, 9, 10], [11, 12, 13]]
+  yTrue = [[49, 54, 59], [87, 96, 105], [125, 138, 151]]
+  yPred = dot(a, b)
+  assert(isEqual(yTrue, yPred), `dot([[2, 3], [4, 5], [6, 7]], [[8, 9, 10], [11, 12, 13]]) should be [[49, 54, 59], [87, 96, 105], [125, 138, 151]]!`)
+
+  a = [4, 3, 2, 1]
+  b = [[12, 11], [10, 9], [8, 7], [6, 5]]
+  yTrue = [100, 90]
+  yPred = dot(a, b)
+  assert(isEqual(yTrue, yPred), `dot([4, 3, 2, 1], [[12, 11], [10, 9], [8, 7], [6, 5]]) should be [100, 90]!`)
+
+  a = [[1, 2, 3, 4, 5], [6, 7, 8, 9, 10]]
+  b = [11, 12, 13, 14, 15]
+  yTrue = [205, 530]
+  yPred = dot(a, b)
+  assert(isEqual(yTrue, yPred), `dot([[1, 2, 3, 4, 5], [6, 7, 8, 9, 10]], [11, 12, 13, 14, 15]) should be [100, 90]!`)
+
+  let hasFailed
+
+  try {
+    hasFailed = false
+    dot()
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `dot() should have failed!`)
+
+  try {
+    hasFailed = false
+    dot(2, 3)
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `dot(2, 3) should have failed!`)
+
+  try {
+    hasFailed = false
+    dot(true, false)
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `dot(true, false) should have failed!`)
+
+  try {
+    hasFailed = false
+    dot("foo", "bar")
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `dot("foo", "bar") should have failed!`)
+
+  try {
+    hasFailed = false
+    dot(normal([2, 3]), normal([2, 3]))
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `dot(normal([2, 3]), normal([2, 3])) should have failed!`)
+
+  try {
+    hasFailed = false
+    dot(normal([2, 3, 4]))
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `dot([2, 3, 4]) should have failed!`)
+
+  try {
+    let fn = () => {}
+    hasFailed = false
+    dot(fn, fn)
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `dot(fn, fn) should have failed!`)
+
+  try {
+    let foo
+    hasFailed = false
+    dot(foo, foo)
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `dot(foo, foo) should have failed!`)
+
+  try {
+    hasFailed = false
+    dot({}, {})
+  } catch(e){
+    hasFailed = true
+  }
+
+  assert(hasFailed, `dot({}, {}) should have failed!`)
+
   console.log("All tests passed!")
 }
