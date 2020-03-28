@@ -6,7 +6,6 @@ let flatten = require("./flatten.js")
 
 function max(arr){
   assert(!isUndefined(arr), "You must pass one array of numbers into the `max` function!")
-
   assert(isArray(arr), "You must pass one array of numbers into the `max` function!")
 
   let temp = flatten(arr)
