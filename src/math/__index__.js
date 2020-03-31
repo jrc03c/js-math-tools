@@ -1,4 +1,4 @@
-module.exports = {
+let out = {
   abs: require("./abs.js"),
   add: require("./add.js"),
   ceil: require("./ceil.js"),
@@ -54,3 +54,5 @@ module.exports = {
   vectorize: require("./vectorize.js"),
   zeros: require("./zeros.js"),
 }
+
+module.exports = out

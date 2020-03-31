@@ -1,8 +1,10 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
-module.exports = {
+let out = {
   downloadCanvas: require("./download-canvas.js"),
   Plot: require("./plot.js"),
 }
+
+module.exports = out
 
 },{"./download-canvas.js":2,"./plot.js":3}],2:[function(require,module,exports){
 function downloadCanvas(canvas, filename){
@@ -292,6 +294,12 @@ let out = {
   misc: require("./misc/__index__.js"),
 }
 
+out.dump = function(){
+  out.misc.dump(out.canvas)
+  out.misc.dump(out.math)
+  out.misc.dump(out.misc)
+}
+
 try {
   module.exports = out
 } catch(e){}
@@ -301,7 +309,7 @@ try {
 } catch(e){}
 
 },{"./canvas/__index__.js":1,"./math/__index__.js":5,"./misc/__index__.js":60}],5:[function(require,module,exports){
-module.exports = {
+let out = {
   abs: require("./abs.js"),
   add: require("./add.js"),
   ceil: require("./ceil.js"),
@@ -357,6 +365,8 @@ module.exports = {
   vectorize: require("./vectorize.js"),
   zeros: require("./zeros.js"),
 }
+
+module.exports = out
 
 },{"./abs.js":6,"./add.js":7,"./ceil.js":8,"./chop.js":9,"./clamp.js":10,"./cohens-d.js":11,"./correl.js":12,"./cos.js":13,"./count.js":14,"./covariance.js":15,"./distance.js":16,"./dot.js":17,"./flatten.js":18,"./floor.js":19,"./is-array.js":20,"./is-boolean.js":21,"./is-equal.js":22,"./is-function.js":23,"./is-number.js":24,"./is-string.js":25,"./is-undefined.js":26,"./lerp.js":27,"./log.js":28,"./map.js":29,"./max.js":30,"./mean.js":31,"./median.js":32,"./min.js":33,"./mode.js":34,"./ndarray.js":35,"./normal.js":36,"./normalize.js":37,"./ones.js":38,"./pow.js":39,"./random.js":40,"./range.js":41,"./reverse.js":42,"./round.js":43,"./scale.js":44,"./set.js":45,"./shape.js":46,"./shuffle.js":47,"./sign.js":48,"./sin.js":49,"./slice.js":50,"./sort.js":51,"./sqrt.js":52,"./std.js":53,"./sum.js":54,"./tan.js":55,"./transpose.js":56,"./variance.js":57,"./vectorize.js":58,"./zeros.js":59}],6:[function(require,module,exports){
 let assert = require("../misc/assert.js")
@@ -5544,16 +5554,19 @@ function zeros(shape){
 module.exports = zeros
 
 },{"./ndarray.js":35}],60:[function(require,module,exports){
-module.exports = {
+let out = {
   apply: require("./apply.js"),
   array: require("./array.js"),
   assert: require("./assert.js"),
   downloadJSON: require("./download-json.js"),
+  dump: require("./dump.js"),
   pause: require("./pause.js"),
   print: require("./print.js"),
 }
 
-},{"./apply.js":61,"./array.js":62,"./assert.js":63,"./download-json.js":64,"./pause.js":65,"./print.js":66}],61:[function(require,module,exports){
+module.exports = out
+
+},{"./apply.js":61,"./array.js":62,"./assert.js":63,"./download-json.js":64,"./dump.js":65,"./pause.js":66,"./print.js":67}],61:[function(require,module,exports){
 let vectorize = require("../math/vectorize.js")
 
 let apply = vectorize(function(x, fn){
@@ -5598,6 +5611,19 @@ function downloadJSON(obj, filename){
 module.exports = downloadJSON
 
 },{}],65:[function(require,module,exports){
+(function (global){
+function dump(obj, excluded=["dump"]){
+  Object.keys(obj).forEach(function(key){
+    if (excluded.indexOf(key) < 0){
+      global[key] = obj[key]
+    }
+  })
+}
+
+module.exports = dump
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],66:[function(require,module,exports){
 function pause(ms){
   return new Promise(function(resolve, reject){
     try {
@@ -5610,7 +5636,7 @@ function pause(ms){
 
 module.exports = pause
 
-},{}],66:[function(require,module,exports){
+},{}],67:[function(require,module,exports){
 function print(x){
   return console.log(x)
 }
