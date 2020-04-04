@@ -1,6 +1,9 @@
 let out = {
   abs: require("./abs.js"),
   add: require("./add.js"),
+  arccos: require("./arccos.js"),
+  arcsin: require("./arcsin.js"),
+  arctan: require("./arctan.js"),
   ceil: require("./ceil.js"),
   chop: require("./chop.js"),
   clamp: require("./clamp.js"),
