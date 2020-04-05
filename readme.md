@@ -118,7 +118,6 @@ cohensd(a, b)
 covariance(a, b)
 distance(a, b)
 
-
 // get a range of numbers by step
 range(4, 8)
 // [4, 5, 6, 7]
