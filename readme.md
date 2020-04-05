@@ -1,4 +1,4 @@
-This is a little library of math tools for JS.
+This is a little library of math tools for JS. It was built completely from scratch and has no other dependencies.
 
 # Installation
 
