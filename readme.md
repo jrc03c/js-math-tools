@@ -227,9 +227,10 @@ This library also provides some simple plotting capabilities. **Note that this f
       // line
       let canvas3 = createCanvas(400, 400)
       let plot3 = new Plot(canvas3)
-      let x3 = range(-10, 10, 0.1)
-      let y3 = apply(x3, x => 0.1 * x * x)
-      plot3.setRange(-10, 10, -2, 12)
+      let angles = range(0, 2 * Math.PI, Math.PI / 100)
+      let x3 = apply(angles, a => sin(4 * a) * cos(a))
+      let y3 = apply(angles, a => sin(4 * a) * sin(a))
+      plot3.setRange(-2, 2, -2, 2)
       plot3.setLineThickness(2)
       plot3.setLineColor("#a5fc03")
       plot3.line(x3, y3)
@@ -260,6 +261,6 @@ That page will produce these plots:
 
 ![](https://i.ibb.co/8dF3fLs/plot1.png)
 ![](https://i.ibb.co/5hY1CK9/plot2.png)
-![](https://i.ibb.co/xHH5W5J/plot3.png)
+![](https://i.ibb.co/7KdbDGD/plot3.png)
 ![](https://i.ibb.co/X7SZD7P/plot4.png)
 ![](https://i.ibb.co/FbkNfMJ/plot5.png)
