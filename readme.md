@@ -36,7 +36,7 @@ tools.dump()
 add(3, 4) // 7
 ```
 
-Most of the typical math functions (like sine, cosine, etc.) can take, individual numeric values, arrays of numbers, or a combination of numbers and arrays of numbers. For example, all of the following are acceptable:
+Most of the typical math functions (like sine, cosine, etc.) can take individual numeric values, arrays of numbers, or a combination of numbers and arrays of numbers. For example, all of the following are acceptable:
 
 ```js
 add(3, 4) // 7
