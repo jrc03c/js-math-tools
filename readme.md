@@ -259,8 +259,4 @@ This library also provides some simple plotting capabilities. **Note that this f
 
 That page will produce these plots:
 
-![](https://i.ibb.co/8dF3fLs/plot1.png)
-![](https://i.ibb.co/5hY1CK9/plot2.png)
-![](https://i.ibb.co/7KdbDGD/plot3.png)
-![](https://i.ibb.co/X7SZD7P/plot4.png)
-![](https://i.ibb.co/FbkNfMJ/plot5.png)
+![](https://i.ibb.co/sQXXbxS/Screenshot-2020-04-04-Screenshot.png)
