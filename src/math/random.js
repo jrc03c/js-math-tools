@@ -1,21 +1,23 @@
 let ndarray = require("./ndarray.js")
 let apply = require("../misc/apply.js")
 let isUndefined = require("./is-undefined.js")
-// let seed = require("./seed.js")
+let seed = require("./seed.js")
+let pow = require("./pow.js")
 
-// function lcg(){
-//   let a = 13
-//   let c = 911
-//   let m = 11584577
-//   let s = seed()
-//   let out = (a * s + c) % m
-//   seed(out)
-//   return out / m
-// }
+let a = 1103515245
+let c = 12345
+let m = pow(2, 31)
+
+function lcg(){
+  let s = seed()
+  let out = (a * s + c) % m
+  seed(out)
+  return out / m
+}
 
 function random(shape){
-  if (isUndefined(shape)) return Math.random()
-  return apply(ndarray(shape), random)
+  if (isUndefined(shape)) return lcg()
+  return apply(ndarray(shape), lcg)
 }
 
 module.exports = random
@@ -36,11 +38,11 @@ if (!module.parent && typeof(window) === "undefined"){
   x = random()
   assert(x >= 0 && x <= 1, `random() should be in the range [0, 1]!`)
 
-  // seed(203948203948)
-  // let a = random([10, 10, 10, 10])
-  // seed(203948203948)
-  // let b = random([10, 10, 10, 10])
-  // assert(distance(a, b) === 0, "Two random arrays seeded with the same value should be identical!")
+  seed(203948203948)
+  let a = random([10, 10, 10, 10])
+  seed(203948203948)
+  let b = random([10, 10, 10, 10])
+  assert(distance(a, b) === 0, "Two random arrays seeded with the same value should be identical!")
 
   let hasFailed
 

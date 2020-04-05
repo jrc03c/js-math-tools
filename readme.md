@@ -176,6 +176,23 @@ flatten([[2, 3, 4], [5, 6, 7]])
 // [2, 3, 4, 5, 6, 7]
 ```
 
+# Working with Random Numbers
+
+The PRNG (pseudo-random number generator) implemented in this library is technically a [linear congruential generator](https://en.wikipedia.org/wiki/Linear_congruential_generator), in case that matters to you. To seed the PRNG, pass a positive integer into the `seed` function. The `random`, `normal`, and `shuffle` functions can all be seeded. For example:
+
+```js
+let tools = require("js-math-tools")
+tools.dump()
+
+seed(230498349)
+random(5)
+// [0.5713683813810349, 0.36495184898376465, 0.04452776908874512, 0.015275746583938599, 0.23413866385817528]
+
+seed(230498349)
+random(5)
+// [0.5713683813810349, 0.36495184898376465, 0.04452776908874512, 0.015275746583938599, 0.23413866385817528]
+```
+
 # Plotting
 
 This library also provides some simple plotting capabilities. **Note that this functionality relies on the `canvas` and therefore only works on the client-side (unless you use some kind of Node-side canvas library).** Here's a demo web page with several examples:

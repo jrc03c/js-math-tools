@@ -39,11 +39,11 @@ if (!module.parent && typeof(window) === "undefined"){
   assert(abs(m) < 0.05, `normal([10, 10, 10, 10]) should have a mean of approximately 0!`)
   assert(abs(s - 1) < 0.05, `normal([10, 10, 10, 10]) should have a standard deviation of approximately 1!`)
 
-  // seed(230498230498)
-  // let a = normal(10000)
-  // seed(230498230498)
-  // let b = normal(10000)
-  // assert(distance(a, b) === 0, "Two normally-distributed arrays seeded with the same value should be identical!")
+  seed(230498230498)
+  let a = normal(10000)
+  seed(230498230498)
+  let b = normal(10000)
+  assert(distance(a, b) === 0, "Two normally-distributed arrays seeded with the same value should be identical!")
 
   let hasFailed
 

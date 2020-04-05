@@ -413,7 +413,7 @@ function Plot(canvas){
 
 module.exports = Plot
 
-},{"../math/is-array.js":23,"../math/is-boolean.js":24,"../math/is-equal.js":25,"../math/is-number.js":27,"../math/is-string.js":28,"../math/is-undefined.js":29,"../math/map.js":32,"../math/max.js":33,"../math/shape.js":50,"../misc/assert.js":66,"./download-canvas.js":2}],4:[function(require,module,exports){
+},{"../math/is-array.js":23,"../math/is-boolean.js":24,"../math/is-equal.js":25,"../math/is-number.js":27,"../math/is-string.js":28,"../math/is-undefined.js":29,"../math/map.js":32,"../math/max.js":33,"../math/shape.js":50,"../misc/assert.js":67,"./download-canvas.js":2}],4:[function(require,module,exports){
 let out = {
   canvas: require("./canvas/__index__.js"),
   math: require("./math/__index__.js"),
@@ -478,7 +478,7 @@ let out = {
   reverse: require("./reverse.js"),
   round: require("./round.js"),
   scale: require("./scale.js"),
-  // seed: require("./seed.js"),
+  seed: require("./seed.js"),
   set: require("./set.js"),
   shape: require("./shape.js"),
   shuffle: require("./shuffle.js"),
@@ -498,7 +498,7 @@ let out = {
 
 module.exports = out
 
-},{"./abs.js":6,"./add.js":7,"./arccos.js":8,"./arcsin.js":9,"./arctan.js":10,"./ceil.js":11,"./chop.js":12,"./clamp.js":13,"./cohens-d.js":14,"./correl.js":15,"./cos.js":16,"./count.js":17,"./covariance.js":18,"./distance.js":19,"./dot.js":20,"./flatten.js":21,"./floor.js":22,"./is-array.js":23,"./is-boolean.js":24,"./is-equal.js":25,"./is-function.js":26,"./is-number.js":27,"./is-string.js":28,"./is-undefined.js":29,"./lerp.js":30,"./log.js":31,"./map.js":32,"./max.js":33,"./mean.js":34,"./median.js":35,"./min.js":36,"./mode.js":37,"./ndarray.js":38,"./normal.js":39,"./normalize.js":40,"./ones.js":41,"./pow.js":42,"./random.js":43,"./range.js":44,"./reverse.js":45,"./round.js":46,"./scale.js":47,"./set.js":49,"./shape.js":50,"./shuffle.js":51,"./sign.js":52,"./sin.js":53,"./slice.js":54,"./sort.js":55,"./sqrt.js":56,"./std.js":57,"./sum.js":58,"./tan.js":59,"./transpose.js":60,"./variance.js":61,"./vectorize.js":62,"./zeros.js":63}],6:[function(require,module,exports){
+},{"./abs.js":6,"./add.js":7,"./arccos.js":8,"./arcsin.js":9,"./arctan.js":10,"./ceil.js":11,"./chop.js":12,"./clamp.js":13,"./cohens-d.js":14,"./correl.js":15,"./cos.js":16,"./count.js":17,"./covariance.js":18,"./distance.js":19,"./dot.js":20,"./flatten.js":21,"./floor.js":22,"./is-array.js":23,"./is-boolean.js":24,"./is-equal.js":25,"./is-function.js":26,"./is-number.js":27,"./is-string.js":28,"./is-undefined.js":29,"./lerp.js":30,"./log.js":31,"./map.js":32,"./max.js":33,"./mean.js":34,"./median.js":35,"./min.js":36,"./mode.js":37,"./ndarray.js":38,"./normal.js":39,"./normalize.js":40,"./ones.js":41,"./pow.js":42,"./random.js":43,"./range.js":44,"./reverse.js":45,"./round.js":46,"./scale.js":47,"./seed.js":48,"./set.js":49,"./shape.js":50,"./shuffle.js":51,"./sign.js":52,"./sin.js":53,"./slice.js":54,"./sort.js":55,"./sqrt.js":56,"./std.js":57,"./sum.js":58,"./tan.js":59,"./transpose.js":60,"./variance.js":61,"./vectorize.js":62,"./zeros.js":63}],6:[function(require,module,exports){
 let assert = require("../misc/assert.js")
 let vectorize = require("./vectorize.js")
 let isArray = require("./is-array.js")
@@ -607,7 +607,7 @@ if (!module.parent && typeof(window) === "undefined"){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":66,"./is-array.js":23,"./is-number.js":27,"./is-undefined.js":29,"./vectorize.js":62}],7:[function(require,module,exports){
+},{"../misc/assert.js":67,"./is-array.js":23,"./is-number.js":27,"./is-undefined.js":29,"./vectorize.js":62}],7:[function(require,module,exports){
 let assert = require("../misc/assert.js")
 let vectorize = require("./vectorize.js")
 let isNumber = require("./is-number.js")
@@ -727,7 +727,7 @@ if (!module.parent && typeof(window) === "undefined"){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":66,"./is-number.js":27,"./is-string.js":28,"./is-undefined.js":29,"./vectorize.js":62}],8:[function(require,module,exports){
+},{"../misc/assert.js":67,"./is-number.js":27,"./is-string.js":28,"./is-undefined.js":29,"./vectorize.js":62}],8:[function(require,module,exports){
 let assert = require("../misc/assert.js")
 let isUndefined = require("./is-undefined.js")
 let isNumber = require("./is-number.js")
@@ -843,7 +843,7 @@ if (!module.parent && typeof(window) === "undefined"){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":66,"./is-number.js":27,"./is-undefined.js":29,"./random.js":43,"./vectorize.js":62}],9:[function(require,module,exports){
+},{"../misc/assert.js":67,"./is-number.js":27,"./is-undefined.js":29,"./random.js":43,"./vectorize.js":62}],9:[function(require,module,exports){
 let assert = require("../misc/assert.js")
 let isUndefined = require("./is-undefined.js")
 let isNumber = require("./is-number.js")
@@ -959,7 +959,7 @@ if (!module.parent && typeof(window) === "undefined"){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":66,"./is-number.js":27,"./is-undefined.js":29,"./random.js":43,"./vectorize.js":62}],10:[function(require,module,exports){
+},{"../misc/assert.js":67,"./is-number.js":27,"./is-undefined.js":29,"./random.js":43,"./vectorize.js":62}],10:[function(require,module,exports){
 let assert = require("../misc/assert.js")
 let isUndefined = require("./is-undefined.js")
 let isNumber = require("./is-number.js")
@@ -1074,7 +1074,7 @@ if (!module.parent && typeof(window) === "undefined"){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":66,"./is-number.js":27,"./is-undefined.js":29,"./random.js":43,"./vectorize.js":62}],11:[function(require,module,exports){
+},{"../misc/assert.js":67,"./is-number.js":27,"./is-undefined.js":29,"./random.js":43,"./vectorize.js":62}],11:[function(require,module,exports){
 let assert = require("../misc/assert.js")
 let isNumber = require("./is-number.js")
 let isUndefined = require("./is-undefined.js")
@@ -1158,7 +1158,7 @@ if (!module.parent && typeof(window) === "undefined"){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":66,"./is-number.js":27,"./is-undefined.js":29,"./vectorize.js":62}],12:[function(require,module,exports){
+},{"../misc/assert.js":67,"./is-number.js":27,"./is-undefined.js":29,"./vectorize.js":62}],12:[function(require,module,exports){
 let assert = require("../misc/assert.js")
 let isNumber = require("./is-number.js")
 let isUndefined = require("./is-undefined.js")
@@ -1279,7 +1279,7 @@ if (!module.parent && typeof(window) === "undefined"){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":66,"./abs.js":6,"./is-number.js":27,"./is-undefined.js":29,"./vectorize.js":62}],13:[function(require,module,exports){
+},{"../misc/assert.js":67,"./abs.js":6,"./is-number.js":27,"./is-undefined.js":29,"./vectorize.js":62}],13:[function(require,module,exports){
 let assert = require("../misc/assert.js")
 let isNumber = require("./is-number.js")
 let isUndefined = require("./is-undefined.js")
@@ -1378,7 +1378,7 @@ if (!module.parent && typeof(window) === "undefined"){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":66,"./is-number.js":27,"./is-undefined.js":29,"./vectorize.js":62}],14:[function(require,module,exports){
+},{"../misc/assert.js":67,"./is-number.js":27,"./is-undefined.js":29,"./vectorize.js":62}],14:[function(require,module,exports){
 let mean = require("./mean.js")
 let sqrt = require("./sqrt.js")
 let variance = require("./variance.js")
@@ -1517,7 +1517,7 @@ if (!module.parent && typeof(window) === "undefined"){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":66,"./abs.js":6,"./add.js":7,"./covariance.js":18,"./is-array.js":23,"./is-number.js":27,"./is-undefined.js":29,"./normal.js":39,"./scale.js":47,"./std.js":57}],16:[function(require,module,exports){
+},{"../misc/assert.js":67,"./abs.js":6,"./add.js":7,"./covariance.js":18,"./is-array.js":23,"./is-number.js":27,"./is-undefined.js":29,"./normal.js":39,"./scale.js":47,"./std.js":57}],16:[function(require,module,exports){
 let assert = require("../misc/assert.js")
 let isNumber = require("./is-number.js")
 let isUndefined = require("./is-undefined.js")
@@ -1620,7 +1620,7 @@ if (!module.parent && typeof(window) === "undefined"){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":66,"./chop.js":12,"./is-number.js":27,"./is-undefined.js":29,"./max.js":33,"./min.js":36,"./normal.js":39,"./vectorize.js":62}],17:[function(require,module,exports){
+},{"../misc/assert.js":67,"./chop.js":12,"./is-number.js":27,"./is-undefined.js":29,"./max.js":33,"./min.js":36,"./normal.js":39,"./vectorize.js":62}],17:[function(require,module,exports){
 let assert = require("../misc/assert.js")
 let isUndefined = require("./is-undefined.js")
 let isArray = require("./is-array.js")
@@ -1727,7 +1727,7 @@ if (!module.parent && typeof(window) === "undefined"){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":66,"./abs.js":6,"./flatten.js":21,"./is-array.js":23,"./is-undefined.js":29,"./random.js":43,"./round.js":46}],18:[function(require,module,exports){
+},{"../misc/assert.js":67,"./abs.js":6,"./flatten.js":21,"./is-array.js":23,"./is-undefined.js":29,"./random.js":43,"./round.js":46}],18:[function(require,module,exports){
 let assert = require("../misc/assert.js")
 let isArray = require("./is-array.js")
 let isUndefined = require("./is-undefined.js")
@@ -1827,7 +1827,7 @@ if (!module.parent && typeof(window) === "undefined"){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":66,"./abs.js":6,"./chop.js":12,"./is-array.js":23,"./is-number.js":27,"./is-undefined.js":29,"./mean.js":34,"./normal.js":39}],19:[function(require,module,exports){
+},{"../misc/assert.js":67,"./abs.js":6,"./chop.js":12,"./is-array.js":23,"./is-number.js":27,"./is-undefined.js":29,"./mean.js":34,"./normal.js":39}],19:[function(require,module,exports){
 let assert = require("../misc/assert.js")
 let isUndefined = require("./is-undefined.js")
 let isNumber = require("./is-number.js")
@@ -1942,7 +1942,7 @@ if (!module.parent && typeof(window) === "undefined"){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":66,"./add.js":7,"./flatten.js":21,"./is-number.js":27,"./is-undefined.js":29,"./normal.js":39,"./pow.js":42,"./scale.js":47,"./shape.js":50,"./sum.js":58}],20:[function(require,module,exports){
+},{"../misc/assert.js":67,"./add.js":7,"./flatten.js":21,"./is-number.js":27,"./is-undefined.js":29,"./normal.js":39,"./pow.js":42,"./scale.js":47,"./shape.js":50,"./sum.js":58}],20:[function(require,module,exports){
 let assert = require("../misc/assert.js")
 let isUndefined = require("./is-undefined.js")
 let isArray = require("./is-array.js")
@@ -2110,7 +2110,7 @@ if (!module.parent && typeof(window) === "undefined"){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":66,"./flatten.js":21,"./is-array.js":23,"./is-equal.js":25,"./is-number.js":27,"./is-undefined.js":29,"./normal.js":39,"./scale.js":47,"./shape.js":50,"./sum.js":58,"./transpose.js":60}],21:[function(require,module,exports){
+},{"../misc/assert.js":67,"./flatten.js":21,"./is-array.js":23,"./is-equal.js":25,"./is-number.js":27,"./is-undefined.js":29,"./normal.js":39,"./scale.js":47,"./shape.js":50,"./sum.js":58,"./transpose.js":60}],21:[function(require,module,exports){
 let assert = require("../misc/assert.js")
 let isUndefined = require("./is-undefined.js")
 let isArray = require("./is-array.js")
@@ -2202,7 +2202,7 @@ if (!module.parent && typeof(window) === "undefined"){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":66,"./is-array.js":23,"./is-undefined.js":29,"./normal.js":39}],22:[function(require,module,exports){
+},{"../misc/assert.js":67,"./is-array.js":23,"./is-undefined.js":29,"./normal.js":39}],22:[function(require,module,exports){
 let assert = require("../misc/assert.js")
 let isNumber = require("./is-number.js")
 let isUndefined = require("./is-undefined.js")
@@ -2294,7 +2294,7 @@ if (!module.parent && typeof(window) === "undefined"){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":66,"./is-number.js":27,"./is-undefined.js":29,"./random.js":43,"./vectorize.js":62,"./zeros.js":63}],23:[function(require,module,exports){
+},{"../misc/assert.js":67,"./is-number.js":27,"./is-undefined.js":29,"./random.js":43,"./vectorize.js":62,"./zeros.js":63}],23:[function(require,module,exports){
 function isArray(obj){
   return obj instanceof Array
 }
@@ -2319,7 +2319,7 @@ if (!module.parent && typeof(window) === "undefined"){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":66}],24:[function(require,module,exports){
+},{"../misc/assert.js":67}],24:[function(require,module,exports){
 function isBoolean(x){
   return typeof(x) === "boolean"
 }
@@ -2394,7 +2394,7 @@ if (!module.parent && typeof(window) === "undefined"){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":66,"./is-array.js":23}],26:[function(require,module,exports){
+},{"../misc/assert.js":67,"./is-array.js":23}],26:[function(require,module,exports){
 function isFunction(fn){
   return typeof(fn) === "function"
 }
@@ -2425,7 +2425,7 @@ if (!module.parent && typeof(window) === "undefined"){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":66}],28:[function(require,module,exports){
+},{"../misc/assert.js":67}],28:[function(require,module,exports){
 function isString(s){
   return typeof(s) === "string"
 }
@@ -2449,7 +2449,7 @@ if (!module.parent && typeof(window) === "undefined"){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":66}],29:[function(require,module,exports){
+},{"../misc/assert.js":67}],29:[function(require,module,exports){
 function isUndefined(x){
   return x === null || typeof(x) === "undefined"
 }
@@ -2485,7 +2485,7 @@ if (!module.parent && typeof(window) === "undefined"){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":66}],30:[function(require,module,exports){
+},{"../misc/assert.js":67}],30:[function(require,module,exports){
 let assert = require("../misc/assert.js")
 let isNumber = require("./is-number.js")
 let isUndefined = require("./is-undefined.js")
@@ -2589,7 +2589,7 @@ if (!module.parent && typeof(window) === "undefined"){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":66,"./is-number.js":27,"./is-undefined.js":29,"./vectorize.js":62}],31:[function(require,module,exports){
+},{"../misc/assert.js":67,"./is-number.js":27,"./is-undefined.js":29,"./vectorize.js":62}],31:[function(require,module,exports){
 let assert = require("../misc/assert.js")
 let isNumber = require("./is-number.js")
 let isUndefined = require("./is-undefined.js")
@@ -2704,7 +2704,7 @@ if (!module.parent && typeof(window) === "undefined"){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":66,"./abs.js":6,"./chop.js":12,"./is-number.js":27,"./is-undefined.js":29,"./vectorize.js":62}],32:[function(require,module,exports){
+},{"../misc/assert.js":67,"./abs.js":6,"./chop.js":12,"./is-number.js":27,"./is-undefined.js":29,"./vectorize.js":62}],32:[function(require,module,exports){
 let assert = require("../misc/assert.js")
 let isUndefined = require("./is-undefined.js")
 let isNumber = require("./is-number.js")
@@ -2809,7 +2809,7 @@ if (!module.parent && typeof(window) === "undefined"){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":66,"./is-number.js":27,"./is-undefined.js":29,"./vectorize.js":62}],33:[function(require,module,exports){
+},{"../misc/assert.js":67,"./is-number.js":27,"./is-undefined.js":29,"./vectorize.js":62}],33:[function(require,module,exports){
 let assert = require("../misc/assert.js")
 let isArray = require("./is-array.js")
 let isNumber = require("./is-number.js")
@@ -2942,7 +2942,7 @@ if (!module.parent && typeof(window) === "undefined"){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":66,"./flatten.js":21,"./is-array.js":23,"./is-number.js":27,"./is-undefined.js":29,"./min.js":36,"./normal.js":39,"./random.js":43}],34:[function(require,module,exports){
+},{"../misc/assert.js":67,"./flatten.js":21,"./is-array.js":23,"./is-number.js":27,"./is-undefined.js":29,"./min.js":36,"./normal.js":39,"./random.js":43}],34:[function(require,module,exports){
 let assert = require("../misc/assert.js")
 let isUndefined = require("./is-undefined.js")
 let isArray = require("./is-array.js")
@@ -3057,7 +3057,7 @@ if (!module.parent && typeof(window) === "undefined"){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":66,"./abs.js":6,"./flatten.js":21,"./is-array.js":23,"./is-number.js":27,"./is-undefined.js":29,"./normal.js":39,"./random.js":43,"./sum.js":58}],35:[function(require,module,exports){
+},{"../misc/assert.js":67,"./abs.js":6,"./flatten.js":21,"./is-array.js":23,"./is-number.js":27,"./is-undefined.js":29,"./normal.js":39,"./random.js":43,"./sum.js":58}],35:[function(require,module,exports){
 let assert = require("../misc/assert.js")
 let isUndefined = require("./is-undefined.js")
 let isArray = require("./is-array.js")
@@ -3189,7 +3189,7 @@ if (!module.parent && typeof(window) === "undefined"){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":66,"./flatten.js":21,"./is-array.js":23,"./is-number.js":27,"./is-undefined.js":29,"./normal.js":39,"./random.js":43,"./round.js":46,"./scale.js":47,"./shuffle.js":51,"./sort.js":55}],36:[function(require,module,exports){
+},{"../misc/assert.js":67,"./flatten.js":21,"./is-array.js":23,"./is-number.js":27,"./is-undefined.js":29,"./normal.js":39,"./random.js":43,"./round.js":46,"./scale.js":47,"./shuffle.js":51,"./sort.js":55}],36:[function(require,module,exports){
 let assert = require("../misc/assert.js")
 let isUndefined = require("./is-undefined.js")
 let isArray = require("./is-array.js")
@@ -3315,7 +3315,7 @@ if (!module.parent && typeof(window) === "undefined"){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":66,"./flatten.js":21,"./is-array.js":23,"./is-number.js":27,"./is-undefined.js":29,"./random.js":43}],37:[function(require,module,exports){
+},{"../misc/assert.js":67,"./flatten.js":21,"./is-array.js":23,"./is-number.js":27,"./is-undefined.js":29,"./random.js":43}],37:[function(require,module,exports){
 let assert = require("../misc/assert.js")
 let isUndefined = require("./is-undefined.js")
 let isArray = require("./is-array.js")
@@ -3437,7 +3437,7 @@ if (!module.parent && typeof(window) === "undefined"){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":66,"./count.js":17,"./flatten.js":21,"./is-array.js":23,"./is-undefined.js":29,"./random.js":43,"./round.js":46,"./scale.js":47,"./set.js":49,"./shuffle.js":51,"./sort.js":55}],38:[function(require,module,exports){
+},{"../misc/assert.js":67,"./count.js":17,"./flatten.js":21,"./is-array.js":23,"./is-undefined.js":29,"./random.js":43,"./round.js":46,"./scale.js":47,"./set.js":49,"./shuffle.js":51,"./sort.js":55}],38:[function(require,module,exports){
 let assert = require("../misc/assert.js")
 let isUndefined = require("./is-undefined.js")
 let isArray = require("./is-array.js")
@@ -3576,7 +3576,7 @@ if (!module.parent && typeof(window) === "undefined"){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":66,"./flatten.js":21,"./floor.js":22,"./is-array.js":23,"./is-number.js":27,"./is-undefined.js":29,"./range.js":44}],39:[function(require,module,exports){
+},{"../misc/assert.js":67,"./flatten.js":21,"./floor.js":22,"./is-array.js":23,"./is-number.js":27,"./is-undefined.js":29,"./range.js":44}],39:[function(require,module,exports){
 let isUndefined = require("./is-undefined.js")
 let ndarray = require("./ndarray.js")
 let apply = require("../misc/apply.js")
@@ -3618,11 +3618,11 @@ if (!module.parent && typeof(window) === "undefined"){
   assert(abs(m) < 0.05, `normal([10, 10, 10, 10]) should have a mean of approximately 0!`)
   assert(abs(s - 1) < 0.05, `normal([10, 10, 10, 10]) should have a standard deviation of approximately 1!`)
 
-  // seed(230498230498)
-  // let a = normal(10000)
-  // seed(230498230498)
-  // let b = normal(10000)
-  // assert(distance(a, b) === 0, "Two normally-distributed arrays seeded with the same value should be identical!")
+  seed(230498230498)
+  let a = normal(10000)
+  seed(230498230498)
+  let b = normal(10000)
+  assert(distance(a, b) === 0, "Two normally-distributed arrays seeded with the same value should be identical!")
 
   let hasFailed
 
@@ -3638,7 +3638,7 @@ if (!module.parent && typeof(window) === "undefined"){
   console.log("All tests passed!")
 }
 
-},{"../misc/apply.js":65,"../misc/assert.js":66,"./abs.js":6,"./distance.js":19,"./is-undefined.js":29,"./mean.js":34,"./ndarray.js":38,"./random.js":43,"./seed.js":48,"./std.js":57}],40:[function(require,module,exports){
+},{"../misc/apply.js":65,"../misc/assert.js":67,"./abs.js":6,"./distance.js":19,"./is-undefined.js":29,"./mean.js":34,"./ndarray.js":38,"./random.js":43,"./seed.js":48,"./std.js":57}],40:[function(require,module,exports){
 let assert = require("../misc/assert.js")
 let isUndefined = require("./is-undefined.js")
 let isArray = require("./is-array.js")
@@ -3741,7 +3741,7 @@ if (!module.parent && typeof(window) === "undefined"){
   console.log("All tests passed!")
 }
 
-},{"../misc/apply.js":65,"../misc/assert.js":66,"./add.js":7,"./flatten.js":21,"./is-array.js":23,"./is-number.js":27,"./is-undefined.js":29,"./max.js":33,"./min.js":36,"./normal.js":39,"./random.js":43,"./scale.js":47}],41:[function(require,module,exports){
+},{"../misc/apply.js":65,"../misc/assert.js":67,"./add.js":7,"./flatten.js":21,"./is-array.js":23,"./is-number.js":27,"./is-undefined.js":29,"./max.js":33,"./min.js":36,"./normal.js":39,"./random.js":43,"./scale.js":47}],41:[function(require,module,exports){
 let ndarray = require("./ndarray.js")
 let apply = require("../misc/apply.js")
 
@@ -3834,7 +3834,7 @@ if (!module.parent && typeof(window) === "undefined"){
   console.log("All tests passed!")
 }
 
-},{"../misc/apply.js":65,"../misc/assert.js":66,"./flatten.js":21,"./mean.js":34,"./ndarray.js":38,"./std.js":57,"./sum.js":58}],42:[function(require,module,exports){
+},{"../misc/apply.js":65,"../misc/assert.js":67,"./flatten.js":21,"./mean.js":34,"./ndarray.js":38,"./std.js":57,"./sum.js":58}],42:[function(require,module,exports){
 let vectorize = require("./vectorize.js")
 let assert = require("../misc/assert.js")
 let isUndefined = require("./is-undefined.js")
@@ -3954,25 +3954,27 @@ if (!module.parent && typeof(window) === "undefined"){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":66,"./is-number.js":27,"./is-undefined.js":29,"./vectorize.js":62}],43:[function(require,module,exports){
+},{"../misc/assert.js":67,"./is-number.js":27,"./is-undefined.js":29,"./vectorize.js":62}],43:[function(require,module,exports){
 let ndarray = require("./ndarray.js")
 let apply = require("../misc/apply.js")
 let isUndefined = require("./is-undefined.js")
-// let seed = require("./seed.js")
+let seed = require("./seed.js")
+let pow = require("./pow.js")
 
-// function lcg(){
-//   let a = 13
-//   let c = 911
-//   let m = 11584577
-//   let s = seed()
-//   let out = (a * s + c) % m
-//   seed(out)
-//   return out / m
-// }
+let a = 1103515245
+let c = 12345
+let m = pow(2, 31)
+
+function lcg(){
+  let s = seed()
+  let out = (a * s + c) % m
+  seed(out)
+  return out / m
+}
 
 function random(shape){
-  if (isUndefined(shape)) return Math.random()
-  return apply(ndarray(shape), random)
+  if (isUndefined(shape)) return lcg()
+  return apply(ndarray(shape), lcg)
 }
 
 module.exports = random
@@ -3993,11 +3995,11 @@ if (!module.parent && typeof(window) === "undefined"){
   x = random()
   assert(x >= 0 && x <= 1, `random() should be in the range [0, 1]!`)
 
-  // seed(203948203948)
-  // let a = random([10, 10, 10, 10])
-  // seed(203948203948)
-  // let b = random([10, 10, 10, 10])
-  // assert(distance(a, b) === 0, "Two random arrays seeded with the same value should be identical!")
+  seed(203948203948)
+  let a = random([10, 10, 10, 10])
+  seed(203948203948)
+  let b = random([10, 10, 10, 10])
+  assert(distance(a, b) === 0, "Two random arrays seeded with the same value should be identical!")
 
   let hasFailed
 
@@ -4049,7 +4051,7 @@ if (!module.parent && typeof(window) === "undefined"){
   console.log("All tests passed!")
 }
 
-},{"../misc/apply.js":65,"../misc/assert.js":66,"./abs.js":6,"./distance.js":19,"./is-undefined.js":29,"./max.js":33,"./mean.js":34,"./min.js":36,"./ndarray.js":38}],44:[function(require,module,exports){
+},{"../misc/apply.js":65,"../misc/assert.js":67,"./abs.js":6,"./distance.js":19,"./is-undefined.js":29,"./max.js":33,"./mean.js":34,"./min.js":36,"./ndarray.js":38,"./pow.js":42,"./seed.js":48}],44:[function(require,module,exports){
 let assert = require("../misc/assert.js")
 let isUndefined = require("./is-undefined.js")
 let isNumber = require("./is-number.js")
@@ -4173,7 +4175,7 @@ if (!module.parent && typeof(window) === "undefined"){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":66,"./is-number.js":27,"./is-undefined.js":29}],45:[function(require,module,exports){
+},{"../misc/assert.js":67,"./is-number.js":27,"./is-undefined.js":29}],45:[function(require,module,exports){
 let assert = require("../misc/assert.js")
 let isUndefined = require("./is-undefined.js")
 let isArray = require("./is-array.js")
@@ -4194,7 +4196,7 @@ if (!module.parent && typeof(window) === "undefined"){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":66,"./is-array.js":23,"./is-undefined.js":29}],46:[function(require,module,exports){
+},{"../misc/assert.js":67,"./is-array.js":23,"./is-undefined.js":29}],46:[function(require,module,exports){
 let assert = require("../misc/assert.js")
 let isUndefined = require("./is-undefined.js")
 let isNumber = require("./is-number.js")
@@ -4295,7 +4297,7 @@ if (!module.parent && typeof(window) === "undefined"){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":66,"./is-number.js":27,"./is-undefined.js":29,"./random.js":43,"./set.js":49,"./sort.js":55,"./vectorize.js":62}],47:[function(require,module,exports){
+},{"../misc/assert.js":67,"./is-number.js":27,"./is-undefined.js":29,"./random.js":43,"./set.js":49,"./sort.js":55,"./vectorize.js":62}],47:[function(require,module,exports){
 let assert = require("../misc/assert.js")
 let isUndefined = require("./is-undefined.js")
 let isNumber = require("./is-number.js")
@@ -4397,7 +4399,7 @@ if (!module.parent && typeof(window) === "undefined"){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":66,"./is-number.js":27,"./is-undefined.js":29,"./vectorize.js":62}],48:[function(require,module,exports){
+},{"../misc/assert.js":67,"./is-number.js":27,"./is-undefined.js":29,"./vectorize.js":62}],48:[function(require,module,exports){
 let assert = require("../misc/assert.js")
 let isUndefined = require("./is-undefined.js")
 let isNumber = require("./is-number.js")
@@ -4416,7 +4418,7 @@ function seed(val){
 
 module.exports = seed
 
-},{"../misc/assert.js":66,"./is-number.js":27,"./is-undefined.js":29}],49:[function(require,module,exports){
+},{"../misc/assert.js":67,"./is-number.js":27,"./is-undefined.js":29}],49:[function(require,module,exports){
 let assert = require("../misc/assert.js")
 let isUndefined = require("./is-undefined.js")
 let isArray = require("./is-array.js")
@@ -4539,7 +4541,7 @@ if (!module.parent && typeof(window) === "undefined"){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":66,"./flatten.js":21,"./is-array.js":23,"./is-undefined.js":29,"./random.js":43,"./range.js":44,"./round.js":46,"./sort.js":55}],50:[function(require,module,exports){
+},{"../misc/assert.js":67,"./flatten.js":21,"./is-array.js":23,"./is-undefined.js":29,"./random.js":43,"./range.js":44,"./round.js":46,"./sort.js":55}],50:[function(require,module,exports){
 let assert = require("../misc/assert.js")
 let isUndefined = require("./is-undefined.js")
 let isArray = require("./is-array.js")
@@ -4660,7 +4662,7 @@ if (!module.parent && typeof(window) === "undefined"){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":66,"./is-array.js":23,"./is-undefined.js":29,"./max.js":33,"./normal.js":39}],51:[function(require,module,exports){
+},{"../misc/assert.js":67,"./is-array.js":23,"./is-undefined.js":29,"./max.js":33,"./normal.js":39}],51:[function(require,module,exports){
 let assert = require("../misc/assert.js")
 let isUndefined = require("./is-undefined.js")
 let isArray = require("./is-array.js")
@@ -4701,13 +4703,13 @@ if (!module.parent && typeof(window) === "undefined"){
 
   assert(distance(a, b) > 0, `shuffle(a) should not be in the same order as a!`)
 
-  // a = normal(10000)
-  // seed(20394230948)
-  // a1 = shuffle(a)
-  // seed(20394230948)
-  // a2 = shuffle(a)
-  //
-  // assert(distance(a1, a2) === 0, `Shuffling using the same seed should produce the same results!`)
+  a = normal(10000)
+  seed(20394230948)
+  a1 = shuffle(a)
+  seed(20394230948)
+  a2 = shuffle(a)
+
+  assert(distance(a1, a2) === 0, `Shuffling using the same seed should produce the same results!`)
 
   let hasFailed
 
@@ -4777,7 +4779,7 @@ if (!module.parent && typeof(window) === "undefined"){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":66,"./distance.js":19,"./floor.js":22,"./is-array.js":23,"./is-undefined.js":29,"./normal.js":39,"./random.js":43,"./seed.js":48}],52:[function(require,module,exports){
+},{"../misc/assert.js":67,"./distance.js":19,"./floor.js":22,"./is-array.js":23,"./is-undefined.js":29,"./normal.js":39,"./random.js":43,"./seed.js":48}],52:[function(require,module,exports){
 let assert = require("../misc/assert.js")
 let isUndefined = require("./is-undefined.js")
 let isNumber = require("./is-number.js")
@@ -4889,7 +4891,7 @@ if (!module.parent && typeof(window) === "undefined"){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":66,"./add.js":7,"./chop.js":12,"./is-number.js":27,"./is-undefined.js":29,"./normal.js":39,"./random.js":43,"./round.js":46,"./scale.js":47,"./set.js":49,"./sort.js":55,"./vectorize.js":62}],53:[function(require,module,exports){
+},{"../misc/assert.js":67,"./add.js":7,"./chop.js":12,"./is-number.js":27,"./is-undefined.js":29,"./normal.js":39,"./random.js":43,"./round.js":46,"./scale.js":47,"./set.js":49,"./sort.js":55,"./vectorize.js":62}],53:[function(require,module,exports){
 let assert = require("../misc/assert.js")
 let isUndefined = require("./is-undefined.js")
 let isNumber = require("./is-number.js")
@@ -4973,7 +4975,7 @@ if (!module.parent && typeof(window) === "undefined"){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":66,"./is-number.js":27,"./is-undefined.js":29,"./max.js":33,"./min.js":36,"./range.js":44,"./vectorize.js":62}],54:[function(require,module,exports){
+},{"../misc/assert.js":67,"./is-number.js":27,"./is-undefined.js":29,"./max.js":33,"./min.js":36,"./range.js":44,"./vectorize.js":62}],54:[function(require,module,exports){
 let assert = require("../misc/assert.js")
 let isUndefined = require("./is-undefined.js")
 let isNumber = require("./is-number.js")
@@ -5121,7 +5123,7 @@ if (!module.parent && typeof(window) === "undefined"){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":66,"./distance.js":19,"./flatten.js":21,"./floor.js":22,"./is-array.js":23,"./is-number.js":27,"./is-undefined.js":29,"./range.js":44,"./shape.js":50}],55:[function(require,module,exports){
+},{"../misc/assert.js":67,"./distance.js":19,"./flatten.js":21,"./floor.js":22,"./is-array.js":23,"./is-number.js":27,"./is-undefined.js":29,"./range.js":44,"./shape.js":50}],55:[function(require,module,exports){
 let assert = require("../misc/assert.js")
 let isUndefined = require("./is-undefined.js")
 let isArray = require("./is-array.js")
@@ -5253,7 +5255,7 @@ if (!module.parent && typeof(window) === "undefined"){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":66,"./distance.js":19,"./is-array.js":23,"./is-undefined.js":29,"./normal.js":39,"./range.js":44,"./shuffle.js":51}],56:[function(require,module,exports){
+},{"../misc/assert.js":67,"./distance.js":19,"./is-array.js":23,"./is-undefined.js":29,"./normal.js":39,"./range.js":44,"./shuffle.js":51}],56:[function(require,module,exports){
 let assert = require("../misc/assert.js")
 let isUndefined = require("./is-undefined.js")
 let isNumber = require("./is-number.js")
@@ -5352,7 +5354,7 @@ if (!module.parent && typeof(window) === "undefined"){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":66,"./distance.js":19,"./is-number.js":27,"./is-undefined.js":29,"./vectorize.js":62}],57:[function(require,module,exports){
+},{"../misc/assert.js":67,"./distance.js":19,"./is-number.js":27,"./is-undefined.js":29,"./vectorize.js":62}],57:[function(require,module,exports){
 let assert = require("../misc/assert.js")
 let isUndefined = require("./is-undefined.js")
 let isArray = require("./is-array.js")
@@ -5463,7 +5465,7 @@ if (!module.parent && typeof(window) === "undefined"){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":66,"./abs.js":6,"./add.js":7,"./flatten.js":21,"./is-array.js":23,"./is-number.js":27,"./is-undefined.js":29,"./mean.js":34,"./normal.js":39,"./pow.js":42,"./scale.js":47,"./sqrt.js":56}],58:[function(require,module,exports){
+},{"../misc/assert.js":67,"./abs.js":6,"./add.js":7,"./flatten.js":21,"./is-array.js":23,"./is-number.js":27,"./is-undefined.js":29,"./mean.js":34,"./normal.js":39,"./pow.js":42,"./scale.js":47,"./sqrt.js":56}],58:[function(require,module,exports){
 let assert = require("../misc/assert.js")
 let isUndefined = require("./is-undefined.js")
 let isArray = require("./is-array.js")
@@ -5576,7 +5578,7 @@ if (!module.parent && typeof(window) === "undefined"){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":66,"./abs.js":6,"./flatten.js":21,"./is-array.js":23,"./is-number.js":27,"./is-undefined.js":29,"./normal.js":39,"./range.js":44}],59:[function(require,module,exports){
+},{"../misc/assert.js":67,"./abs.js":6,"./flatten.js":21,"./is-array.js":23,"./is-number.js":27,"./is-undefined.js":29,"./normal.js":39,"./range.js":44}],59:[function(require,module,exports){
 let assert = require("../misc/assert.js")
 let isUndefined = require("./is-undefined.js")
 let isNumber = require("./is-number.js")
@@ -5683,7 +5685,7 @@ if (!module.parent && typeof(window) === "undefined"){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":66,"./abs.js":6,"./floor.js":22,"./is-number.js":27,"./is-undefined.js":29,"./normal.js":39,"./vectorize.js":62}],60:[function(require,module,exports){
+},{"../misc/assert.js":67,"./abs.js":6,"./floor.js":22,"./is-number.js":27,"./is-undefined.js":29,"./normal.js":39,"./vectorize.js":62}],60:[function(require,module,exports){
 let assert = require("../misc/assert.js")
 let isUndefined = require("./is-undefined.js")
 let isArray = require("./is-array.js")
@@ -5811,7 +5813,7 @@ if (!module.parent && typeof(window) === "undefined"){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":66,"./is-array.js":23,"./is-equal.js":25,"./is-undefined.js":29,"./ndarray.js":38,"./reverse.js":45,"./shape.js":50}],61:[function(require,module,exports){
+},{"../misc/assert.js":67,"./is-array.js":23,"./is-equal.js":25,"./is-undefined.js":29,"./ndarray.js":38,"./reverse.js":45,"./shape.js":50}],61:[function(require,module,exports){
 let assert = require("../misc/assert.js")
 let isUndefined = require("./is-undefined.js")
 let isArray = require("./is-array.js")
@@ -5920,7 +5922,7 @@ if (!module.parent && typeof(window) === "undefined"){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":66,"./abs.js":6,"./flatten.js":21,"./is-array.js":23,"./is-number.js":27,"./is-undefined.js":29,"./normal.js":39,"./pow.js":42,"./scale.js":47,"./std.js":57}],62:[function(require,module,exports){
+},{"../misc/assert.js":67,"./abs.js":6,"./flatten.js":21,"./is-array.js":23,"./is-number.js":27,"./is-undefined.js":29,"./normal.js":39,"./pow.js":42,"./scale.js":47,"./std.js":57}],62:[function(require,module,exports){
 let assert = require("../misc/assert.js")
 let isUndefined = require("./is-undefined.js")
 let isFunction = require("./is-function.js")
@@ -6067,7 +6069,7 @@ if (!module.parent && typeof(window) === "undefined"){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":66,"./is-array.js":23,"./is-equal.js":25,"./is-function.js":26,"./is-undefined.js":29,"./max.js":33}],63:[function(require,module,exports){
+},{"../misc/assert.js":67,"./is-array.js":23,"./is-equal.js":25,"./is-function.js":26,"./is-undefined.js":29,"./max.js":33}],63:[function(require,module,exports){
 let ndarray = require("./ndarray.js")
 let apply = require("../misc/apply.js")
 
@@ -6080,15 +6082,17 @@ module.exports = zeros
 },{"../misc/apply.js":65,"./ndarray.js":38}],64:[function(require,module,exports){
 let out = {
   apply: require("./apply.js"),
+  array: require("./array.js"),
   assert: require("./assert.js"),
   downloadJSON: require("./download-json.js"),
   dump: require("./dump.js"),
   pause: require("./pause.js"),
+  print: require("./print.js"),
 }
 
 module.exports = out
 
-},{"./apply.js":65,"./assert.js":66,"./download-json.js":67,"./dump.js":68,"./pause.js":69}],65:[function(require,module,exports){
+},{"./apply.js":65,"./array.js":66,"./assert.js":67,"./download-json.js":68,"./dump.js":69,"./pause.js":70,"./print.js":71}],65:[function(require,module,exports){
 let vectorize = require("../math/vectorize.js")
 
 let apply = vectorize(function(x, fn){
@@ -6098,11 +6102,31 @@ let apply = vectorize(function(x, fn){
 module.exports = apply
 
 },{"../math/vectorize.js":62}],66:[function(require,module,exports){
+Array.prototype.asyncForEach = async function(fn){
+  for (let i=0; i<this.length; i++) await fn(this[i], i, this)
+  return this
+}
+
+Array.prototype.alphaSort = function(key){
+  return this.sort(function(a, b){
+    if (key){
+      if (a[key] < b[key]) return -1
+      if (a[key] > b[key]) return 1
+      return 0
+    } else {
+      if (a < b) return -1
+      if (a > b) return 1
+      return 0
+    }
+  })
+}
+
+},{}],67:[function(require,module,exports){
 module.exports = function(isTrue, message){
   if (!isTrue) throw new Error(message)
 }
 
-},{}],67:[function(require,module,exports){
+},{}],68:[function(require,module,exports){
 function downloadJSON(obj, filename){
   let a = document.createElement("a")
   a.href = `data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(obj, null, "\t"))}`
@@ -6112,7 +6136,7 @@ function downloadJSON(obj, filename){
 
 module.exports = downloadJSON
 
-},{}],68:[function(require,module,exports){
+},{}],69:[function(require,module,exports){
 (function (global){
 function dump(obj, excluded=["dump"]){
   Object.keys(obj).forEach(function(key){
@@ -6125,7 +6149,7 @@ function dump(obj, excluded=["dump"]){
 module.exports = dump
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],69:[function(require,module,exports){
+},{}],70:[function(require,module,exports){
 function pause(ms){
   return new Promise(function(resolve, reject){
     try {
@@ -6137,5 +6161,12 @@ function pause(ms){
 }
 
 module.exports = pause
+
+},{}],71:[function(require,module,exports){
+function print(x){
+  return console.log(x)
+}
+
+module.exports = print
 
 },{}]},{},[4]);

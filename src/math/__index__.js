@@ -41,7 +41,7 @@ let out = {
   reverse: require("./reverse.js"),
   round: require("./round.js"),
   scale: require("./scale.js"),
-  // seed: require("./seed.js"),
+  seed: require("./seed.js"),
   set: require("./set.js"),
   shape: require("./shape.js"),
   shuffle: require("./shuffle.js"),

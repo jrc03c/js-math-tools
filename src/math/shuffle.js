@@ -38,13 +38,13 @@ if (!module.parent && typeof(window) === "undefined"){
 
   assert(distance(a, b) > 0, `shuffle(a) should not be in the same order as a!`)
 
-  // a = normal(10000)
-  // seed(20394230948)
-  // a1 = shuffle(a)
-  // seed(20394230948)
-  // a2 = shuffle(a)
-  //
-  // assert(distance(a1, a2) === 0, `Shuffling using the same seed should produce the same results!`)
+  a = normal(10000)
+  seed(20394230948)
+  a1 = shuffle(a)
+  seed(20394230948)
+  a2 = shuffle(a)
+
+  assert(distance(a1, a2) === 0, `Shuffling using the same seed should produce the same results!`)
 
   let hasFailed
 
