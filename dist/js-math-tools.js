@@ -3334,7 +3334,7 @@ function ndarray(shape){
   })
 
   if (shape.length === 1){
-    return range(0, shape[0]).map(v => 0)
+    return range(0, shape[0]).map(v => undefined)
   } else {
     let out = []
     for (let i=0; i<shape[0]; i++) out.push(ndarray(shape.slice(1, shape.length)))
@@ -5896,14 +5896,15 @@ if (!module.parent){
 
 },{"../misc/assert.js":66,"./is-array.js":23,"./is-equal.js":25,"./is-function.js":26,"./is-undefined.js":29,"./max.js":33}],62:[function(require,module,exports){
 let ndarray = require("./ndarray.js")
+let apply = require("../misc/apply.js")
 
 function zeros(shape){
-  return ndarray(shape)
+  return apply(ndarray(shape), x => 0)
 }
 
 module.exports = zeros
 
-},{"./ndarray.js":38}],63:[function(require,module,exports){
+},{"../misc/apply.js":64,"./ndarray.js":38}],63:[function(require,module,exports){
 let out = {
   apply: require("./apply.js"),
   array: require("./array.js"),
