@@ -32,7 +32,7 @@ function isEqual(a, b){
 module.exports = isEqual
 
 // tests
-if (!module.parent && !window){
+if (!module.parent && typeof(window) === "undefined"){
   let assert = require("../misc/assert.js")
 
   assert(isEqual(2, 2), `isEqual(2, 2) should be true!`)

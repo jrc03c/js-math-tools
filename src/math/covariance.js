@@ -25,7 +25,7 @@ function covariance(x, y){
 module.exports = covariance
 
 // tests
-if (!module.parent && !window){
+if (!module.parent && typeof(window) === "undefined"){
   let normal = require("./normal.js")
   let abs = require("./abs.js")
   let chop = require("./chop.js")

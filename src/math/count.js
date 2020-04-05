@@ -22,7 +22,7 @@ function count(arr, items){
 module.exports = count
 
 // tests
-if (!module.parent && !window){
+if (!module.parent && typeof(window) === "undefined"){
   let random = require("./random.js")
   let round = require("./round.js")
   let abs = require("./abs.js")

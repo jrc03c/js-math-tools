@@ -24,7 +24,7 @@ let add = vectorize(function(){
 module.exports = add
 
 // tests
-if (!module.parent && !window){
+if (!module.parent && typeof(window) === "undefined"){
   let a = 3
   let b = 4
   cTrue = a + b

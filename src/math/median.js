@@ -35,7 +35,7 @@ function median(arr){
 module.exports = median
 
 // tests
-if (!module.parent && !window){
+if (!module.parent && typeof(window) === "undefined"){
   let shuffle = require("./shuffle.js")
   let normal = require("./normal.js")
   let random = require("./random.js")

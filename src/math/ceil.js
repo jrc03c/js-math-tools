@@ -12,7 +12,7 @@ let ceil = vectorize(function(x){
 module.exports = ceil
 
 // tests
-if (!module.parent && !window){
+if (!module.parent && typeof(window) === "undefined"){
   let x = 3.5
   let yTrue = 4
   let yPred = ceil(x)

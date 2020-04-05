@@ -15,7 +15,7 @@ function sort(arr, fn){
 module.exports = sort
 
 // tests
-if (!module.parent && !window){
+if (!module.parent && typeof(window) === "undefined"){
   let shuffle = require("./shuffle.js")
   let range = require("./range.js")
   let distance = require("./distance.js")

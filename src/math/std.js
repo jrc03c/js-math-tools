@@ -27,7 +27,7 @@ function std(arr){
 module.exports = std
 
 // tests
-if (!module.parent && !window){
+if (!module.parent && typeof(window) === "undefined"){
   let normal = require("./normal.js")
   let abs = require("./abs.js")
   let add = require("./add.js")

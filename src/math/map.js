@@ -14,7 +14,7 @@ let map = vectorize(function(x, a, b, c, d){
 module.exports = map
 
 // tests
-if (!module.parent && !window){
+if (!module.parent && typeof(window) === "undefined"){
   let x = 1
   let a = 0
   let b = 2

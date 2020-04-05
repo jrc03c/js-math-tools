@@ -28,7 +28,7 @@ function max(arr){
 module.exports = max
 
 // tests
-if (!module.parent && !window){
+if (!module.parent && typeof(window) === "undefined"){
   let normal = require("./normal.js")
   let random = require("./random.js")
   let min = require("./min.js")

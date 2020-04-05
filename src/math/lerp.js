@@ -14,7 +14,7 @@ let lerp = vectorize(function(a, b, f){
 module.exports = lerp
 
 // tests
-if (!module.parent && !window){
+if (!module.parent && typeof(window) === "undefined"){
   let a = 0
   let b = 1
   let f = 1

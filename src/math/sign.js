@@ -15,7 +15,7 @@ let sign = vectorize(function(x){
 module.exports = sign
 
 // tests
-if (!module.parent && !window){
+if (!module.parent && typeof(window) === "undefined"){
   let random = require("./random.js")
   let normal = require("./normal.js")
   let round = require("./round.js")

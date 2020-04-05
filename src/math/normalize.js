@@ -24,7 +24,7 @@ function normalize(arr){
 module.exports = normalize
 
 // tests
-if (!module.parent && !window){
+if (!module.parent && typeof(window) === "undefined"){
   let random = require("./random.js")
   let normal = require("./normal.js")
   let add = require("./add.js")

@@ -28,7 +28,7 @@ function shuffle(arr){
 module.exports = shuffle
 
 // tests
-if (!module.parent && !window){
+if (!module.parent && typeof(window) === "undefined"){
   let normal = require("./normal.js")
 
   let a = normal(10000)

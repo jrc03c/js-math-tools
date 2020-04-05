@@ -16,7 +16,7 @@ function normal(shape){
 module.exports = normal
 
 // tests
-if (!module.parent && !window){
+if (!module.parent && typeof(window) === "undefined"){
   let assert = require("../misc/assert.js")
   let std = require("./std.js")
   let mean = require("./mean.js")

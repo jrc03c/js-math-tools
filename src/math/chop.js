@@ -17,7 +17,7 @@ let chop = vectorize(function(x, threshold){
 module.exports = chop
 
 // tests
-if (!module.parent && !window){
+if (!module.parent && typeof(window) === "undefined"){
   let x = 1
   let y = chop(x)
   assert(y === 1, `chop(1) should be 1, but instead is ${y}!`)

@@ -21,7 +21,7 @@ function mean(arr){
 module.exports = mean
 
 // tests
-if (!module.parent && !window){
+if (!module.parent && typeof(window) === "undefined"){
   let normal = require("./normal.js")
   let random = require("./random.js")
   let abs = require("./abs.js")

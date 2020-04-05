@@ -13,7 +13,7 @@ let scale = vectorize(function(a, b){
 module.exports = scale
 
 // tests
-if (!module.parent && !window){
+if (!module.parent && typeof(window) === "undefined"){
   let a = 3
   let b = 5
   let yTrue = 15

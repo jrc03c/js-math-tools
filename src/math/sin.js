@@ -13,7 +13,7 @@ let sin = vectorize(function(x){
 module.exports = sin
 
 // tests
-if (!module.parent && !window){
+if (!module.parent && typeof(window) === "undefined"){
   let min = require("./min.js")
   let max = require("./max.js")
   let range = require("./range.js")

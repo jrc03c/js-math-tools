@@ -14,7 +14,7 @@ let floor = vectorize(function(x){
 module.exports = floor
 
 // tests
-if (!module.parent && !window){
+if (!module.parent && typeof(window) === "undefined"){
   let random = require("./random.js")
   let zeros = require("./zeros.js")
 

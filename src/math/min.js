@@ -28,7 +28,7 @@ function min(arr){
 module.exports = min
 
 // tests
-if (!module.parent && !window){
+if (!module.parent && typeof(window) === "undefined"){
   let random = require("./random.js")
 
   let x = [4, 2, 3]

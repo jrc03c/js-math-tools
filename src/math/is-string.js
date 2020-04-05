@@ -5,7 +5,7 @@ function isString(s){
 module.exports = isString
 
 // tests
-if (!module.parent && !window){
+if (!module.parent && typeof(window) === "undefined"){
   let assert = require("../misc/assert.js")
 
   assert(isString("hi"), `"hi" is a string!`)

@@ -50,7 +50,7 @@ function dot(a, b){
 module.exports = dot
 
 // tests
-if (!module.parent && !window){
+if (!module.parent && typeof(window) === "undefined"){
   let normal = require("./normal.js")
 
   let a = [2, 3, 4]

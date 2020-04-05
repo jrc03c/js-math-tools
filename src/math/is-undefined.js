@@ -5,7 +5,7 @@ function isUndefined(x){
 module.exports = isUndefined
 
 // tests
-if (!module.parent && !window){
+if (!module.parent && typeof(window) === "undefined"){
   let assert = require("../misc/assert.js")
 
   assert(!isUndefined("foo"), `isUndefined("foo") should be false, but instead was true!`)

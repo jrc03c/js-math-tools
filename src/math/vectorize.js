@@ -38,7 +38,7 @@ function vectorize(fn){
 module.exports = vectorize
 
 // tests
-if (!module.parent && !window){
+if (!module.parent && typeof(window) === "undefined"){
   let isEqual = require("./is-equal.js")
 
   let x = [2, 3, 4]

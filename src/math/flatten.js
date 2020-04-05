@@ -22,7 +22,7 @@ function flatten(arr){
 module.exports = flatten
 
 // tests
-if (!module.parent && !window){
+if (!module.parent && typeof(window) === "undefined"){
   let normal = require("./normal.js")
 
   let x = [2, 3, 4]

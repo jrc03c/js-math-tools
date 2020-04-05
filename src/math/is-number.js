@@ -5,7 +5,7 @@ function isNumber(x){
 module.exports = isNumber
 
 // tests
-if (!module.parent && !window){
+if (!module.parent && typeof(window) === "undefined"){
   let assert = require("../misc/assert.js")
 
   assert(isNumber(3), `3 is a number!`)

@@ -25,7 +25,7 @@ function range(a, b, step=1){
 module.exports = range
 
 // tests
-if (!module.parent && !window){
+if (!module.parent && typeof(window) === "undefined"){
   let yTrue = [5, 6, 7, 8, 9]
   let yPred = range(5, 10)
   for (let i=0; i<yTrue; i++) assert(yTrue[i] === yPred[i], `range(5, 10) should be [5, 6, 7, 8, 9]!`)

@@ -13,7 +13,7 @@ let arcsin = vectorize(function(x){
 module.exports = arcsin
 
 // tests
-if (!module.parent && !window){
+if (!module.parent && typeof(window) === "undefined"){
   let random = require("./random.js")
 
   let x = 0

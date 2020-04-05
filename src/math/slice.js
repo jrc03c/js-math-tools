@@ -46,7 +46,7 @@ function slice(arr, indices){
 module.exports = slice
 
 // tests
-if (!module.parent && !window){
+if (!module.parent && typeof(window) === "undefined"){
   let distance = require("./distance.js")
 
   let x = [[2, 3, 4], [5, 6, 7], [8, 9, 10]]

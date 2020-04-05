@@ -20,7 +20,7 @@ let clamp = vectorize(function(x, a, b){
 module.exports = clamp
 
 // tests
-if (!module.parent && !window){
+if (!module.parent && typeof(window) === "undefined"){
   let x = 5
   let a = 1
   let b = 10

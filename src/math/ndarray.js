@@ -32,7 +32,7 @@ function ndarray(shape){
 module.exports = ndarray
 
 // tests
-if (!module.parent && !window){
+if (!module.parent && typeof(window) === "undefined"){
   let flatten = require("./flatten.js")
 
   assert(ndarray(3).length === 3, `ndarray(3) should have a length of 3!`)
