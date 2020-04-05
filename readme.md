@@ -63,7 +63,7 @@ divide(24, [6, 8, 12]) // [4, 3, 2]
 divide([20, 30, 40], [40, 30, 20]) // [0.5, 1, 2]
 ```
 
-# Arrays
+# Working with Arrays
 
 Unlike some other JS math libraries, this library does _not_ provide a wrapper around standard JS arrays. Therefore, pretty much everything is handled through functions, not objects. Here are some examples of things you might want to do with (_n_-dimensional) arrays.
 
@@ -176,3 +176,91 @@ slice(arr7, which)
 flatten([[2, 3, 4], [5, 6, 7]])
 // [2, 3, 4, 5, 6, 7]
 ```
+
+# Plotting
+
+This library also provides some simple plotting capabilities. **Note that this functionality relies on the `canvas` and therefore only works on client-side (unless you use some kind of Node-side canvas library).** Here's a demo web page with several examples:
+
+```html
+<html>
+  <head>
+    <meta charset="utf-8">
+    <style>
+      canvas {
+        margin: 1em;
+        box-shadow: 4px 4px 20px rgb(200, 200, 200);
+      }
+    </style>
+  </head>
+  <body>
+    <script src="dist/js-math-tools.js"></script>
+    <script>
+      JSMathTools.dump()
+
+      function createCanvas(width, height){
+        let canvas = document.createElement("canvas")
+        canvas.width = width
+        canvas.height = height
+        document.body.appendChild(canvas)
+        return canvas
+      }
+
+      // random noise
+      let canvas1 = createCanvas(400, 400)
+      let plot1 = new Plot(canvas1)
+      let x1 = normal(1000)
+      let y1 = normal(1000)
+      plot1.setRange(-3, 3, -3, 3)
+      plot1.setDotSize(1)
+      plot1.scatter(x1, y1)
+
+      // sine wave
+      let canvas2 = createCanvas(400, 400)
+      let plot2 = new Plot(canvas2)
+      let x2 = range(-Math.PI, Math.PI, Math.PI / 100)
+      let y2 = sin(x2)
+      plot2.setRange(-Math.PI, Math.PI, -1.05, 1.05)
+      plot2.setDotSize(3)
+      plot2.setFillColor("red")
+      plot2.setLineThickness(0)
+      plot2.scatter(x2, y2)
+
+      // line
+      let canvas3 = createCanvas(400, 400)
+      let plot3 = new Plot(canvas3)
+      let x3 = range(-10, 10, 0.1)
+      let y3 = apply(x3, x => 0.1 * x * x)
+      plot3.setRange(-10, 10, -2, 12)
+      plot3.setLineThickness(2)
+      plot3.setLineColor("#a5fc03")
+      plot3.line(x3, y3)
+
+      // dashed / dotted line
+      let canvas4 = createCanvas(400, 400)
+      let plot4 = new Plot(canvas4)
+      let x4 = range(-10, 10, 0.5)
+      let y4 = apply(x4, x => 0.1 * x * x)
+      plot4.setRange(-10, 10, -2, 12)
+      plot4.setLineThickness(2)
+      plot4.setLineColor("rgb(55, 134, 161)")
+      plot4.dottedLine(x4, y4)
+
+      // bar chart
+      let canvas5 = createCanvas(400, 400)
+      let plot5 = new Plot(canvas5)
+      plot5.bar([2, 3, 4, 5], ["red", "green", "blue", "yellow"])
+
+      // download a plot
+      plot5.download("plot5.png")
+    </script>
+  </body>
+</html>
+```
+
+That page will produce these plots:
+
+![](https://i.ibb.co/8dF3fLs/plot1.png)
+![](https://i.ibb.co/5hY1CK9/plot2.png)
+![](https://i.ibb.co/xHH5W5J/plot3.png)
+![](https://i.ibb.co/X7SZD7P/plot4.png)
+![](https://i.ibb.co/FbkNfMJ/plot5.png)

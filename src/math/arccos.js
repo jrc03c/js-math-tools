@@ -13,7 +13,7 @@ let arccos = vectorize(function(x){
 module.exports = arccos
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let random = require("./random.js")
 
   let x = 0

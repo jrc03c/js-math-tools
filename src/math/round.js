@@ -13,7 +13,7 @@ let round = vectorize(function(x){
 module.exports = round
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let random = require("./random.js")
   let set = require("./set.js")
   let sort = require("./sort.js")

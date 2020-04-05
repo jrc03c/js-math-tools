@@ -5,7 +5,7 @@ function isArray(obj){
 module.exports = isArray
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let assert = require("../misc/assert.js")
 
   assert(isArray([]), `isArray([]) should return true!`)

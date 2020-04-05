@@ -18,6 +18,7 @@ module.exports = downloadCanvas
 
 },{}],3:[function(require,module,exports){
 let map = require("../math/map.js")
+let max = require("../math/max.js")
 let downloadCanvas = require("./download-canvas.js")
 
 function Plot(canvas){
@@ -219,6 +220,9 @@ function Plot(canvas){
   }
 
   self.bar = function(values, colors){
+    let maxValue = max(values)
+    self.setRange(1, 2 + values.length, -0.1 * maxValue, 1.1 * maxValue)
+
     context.save()
     context.translate(width/2, height/2)
     context.scale(1, -1)
@@ -280,6 +284,7 @@ function Plot(canvas){
   }
 
   self.download = function(filename){
+    filename = filename || "untitled.png"
     downloadCanvas(canvas, filename)
     return self
   }
@@ -287,7 +292,7 @@ function Plot(canvas){
 
 module.exports = Plot
 
-},{"../math/map.js":32,"./download-canvas.js":2}],4:[function(require,module,exports){
+},{"../math/map.js":32,"../math/max.js":33,"./download-canvas.js":2}],4:[function(require,module,exports){
 let out = {
   canvas: require("./canvas/__index__.js"),
   math: require("./math/__index__.js"),
@@ -387,7 +392,7 @@ let abs = vectorize(function(x){
 module.exports = abs
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let result = abs(3)
   assert(result === 3, `abs(3) should be 3, but instead is ${result}!`)
 
@@ -507,7 +512,7 @@ let add = vectorize(function(){
 module.exports = add
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let a = 3
   let b = 4
   cTrue = a + b
@@ -616,7 +621,7 @@ let arccos = vectorize(function(x){
 module.exports = arccos
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let random = require("./random.js")
 
   let x = 0
@@ -732,7 +737,7 @@ let arcsin = vectorize(function(x){
 module.exports = arcsin
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let random = require("./random.js")
 
   let x = 0
@@ -847,7 +852,7 @@ let arctan = vectorize(function(x){
 module.exports = arctan
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let random = require("./random.js")
 
   let x = 0
@@ -962,7 +967,7 @@ let ceil = vectorize(function(x){
 module.exports = ceil
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let x = 3.5
   let yTrue = 4
   let yPred = ceil(x)
@@ -1051,7 +1056,7 @@ let chop = vectorize(function(x, threshold){
 module.exports = chop
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let x = 1
   let y = chop(x)
   assert(y === 1, `chop(1) should be 1, but instead is ${y}!`)
@@ -1175,7 +1180,7 @@ let clamp = vectorize(function(x, a, b){
 module.exports = clamp
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let x = 5
   let a = 1
   let b = 10
@@ -1288,7 +1293,7 @@ function correl(x, y){
 module.exports = correl
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let normal = require("./normal.js")
   let abs = require("./abs.js")
   let add = require("./add.js")
@@ -1405,7 +1410,7 @@ let cos = vectorize(function(x){
 module.exports = cos
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let min = require("./min.js")
   let max = require("./max.js")
   let normal = require("./normal.js")
@@ -1518,7 +1523,7 @@ function count(arr, items){
 module.exports = count
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let random = require("./random.js")
   let round = require("./round.js")
   let abs = require("./abs.js")
@@ -1628,7 +1633,7 @@ function covariance(x, y){
 module.exports = covariance
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let normal = require("./normal.js")
   let abs = require("./abs.js")
   let chop = require("./chop.js")
@@ -1731,7 +1736,7 @@ function distance(a, b){
 module.exports = distance
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let normal = require("./normal.js")
 
   let a = [4, 6]
@@ -1868,7 +1873,7 @@ function dot(a, b){
 module.exports = dot
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let normal = require("./normal.js")
 
   let a = [2, 3, 4]
@@ -2008,7 +2013,7 @@ function flatten(arr){
 module.exports = flatten
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let normal = require("./normal.js")
 
   let x = [2, 3, 4]
@@ -2092,7 +2097,7 @@ let floor = vectorize(function(x){
 module.exports = floor
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let random = require("./random.js")
   let zeros = require("./zeros.js")
 
@@ -2175,7 +2180,7 @@ function isArray(obj){
 module.exports = isArray
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let assert = require("../misc/assert.js")
 
   assert(isArray([]), `isArray([]) should return true!`)
@@ -2234,7 +2239,7 @@ function isEqual(a, b){
 module.exports = isEqual
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let assert = require("../misc/assert.js")
 
   assert(isEqual(2, 2), `isEqual(2, 2) should be true!`)
@@ -2282,7 +2287,7 @@ function isNumber(x){
 module.exports = isNumber
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let assert = require("../misc/assert.js")
 
   assert(isNumber(3), `3 is a number!`)
@@ -2306,7 +2311,7 @@ function isString(s){
 module.exports = isString
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let assert = require("../misc/assert.js")
 
   assert(isString("hi"), `"hi" is a string!`)
@@ -2330,7 +2335,7 @@ function isUndefined(x){
 module.exports = isUndefined
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let assert = require("../misc/assert.js")
 
   assert(!isUndefined("foo"), `isUndefined("foo") should be false, but instead was true!`)
@@ -2375,7 +2380,7 @@ let lerp = vectorize(function(a, b, f){
 module.exports = lerp
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let a = 0
   let b = 1
   let f = 1
@@ -2481,7 +2486,7 @@ let log = vectorize(function(x, base){
 module.exports = log
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let abs = require("./abs.js")
   let chop = require("./chop.js")
 
@@ -2594,7 +2599,7 @@ let map = vectorize(function(x, a, b, c, d){
 module.exports = map
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let x = 1
   let a = 0
   let b = 2
@@ -2713,7 +2718,7 @@ function max(arr){
 module.exports = max
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let normal = require("./normal.js")
   let random = require("./random.js")
   let min = require("./min.js")
@@ -2839,7 +2844,7 @@ function mean(arr){
 module.exports = mean
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let normal = require("./normal.js")
   let random = require("./random.js")
   let abs = require("./abs.js")
@@ -2968,7 +2973,7 @@ function median(arr){
 module.exports = median
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let shuffle = require("./shuffle.js")
   let normal = require("./normal.js")
   let random = require("./random.js")
@@ -3093,7 +3098,7 @@ function min(arr){
 module.exports = min
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let random = require("./random.js")
 
   let x = [4, 2, 3]
@@ -3228,7 +3233,7 @@ function mode(arr){
 module.exports = mode
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let random = require("./random.js")
   let round = require("./round.js")
   let shuffle = require("./shuffle.js")
@@ -3345,7 +3350,7 @@ function ndarray(shape){
 module.exports = ndarray
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let flatten = require("./flatten.js")
 
   assert(ndarray(3).length === 3, `ndarray(3) should have a length of 3!`)
@@ -3468,7 +3473,7 @@ function normal(shape){
 module.exports = normal
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let assert = require("../misc/assert.js")
   let std = require("./std.js")
   let mean = require("./mean.js")
@@ -3529,7 +3534,7 @@ function normalize(arr){
 module.exports = normalize
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let random = require("./random.js")
   let normal = require("./normal.js")
   let add = require("./add.js")
@@ -3616,7 +3621,7 @@ function ones(shape){
 module.exports = ones
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let assert = require("../misc/assert.js")
   let sum = require("./sum.js")
   let mean = require("./mean.js")
@@ -3714,7 +3719,7 @@ let pow = vectorize(function(x, p){
 module.exports = pow
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let x = 3
   let p = 2
   let yTrue = 9
@@ -3831,7 +3836,7 @@ function random(shape){
 module.exports = random
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   console.log("TO-DO: Implement PRNG / seeding in `random`?")
 
   let assert = require("../misc/assert.js")
@@ -3925,7 +3930,7 @@ function range(a, b, step=1){
 module.exports = range
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let yTrue = [5, 6, 7, 8, 9]
   let yPred = range(5, 10)
   for (let i=0; i<yTrue; i++) assert(yTrue[i] === yPred[i], `range(5, 10) should be [5, 6, 7, 8, 9]!`)
@@ -4038,7 +4043,7 @@ function reverse(arr){
 module.exports = reverse
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   console.log("All tests passed!")
 }
 
@@ -4058,7 +4063,7 @@ let round = vectorize(function(x){
 module.exports = round
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let random = require("./random.js")
   let set = require("./set.js")
   let sort = require("./sort.js")
@@ -4159,7 +4164,7 @@ let scale = vectorize(function(a, b){
 module.exports = scale
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let a = 3
   let b = 5
   let yTrue = 15
@@ -4267,7 +4272,7 @@ function set(arr){
 module.exports = set
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let sort = require("./sort.js")
   let round = require("./round.js")
   let random = require("./random.js")
@@ -4400,7 +4405,7 @@ function shape(arr){
 module.exports = shape
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let normal = require("./normal.js")
 
   let yTrue = 500
@@ -4520,7 +4525,7 @@ function shuffle(arr){
 module.exports = shuffle
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let normal = require("./normal.js")
 
   let a = normal(10000)
@@ -4622,7 +4627,7 @@ let sign = vectorize(function(x){
 module.exports = sign
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let random = require("./random.js")
   let normal = require("./normal.js")
   let round = require("./round.js")
@@ -4732,7 +4737,7 @@ let sin = vectorize(function(x){
 module.exports = sin
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let min = require("./min.js")
   let max = require("./max.js")
   let range = require("./range.js")
@@ -4849,7 +4854,7 @@ function slice(arr, indices){
 module.exports = slice
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let distance = require("./distance.js")
 
   let x = [[2, 3, 4], [5, 6, 7], [8, 9, 10]]
@@ -4966,7 +4971,7 @@ function sort(arr, fn){
 module.exports = sort
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let shuffle = require("./shuffle.js")
   let range = require("./range.js")
   let distance = require("./distance.js")
@@ -5097,7 +5102,7 @@ let sqrt = vectorize(function(x){
 module.exports = sqrt
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let distance = require("./distance.js")
 
   let x = 4
@@ -5209,7 +5214,7 @@ function std(arr){
 module.exports = std
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let normal = require("./normal.js")
   let abs = require("./abs.js")
   let add = require("./add.js")
@@ -5315,7 +5320,7 @@ function sum(arr){
 module.exports = sum
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let range = require("./range.js")
   let normal = require("./normal.js")
   let abs = require("./abs.js")
@@ -5422,7 +5427,7 @@ let tan = vectorize(function(x){
 module.exports = tan
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let abs = require("./abs.js")
   let normal = require("./normal.js")
 
@@ -5543,7 +5548,7 @@ function transpose(arr){
 module.exports = transpose
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let isEqual = require("./is-equal.js")
 
   let x = [2, 3, 4]
@@ -5663,7 +5668,7 @@ function variance(arr){
 module.exports = variance
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let abs = require("./abs.js")
   let normal = require("./normal.js")
   let scale = require("./scale.js")
@@ -5788,7 +5793,7 @@ function vectorize(fn){
 module.exports = vectorize
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let isEqual = require("./is-equal.js")
 
   let x = [2, 3, 4]

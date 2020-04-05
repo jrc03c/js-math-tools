@@ -13,7 +13,7 @@ let abs = vectorize(function(x){
 module.exports = abs
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let result = abs(3)
   assert(result === 3, `abs(3) should be 3, but instead is ${result}!`)
 

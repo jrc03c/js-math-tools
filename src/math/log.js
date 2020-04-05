@@ -16,7 +16,7 @@ let log = vectorize(function(x, base){
 module.exports = log
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let abs = require("./abs.js")
   let chop = require("./chop.js")
 

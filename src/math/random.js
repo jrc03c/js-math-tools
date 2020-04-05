@@ -10,7 +10,7 @@ function random(shape){
 module.exports = random
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   console.log("TO-DO: Implement PRNG / seeding in `random`?")
 
   let assert = require("../misc/assert.js")

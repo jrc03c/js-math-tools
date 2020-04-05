@@ -16,7 +16,7 @@ function normal(shape){
 module.exports = normal
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let assert = require("../misc/assert.js")
   let std = require("./std.js")
   let mean = require("./mean.js")

@@ -1,4 +1,5 @@
 let map = require("../math/map.js")
+let max = require("../math/max.js")
 let downloadCanvas = require("./download-canvas.js")
 
 function Plot(canvas){
@@ -200,6 +201,9 @@ function Plot(canvas){
   }
 
   self.bar = function(values, colors){
+    let maxValue = max(values)
+    self.setRange(1, 2 + values.length, -0.1 * maxValue, 1.1 * maxValue)
+
     context.save()
     context.translate(width/2, height/2)
     context.scale(1, -1)
@@ -261,6 +265,7 @@ function Plot(canvas){
   }
 
   self.download = function(filename){
+    filename = filename || "untitled.png"
     downloadCanvas(canvas, filename)
     return self
   }

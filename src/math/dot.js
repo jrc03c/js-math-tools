@@ -50,7 +50,7 @@ function dot(a, b){
 module.exports = dot
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let normal = require("./normal.js")
 
   let a = [2, 3, 4]

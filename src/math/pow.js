@@ -13,7 +13,7 @@ let pow = vectorize(function(x, p){
 module.exports = pow
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let x = 3
   let p = 2
   let yTrue = 9

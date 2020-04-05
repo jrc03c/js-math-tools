@@ -16,7 +16,7 @@ let tan = vectorize(function(x){
 module.exports = tan
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let abs = require("./abs.js")
   let normal = require("./normal.js")
 

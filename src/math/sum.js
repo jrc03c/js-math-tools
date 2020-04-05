@@ -22,7 +22,7 @@ function sum(arr){
 module.exports = sum
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let range = require("./range.js")
   let normal = require("./normal.js")
   let abs = require("./abs.js")

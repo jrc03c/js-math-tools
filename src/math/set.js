@@ -19,7 +19,7 @@ function set(arr){
 module.exports = set
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let sort = require("./sort.js")
   let round = require("./round.js")
   let random = require("./random.js")

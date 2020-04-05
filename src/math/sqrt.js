@@ -14,7 +14,7 @@ let sqrt = vectorize(function(x){
 module.exports = sqrt
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let distance = require("./distance.js")
 
   let x = 4

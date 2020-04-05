@@ -12,7 +12,7 @@ let cos = vectorize(function(x){
 module.exports = cos
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let min = require("./min.js")
   let max = require("./max.js")
   let normal = require("./normal.js")

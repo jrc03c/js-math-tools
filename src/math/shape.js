@@ -29,7 +29,7 @@ function shape(arr){
 module.exports = shape
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let normal = require("./normal.js")
 
   let yTrue = 500

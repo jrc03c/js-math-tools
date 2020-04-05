@@ -22,7 +22,7 @@ function variance(arr){
 module.exports = variance
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let abs = require("./abs.js")
   let normal = require("./normal.js")
   let scale = require("./scale.js")

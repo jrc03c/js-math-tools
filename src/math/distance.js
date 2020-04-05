@@ -28,7 +28,7 @@ function distance(a, b){
 module.exports = distance
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let normal = require("./normal.js")
 
   let a = [4, 6]

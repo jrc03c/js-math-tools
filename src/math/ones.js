@@ -8,7 +8,7 @@ function ones(shape){
 module.exports = ones
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let assert = require("../misc/assert.js")
   let sum = require("./sum.js")
   let mean = require("./mean.js")

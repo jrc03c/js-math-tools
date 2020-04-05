@@ -12,7 +12,7 @@ let arctan = vectorize(function(x){
 module.exports = arctan
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let random = require("./random.js")
 
   let x = 0

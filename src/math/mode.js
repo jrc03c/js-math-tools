@@ -37,7 +37,7 @@ function mode(arr){
 module.exports = mode
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   let random = require("./random.js")
   let round = require("./round.js")
   let shuffle = require("./shuffle.js")

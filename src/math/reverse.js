@@ -14,6 +14,6 @@ function reverse(arr){
 module.exports = reverse
 
 // tests
-if (!module.parent){
+if (!module.parent && !window){
   console.log("All tests passed!")
 }
