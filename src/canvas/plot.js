@@ -297,6 +297,13 @@ function Plot(canvas){
     assert(isArray(values), "You must pass two equally-sized one-dimensional arrays into the plot's `bar` method: an array of numeric values and array of color strings!")
     assert(isArray(colors), "You must pass two equally-sized one-dimensional arrays into the plot's `bar` method: an array of numeric values and array of color strings!")
 
+    let valuesShape = shape(values)
+    let colorsShape = shape(colors)
+
+    assert(valuesShape.length < 2, "You must pass two equally-sized one-dimensional arrays into the plot's `bar` method: an array of numeric values and array of color strings!")
+    assert(colorsShape.length < 2, "You must pass two equally-sized one-dimensional arrays into the plot's `bar` method: an array of numeric values and array of color strings!")
+    assert(isEqual(valuesShape, colorsShape), "You must pass two equally-sized one-dimensional arrays into the plot's `bar` method: an array of numeric values and array of color strings!")
+
     values.forEach(function(value){
       assert(isNumber(value), "You must pass two equally-sized one-dimensional arrays into the plot's `bar` method: an array of numeric values and array of color strings!")
     })
