@@ -30,19 +30,21 @@ module.exports = shuffle
 // tests
 if (!module.parent && typeof(window) === "undefined"){
   let normal = require("./normal.js")
+  let seed = require("./seed.js")
+  let distance = require("./distance.js")
 
   let a = normal(10000)
   let b = shuffle(a)
-  let allAreTheSame = true
 
-  for (let i=0; i<a.length; i++){
-    if (a[i] !== b[i]){
-      allAreTheSame = false
-      break
-    }
-  }
+  assert(distance(a, b) > 0, `shuffle(a) should not be in the same order as a!`)
 
-  assert(!allAreTheSame, `shuffle(a) should not be in the same order as a!`)
+  a = normal(10000)
+  seed(20394230948)
+  a1 = shuffle(a)
+  seed(20394230948)
+  a2 = shuffle(a)
+
+  assert(distance(a1, a2) === 0, `Shuffling using the same seed should produce the same results!`)
 
   let hasFailed
 

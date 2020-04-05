@@ -3459,11 +3459,12 @@ if (!module.parent && typeof(window) === "undefined"){
 let isUndefined = require("./is-undefined.js")
 let ndarray = require("./ndarray.js")
 let apply = require("../misc/apply.js")
+let random = require("./random.js")
 
 function normal(shape){
   function n(){
-    let u1 = Math.random()
-    let u2 = Math.random()
+    let u1 = random()
+    let u2 = random()
     return Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2)
   }
 
@@ -3479,6 +3480,8 @@ if (!module.parent && typeof(window) === "undefined"){
   let std = require("./std.js")
   let mean = require("./mean.js")
   let abs = require("./abs.js")
+  let seed = require("./seed.js")
+  let distance = require("./distance.js")
 
   let x = normal([10000])
   let m = mean(x)
@@ -3494,6 +3497,12 @@ if (!module.parent && typeof(window) === "undefined"){
   assert(abs(m) < 0.05, `normal([10, 10, 10, 10]) should have a mean of approximately 0!`)
   assert(abs(s - 1) < 0.05, `normal([10, 10, 10, 10]) should have a standard deviation of approximately 1!`)
 
+  seed(230498230498)
+  let a = normal(10000)
+  seed(230498230498)
+  let b = normal(10000)
+  assert(distance(a, b) === 0, "Two normally-distributed arrays seeded with the same value should be identical!")
+
   let hasFailed
 
   try {
@@ -3508,7 +3517,7 @@ if (!module.parent && typeof(window) === "undefined"){
   console.log("All tests passed!")
 }
 
-},{"../misc/apply.js":65,"../misc/assert.js":67,"./abs.js":6,"./is-undefined.js":29,"./mean.js":34,"./ndarray.js":38,"./std.js":57}],40:[function(require,module,exports){
+},{"../misc/apply.js":65,"../misc/assert.js":67,"./abs.js":6,"./distance.js":19,"./is-undefined.js":29,"./mean.js":34,"./ndarray.js":38,"./random.js":43,"./seed.js":48,"./std.js":57}],40:[function(require,module,exports){
 let assert = require("../misc/assert.js")
 let isUndefined = require("./is-undefined.js")
 let isArray = require("./is-array.js")
@@ -4562,19 +4571,21 @@ module.exports = shuffle
 // tests
 if (!module.parent && typeof(window) === "undefined"){
   let normal = require("./normal.js")
+  let seed = require("./seed.js")
+  let distance = require("./distance.js")
 
   let a = normal(10000)
   let b = shuffle(a)
-  let allAreTheSame = true
 
-  for (let i=0; i<a.length; i++){
-    if (a[i] !== b[i]){
-      allAreTheSame = false
-      break
-    }
-  }
+  assert(distance(a, b) > 0, `shuffle(a) should not be in the same order as a!`)
 
-  assert(!allAreTheSame, `shuffle(a) should not be in the same order as a!`)
+  a = normal(10000)
+  seed(20394230948)
+  a1 = shuffle(a)
+  seed(20394230948)
+  a2 = shuffle(a)
+
+  assert(distance(a1, a2) === 0, `Shuffling using the same seed should produce the same results!`)
 
   let hasFailed
 
@@ -4644,7 +4655,7 @@ if (!module.parent && typeof(window) === "undefined"){
   console.log("All tests passed!")
 }
 
-},{"../misc/assert.js":67,"./floor.js":22,"./is-array.js":23,"./is-undefined.js":29,"./normal.js":39,"./random.js":43}],52:[function(require,module,exports){
+},{"../misc/assert.js":67,"./distance.js":19,"./floor.js":22,"./is-array.js":23,"./is-undefined.js":29,"./normal.js":39,"./random.js":43,"./seed.js":48}],52:[function(require,module,exports){
 let assert = require("../misc/assert.js")
 let isUndefined = require("./is-undefined.js")
 let isNumber = require("./is-number.js")
