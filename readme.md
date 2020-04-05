@@ -178,7 +178,7 @@ flatten([[2, 3, 4], [5, 6, 7]])
 
 # Plotting
 
-This library also provides some simple plotting capabilities. **Note that this functionality relies on the `canvas` and therefore only works on client-side (unless you use some kind of Node-side canvas library).** Here's a demo web page with several examples:
+This library also provides some simple plotting capabilities. **Note that this functionality relies on the `canvas` and therefore only works on the client-side (unless you use some kind of Node-side canvas library).** Here's a demo web page with several examples:
 
 ```html
 <html>
