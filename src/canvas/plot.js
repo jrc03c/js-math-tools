@@ -93,7 +93,6 @@ function Plot(canvas){
 
   self.setTextStyle = function(t){
     assert(!isUndefined(t), "You must pass a text style string into the plot's `setTextStyle` method!")
-    assert(isString(t), "You must pass a text style string into the plot's `setTextStyle` method!")
 
     textStyle = t
     return self
@@ -136,7 +135,8 @@ function Plot(canvas){
         lines.push(temp)
         temp = word
       } else {
-        temp += " " + word
+        if (temp.length === 0) temp += word
+        else temp += " " + word
       }
     })
 
@@ -341,7 +341,7 @@ function Plot(canvas){
     return self
   }
 
-  self.text = function(text, x, y, maxWidth){
+  self.text = function(text, x, y, rotation, maxWidth){
     assert(!isUndefined(text), "You must pass a string and two numbers for coordinates (and optionally a positive third number for the maximum width of the text) into the plot's `text` method!")
     assert(!isUndefined(x), "You must pass a string and two numbers for coordinates (and optionally a positive third number for the maximum width of the text) into the plot's `text` method!")
     assert(!isUndefined(y), "You must pass a string and two numbers for coordinates (and optionally a positive third number for the maximum width of the text) into the plot's `text` method!")
@@ -357,6 +357,7 @@ function Plot(canvas){
 
     context.save()
     context.translate(width/2, height/2)
+    context.rotate(rotation)
     context.scale(1, -1)
 
     context.fillStyle = textStyle.color

@@ -224,9 +224,9 @@ This library also provides some simple plotting capabilities. **Note that this f
       // random noise
       let canvas1 = createCanvas(400, 400)
       let plot1 = new Plot(canvas1)
-      let x1 = normal(1000)
-      let y1 = normal(1000)
-      plot1.setRange(-3, 3, -3, 3)
+      let x1 = normal(10000)
+      let y1 = normal(10000)
+      plot1.setRange(-5, 5, -5, 5)
       plot1.setDotSize(1)
       plot1.scatter(x1, y1)
 
@@ -268,7 +268,40 @@ This library also provides some simple plotting capabilities. **Note that this f
       plot5.bar([2, 3, 4, 5], ["red", "green", "blue", "yellow"])
 
       // download a plot
-      plot5.download("plot5.png")
+      // plot5.download("plot5.png")
+
+      // text
+      let canvas6 = createCanvas(400, 400)
+      let plot6 = new Plot(canvas6)
+      let x6 = range(0, 1, 0.025)
+      let y6Pred = apply(x6, x => x * x)
+      let y6Real = apply(x6, x => x * x + 0.05 * normal())
+      plot6.setRange(-0.25, 1.25, -0.25, 1.75)
+      plot6.setLineThickness(2)
+      plot6.setTextStyle({
+        family: "monospace",
+        size: 10,
+        alignment: "left",
+        baseline: "middle",
+        isBold: false,
+        isItalicized: false,
+        lineHeight: 14,
+        color: "black",
+      })
+
+      plot6.setLineColor("gray")
+      plot6.dottedLine(x6, y6Pred)
+      plot6.setFillColor("gray")
+      plot6.setDotSize(12)
+      plot6.scatter([0.25], [1.4])
+      plot6.text("PREDICTED (what we thought we'd find)", 0.3, 1.4, 0, 0.5)
+
+      plot6.setLineColor("rgba(128, 0, 255, 0.25)")
+      plot6.line(x6, y6Real)
+      plot6.setFillColor("rgba(128, 0, 255, 0.25)")
+      plot6.setDotSize(12)
+      plot6.scatter([0.25], [1.2])
+      plot6.text("ACTUAL (what we actually found)", 0.3, 1.2, 0, 0.5)
     </script>
   </body>
 </html>
@@ -276,4 +309,4 @@ This library also provides some simple plotting capabilities. **Note that this f
 
 That page will produce these plots:
 
-![](https://i.ibb.co/sQXXbxS/Screenshot-2020-04-04-Screenshot.png)
+![](https://i.ibb.co/0XvhjN8/Screenshot-2020-04-05-Screenshot.png)
