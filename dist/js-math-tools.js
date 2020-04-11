@@ -30,6 +30,7 @@ let isEqual = require("../math/is-equal.js")
 let shape = require("../math/shape.js")
 let flatten = require("../math/flatten.js")
 let distrib = require("../math/distrib.js")
+let scale = require("../math/scale.js")
 
 function Plot(canvas){
   assert(!isUndefined(canvas), "You must pass an HTML5 canvas element into the `Plot` constructor!")
@@ -412,6 +413,73 @@ function Plot(canvas){
     return self
   }
 
+  self.gkde = function(x, bandwidth, scalar, resolution){
+    assert(!isUndefined(x), "You must pass an array of numbers (and optionally a numeric bandwidth value, a numeric scale value, and a numeric resolution value) into the plot's `gkde` method!")
+    assert(isArray(x), "You must pass an array of numbers (and optionally a numeric bandwidth value, a numeric scale value, and a numeric resolution value) into the plot's `gkde` method!")
+
+    let temp = flatten(x)
+    temp.forEach(v => assert(isNumber(v), "You must pass an array of numbers (and optionally a numeric bandwidth value, a numeric scale value, and a numeric resolution value) into the plot's `gkde` method!"))
+
+    if (isUndefined(bandwidth)){
+      bandwidth = 0.5
+    } else {
+      assert(isNumber(bandwidth), "You must pass an array of numbers (and optionally a numeric bandwidth value, a numeric scale value, and a numeric resolution value) into the plot's `gkde` method!")
+    }
+
+    if (isUndefined(scalar)){
+      scalar = 1
+    } else {
+      assert(isNumber(scalar), "You must pass an array of numbers (and optionally a numeric bandwidth value, a numeric scale value, and a numeric resolution value) into the plot's `gkde` method!")
+    }
+
+    if (isUndefined(resolution)){
+      resolution = 50
+    } else {
+      assert(isNumber(resolution), "You must pass an array of numbers (and optionally a numeric bandwidth value, a numeric scale value, and a numeric resolution value) into the plot's `gkde` method!")
+    }
+
+    let k = vectorize(function(x, h){
+      return Math.exp(-(x * x) / (2 * h * h))
+    })
+
+    let f = function(y, x, h){
+      return apply(y, v => sum(k(scale(add(v, scale(x, -1)), 1 / h), h)))
+    }
+
+    let start = min(temp)
+    let stop = max(temp)
+    let step = (stop - start) / resolution
+    x = range(start, stop + step, step)
+    let y = f(x, temp, bandwidth)
+    let yMin = min(y)
+    let yMax = max(y)
+    y = apply(y, v => map(v, yMin, yMax, 0, scalar))
+
+    x = apply(x, v => map(v, xmin, xmax, -width/2, width/2))
+    y = apply(y, v => map(v, ymin, ymax, -height/2, height/2))
+    let yZero = map(0, ymin, ymax, -height/2, height/2)
+
+    context.save()
+    context.translate(width/2, height/2)
+    context.scale(1, -1)
+    context.beginPath()
+    context.moveTo(x[0], yZero)
+    context.lineTo(x[0], y[0])
+
+    for (let i=0; i<x.length; i++){
+      context.lineTo(x[i], y[i])
+    }
+
+    context.lineTo(x[x.length-1], yZero)
+    context.fillStyle = fillColor
+    context.strokeStyle = strokeColor
+    context.lineWidth = lineThickness
+    context.fill()
+    context.stroke()
+    context.restore()
+    return self
+  }
+
   self.text = function(text, x, y, rotation, maxWidth){
     assert(!isUndefined(text), "You must pass a string and two numbers for coordinates (and optionally a positive third number for the maximum width of the text) into the plot's `text` method!")
     assert(!isUndefined(x), "You must pass a string and two numbers for coordinates (and optionally a positive third number for the maximum width of the text) into the plot's `text` method!")
@@ -473,7 +541,7 @@ function Plot(canvas){
 
 module.exports = Plot
 
-},{"../math/distrib.js":20,"../math/flatten.js":22,"../math/is-array.js":24,"../math/is-boolean.js":25,"../math/is-equal.js":26,"../math/is-number.js":28,"../math/is-string.js":29,"../math/is-undefined.js":30,"../math/map.js":33,"../math/max.js":34,"../math/shape.js":51,"../misc/assert.js":68,"./download-canvas.js":2}],4:[function(require,module,exports){
+},{"../math/distrib.js":20,"../math/flatten.js":22,"../math/is-array.js":24,"../math/is-boolean.js":25,"../math/is-equal.js":26,"../math/is-number.js":28,"../math/is-string.js":29,"../math/is-undefined.js":30,"../math/map.js":33,"../math/max.js":34,"../math/scale.js":48,"../math/shape.js":51,"../misc/assert.js":68,"./download-canvas.js":2}],4:[function(require,module,exports){
 let out = {
   canvas: require("./canvas/__index__.js"),
   math: require("./math/__index__.js"),

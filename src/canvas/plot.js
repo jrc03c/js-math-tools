@@ -11,6 +11,7 @@ let isEqual = require("../math/is-equal.js")
 let shape = require("../math/shape.js")
 let flatten = require("../math/flatten.js")
 let distrib = require("../math/distrib.js")
+let scale = require("../math/scale.js")
 
 function Plot(canvas){
   assert(!isUndefined(canvas), "You must pass an HTML5 canvas element into the `Plot` constructor!")
@@ -389,6 +390,73 @@ function Plot(canvas){
       context.strokeRect(x[i], map(0, ymin, ymax, -height/2, height/2), step, y[i])
     }
 
+    context.restore()
+    return self
+  }
+
+  self.gkde = function(x, bandwidth, scalar, resolution){
+    assert(!isUndefined(x), "You must pass an array of numbers (and optionally a numeric bandwidth value, a numeric scale value, and a numeric resolution value) into the plot's `gkde` method!")
+    assert(isArray(x), "You must pass an array of numbers (and optionally a numeric bandwidth value, a numeric scale value, and a numeric resolution value) into the plot's `gkde` method!")
+
+    let temp = flatten(x)
+    temp.forEach(v => assert(isNumber(v), "You must pass an array of numbers (and optionally a numeric bandwidth value, a numeric scale value, and a numeric resolution value) into the plot's `gkde` method!"))
+
+    if (isUndefined(bandwidth)){
+      bandwidth = 0.5
+    } else {
+      assert(isNumber(bandwidth), "You must pass an array of numbers (and optionally a numeric bandwidth value, a numeric scale value, and a numeric resolution value) into the plot's `gkde` method!")
+    }
+
+    if (isUndefined(scalar)){
+      scalar = 1
+    } else {
+      assert(isNumber(scalar), "You must pass an array of numbers (and optionally a numeric bandwidth value, a numeric scale value, and a numeric resolution value) into the plot's `gkde` method!")
+    }
+
+    if (isUndefined(resolution)){
+      resolution = 50
+    } else {
+      assert(isNumber(resolution), "You must pass an array of numbers (and optionally a numeric bandwidth value, a numeric scale value, and a numeric resolution value) into the plot's `gkde` method!")
+    }
+
+    let k = vectorize(function(x, h){
+      return Math.exp(-(x * x) / (2 * h * h))
+    })
+
+    let f = function(y, x, h){
+      return apply(y, v => sum(k(scale(add(v, scale(x, -1)), 1 / h), h)))
+    }
+
+    let start = min(temp)
+    let stop = max(temp)
+    let step = (stop - start) / resolution
+    x = range(start, stop + step, step)
+    let y = f(x, temp, bandwidth)
+    let yMin = min(y)
+    let yMax = max(y)
+    y = apply(y, v => map(v, yMin, yMax, 0, scalar))
+
+    x = apply(x, v => map(v, xmin, xmax, -width/2, width/2))
+    y = apply(y, v => map(v, ymin, ymax, -height/2, height/2))
+    let yZero = map(0, ymin, ymax, -height/2, height/2)
+
+    context.save()
+    context.translate(width/2, height/2)
+    context.scale(1, -1)
+    context.beginPath()
+    context.moveTo(x[0], yZero)
+    context.lineTo(x[0], y[0])
+
+    for (let i=0; i<x.length; i++){
+      context.lineTo(x[i], y[i])
+    }
+
+    context.lineTo(x[x.length-1], yZero)
+    context.fillStyle = fillColor
+    context.strokeStyle = strokeColor
+    context.lineWidth = lineThickness
+    context.fill()
+    context.stroke()
     context.restore()
     return self
   }
