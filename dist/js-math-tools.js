@@ -28,6 +28,8 @@ let isBoolean = require("../math/is-boolean.js")
 let isArray = require("../math/is-array.js")
 let isEqual = require("../math/is-equal.js")
 let shape = require("../math/shape.js")
+let flatten = require("../math/flatten.js")
+let distrib = require("../math/distrib.js")
 
 function Plot(canvas){
   assert(!isUndefined(canvas), "You must pass an HTML5 canvas element into the `Plot` constructor!")
@@ -360,6 +362,56 @@ function Plot(canvas){
     return self
   }
 
+  self.hist = function(x, bins, isDensity){
+    assert(!isUndefined(x), "You must pass an array of numbers (and optionally an integer number of bins and a boolean that determines whether or not to display the histogram as a density plot) into the plot's `hist` method!")
+    assert(isArray(x), "You must pass an array of numbers (and optionally an integer number of bins and a boolean that determines whether or not to display the histogram as a density plot) into the plot's `hist` method!")
+
+    let temp = flatten(x)
+    temp.forEach(v => assert(isNumber(v), "You must pass an array of numbers (and optionally an integer number of bins and a boolean that determines whether or not to display the histogram as a density plot) into the plot's `hist` method!"))
+
+    if (isUndefined(bins)){
+      bins = parseInt(Math.sqrt(temp.length))
+    } else {
+      assert(isNumber(bins), "You must pass an array of numbers (and optionally an integer number of bins and a boolean that determines whether or not to display the histogram as a density plot) into the plot's `hist` method!")
+      assert(bins === parseInt(bins), "You must pass an array of numbers (and optionally an integer number of bins and a boolean that determines whether or not to display the histogram as a density plot) into the plot's `hist` method!")
+    }
+
+    if (isUndefined(isDensity)){
+      isDensity = false
+    } else {
+      assert(isBoolean(isDensity), "You must pass an array of numbers (and optionally an integer number of bins and a boolean that determines whether or not to display the histogram as a density plot) into the plot's `hist` method!")
+    }
+
+    let y = distrib(temp, bins)
+
+    context.save()
+    context.translate(width/2, height/2)
+    context.scale(1, -1)
+    self.drawAxes()
+    context.fillStyle = fillColor
+    context.strokeStyle = strokeColor
+    context.lineWidth = lineThickness
+
+    temp = apply(temp, v => map(v, xmin, xmax, -width/2, width/2))
+    let start = min(temp)
+    let stop = max(temp)
+    let step = (stop - start) / bins
+    x = range(start, stop, step)
+    y = apply(y, v => map(v, 0, ymax - ymin, 0, height))
+
+    if (isDensity){
+      y = apply(y, v => v / temp.length)
+    }
+
+    for (let i=0; i<x.length; i++){
+      context.fillRect(x[i], map(0, ymin, ymax, -height/2, height/2), step, y[i])
+      context.strokeRect(x[i], map(0, ymin, ymax, -height/2, height/2), step, y[i])
+    }
+
+    context.restore()
+    return self
+  }
+
   self.text = function(text, x, y, rotation, maxWidth){
     assert(!isUndefined(text), "You must pass a string and two numbers for coordinates (and optionally a positive third number for the maximum width of the text) into the plot's `text` method!")
     assert(!isUndefined(x), "You must pass a string and two numbers for coordinates (and optionally a positive third number for the maximum width of the text) into the plot's `text` method!")
@@ -421,7 +473,7 @@ function Plot(canvas){
 
 module.exports = Plot
 
-},{"../math/is-array.js":24,"../math/is-boolean.js":25,"../math/is-equal.js":26,"../math/is-number.js":28,"../math/is-string.js":29,"../math/is-undefined.js":30,"../math/map.js":33,"../math/max.js":34,"../math/shape.js":51,"../misc/assert.js":68,"./download-canvas.js":2}],4:[function(require,module,exports){
+},{"../math/distrib.js":20,"../math/flatten.js":22,"../math/is-array.js":24,"../math/is-boolean.js":25,"../math/is-equal.js":26,"../math/is-number.js":28,"../math/is-string.js":29,"../math/is-undefined.js":30,"../math/map.js":33,"../math/max.js":34,"../math/shape.js":51,"../misc/assert.js":68,"./download-canvas.js":2}],4:[function(require,module,exports){
 let out = {
   canvas: require("./canvas/__index__.js"),
   math: require("./math/__index__.js"),

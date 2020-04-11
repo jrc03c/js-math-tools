@@ -9,6 +9,8 @@ let isBoolean = require("../math/is-boolean.js")
 let isArray = require("../math/is-array.js")
 let isEqual = require("../math/is-equal.js")
 let shape = require("../math/shape.js")
+let flatten = require("../math/flatten.js")
+let distrib = require("../math/distrib.js")
 
 function Plot(canvas){
   assert(!isUndefined(canvas), "You must pass an HTML5 canvas element into the `Plot` constructor!")
@@ -337,6 +339,56 @@ function Plot(canvas){
     }
 
     self.drawAxes()
+    context.restore()
+    return self
+  }
+
+  self.hist = function(x, bins, isDensity){
+    assert(!isUndefined(x), "You must pass an array of numbers (and optionally an integer number of bins and a boolean that determines whether or not to display the histogram as a density plot) into the plot's `hist` method!")
+    assert(isArray(x), "You must pass an array of numbers (and optionally an integer number of bins and a boolean that determines whether or not to display the histogram as a density plot) into the plot's `hist` method!")
+
+    let temp = flatten(x)
+    temp.forEach(v => assert(isNumber(v), "You must pass an array of numbers (and optionally an integer number of bins and a boolean that determines whether or not to display the histogram as a density plot) into the plot's `hist` method!"))
+
+    if (isUndefined(bins)){
+      bins = parseInt(Math.sqrt(temp.length))
+    } else {
+      assert(isNumber(bins), "You must pass an array of numbers (and optionally an integer number of bins and a boolean that determines whether or not to display the histogram as a density plot) into the plot's `hist` method!")
+      assert(bins === parseInt(bins), "You must pass an array of numbers (and optionally an integer number of bins and a boolean that determines whether or not to display the histogram as a density plot) into the plot's `hist` method!")
+    }
+
+    if (isUndefined(isDensity)){
+      isDensity = false
+    } else {
+      assert(isBoolean(isDensity), "You must pass an array of numbers (and optionally an integer number of bins and a boolean that determines whether or not to display the histogram as a density plot) into the plot's `hist` method!")
+    }
+
+    let y = distrib(temp, bins)
+
+    context.save()
+    context.translate(width/2, height/2)
+    context.scale(1, -1)
+    self.drawAxes()
+    context.fillStyle = fillColor
+    context.strokeStyle = strokeColor
+    context.lineWidth = lineThickness
+
+    temp = apply(temp, v => map(v, xmin, xmax, -width/2, width/2))
+    let start = min(temp)
+    let stop = max(temp)
+    let step = (stop - start) / bins
+    x = range(start, stop, step)
+    y = apply(y, v => map(v, 0, ymax - ymin, 0, height))
+
+    if (isDensity){
+      y = apply(y, v => v / temp.length)
+    }
+
+    for (let i=0; i<x.length; i++){
+      context.fillRect(x[i], map(0, ymin, ymax, -height/2, height/2), step, y[i])
+      context.strokeRect(x[i], map(0, ymin, ymax, -height/2, height/2), step, y[i])
+    }
+
     context.restore()
     return self
   }
