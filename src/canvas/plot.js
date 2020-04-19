@@ -430,7 +430,7 @@ function Plot(canvas){
     let start = min(temp)
     let stop = max(temp)
     let step = (stop - start) / resolution
-    x = range(start, stop + step, step)
+    x = range(start - step * 20, stop + step * 20, step)
     let y = f(x, temp, bandwidth)
     let yMin = min(y)
     let yMax = max(y)
@@ -443,6 +443,8 @@ function Plot(canvas){
     context.save()
     context.translate(width/2, height/2)
     context.scale(1, -1)
+    self.drawAxes()
+
     context.beginPath()
     context.moveTo(x[0], yZero)
     context.lineTo(x[0], y[0])
