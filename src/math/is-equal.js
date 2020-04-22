@@ -9,6 +9,7 @@ function isEqual(a, b){
   if (aType === "boolean") return a === b
   if (aType === "number") return a === b
   if (aType === "string") return a === b
+  if (aType === "function") return a === b
 
   if (aType === "object"){
     if (a === null || b === null){
@@ -45,6 +46,9 @@ if (!module.parent && typeof(window) === "undefined"){
   assert(isEqual(null, null), `isEqual(null, null) should be true!`)
   assert(isEqual({x: 5}, {x: 5}), `isEqual({x: 5}, {x: 5}) should be true!`)
   assert(isEqual([2, 3, 4], [2, 3, 4]), `isEqual([2, 3, 4], [2, 3, 4]) should be true!`)
+
+  let fn = () => {}
+  assert(isEqual(fn, fn), `isEqual(fn, fn) should be true!`)
 
   let a = {name: "James", friends: ["Bill", "Sally"]}
   let b = {name: "James", friends: ["Bill", "Sally"]}
