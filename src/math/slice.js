@@ -38,7 +38,7 @@ function slice(arr, indices){
     }
   })
 
-  if (shape(out).indexOf(1) > -1) out = flatten(out)
+  // if (shape(out).indexOf(1) > -1) out = flatten(out)
 
   return out
 }
@@ -50,7 +50,7 @@ if (!module.parent && typeof(window) === "undefined"){
   let distance = require("./distance.js")
 
   let x = [[2, 3, 4], [5, 6, 7], [8, 9, 10]]
-  let yTrue = [3, 6, 9]
+  let yTrue = [[3, 6, 9]]
   let yPred = slice(x, [null, 1])
 
   x = [[2, 3, 4], [5, 6, 7], [8, 9, 10]]
@@ -63,7 +63,7 @@ if (!module.parent && typeof(window) === "undefined"){
   assert(slice(x, [-1])[0] === 7, `slice([5, 6, 7], [-1]) should be [7]!`)
 
   x = [[2, 3, 4], [5, 6, 7], [8, 9, 10]]
-  yTrue = [9]
+  yTrue = [[9]]
   yPred = slice(x, [-1, -2])
   assert(distance(yTrue, yPred) === 0, `slice([[2, 3, 4], [5, 6, 7], [8, 9, 10]], [-1, -2]) should be [9]!`)
 
