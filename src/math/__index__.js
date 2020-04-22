@@ -15,6 +15,7 @@ let out = {
   count: require("./count.js"),
   covariance: require("./covariance.js"),
   distance: require("./distance.js"),
+  distrib: require("./distrib.js"),
   dot: require("./dot.js"),
   flatten: require("./flatten.js"),
   floor: require("./floor.js"),
