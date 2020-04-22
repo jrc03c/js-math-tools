@@ -148,5 +148,5 @@ if (!module.parent && typeof(window) === "undefined"){
 
   assert(hasFailed, `append(normal([2, 3, 4]), normal([2, 3, 4]), 0) should have failed!`)
 
-  console.log("All tests passed!")
+  console.log("All tests passed! (But I should probably make `append` compatible with (n > 2)-dimensional arrays!)")
 }
