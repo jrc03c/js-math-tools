@@ -38,7 +38,6 @@ let out = {
   mode: require("./mode.js"),
   ndarray: require("./ndarray.js"),
   normal: require("./normal.js"),
-  normalize: require("./normalize.js"),
   ones: require("./ones.js"),
   pow: require("./pow.js"),
   random: require("./random.js"),
