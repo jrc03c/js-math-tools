@@ -4,11 +4,15 @@
   "description": "some math tools for JS",
   "main": "src/index.js",
   "scripts": {
-    "build": "watchify -e src/index.js -o dist/js-math-tools.js"
+    "build": "watchify -e src/index.js -t uglifyify -o dist/js-math-tools.js"
   },
   "repository": {
     "type": "git",
     "url": "git+ssh://git@gitlab.com/jrc03c/js-math-tools.git"
   },
-  "author": "jrc03c"
+  "author": "jrc03c",
+  "dependencies": {},
+  "devDependencies": {
+    "uglifyify": "^5.0.2"
+  }
 }
