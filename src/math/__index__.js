@@ -14,6 +14,7 @@ let out = {
   cos: require("./cos.js"),
   count: require("./count.js"),
   covariance: require("./covariance.js"),
+  DataFrame: require("./dataframe.js"),
   distance: require("./distance.js"),
   distrib: require("./distrib.js"),
   dot: require("./dot.js"),
