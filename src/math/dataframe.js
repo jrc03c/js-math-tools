@@ -190,6 +190,11 @@ class DataFrame {
     return out
   }
 
+  get T(){
+    let self = this
+    return self.transpose()
+  }
+
   resetIndex(){
     let self = this
     let out = self.copy()
