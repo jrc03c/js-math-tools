@@ -223,13 +223,13 @@ class DataFrame {
     if (axis === 0){
       out = out.transpose()
 
-      out._values = out._values.map((col, i) => {
+      out.values = out.values.map((col, i) => {
         return fn(out.index[i], col)
       })
 
       out = out.transpose()
     } else if (axis === 1){
-      out._values = out._values.map((row, i) => {
+      out.values = out.values.map((row, i) => {
         return fn(out.index[i], row)
       })
     }
