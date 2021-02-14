@@ -210,6 +210,32 @@ class DataFrame {
 
     return out
   }
+
+  apply(fn, axis){
+    axis = axis || 0
+
+    assert(isFunction(fn), "The first parameter to the `apply` method must be a function.")
+    assert(axis === 0 || axis === 1, "The second parameter to the `apply` method (the `axis`) must be 0 or 1.")
+
+    let self = this
+    let out = self.copy()
+
+    if (axis === 0){
+      out = out.transpose()
+
+      out._values = out._values.map((col, i) => {
+        return fn(out.index[i], col)
+      })
+
+      out = out.transpose()
+    } else if (axis === 1){
+      out._values = out._values.map((row, i) => {
+        return fn(out.index[i], row)
+      })
+    }
+
+    return out
+  }
 }
 
 module.exports = DataFrame
