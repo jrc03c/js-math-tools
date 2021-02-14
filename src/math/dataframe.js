@@ -9,6 +9,7 @@ let isString = require("./is-string.js")
 let apply = require("../misc/apply.js")
 let isFunction = require("./is-function.js")
 let ndarray = require("./ndarray.js")
+let copy = require("./copy.js")
 
 function isInteger(x){
   return isNumber(x) && parseInt(x) === x
@@ -20,6 +21,10 @@ function isWholeNumber(x){
 
 function isObject(x){
   return x instanceof Object && !isArray(x)
+}
+
+function isDataFrame(x){
+  return x instanceof DataFrame
 }
 
 class DataFrame {
@@ -292,11 +297,9 @@ class DataFrame {
     let out = self.copy()
 
     if (axis === 0){
-      let newIndex = copy(out.index)
-
       let newValues = out.values.map(helper).filter((row, i) => {
         if (row.length === 0){
-          newIndex.splice(i, 1)
+          out.index.splice(i, 1)
           return false
         } else {
           return true
@@ -306,14 +309,12 @@ class DataFrame {
       if (shape(newValues).length < 2) return new DataFrame()
 
       out.values = newValues
-      out.index = newIndex
     } else if (axis === 1){
       out = out.transpose()
-      let newIndex = copy(out.index)
 
       let newValues = out.values.map(helper).filter((col, i) => {
         if (col.length === 0){
-          newIndex.splice(i, 1)
+          out.index.splice(i, 1)
           return false
         } else {
           return true
@@ -323,7 +324,6 @@ class DataFrame {
       if (shape(newValues).length < 2) return new DataFrame()
 
       out.values = newValues
-      out.index = newIndex
       out = out.transpose()
     }
 
@@ -332,3 +332,182 @@ class DataFrame {
 }
 
 module.exports = DataFrame
+
+// tests
+if (!module.parent && typeof(window) === "undefined"){
+  let isEqual = require("./is-equal.js")
+  let normal = require("./normal.js")
+  let set = require("./set.js")
+  let flatten = require("./flatten.js")
+  let distance = require("./distance.js")
+  let zeros = require("./zeros.js")
+  let chop = require("./chop.js")
+  let random = require("./random.js")
+
+  let xShape = [17, 32]
+  let x = normal(xShape)
+  let df = new DataFrame(x)
+
+  assert(isDataFrame(df), "`df` is not a DataFrame!")
+  assert(isEqual(df.shape, xShape), "The shape of the DataFrame is not the same as the shape of its data!")
+  assert(!df.isEmpty(), "`df` should not be empty!")
+  assert((new DataFrame()).isEmpty(), "New DataFrames should be empty!")
+
+  let clearedValues = set(df.clear().values)
+  assert(clearedValues.length === 1 && isUndefined(clearedValues[0]), "Cleared DataFrames should only have `undefined` values.")
+
+  let a = normal(100)
+  let b = normal(100)
+  let c = normal(100)
+  df = new DataFrame({a, b, c})
+  let dfShape = df.shape
+
+  assert(isEqual(a, flatten(df.loc(null, ["a"]).values)), "The values in column 'a' are not the same as the values used to create it!")
+  assert(isEqual(b, flatten(df.loc(null, ["b"]).values)), "The values in column 'b' are not the same as the values used to create it!")
+  assert(isEqual(c, flatten(df.loc(null, ["c"]).values)), "The values in column 'c' are not the same as the values used to create it!")
+  assert(isEqual(df.values, df.transpose().transpose().values), "A doubly-transposed DataFrame should have the same values as the original!")
+  assert(chop(distance(df.values, zeros(df.shape)) - distance(df.transpose().values, zeros(df.transpose().shape))) === 0, "A transposed DataFrame's values should have the same 2-norm as the original!")
+
+  let hasFailed = false
+
+  try {
+    df.loc(df.index, df.columns)
+    hasFailed = false
+  } catch(e) {
+    hasFailed = true
+  }
+
+  assert(!hasFailed, "`df.loc(df.index, df.columns)` should not have failed!")
+
+  try {
+    df.loc([], df.columns)
+    hasFailed = false
+  } catch(e) {
+    hasFailed = true
+  }
+
+  assert(hasFailed, "`df.loc([], df.columns)` should have failed!")
+
+  try {
+    df.loc(df.index, [])
+    hasFailed = false
+  } catch(e) {
+    hasFailed = true
+  }
+
+  assert(hasFailed, "`df.loc(df.index, [])` should have failed!")
+
+  try {
+    df.loc(["this doesn't exist"], ["this doesn't exist"])
+    hasFailed = false
+  } catch(e) {
+    hasFailed = true
+  }
+
+  assert(hasFailed, "`df.loc([\"this doesn't exist\"], [\"this doesn't exist\"])` should have failed!")
+
+  try {
+    df.iloc(range(0, dfShape[0]), range(0, dfShape[1]))
+    hasFailed = false
+  } catch(e) {
+    hasFailed = true
+  }
+
+  assert(!hasFailed, "`df.iloc(range(0, dfShape[0]), range(0, dfShape[1]))` should not have failed!")
+
+  try {
+    df.iloc()
+    hasFailed = false
+  } catch(e) {
+    hasFailed = true
+  }
+
+  assert(!hasFailed, "`df.iloc()` should not have failed!")
+
+  try {
+    df.iloc([-5], [-7])
+    hasFailed = false
+  } catch(e) {
+    hasFailed = true
+  }
+
+  assert(hasFailed, "`df.iloc([-5], [-7])` should have failed!")
+
+  try {
+    df.iloc([500], [700])
+    hasFailed = false
+  } catch(e) {
+    hasFailed = true
+  }
+
+  assert(hasFailed, "`df.iloc([500], [700])` should have failed!")
+
+  let df2 = df.copy()
+  assert(isEqual(df, df2), "A DataFrame and its copy should evaluate as equal!")
+  assert(!(df === df2), "A DataFrame and its copy should not be the same object!")
+
+  df.index = range(0, dfShape[0]).map(i => Math.random().toString())
+  assert(!isEqual(df.index, df2.index), "`df` should now have random row names!")
+
+  df = df.resetIndex()
+  assert(isEqual(df.index, df2.index), "`df` should now have its original row names!")
+
+  let d = normal(100)
+  df = df.assign({d})
+  assert(isEqual(d, flatten(df.loc(null, ["d"]).values)), "The values in column 'd' are not the same as the values used to create it!")
+
+  a = random(100)
+  df = df.assign({a})
+  assert(isEqual(a, flatten(df.loc(null, ["a"]).values)), "The values in column 'a' are not the same as the values that were assigned to it!")
+
+  df = new DataFrame(zeros([3, 3]))
+
+  df = df.apply((colName, colVals) => {
+    return colVals.map((v, j) => {
+      return colName + "/" + j
+    })
+  })
+
+  let newValuesShouldBe = [
+    ["col0/0", "col1/0", "col2/0"],
+    ["col0/1", "col1/1", "col2/1"],
+    ["col0/2", "col1/2", "col2/2"],
+  ]
+
+  assert(isEqual(newValuesShouldBe, df.values), "The DataFrame's new values should be as I've described!")
+
+  df = new DataFrame(zeros([3, 3]))
+
+  df = df.apply((rowName, rowVals) => {
+    return rowVals.map((v, i) => {
+      return rowName + "/" + i
+    })
+  }, 1)
+
+  newValuesShouldBe = [
+    ["row0/0", "row0/1", "row0/2"],
+    ["row1/0", "row1/1", "row1/2"],
+    ["row2/0", "row2/1", "row2/2"],
+  ]
+
+  assert(isEqual(newValuesShouldBe, df.values), "The DataFrame's new values should be as I've described!")
+
+  df = new DataFrame([
+    [0, null],
+    [1, "foo"],
+    [2, "bar"],
+    [3, null],
+    [4, null],
+    [null, "uh-oh"],
+  ])
+
+  assert(isEqual(df.dropMissing().shape, [2, 2]), "The DataFrame should have a shape of [2, 2] after dropping missing values!")
+  assert(isEqual(df.dropMissing().index, ["row1", "row2"]), "The DataFrame's new index should be as I've described!")
+  assert(df.dropMissing(1).isEmpty(), "The DataFrame should be empty after dropping missing values!")
+  assert(isEqual(df.dropMissing(1, "all").shape, df.shape), "The DataFrame should have its original shape after trying to drop missing values!")
+  assert(isEqual(df.dropMissing(1, null, 4).shape, df.shape), "The DataFrame should have its original shape after trying to drop missing values!")
+  assert(isEqual(df.dropMissing(1, null, 3).shape, [6, 1]), "The DataFrame should have a shape of [6, 1] after dropping missing values!")
+  assert(df.dropMissing(1, null, 1).isEmpty(), "The DataFrame should be empty after dropping missing values!")
+
+  console.log("All tests passed!")
+}
