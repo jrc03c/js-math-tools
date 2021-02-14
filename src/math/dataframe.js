@@ -8,6 +8,7 @@ let isNumber = require("./is-number.js")
 let isString = require("./is-string.js")
 let apply = require("../misc/apply.js")
 let isFunction = require("./is-function.js")
+let ndarray = require("./ndarray.js")
 
 function isInteger(x){
   return isNumber(x) && parseInt(x) === x
@@ -90,6 +91,20 @@ class DataFrame {
   get shape(){
     let self = this
     return shape(self.values)
+  }
+
+  isEmpty(){
+    let self = this
+    return self.shape.length < 2
+  }
+
+  clear(){
+    let self = this
+    let out = self.copy()
+    out.values = ndarray(out.shape)
+    out.index = self.index
+    out.columns = self.columns
+    return out
   }
 
   getSubsetByNames(rows, cols){
