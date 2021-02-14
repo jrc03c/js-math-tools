@@ -6,6 +6,8 @@ let transpose = require("./transpose.js")
 let range = require("./range.js")
 let isNumber = require("./is-number.js")
 let isString = require("./is-string.js")
+let apply = require("../misc/apply.js")
+let isFunction = require("./is-function.js")
 
 function isInteger(x){
   return isNumber(x) && parseInt(x) === x
@@ -13,6 +15,10 @@ function isInteger(x){
 
 function isWholeNumber(x){
   return isInteger(x) && x >= 0
+}
+
+function isObject(x){
+  return x instanceof Object && !isArray(x)
 }
 
 class DataFrame {
@@ -86,34 +92,16 @@ class DataFrame {
     return shape(self.values)
   }
 
-  getColumn(col){
-    let self = this
-
-    assert(isString(col), "The column name must be a string.")
-    assert(self.columns.indexOf(col) > -1, `The column name "${col}" does not exist in the list of columns.`)
-
-    let temp = {}
-    temp[col] = transpose(self.values)[self.columns.indexOf(col)]
-    return new DataFrame(temp)
-  }
-
-  getRow(row){
-    let self = this
-
-    assert(isString(row), "The row name must be a string.")
-    assert(self.index.indexOf(row) > -1, `The row name "${row}" does not exist in the list of rows.`)
-
-    let index = self.index.indexOf(row)
-    let out = new DataFrame([self.values[index]])
-    out.index = [row]
-    return out
-  }
-
   getSubsetByNames(rows, cols){
     let self = this
 
+    if (isUndefined(rows)) rows = self.index
+    if (isUndefined(cols)) cols = self.columns
+
     assert(isArray(rows) && isArray(cols), "The `rows` and `cols` parameters must be 1-dimensional arrays of strings.")
     assert(shape(rows).length === 1 && shape(cols).length === 1, "The `rows` and `cols` parameters must be 1-dimensional arrays of strings.")
+    assert(rows.length > 0, "The `rows` array must contain at least one row name.")
+    assert(cols.length > 0, "The `cols` array must contain at least one column name.")
 
     rows.forEach(row => {
       assert(isString(row), "The `rows` and `cols` parameters must be 1-dimensional arrays of strings.")
@@ -139,9 +127,15 @@ class DataFrame {
 
   getSubsetByIndices(rowIndices, colIndices){
     let self = this
+    let dataShape = self.shape
+
+    if (isUndefined(rowIndices)) rowIndices = range(0, dataShape[0])
+    if (isUndefined(colIndices)) colIndices = range(0, dataShape[1])
 
     assert(isArray(rowIndices) && isArray(colIndices), "The `rowIndices` and `colIndices` parameters must be 1-dimensional arrays of whole numbers.")
     assert(shape(rowIndices).length === 1 && shape(colIndices).length === 1, "The `rowIndices` and `colIndices` parameters must be 1-dimensional arrays of whole numbers.")
+    assert(rowIndices.length > 0, "The `rowIndices` array must contain at least one index.")
+    assert(colIndices.length > 0, "The `colIndices` array must contain at least one index.")
 
     rowIndices.forEach(rowIndex => {
       assert(isWholeNumber(rowIndex), "The `rowIndices` and `colIndices` parameters must be 1-dimensional arrays of whole numbers.")
@@ -158,11 +152,62 @@ class DataFrame {
     return self.getSubsetByNames(rows, cols)
   }
 
+  loc(rows, cols){
+    let self = this
+    return self.getSubsetByNames(rows, cols)
+  }
+
+  iloc(rowIndices, colIndices){
+    let self = this
+    return self.getSubsetByIndices(rowIndices, colIndices)
+  }
+
   transpose(){
     let self = this
     let out = new DataFrame(transpose(self.values))
     out.columns = self.index
     out.index = self.columns
+    return out
+  }
+
+  resetIndex(){
+    let self = this
+    let out = self.copy()
+    out.index = range(0, self.shape[0]).map(i => "row" + i)
+    return out
+  }
+
+  copy(){
+    let self = this
+    let out = new DataFrame(copy(self.values))
+    out.columns = self.columns.slice()
+    out.index = self.index.slice()
+    return out
+  }
+
+  assign(obj){
+    assert(isObject(obj), "An object must be passed into the `assign` method.")
+
+    let self = this
+    let out = self.copy()
+    let outShape = out.shape
+
+    Object.keys(obj).forEach(col => {
+      let values = obj[col]
+      assert(values.length === outShape[0], `Column "${col}" in the new data is not the same length as the other columns in the original DataFrame.`)
+
+      let colIndex = out.columns.indexOf(col)
+
+      if (colIndex < 0){
+        out.columns.push(col)
+        colIndex = out.columns.indexOf(col)
+      }
+
+      out.values.forEach((row, i) => {
+        row[colIndex] = values[i]
+      })
+    })
+
     return out
   }
 }
