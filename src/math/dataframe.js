@@ -204,6 +204,7 @@ class DataFrame {
 
   copy(){
     let self = this
+    if (self.isEmpty()) return new DataFrame()
     let out = new DataFrame(copy(self.values))
     out.columns = self.columns.slice()
     out.index = self.index.slice()
@@ -219,18 +220,25 @@ class DataFrame {
 
     Object.keys(obj).forEach(col => {
       let values = obj[col]
-      assert(values.length === outShape[0], `Column "${col}" in the new data is not the same length as the other columns in the original DataFrame.`)
 
-      let colIndex = out.columns.indexOf(col)
+      if (out.isEmpty()){
+        out.values = transpose([values])
+        out.columns = [col]
+        outShape = out.shape
+      } else {
+        assert(values.length === outShape[0], `Column "${col}" in the new data is not the same length as the other columns in the original DataFrame.`)
 
-      if (colIndex < 0){
-        out.columns.push(col)
-        colIndex = out.columns.indexOf(col)
+        let colIndex = out.columns.indexOf(col)
+
+        if (colIndex < 0){
+          out.columns.push(col)
+          colIndex = out.columns.indexOf(col)
+        }
+
+        out.values.forEach((row, i) => {
+          row[colIndex] = values[i]
+        })
       }
-
-      out.values.forEach((row, i) => {
-        row[colIndex] = values[i]
-      })
     })
 
     return out
