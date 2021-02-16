@@ -47,27 +47,82 @@ class DataFrame {
       },
 
       set(x){
+        assert(isArray(x), "The new values must be a 2-dimensional array!")
+
         let dataShape = shape(x)
         assert(dataShape.length === 2, "The new array of values must be 2-dimensional!")
 
-        if (dataShape[0] < self.index.length){
-          self.index = self.index.slice(0, dataShape[0])
-        } else if (dataShape[0] > self.index.length){
-          self.index = self.index.concat(range(self.index.length, dataShape[0]).map(i => "row" + i))
+        if (dataShape[0] < self._index.length){
+          self._index = self._index.slice(0, dataShape[0])
+        } else if (dataShape[0] > self._index.length){
+          self._index = self._index.concat(range(self._index.length, dataShape[0]).map(i => "row" + i))
         }
 
-        if (dataShape[1] < self.columns.length){
-          self.columns = self.columns.slice(0, dataShape[1])
-        } else if (dataShape[1] > self.columns.length){
-          self.columns = self.columns.concat(range(self.columns.length, dataShape[1]).map(i => "col" + i))
+        if (dataShape[1] < self._columns.length){
+          self._columns = self._columns.slice(0, dataShape[1])
+        } else if (dataShape[1] > self._columns.length){
+          self._columns = self._columns.concat(range(self._columns.length, dataShape[1]).map(i => "col" + i))
         }
 
         self._values = x
       },
     })
 
-    self.columns = []
-    self.index = []
+    Object.defineProperty(self, "_columns", {
+      value: [],
+      configurable: true,
+      enumerable: false,
+      writable: true,
+    })
+
+    Object.defineProperty(self, "columns", {
+      configurable: true,
+      enumerable: true,
+
+      get(){
+        return self._columns
+      },
+
+      set(x){
+        assert(isArray(x), "The new columns list must be a one-dimensional array of strings!")
+        assert(x.length === self.shape[1], "The new columns list must be the same length as the old columns list!")
+        assert(shape(x).length === 1, "The new columns list must be a one-dimensional array of strings!")
+
+        x.forEach(value => {
+          assert(isString(value), "All of the column names must be strings!")
+        })
+
+        self._columns = x
+      },
+    })
+
+    Object.defineProperty(self, "_index", {
+      value: [],
+      configurable: true,
+      enumerable: false,
+      writable: true,
+    })
+
+    Object.defineProperty(self, "index", {
+      configurable: true,
+      enumerable: true,
+
+      get(){
+        return self._index
+      },
+
+      set(x){
+        assert(isArray(x), "The new index must be a one-dimensional array of strings!")
+        assert(x.length === self.shape[0], "The new index must be the same length as the old index!")
+        assert(shape(x).length === 1, "The new index must be a one-dimensional array of strings!")
+
+        x.forEach(value => {
+          assert(isString(value), "All of the row names must be strings!")
+        })
+
+        self._index = x
+      },
+    })
 
     assert(isUndefined(data) || data instanceof Object, "The `data` passed into the constructor of a DataFrame must be either (1) an object where the key-value pairs are (respectively) column names and 1-dimensional arrays of values, or (2) a 2-dimensional array of values.")
 
@@ -77,18 +132,18 @@ class DataFrame {
         assert(dataShape.length === 2, "The `data` array passed into the constructor of a DataFrame must be 2-dimensional!")
         self.values = data
       } else {
-        self.columns = Object.keys(data)
+        self._columns = Object.keys(data)
         let temp = []
 
-        self.columns.forEach(col => {
+        self._columns.forEach(col => {
           let values = data[col]
           temp.push(values)
         })
 
-        self.values = transpose(temp)
+        self._values = transpose(temp)
 
         let dataShape = shape(self.values)
-        self.index = range(0, dataShape[0]).map(i => "row" + i)
+        self._index = range(0, dataShape[0]).map(i => "row" + i)
       }
     }
   }
