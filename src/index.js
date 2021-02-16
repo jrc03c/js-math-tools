@@ -7,6 +7,7 @@ let out = {
 out.dump = function(){
   out.misc.dump(out.canvas)
   out.misc.dump(out.math)
+  out.misc.dump(out.math.classes)
   out.misc.dump(out.misc)
 }
 

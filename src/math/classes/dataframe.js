@@ -1,15 +1,15 @@
-let assert = require("../misc/assert.js")
-let isArray = require("./is-array.js")
-let isUndefined = require("./is-undefined.js")
-let shape = require("./shape.js")
-let transpose = require("./transpose.js")
-let range = require("./range.js")
-let isNumber = require("./is-number.js")
-let isString = require("./is-string.js")
-let apply = require("../misc/apply.js")
-let isFunction = require("./is-function.js")
-let ndarray = require("./ndarray.js")
-let copy = require("./copy.js")
+let assert = require("../../misc/assert.js")
+let isArray = require("../is-array.js")
+let isUndefined = require("../is-undefined.js")
+let shape = require("../shape.js")
+let transpose = require("../transpose.js")
+let range = require("../range.js")
+let isNumber = require("../is-number.js")
+let isString = require("../is-string.js")
+let apply = require("../../misc/apply.js")
+let isFunction = require("../is-function.js")
+let ndarray = require("../ndarray.js")
+let copy = require("../copy.js")
 
 function isInteger(x){
   return isNumber(x) && parseInt(x) === x
@@ -467,14 +467,14 @@ module.exports = DataFrame
 
 // tests
 if (!module.parent && typeof(window) === "undefined"){
-  let isEqual = require("./is-equal.js")
-  let normal = require("./normal.js")
-  let set = require("./set.js")
-  let flatten = require("./flatten.js")
-  let distance = require("./distance.js")
-  let zeros = require("./zeros.js")
-  let chop = require("./chop.js")
-  let random = require("./random.js")
+  let isEqual = require("../is-equal.js")
+  let normal = require("../normal.js")
+  let set = require("../set.js")
+  let flatten = require("../flatten.js")
+  let distance = require("../distance.js")
+  let zeros = require("../zeros.js")
+  let chop = require("../chop.js")
+  let random = require("../random.js")
 
   let xShape = [17, 32]
   let x = normal(xShape)
