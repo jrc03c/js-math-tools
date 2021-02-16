@@ -10,6 +10,9 @@ let apply = require("../../misc/apply.js")
 let isFunction = require("../is-function.js")
 let ndarray = require("../ndarray.js")
 let copy = require("../copy.js")
+let Series = require("./series.js")
+let flatten = require("../flatten.js")
+let isEqual = require("../is-equal.js")
 
 function isInteger(x){
   return isNumber(x) && parseInt(x) === x
@@ -25,6 +28,10 @@ function isObject(x){
 
 function isDataFrame(x){
   return x instanceof DataFrame
+}
+
+function isSeries(x){
+  return x instanceof Series
 }
 
 class DataFrame {
@@ -204,6 +211,22 @@ class DataFrame {
       })
     })
 
+    let valuesShape = shape(values)
+
+    if (valuesShape.indexOf(1) > -1){
+      let out = new Series(flatten(values))
+
+      if (valuesShape[0] === 1){
+        out.name = rows[0]
+        out.index = self.columns
+        return out
+      } else if (valuesShape[1] === 1){
+        out.name = cols[0]
+        out.index = self.index
+        return out
+      }
+    }
+
     let out = new DataFrame(values)
     out.columns = cols
     out.index = rows
@@ -277,36 +300,47 @@ class DataFrame {
   }
 
   assign(obj){
-    assert(isObject(obj), "An object must be passed into the `assign` method.")
+    assert(isObject(obj) || isSeries(obj), "An object or Series must be passed into the `assign` method.")
 
     let self = this
-    let out = self.copy()
-    let outShape = out.shape
 
-    Object.keys(obj).forEach(col => {
-      let values = obj[col]
+    if (isSeries(obj)){
+      let temp = {}
+      assert (isEqual(obj.index, self.index), "The index of the new data does not match the index of the DataFrame.")
+      temp[obj.name] = obj.values
+      return self.assign(temp)
+    } else {
+      let out = self.copy()
+      let outShape = out.shape
 
-      if (out.isEmpty()){
-        out.values = transpose([values])
-        out.columns = [col]
-        outShape = out.shape
-      } else {
-        assert(values.length === outShape[0], `Column "${col}" in the new data is not the same length as the other columns in the original DataFrame.`)
+      Object.keys(obj).forEach(col => {
+        let values = obj[col]
 
-        let colIndex = out.columns.indexOf(col)
+        assert(isArray(values), "Each key-value pair must be (respectively) a string and a 1-dimensional array of values.")
+        assert(shape(values).length === 1, "Each key-value pair must be (respectively) a string and a 1-dimensional array of values.")
 
-        if (colIndex < 0){
-          out.columns.push(col)
-          colIndex = out.columns.indexOf(col)
+        if (out.isEmpty()){
+          out.values = transpose([values])
+          out.columns = [col]
+          outShape = out.shape
+        } else {
+          assert(values.length === outShape[0], `Column "${col}" in the new data is not the same length as the other columns in the original DataFrame.`)
+
+          let colIndex = out.columns.indexOf(col)
+
+          if (colIndex < 0){
+            out.columns.push(col)
+            colIndex = out.columns.indexOf(col)
+          }
+
+          out.values.forEach((row, i) => {
+            row[colIndex] = values[i]
+          })
         }
+      })
 
-        out.values.forEach((row, i) => {
-          row[colIndex] = values[i]
-        })
-      }
-    })
-
-    return out
+      return out
+    }
   }
 
   apply(fn, axis){
@@ -499,6 +533,13 @@ if (!module.parent && typeof(window) === "undefined"){
   assert(isEqual(c, flatten(df.loc(null, ["c"]).values)), "The values in column 'c' are not the same as the values used to create it!")
   assert(isEqual(df.values, df.transpose().transpose().values), "A doubly-transposed DataFrame should have the same values as the original!")
   assert(chop(distance(df.values, zeros(df.shape)) - distance(df.transpose().values, zeros(df.transpose().shape))) === 0, "A transposed DataFrame's values should have the same 2-norm as the original!")
+  assert(isSeries(df.getSubsetByNames(null, ["a"])), "A one-dimensional result should be a Series, not a DataFrame!")
+  assert(isDataFrame(df.getSubsetByNames(null, ["b", "c"])), "A two-dimensional result should be a DataFrame, not a Series!")
+
+  let e = new Series(normal(100))
+  e.name = "e"
+  df = df.assign(e)
+  assert(isEqual(e.values, flatten(df.loc(null, ["e"]).values)), "The values in column 'e' are not the same as the values used to create it!")
 
   let hasFailed = false
 
