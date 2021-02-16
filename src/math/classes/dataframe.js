@@ -84,9 +84,9 @@ class DataFrame {
       },
 
       set(x){
-        assert(isArray(x), "The new columns list must be a one-dimensional array of strings!")
+        assert(isArray(x), "The new columns list must be a 1-dimensional array of strings!")
         assert(x.length === self.shape[1], "The new columns list must be the same length as the old columns list!")
-        assert(shape(x).length === 1, "The new columns list must be a one-dimensional array of strings!")
+        assert(shape(x).length === 1, "The new columns list must be a 1-dimensional array of strings!")
 
         x.forEach(value => {
           assert(isString(value), "All of the column names must be strings!")
@@ -112,9 +112,9 @@ class DataFrame {
       },
 
       set(x){
-        assert(isArray(x), "The new index must be a one-dimensional array of strings!")
+        assert(isArray(x), "The new index must be a 1-dimensional array of strings!")
         assert(x.length === self.shape[0], "The new index must be the same length as the old index!")
-        assert(shape(x).length === 1, "The new index must be a one-dimensional array of strings!")
+        assert(shape(x).length === 1, "The new index must be a 1-dimensional array of strings!")
 
         x.forEach(value => {
           assert(isString(value), "All of the row names must be strings!")
@@ -410,7 +410,7 @@ class DataFrame {
 
   dropColumns(columns){
     assert(isArray(columns), "`columns` must be an array of strings.")
-    assert(shape(columns).length === 1, "`columns` must be a one-dimensional array of strings.")
+    assert(shape(columns).length === 1, "`columns` must be a 1-dimensional array of strings.")
 
     columns.forEach(col => {
       assert(isString(col), "Each item in the `columns` array must be a string.")
@@ -439,7 +439,7 @@ class DataFrame {
 
   dropRows(rows){
     assert(isArray(rows), "`rows` must be an array of strings.")
-    assert(shape(rows).length === 1, "`rows` must be a one-dimensional array of strings.")
+    assert(shape(rows).length === 1, "`rows` must be a 1-dimensional array of strings.")
 
     rows.forEach(row => {
       assert(isString(row), "Each item in the `rows` array must be a string.")
