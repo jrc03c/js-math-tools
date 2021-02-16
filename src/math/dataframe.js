@@ -98,6 +98,16 @@ class DataFrame {
     return shape(self.values)
   }
 
+  get rows(){
+    let self = this
+    return self.index
+  }
+
+  set rows(rows){
+    let self = this
+    self.index = rows
+  }
+
   isEmpty(){
     let self = this
     return self.shape.length < 2
@@ -356,7 +366,9 @@ class DataFrame {
     let outColumns = copy(out.columns)
 
     columns.forEach(col => {
-      let index = out.columns.indexOf(col)
+      let index = outColumns.indexOf(col)
+      assert(index > -1, `The column "${col}" does not exist!`)
+
       outColumns.splice(index, 1)
 
       out.values = out.values.map(row => {
@@ -367,6 +379,31 @@ class DataFrame {
 
     if (set(out.values).length === 0) return new DataFrame()
     out.columns = outColumns
+    return out
+  }
+
+  dropRows(rows){
+    assert(isArray(rows), "`rows` must be an array of strings.")
+    assert(shape(rows).length === 1, "`rows` must be a one-dimensional array of strings.")
+
+    rows.forEach(row => {
+      assert(isString(row), "Each item in the `rows` array must be a string.")
+    })
+
+    let self = this
+    let out = self.copy()
+    let outIndex = copy(out.index)
+
+    rows.forEach(row => {
+      let index = outIndex.indexOf(row)
+      assert(index > -1, `The row "${row}" does not exist!`)
+
+      outIndex.splice(index, 1)
+      out.values.splice(index, 1)
+    })
+
+    if (set(out.values).length === 0) return new DataFrame()
+    out.index = outIndex
     return out
   }
 }
