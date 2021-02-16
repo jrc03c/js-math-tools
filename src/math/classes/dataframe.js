@@ -13,6 +13,8 @@ let copy = require("../copy.js")
 let Series = require("./series.js")
 let flatten = require("../flatten.js")
 let isEqual = require("../is-equal.js")
+let max = require("../max.js")
+let min = require("../min.js")
 
 function isInteger(x){
   return isNumber(x) && parseInt(x) === x
@@ -495,6 +497,57 @@ class DataFrame {
     out.index = outIndex
     return out
   }
+
+  print(){
+    function truncate(text, maxLength){
+      return text.length > maxLength ? text.substring(0, maxLength - 3) + "..." : text
+    }
+
+    function leftPad(text, minLength){
+      while (text.length < minLength) text = " " + text
+      return text
+    }
+
+    let self = this
+    let maxColumnWidth = 8
+
+    if (typeof process === "undefined"){
+      // browser
+      // console.table(...)
+    } else {
+      // node
+      let totalColumns = process.stdout.columns
+      let defaultWidth = 24
+
+      let columnWidths = self.columns.map(col => {
+        let values = self.getSubsetByNames(null, [col]).values
+        let lengths = values.map(v => v.toString().length)
+        return min([defaultWidth, max(lengths)])
+      })
+
+      let truncatedColumns = self.columns.map((col, i) => {
+        let width = columnWidths[i]
+        return leftPad(truncate(col, width), width)
+      })
+
+      let truncatedValues = self.values.map(row => {
+        return row.map((value, i) => {
+          let width = columnWidths[i]
+          return leftPad(truncate(value.toString(), width), width)
+        })
+      })
+
+      let maxIndexWidth = min([defaultWidth, max(self.index.map(row => row.toString().length))])
+
+      let truncatedIndex = self.index.map((row, i) => {
+        return leftPad(truncate(row, maxIndexWidth), maxIndexWidth)
+      })
+
+      console.log(leftPad(" ", maxIndexWidth) + " | " + truncatedColumns.join(" | "))
+      console.log(leftPad(" ", maxIndexWidth).split("").map(s => "-").join("") + " | " + truncatedColumns.map(col => col.split("").map(s => "-").join("")).join(" | "))
+      console.log(truncatedValues.map((row, i) => truncatedIndex[i] + " | " + row.join(" | ")).join("\n"))
+    }
+  }
 }
 
 module.exports = DataFrame
@@ -683,4 +736,12 @@ if (!module.parent && typeof(window) === "undefined"){
   assert(df.dropMissing(1, null, 1).isEmpty(), "The DataFrame should be empty after dropping missing values!")
 
   console.log("All tests passed!")
+
+  let test = new DataFrame({
+    a: range(0, 5),
+    foo: normal(5),
+    fullName: ["Josh", "Hello, world! My name is Harry James Potter!", "Bob", "Flibbertigibbet", "Test"],
+  })
+
+  test.print()
 }
