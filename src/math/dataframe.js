@@ -342,6 +342,33 @@ class DataFrame {
 
     return out
   }
+
+  dropColumns(columns){
+    assert(isArray(columns), "`columns` must be an array of strings.")
+    assert(shape(columns).length === 1, "`columns` must be a one-dimensional array of strings.")
+
+    columns.forEach(col => {
+      assert(isString(col), "Each item in the `columns` array must be a string.")
+    })
+
+    let self = this
+    let out = self.copy()
+    let outColumns = copy(out.columns)
+
+    columns.forEach(col => {
+      let index = out.columns.indexOf(col)
+      outColumns.splice(index, 1)
+
+      out.values = out.values.map(row => {
+        row.splice(index, 1)
+        return row
+      })
+    })
+
+    if (set(out.values).length === 0) return new DataFrame()
+    out.columns = outColumns
+    return out
+  }
 }
 
 module.exports = DataFrame
