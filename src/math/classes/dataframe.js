@@ -518,9 +518,20 @@ class DataFrame {
       // node
       let totalWidth = process.stdout.columns
       let defaultWidth = 24
+      let totalHeight = 24
 
-      let columnWidths = self.columns.map(col => {
-        let values = self.getSubsetByNames(null, [col]).values
+      let temp = self.copy()
+
+      if (temp.columns.length > 20){
+        temp = temp.getSubsetByNames(null, temp.columns.slice(0, 10).concat(temp.columns.slice(temp.columns.length - 10, temp.columns.length)))
+      }
+
+      if (temp.index.length > totalHeight + 1){
+        temp = temp.getSubsetByNames(temp.index.slice(0, 10).concat(temp.index.slice(temp.index.length - 15, temp.index.length)), null)
+      }
+
+      let columnWidths = temp.columns.map(col => {
+        let values = temp.getSubsetByNames(null, [col]).values
         let lengths = values.map(v => v.toString().length)
         return min([defaultWidth, max(lengths)])
       })
@@ -532,10 +543,10 @@ class DataFrame {
       while (lengthSoFar < totalWidth / 2 && i < columnWidths.length / 2){
         lengthSoFar += columnWidths[i] + 3
         lengthSoFar += columnWidths[columnWidths.length - i - 1] + 3
-        columnsToKeep.push(self.columns[i])
+        columnsToKeep.push(temp.columns[i])
 
         if (i !== columnWidths.length - i - 1){
-          columnsToKeep.push(self.columns[self.columns.length - i - 1])
+          columnsToKeep.push(temp.columns[temp.columns.length - i - 1])
         }
 
         i++
@@ -545,9 +556,9 @@ class DataFrame {
         return self.columns.indexOf(a) < self.columns.indexOf(b) ? -1 : 1
       })
 
-      let truncatedDataFrame = self.getSubsetByNames(null, columnsToKeep)
+      let truncatedDataFrame = temp.getSubsetByNames(null, columnsToKeep)
 
-      if (columnsToKeep.length < self.columns.length){
+      if (columnsToKeep.length < temp.columns.length){
         truncatedDataFrame = truncatedDataFrame.assign({
           "...": range(0, truncatedDataFrame.index.length).map(i => "...")
         })
@@ -559,6 +570,16 @@ class DataFrame {
           let lengths = values.map(v => v.toString().length)
           return min([defaultWidth, max(lengths)])
         })
+      }
+
+      if (truncatedDataFrame.values.length > totalHeight){
+        truncatedDataFrame = truncatedDataFrame.iloc(range(0, totalHeight / 2).concat(range(truncatedDataFrame.values.length - totalHeight / 2, truncatedDataFrame.values.length)), null)
+        let originalIndex = copy(truncatedDataFrame.index)
+
+        truncatedDataFrame.index.push("...")
+        truncatedDataFrame.values.push(range(0, truncatedDataFrame.columns.length).map(i => "..."))
+
+        truncatedDataFrame = truncatedDataFrame.loc(originalIndex.slice(0, originalIndex.length / 2).concat(["..."]).concat(originalIndex.slice(originalIndex.length / 2, originalIndex.length)), null)
       }
 
       truncatedDataFrame.columns = truncatedDataFrame.columns.map((col, i) => {
@@ -573,7 +594,7 @@ class DataFrame {
         })
       })
 
-      let maxIndexWidth = min([defaultWidth, max(self.index.map(row => row.toString().length))])
+      let maxIndexWidth = min([defaultWidth, max(temp.index.map(row => row.toString().length))])
 
       truncatedDataFrame.index = truncatedDataFrame.index.map((row, i) => {
         return leftPad(truncate(row, maxIndexWidth), maxIndexWidth)
@@ -772,15 +793,4 @@ if (!module.parent && typeof(window) === "undefined"){
   assert(df.dropMissing(1, null, 1).isEmpty(), "The DataFrame should be empty after dropping missing values!")
 
   console.log("All tests passed!")
-
-  let test = new DataFrame({
-    a: range(0, 5),
-    foo: normal(5),
-    fullName: ["Josh", "Hello, world! My name is Harry James Potter!", "Bob", "Flibbertigibbet", "Test"],
-  })
-
-  test.print()
-
-  test = new DataFrame(normal([100, 100]))
-  test.print()
 }
