@@ -568,7 +568,7 @@ class DataFrame {
 
       let columnWidths = temp.columns.map(col => {
         let values = temp.getSubsetByNames(null, [col]).values
-        let lengths = values.map(v => v.toString().length)
+        let lengths = values.concat([col]).map(v => v.toString().length)
         return min([defaultWidth, max(lengths)])
       })
 

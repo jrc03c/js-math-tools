@@ -193,6 +193,149 @@ random(5)
 // [0.5713683813810349, 0.36495184898376465, 0.04452776908874512, 0.015275746583938599, 0.23413866385817528]
 ```
 
+# Series & DataFrames
+
+I recently added some helper classes to mimic the behavior of Python's [pandas](https://pandas.pydata.org/) library. Note that these classes do not fully implement the functionality of the pandas `DataFrames` and `Series`!
+
+Here are some of the things that you can do with Series:
+
+```js
+let tools = require("js-math-tools")
+tools.dump()
+// or:
+// const Series = tools.math.classes.Series
+
+let series = new Series([1, 2, 3, 4, 5])
+
+console.log(series.values) // [1, 2, 3, 4, 5]
+console.log(series.name) // data
+console.log(series.index) // ["row0", "row1", "row2", "row3", "row4"]
+console.log(series.shape) // [5]
+console.log(series.isEmpty()) // false
+console.log(series.clear().values) // [undefined, undefined, undefined, undefined, undefined]
+console.log(series.getSubsetByNames(["row0", "row2", "row4"]).values) // [1, 3, 5]
+console.log(series.loc(["row0", "row2", "row4"]).values) // [1, 3, 5]
+console.log(series.getSubsetByIndices([0, 2, 4]).values) // [1, 3, 5]
+console.log(series.iloc([0, 2, 4]).values) // [1, 3, 5]
+console.log(series.reverse().values) // [5, 4, 3, 2, 1]
+console.log(series.reverse().index) // ["row4", "row3", "row2", "row1", "row0"]
+console.log(series.reverse().resetIndex().index) // ["row0", "row1", "row2", "row3", "row4"]
+console.log(series.copy().values) // [1, 2, 3, 4, 5]
+console.log(series.apply((index, x) => x * 2).values) // [2, 4, 6, 8, 10]
+
+series.values[0] = null
+series.values[3] = null
+
+console.log(series.values) // [null, 2, 3, null, 5]
+console.log(series.dropMissing().values) // [2, 3, 5]
+console.log(series.dropMissing().index) // ["row1", "row2", "row4"]
+```
+
+And here are some of the things you can do with `DataFrame`:
+
+```js
+let tools = require("js-math-tools")
+tools.dump()
+// or:
+// const DataFrame = tools.math.classes.DataFrame
+
+let x = new DataFrame([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+x.print()
+/*
+     | col0 | col1 | col2
+---- | ---- | ---- | ----
+row0 |    1 |    2 |    3
+row1 |    4 |    5 |    6
+row2 |    7 |    8 |    9
+*/
+
+x = new DataFrame({a: range(0, 5), b: range(5, 10), c: range(10, 15)})
+x.print()
+/*
+     | a | b |  c
+---- | - | - | --
+row0 | 0 | 5 | 10
+row1 | 1 | 6 | 11
+row2 | 2 | 7 | 12
+row3 | 3 | 8 | 13
+row4 | 4 | 9 | 14
+*/
+
+console.log(x.shape) // [5, 3]
+console.log(x.isEmpty()) // false
+console.log(x.clear().isEmpty()) // true
+console.log(x.clear().shape) // [5, 3]
+
+let subset = x.getSubsetByNames(["row2", "row4"], ["b", "a"]) // or x.loc(...)
+subset.print()
+/*
+     | b | a
+---- | - | -
+row2 | 7 | 2
+row4 | 9 | 4
+*/
+
+subset = x.getSubsetByIndices([0, 2, 4], null) // or x.iloc(...)
+subset.print()
+/*
+     | a | b |  c
+---- | - | - | --
+row0 | 0 | 5 | 10
+row2 | 2 | 7 | 12
+row4 | 4 | 9 | 14
+*/
+
+x.transpose().print() // or x.T.print()
+/*
+  | row0 | row1 | row2 | row3 | row4
+- | ---- | ---- | ---- | ---- | ----
+a |    0 |    1 |    2 |    3 |    4
+b |    5 |    6 |    7 |    8 |    9
+c |   10 |   11 |   12 |   13 |   14
+*/
+
+let xCopy = x.copy()
+console.log(isEqual(x, xCopy)) // true
+console.log(x === xCopy) // false
+
+x = x.assign({d: range(15, 20)})
+x.print()
+/*
+     | a | b |  c |  d
+---- | - | - | -- | --
+row0 | 0 | 5 | 10 | 15
+row1 | 1 | 6 | 11 | 16
+row2 | 2 | 7 | 12 | 17
+row3 | 3 | 8 | 13 | 18
+row4 | 4 | 9 | 14 | 19
+*/
+
+x.apply(col => reverse(col), 0) // axis = 0
+x.apply(row => reverse(row), 1) // axis = 1
+x.dropMissing() // drop any row that contains null / undefined values
+x.dropMissing(0) // same
+x.dropMissing(1) // drop any column that contains null / undefined values
+x.dropMissing(0, "any") // drop any row that contains null / undefined values
+x.dropMissing(0, "all") // drop a row only if all of its values are null / undefined
+x.dropMissing(0, null, 5) // drop a row only if it contains at least 5 null / undefined values
+
+x.dropColumns(["a", "c"])
+x.dropRows(["row4", "row2"])
+
+console.log(x.toObject())
+/*
+{
+  row0: { a: 0, b: 5, c: 10, d: 15 },
+  row1: { a: 1, b: 6, c: 11, d: 16 },
+  row2: { a: 2, b: 7, c: 12, d: 17 },
+  row3: { a: 3, b: 8, c: 13, d: 18 },
+  row4: { a: 4, b: 9, c: 14, d: 19 }
+}
+*/
+```
+
+I still need to add functionality to read and write CSV files from `DataFrames`!
+
 # Plotting
 
 This library also provides some simple plotting capabilities. **Note that this functionality relies on the `canvas` and therefore only works on the client-side (unless you use some kind of Node-side canvas library).** Here's a demo web page with several examples:
