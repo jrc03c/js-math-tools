@@ -516,7 +516,7 @@ class DataFrame {
       // console.table(...)
     } else {
       // node
-      let totalColumns = process.stdout.columns
+      let totalWidth = process.stdout.columns
       let defaultWidth = 24
 
       let columnWidths = self.columns.map(col => {
@@ -525,12 +525,48 @@ class DataFrame {
         return min([defaultWidth, max(lengths)])
       })
 
-      let truncatedColumns = self.columns.map((col, i) => {
+      let lengthSoFar = 0
+      let columnsToKeep = []
+      let i = 0
+
+      while (lengthSoFar < totalWidth / 2 && i < columnWidths.length / 2){
+        lengthSoFar += columnWidths[i] + 3
+        lengthSoFar += columnWidths[columnWidths.length - i - 1] + 3
+        columnsToKeep.push(self.columns[i])
+
+        if (i !== columnWidths.length - i - 1){
+          columnsToKeep.push(self.columns[self.columns.length - i - 1])
+        }
+
+        i++
+      }
+
+      columnsToKeep.sort((a, b) => {
+        return self.columns.indexOf(a) < self.columns.indexOf(b) ? -1 : 1
+      })
+
+      let truncatedDataFrame = self.getSubsetByNames(null, columnsToKeep)
+
+      if (columnsToKeep.length < self.columns.length){
+        truncatedDataFrame = truncatedDataFrame.assign({
+          "...": range(0, truncatedDataFrame.index.length).map(i => "...")
+        })
+
+        truncatedDataFrame = truncatedDataFrame.loc(null, columnsToKeep.slice(0, columnsToKeep.length / 2).concat(["..."]).concat(columnsToKeep.slice(columnsToKeep.length / 2, columnsToKeep.length)))
+
+        columnWidths = truncatedDataFrame.columns.map(col => {
+          let values = truncatedDataFrame.getSubsetByNames(null, [col]).values
+          let lengths = values.map(v => v.toString().length)
+          return min([defaultWidth, max(lengths)])
+        })
+      }
+
+      truncatedDataFrame.columns = truncatedDataFrame.columns.map((col, i) => {
         let width = columnWidths[i]
         return leftPad(truncate(col, width), width)
       })
 
-      let truncatedValues = self.values.map(row => {
+      truncatedDataFrame.values = truncatedDataFrame.values.map(row => {
         return row.map((value, i) => {
           let width = columnWidths[i]
           return leftPad(truncate(value.toString(), width), width)
@@ -539,13 +575,13 @@ class DataFrame {
 
       let maxIndexWidth = min([defaultWidth, max(self.index.map(row => row.toString().length))])
 
-      let truncatedIndex = self.index.map((row, i) => {
+      truncatedDataFrame.index = truncatedDataFrame.index.map((row, i) => {
         return leftPad(truncate(row, maxIndexWidth), maxIndexWidth)
       })
 
-      console.log(leftPad(" ", maxIndexWidth) + " | " + truncatedColumns.join(" | "))
-      console.log(leftPad(" ", maxIndexWidth).split("").map(s => "-").join("") + " | " + truncatedColumns.map(col => col.split("").map(s => "-").join("")).join(" | "))
-      console.log(truncatedValues.map((row, i) => truncatedIndex[i] + " | " + row.join(" | ")).join("\n"))
+      console.log(leftPad(" ", maxIndexWidth) + " | " + truncatedDataFrame.columns.join(" | "))
+      console.log(leftPad(" ", maxIndexWidth).split("").map(s => "-").join("") + " | " + truncatedDataFrame.columns.map(col => col.split("").map(s => "-").join("")).join(" | "))
+      console.log(truncatedDataFrame.values.map((row, i) => truncatedDataFrame.index[i] + " | " + row.join(" | ")).join("\n"))
     }
   }
 }
@@ -743,5 +779,8 @@ if (!module.parent && typeof(window) === "undefined"){
     fullName: ["Josh", "Hello, world! My name is Harry James Potter!", "Bob", "Flibbertigibbet", "Test"],
   })
 
+  test.print()
+
+  test = new DataFrame(normal([100, 100]))
   test.print()
 }
