@@ -530,7 +530,26 @@ class DataFrame {
 
     if (typeof window !== "undefined"){
       // browser
-      console.table(self.toObject())
+      let temp = self.copy()
+
+      if (temp.columns.length > 10){
+        temp = temp.getSubsetByNames(null, temp.columns.slice(0, 5).concat(temp.columns.slice(temp.columns.length - 5, temp.columns.length)))
+        let newColumns = temp.columns
+
+        temp = temp.assign({"...": range(0, temp.index.length).map(i => "...")})
+        temp = temp.loc(null, newColumns.slice(0, newColumns.length / 2).concat(["..."]).concat(newColumns.slice(newColumns.length / 2, newColumns.length)))
+      }
+
+      if (temp.index.length > 10){
+        temp = temp.getSubsetByIndices(range(0, 5).concat(range(temp.index.length - 5, temp.index.length)), null)
+        let newIndex = temp.index
+
+        temp.index.push("...")
+        temp.values.push(range(0, temp.columns.length).map(i => "..."))
+        temp = temp.loc(newIndex.slice(0, newIndex.length / 2).concat(["..."]).concat(newIndex.slice(newIndex.length / 2, newIndex.length)), null)
+      }
+
+      console.table(temp.toObject())
     } else {
       // node
       let totalWidth = process.stdout.columns
