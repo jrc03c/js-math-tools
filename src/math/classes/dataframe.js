@@ -498,6 +498,23 @@ class DataFrame {
     return out
   }
 
+  toObject(){
+    let self = this
+    let out = {}
+
+    self.values.forEach((row, i) => {
+      let temp = {}
+
+      row.forEach((value, j) => {
+        temp[self.columns[j]] = value
+      })
+
+      out[self.index[i]] = temp
+    })
+
+    return out
+  }
+
   print(){
     function truncate(text, maxLength){
       return text.length > maxLength ? text.substring(0, maxLength - 3) + "..." : text
@@ -511,9 +528,9 @@ class DataFrame {
     let self = this
     let maxColumnWidth = 8
 
-    if (typeof process === "undefined"){
+    if (typeof window !== "undefined"){
       // browser
-      // console.table(...)
+      console.table(self.toObject())
     } else {
       // node
       let totalWidth = process.stdout.columns
