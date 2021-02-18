@@ -36,6 +36,29 @@ function isSeries(x){
   return x instanceof Series
 }
 
+function quote(s){
+  let pattern = /"(.*?)"/g
+  let matches = s.match(pattern)
+  let out = s.slice()
+
+  if (matches){
+    matches.forEach(item => {
+      out = out.replace(item, `“${item.substring(1, item.length-1)}”`)
+    })
+  }
+
+  pattern = /'(.*?)'/g
+  matches = s.match(pattern)
+
+  if (matches){
+    matches.forEach(item => {
+      out = out.replace(item, `‘${item.substring(1, item.length-1)}’`)
+    })
+  }
+
+  return `"${out}"`
+}
+
 class DataFrame {
   constructor(data){
     let self = this
@@ -515,6 +538,46 @@ class DataFrame {
     return out
   }
 
+  toCSV(filename){
+    let self = this
+    let out = self.copy()
+    let originalColumns = copy(out.columns)
+    out = out.assign({"(index)": out.index})
+    out = out.loc(null, ["(index)"].concat(originalColumns))
+
+    out = [out.columns].concat(out.values).map(row => {
+      return row.map(value => {
+        if (typeof value === "string"){
+          return quote(value)
+        } else {
+          return value
+        }
+      }).join(",")
+    }).join("\n")
+
+    // browser
+    if (typeof window !== "undefined"){
+      if (filename.includes("/")){
+        let parts = filename.split("/")
+        filename = parts[parts.length - 1]
+      }
+
+      let a = document.createElement("a")
+      a.href = `data:text/csv;charset=utf-8,${encodeURIComponent(out)}`
+      a.download = filename
+      a.dispatchEvent(new MouseEvent("click"))
+    }
+
+    // node
+    else {
+      let fs = require("fs")
+      let path = require("path")
+      fs.writeFileSync(path.resolve(filename), out, "utf8")
+    }
+
+    return self
+  }
+
   print(){
     let self = this
     let temp = self.copy()
@@ -539,6 +602,7 @@ class DataFrame {
     }
 
     console.table(temp.toObject())
+    return self
   }
 }
 

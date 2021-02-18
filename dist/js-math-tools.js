@@ -45,10 +45,10 @@ let out={DataFrame:require("./dataframe.js"),Series:require("./series.js")};modu
 
 },{"./dataframe.js":16,"./series.js":17}],16:[function(require,module,exports){
 (function (process){(function (){
-let assert=require("../../misc/assert.js"),isArray=require("../is-array.js"),isUndefined=require("../is-undefined.js"),shape=require("../shape.js"),transpose=require("../transpose.js"),range=require("../range.js"),isNumber=require("../is-number.js"),isString=require("../is-string.js"),apply=require("../../misc/apply.js"),isFunction=require("../is-function.js"),ndarray=require("../ndarray.js"),copy=require("../copy.js"),Series=require("./series.js"),flatten=require("../flatten.js"),isEqual=require("../is-equal.js"),max=require("../max.js"),min=require("../min.js");function isInteger(e){return isNumber(e)&&parseInt(e)===e}function isWholeNumber(e){return isInteger(e)&&e>=0}function isObject(e){return e instanceof Object&&!isArray(e)}function isDataFrame(e){return e instanceof DataFrame}function isSeries(e){return e instanceof Series}class DataFrame{constructor(e){let s=this;if(Object.defineProperty(s,"_values",{value:[],configurable:!0,enumerable:!1,writable:!0}),Object.defineProperty(s,"values",{configurable:!0,enumerable:!0,get:()=>s._values,set(e){assert(isArray(e),"The new values must be a 2-dimensional array!");let a=shape(e);assert(2===a.length,"The new array of values must be 2-dimensional!"),a[0]<s._index.length?s._index=s._index.slice(0,a[0]):a[0]>s._index.length&&(s._index=s._index.concat(range(s._index.length,a[0]).map(e=>"row"+e))),a[1]<s._columns.length?s._columns=s._columns.slice(0,a[1]):a[1]>s._columns.length&&(s._columns=s._columns.concat(range(s._columns.length,a[1]).map(e=>"col"+e))),s._values=e}}),Object.defineProperty(s,"_columns",{value:[],configurable:!0,enumerable:!1,writable:!0}),Object.defineProperty(s,"columns",{configurable:!0,enumerable:!0,get:()=>s._columns,set(e){assert(isArray(e),"The new columns list must be a 1-dimensional array of strings!"),assert(e.length===s.shape[1],"The new columns list must be the same length as the old columns list!"),assert(1===shape(e).length,"The new columns list must be a 1-dimensional array of strings!"),e.forEach(e=>{assert(isString(e),"All of the column names must be strings!")}),s._columns=e}}),Object.defineProperty(s,"_index",{value:[],configurable:!0,enumerable:!1,writable:!0}),Object.defineProperty(s,"index",{configurable:!0,enumerable:!0,get:()=>s._index,set(e){assert(isArray(e),"The new index must be a 1-dimensional array of strings!"),assert(e.length===s.shape[0],"The new index must be the same length as the old index!"),assert(1===shape(e).length,"The new index must be a 1-dimensional array of strings!"),e.forEach(e=>{assert(isString(e),"All of the row names must be strings!")}),s._index=e}}),assert(isUndefined(e)||e instanceof Object,"The `data` passed into the constructor of a DataFrame must be either (1) an object where the key-value pairs are (respectively) column names and 1-dimensional arrays of values, or (2) a 2-dimensional array of values."),e)if(isArray(e)){let a=shape(e);assert(2===a.length,"The `data` array passed into the constructor of a DataFrame must be 2-dimensional!"),s.values=e}else{s._columns=Object.keys(e);let a=[];s._columns.forEach(s=>{let t=e[s];a.push(t)}),s._values=transpose(a);let t=shape(s.values);s._index=range(0,t[0]).map(e=>"row"+e)}}get shape(){return shape(this.values)}get rows(){return this.index}set rows(e){this.index=e}isEmpty(){return this.shape.length<2}clear(){let e=this.copy();return e.values=ndarray(e.shape),e.index=this.index,e.columns=this.columns,e}getSubsetByNames(e,s){let a=this;isUndefined(e)&&(e=a.index),isUndefined(s)&&(s=a.columns),assert(isArray(e)&&isArray(s),"The `rows` and `cols` parameters must be 1-dimensional arrays of strings."),assert(1===shape(e).length&&1===shape(s).length,"The `rows` and `cols` parameters must be 1-dimensional arrays of strings."),assert(e.length>0,"The `rows` array must contain at least one row name."),assert(s.length>0,"The `cols` array must contain at least one column name."),e.forEach(e=>{assert(isString(e),"The `rows` and `cols` parameters must be 1-dimensional arrays of strings."),assert(a.index.indexOf(e)>-1,`The row name "${e}" does not exist in the list of rows.`)}),s.forEach(e=>{assert(isString(e),"The `rows` and `cols` parameters must be 1-dimensional arrays of strings."),assert(a.columns.indexOf(e)>-1,`The column name "${e}" does not exist in the list of columns.`)});let t=e.map(e=>s.map(s=>a.values[a.index.indexOf(e)][a.columns.indexOf(s)])),n=shape(t);if(n.indexOf(1)>-1){let r=new Series(flatten(t));if(1===n[0])return r.name=e[0],r.index=a.columns,r;if(1===n[1])return r.name=s[0],r.index=a.index,r}let r=new DataFrame(t);return r.columns=s,r.index=e,r}getSubsetByIndices(e,s){let a=this,t=a.shape;isUndefined(e)&&(e=range(0,t[0])),isUndefined(s)&&(s=range(0,t[1])),assert(isArray(e)&&isArray(s),"The `rowIndices` and `colIndices` parameters must be 1-dimensional arrays of whole numbers."),assert(1===shape(e).length&&1===shape(s).length,"The `rowIndices` and `colIndices` parameters must be 1-dimensional arrays of whole numbers."),assert(e.length>0,"The `rowIndices` array must contain at least one index."),assert(s.length>0,"The `colIndices` array must contain at least one index."),e.forEach(e=>{assert(isWholeNumber(e),"The `rowIndices` and `colIndices` parameters must be 1-dimensional arrays of whole numbers."),assert(e<a.index.length,`The row index ${e} is out of bounds.`)}),s.forEach(e=>{assert(isWholeNumber(e),"The `rowIndices` and `colIndices` parameters must be 1-dimensional arrays of whole numbers."),assert(e<a.columns.length,`The column index ${e} is out of bounds.`)});let n=e.map(e=>a.index[e]),r=s.map(e=>a.columns[e]);return a.getSubsetByNames(n,r)}loc(e,s){return this.getSubsetByNames(e,s)}iloc(e,s){return this.getSubsetByIndices(e,s)}transpose(){let e=new DataFrame(transpose(this.values));return e.columns=this.index,e.index=this.columns,e}get T(){return this.transpose()}resetIndex(){let e=this.copy();return e.index=range(0,this.shape[0]).map(e=>"row"+e),e}copy(){if(this.isEmpty())return new DataFrame;let e=new DataFrame(copy(this.values));return e.columns=this.columns.slice(),e.index=this.index.slice(),e}assign(e){assert(isObject(e)||isSeries(e),"An object or Series must be passed into the `assign` method.");let s=this;if(isSeries(e)){let a={};return assert(isEqual(e.index,s.index),"The index of the new data does not match the index of the DataFrame."),a[e.name]=e.values,s.assign(a)}{let a=s.copy(),t=a.shape;return Object.keys(e).forEach(s=>{let n=e[s];if(assert(isArray(n),"Each key-value pair must be (respectively) a string and a 1-dimensional array of values."),assert(1===shape(n).length,"Each key-value pair must be (respectively) a string and a 1-dimensional array of values."),a.isEmpty())a.values=transpose([n]),a.columns=[s],t=a.shape;else{assert(n.length===t[0],`Column "${s}" in the new data is not the same length as the other columns in the original DataFrame.`);let e=a.columns.indexOf(s);e<0&&(a.columns.push(s),e=a.columns.indexOf(s)),a.values.forEach((s,a)=>{s[e]=n[a]})}}),a}}apply(e,s){s=s||0,assert(isFunction(e),"The first parameter to the `apply` method must be a function."),assert(0===s||1===s,"The second parameter to the `apply` method (the `axis`) must be 0 or 1.");let a=this.copy();return 0===s?((a=a.transpose()).values=a.values.map((s,t)=>e(a.index[t],s)),a=a.transpose()):1===s&&(a.values=a.values.map((s,t)=>e(a.index[t],s))),a}dropMissing(e,s,a){function t(e){if(a>0){let s=0;for(let t=0;t<e.length;t++){let n=e[t];if(isUndefined(n)&&s++,s>=a)return[]}}else if("any"===s)for(let s=0;s<e.length;s++){let a=e[s];if(isUndefined(a))return[]}else if("all"===s){for(let s=0;s<e.length;s++){let a=e[s];if(!isUndefined(a))return e}return[]}return e}assert(0===(e=e||0)||1===e,"The first parameter of the `dropMissing` method (the `axis`) must be 0 or 1."),assert(isWholeNumber(a=a||0),"The third parameter of the `dropMissing` method (the `threshold`) should be a whole number (meaning that data should be dropped if it contains more than `threshold` null values)."),assert("any"===(s=a>0?"none":s||"any")||"all"===s||"none"===s,"The second parameter of the `dropMissing` method (the `condition` parameter, which indicates the condition under which data should be dropped) should be 'any' or 'all' (meaning that if 'any' of the data contains null values, then it should be dropped; or that if 'all' of the data contains null values, then it should be dropped).");let n=this.copy();if(0===e){let e=n.values.map(t).filter((e,s)=>0!==e.length||(n.index.splice(s,1),!1));if(shape(e).length<2)return new DataFrame;n.values=e}else if(1===e){let e=(n=n.transpose()).values.map(t).filter((e,s)=>0!==e.length||(n.index.splice(s,1),!1));if(shape(e).length<2)return new DataFrame;n.values=e,n=n.transpose()}return n}dropColumns(e){assert(isArray(e),"`columns` must be an array of strings."),assert(1===shape(e).length,"`columns` must be a 1-dimensional array of strings."),e.forEach(e=>{assert(isString(e),"Each item in the `columns` array must be a string.")});let s=this.copy(),a=copy(s.columns);return e.forEach(e=>{let t=a.indexOf(e);assert(t>-1,`The column "${e}" does not exist!`),a.splice(t,1),s.values=s.values.map(e=>(e.splice(t,1),e))}),0===set(s.values).length?new DataFrame:(s.columns=a,s)}dropRows(e){assert(isArray(e),"`rows` must be an array of strings."),assert(1===shape(e).length,"`rows` must be a 1-dimensional array of strings."),e.forEach(e=>{assert(isString(e),"Each item in the `rows` array must be a string.")});let s=this.copy(),a=copy(s.index);return e.forEach(e=>{let t=a.indexOf(e);assert(t>-1,`The row "${e}" does not exist!`),a.splice(t,1),s.values.splice(t,1)}),0===set(s.values).length?new DataFrame:(s.index=a,s)}toObject(){let e=this,s={};return e.values.forEach((a,t)=>{let n={};a.forEach((s,a)=>{n[e.columns[a]]=s}),s[e.index[t]]=n}),s}print(){let e=this.copy(),s="undefined"==typeof window?Math.floor(process.stdout.columns/24)-1:10,a="undefined"==typeof window?20:10;if(e.columns.length>s){let a=(e=e.getSubsetByNames(null,e.columns.slice(0,s/2).concat(e.columns.slice(e.columns.length-s/2,e.columns.length)))).columns;e=(e=e.assign({"...":range(0,e.index.length).map(e=>"...")})).loc(null,a.slice(0,a.length/2).concat(["..."]).concat(a.slice(a.length/2,a.length)))}if(e.index.length>a){let s=(e=e.getSubsetByIndices(range(0,a/2).concat(range(e.index.length-a/2,e.index.length)),null)).index;e.index.push("..."),e.values.push(range(0,e.columns.length).map(e=>"...")),e=e.loc(s.slice(0,s.length/2).concat(["..."]).concat(s.slice(s.length/2,s.length)),null)}console.table(e.toObject())}}if(module.exports=DataFrame,!module.parent&&"undefined"==typeof window){let e=require("../is-equal.js"),s=require("../normal.js"),a=require("../set.js"),t=require("../flatten.js"),n=require("../distance.js"),r=require("../zeros.js"),i=require("../chop.js"),l=require("../random.js"),o=[17,32],u=s(o),h=new DataFrame(u);assert(isDataFrame(h),"`df` is not a DataFrame!"),assert(e(h.shape,o),"The shape of the DataFrame is not the same as the shape of its data!"),assert(!h.isEmpty(),"`df` should not be empty!"),assert((new DataFrame).isEmpty(),"New DataFrames should be empty!");let d=a(h.clear().values);assert(1===d.length&&isUndefined(d[0]),"Cleared DataFrames should only have `undefined` values.");let m=s(100),c=s(100),p=s(100),f=(h=new DataFrame({a:m,b:c,c:p})).shape;assert(e(m,t(h.loc(null,["a"]).values)),"The values in column 'a' are not the same as the values used to create it!"),assert(e(c,t(h.loc(null,["b"]).values)),"The values in column 'b' are not the same as the values used to create it!"),assert(e(p,t(h.loc(null,["c"]).values)),"The values in column 'c' are not the same as the values used to create it!"),assert(e(h.values,h.transpose().transpose().values),"A doubly-transposed DataFrame should have the same values as the original!"),assert(0===i(n(h.values,r(h.shape))-n(h.transpose().values,r(h.transpose().shape))),"A transposed DataFrame's values should have the same 2-norm as the original!"),assert(isSeries(h.getSubsetByNames(null,["a"])),"A one-dimensional result should be a Series, not a DataFrame!"),assert(isDataFrame(h.getSubsetByNames(null,["b","c"])),"A two-dimensional result should be a DataFrame, not a Series!");let g=new Series(s(100));g.name="e",h=h.assign(g),assert(e(g.values,t(h.loc(null,["e"]).values)),"The values in column 'e' are not the same as the values used to create it!");let y=!1;try{h.loc(h.index,h.columns),y=!1}catch(e){y=!0}assert(!y,"`df.loc(df.index, df.columns)` should not have failed!");try{h.loc([],h.columns),y=!1}catch(e){y=!0}assert(y,"`df.loc([], df.columns)` should have failed!");try{h.loc(h.index,[]),y=!1}catch(e){y=!0}assert(y,"`df.loc(df.index, [])` should have failed!");try{h.loc(["this doesn't exist"],["this doesn't exist"]),y=!1}catch(e){y=!0}assert(y,'`df.loc(["this doesn\'t exist"], ["this doesn\'t exist"])` should have failed!');try{h.iloc(range(0,f[0]),range(0,f[1])),y=!1}catch(e){y=!0}assert(!y,"`df.iloc(range(0, dfShape[0]), range(0, dfShape[1]))` should not have failed!");try{h.iloc(),y=!1}catch(e){y=!0}assert(!y,"`df.iloc()` should not have failed!");try{h.iloc([-5],[-7]),y=!1}catch(e){y=!0}assert(y,"`df.iloc([-5], [-7])` should have failed!");try{h.iloc([500],[700]),y=!1}catch(e){y=!0}assert(y,"`df.iloc([500], [700])` should have failed!");let b=h.copy();assert(e(h,b),"A DataFrame and its copy should evaluate as equal!"),assert(!(h===b),"A DataFrame and its copy should not be the same object!"),h.index=range(0,f[0]).map(e=>Math.random().toString()),assert(!e(h.index,b.index),"`df` should now have random row names!"),h=h.resetIndex(),assert(e(h.index,b.index),"`df` should now have its original row names!");let v=s(100);h=h.assign({d:v}),assert(e(v,t(h.loc(null,["d"]).values)),"The values in column 'd' are not the same as the values used to create it!"),m=l(100),h=h.assign({a:m}),assert(e(m,t(h.loc(null,["a"]).values)),"The values in column 'a' are not the same as the values that were assigned to it!"),h=(h=new DataFrame(r([3,3]))).apply((e,s)=>s.map((s,a)=>e+"/"+a));let x=[["col0/0","col1/0","col2/0"],["col0/1","col1/1","col2/1"],["col0/2","col1/2","col2/2"]];assert(e(x,h.values),"The DataFrame's new values should be as I've described!"),h=(h=new DataFrame(r([3,3]))).apply((e,s)=>s.map((s,a)=>e+"/"+a),1),assert(e(x=[["row0/0","row0/1","row0/2"],["row1/0","row1/1","row1/2"],["row2/0","row2/1","row2/2"]],h.values),"The DataFrame's new values should be as I've described!"),h=new DataFrame([[0,null],[1,"foo"],[2,"bar"],[3,null],[4,null],[null,"uh-oh"]]),assert(e(h.dropMissing().shape,[2,2]),"The DataFrame should have a shape of [2, 2] after dropping missing values!"),assert(e(h.dropMissing().index,["row1","row2"]),"The DataFrame's new index should be as I've described!"),assert(h.dropMissing(1).isEmpty(),"The DataFrame should be empty after dropping missing values!"),assert(e(h.dropMissing(1,"all").shape,h.shape),"The DataFrame should have its original shape after trying to drop missing values!"),assert(e(h.dropMissing(1,null,4).shape,h.shape),"The DataFrame should have its original shape after trying to drop missing values!"),assert(e(h.dropMissing(1,null,3).shape,[6,1]),"The DataFrame should have a shape of [6, 1] after dropping missing values!"),assert(h.dropMissing(1,null,1).isEmpty(),"The DataFrame should be empty after dropping missing values!"),console.log("All tests passed!")}
+let assert=require("../../misc/assert.js"),isArray=require("../is-array.js"),isUndefined=require("../is-undefined.js"),shape=require("../shape.js"),transpose=require("../transpose.js"),range=require("../range.js"),isNumber=require("../is-number.js"),isString=require("../is-string.js"),apply=require("../../misc/apply.js"),isFunction=require("../is-function.js"),ndarray=require("../ndarray.js"),copy=require("../copy.js"),Series=require("./series.js"),flatten=require("../flatten.js"),isEqual=require("../is-equal.js"),max=require("../max.js"),min=require("../min.js");function isInteger(e){return isNumber(e)&&parseInt(e)===e}function isWholeNumber(e){return isInteger(e)&&e>=0}function isObject(e){return e instanceof Object&&!isArray(e)}function isDataFrame(e){return e instanceof DataFrame}function isSeries(e){return e instanceof Series}function quote(e){let s=/"(.*?)"/g,a=e.match(s),t=e.slice();return a&&a.forEach(e=>{t=t.replace(e,`“${e.substring(1,e.length-1)}”`)}),s=/'(.*?)'/g,(a=e.match(s))&&a.forEach(e=>{t=t.replace(e,`‘${e.substring(1,e.length-1)}’`)}),`"${t}"`}class DataFrame{constructor(e){let s=this;if(Object.defineProperty(s,"_values",{value:[],configurable:!0,enumerable:!1,writable:!0}),Object.defineProperty(s,"values",{configurable:!0,enumerable:!0,get:()=>s._values,set(e){assert(isArray(e),"The new values must be a 2-dimensional array!");let a=shape(e);assert(2===a.length,"The new array of values must be 2-dimensional!"),a[0]<s._index.length?s._index=s._index.slice(0,a[0]):a[0]>s._index.length&&(s._index=s._index.concat(range(s._index.length,a[0]).map(e=>"row"+e))),a[1]<s._columns.length?s._columns=s._columns.slice(0,a[1]):a[1]>s._columns.length&&(s._columns=s._columns.concat(range(s._columns.length,a[1]).map(e=>"col"+e))),s._values=e}}),Object.defineProperty(s,"_columns",{value:[],configurable:!0,enumerable:!1,writable:!0}),Object.defineProperty(s,"columns",{configurable:!0,enumerable:!0,get:()=>s._columns,set(e){assert(isArray(e),"The new columns list must be a 1-dimensional array of strings!"),assert(e.length===s.shape[1],"The new columns list must be the same length as the old columns list!"),assert(1===shape(e).length,"The new columns list must be a 1-dimensional array of strings!"),e.forEach(e=>{assert(isString(e),"All of the column names must be strings!")}),s._columns=e}}),Object.defineProperty(s,"_index",{value:[],configurable:!0,enumerable:!1,writable:!0}),Object.defineProperty(s,"index",{configurable:!0,enumerable:!0,get:()=>s._index,set(e){assert(isArray(e),"The new index must be a 1-dimensional array of strings!"),assert(e.length===s.shape[0],"The new index must be the same length as the old index!"),assert(1===shape(e).length,"The new index must be a 1-dimensional array of strings!"),e.forEach(e=>{assert(isString(e),"All of the row names must be strings!")}),s._index=e}}),assert(isUndefined(e)||e instanceof Object,"The `data` passed into the constructor of a DataFrame must be either (1) an object where the key-value pairs are (respectively) column names and 1-dimensional arrays of values, or (2) a 2-dimensional array of values."),e)if(isArray(e)){let a=shape(e);assert(2===a.length,"The `data` array passed into the constructor of a DataFrame must be 2-dimensional!"),s.values=e}else{s._columns=Object.keys(e);let a=[];s._columns.forEach(s=>{let t=e[s];a.push(t)}),s._values=transpose(a);let t=shape(s.values);s._index=range(0,t[0]).map(e=>"row"+e)}}get shape(){return shape(this.values)}get rows(){return this.index}set rows(e){this.index=e}isEmpty(){return this.shape.length<2}clear(){let e=this.copy();return e.values=ndarray(e.shape),e.index=this.index,e.columns=this.columns,e}getSubsetByNames(e,s){let a=this;isUndefined(e)&&(e=a.index),isUndefined(s)&&(s=a.columns),assert(isArray(e)&&isArray(s),"The `rows` and `cols` parameters must be 1-dimensional arrays of strings."),assert(1===shape(e).length&&1===shape(s).length,"The `rows` and `cols` parameters must be 1-dimensional arrays of strings."),assert(e.length>0,"The `rows` array must contain at least one row name."),assert(s.length>0,"The `cols` array must contain at least one column name."),e.forEach(e=>{assert(isString(e),"The `rows` and `cols` parameters must be 1-dimensional arrays of strings."),assert(a.index.indexOf(e)>-1,`The row name "${e}" does not exist in the list of rows.`)}),s.forEach(e=>{assert(isString(e),"The `rows` and `cols` parameters must be 1-dimensional arrays of strings."),assert(a.columns.indexOf(e)>-1,`The column name "${e}" does not exist in the list of columns.`)});let t=e.map(e=>s.map(s=>a.values[a.index.indexOf(e)][a.columns.indexOf(s)])),n=shape(t);if(n.indexOf(1)>-1){let r=new Series(flatten(t));if(1===n[0])return r.name=e[0],r.index=a.columns,r;if(1===n[1])return r.name=s[0],r.index=a.index,r}let r=new DataFrame(t);return r.columns=s,r.index=e,r}getSubsetByIndices(e,s){let a=this,t=a.shape;isUndefined(e)&&(e=range(0,t[0])),isUndefined(s)&&(s=range(0,t[1])),assert(isArray(e)&&isArray(s),"The `rowIndices` and `colIndices` parameters must be 1-dimensional arrays of whole numbers."),assert(1===shape(e).length&&1===shape(s).length,"The `rowIndices` and `colIndices` parameters must be 1-dimensional arrays of whole numbers."),assert(e.length>0,"The `rowIndices` array must contain at least one index."),assert(s.length>0,"The `colIndices` array must contain at least one index."),e.forEach(e=>{assert(isWholeNumber(e),"The `rowIndices` and `colIndices` parameters must be 1-dimensional arrays of whole numbers."),assert(e<a.index.length,`The row index ${e} is out of bounds.`)}),s.forEach(e=>{assert(isWholeNumber(e),"The `rowIndices` and `colIndices` parameters must be 1-dimensional arrays of whole numbers."),assert(e<a.columns.length,`The column index ${e} is out of bounds.`)});let n=e.map(e=>a.index[e]),r=s.map(e=>a.columns[e]);return a.getSubsetByNames(n,r)}loc(e,s){return this.getSubsetByNames(e,s)}iloc(e,s){return this.getSubsetByIndices(e,s)}transpose(){let e=new DataFrame(transpose(this.values));return e.columns=this.index,e.index=this.columns,e}get T(){return this.transpose()}resetIndex(){let e=this.copy();return e.index=range(0,this.shape[0]).map(e=>"row"+e),e}copy(){if(this.isEmpty())return new DataFrame;let e=new DataFrame(copy(this.values));return e.columns=this.columns.slice(),e.index=this.index.slice(),e}assign(e){assert(isObject(e)||isSeries(e),"An object or Series must be passed into the `assign` method.");let s=this;if(isSeries(e)){let a={};return assert(isEqual(e.index,s.index),"The index of the new data does not match the index of the DataFrame."),a[e.name]=e.values,s.assign(a)}{let a=s.copy(),t=a.shape;return Object.keys(e).forEach(s=>{let n=e[s];if(assert(isArray(n),"Each key-value pair must be (respectively) a string and a 1-dimensional array of values."),assert(1===shape(n).length,"Each key-value pair must be (respectively) a string and a 1-dimensional array of values."),a.isEmpty())a.values=transpose([n]),a.columns=[s],t=a.shape;else{assert(n.length===t[0],`Column "${s}" in the new data is not the same length as the other columns in the original DataFrame.`);let e=a.columns.indexOf(s);e<0&&(a.columns.push(s),e=a.columns.indexOf(s)),a.values.forEach((s,a)=>{s[e]=n[a]})}}),a}}apply(e,s){s=s||0,assert(isFunction(e),"The first parameter to the `apply` method must be a function."),assert(0===s||1===s,"The second parameter to the `apply` method (the `axis`) must be 0 or 1.");let a=this.copy();return 0===s?((a=a.transpose()).values=a.values.map((s,t)=>e(a.index[t],s)),a=a.transpose()):1===s&&(a.values=a.values.map((s,t)=>e(a.index[t],s))),a}dropMissing(e,s,a){function t(e){if(a>0){let s=0;for(let t=0;t<e.length;t++){let n=e[t];if(isUndefined(n)&&s++,s>=a)return[]}}else if("any"===s)for(let s=0;s<e.length;s++){let a=e[s];if(isUndefined(a))return[]}else if("all"===s){for(let s=0;s<e.length;s++){let a=e[s];if(!isUndefined(a))return e}return[]}return e}assert(0===(e=e||0)||1===e,"The first parameter of the `dropMissing` method (the `axis`) must be 0 or 1."),assert(isWholeNumber(a=a||0),"The third parameter of the `dropMissing` method (the `threshold`) should be a whole number (meaning that data should be dropped if it contains more than `threshold` null values)."),assert("any"===(s=a>0?"none":s||"any")||"all"===s||"none"===s,"The second parameter of the `dropMissing` method (the `condition` parameter, which indicates the condition under which data should be dropped) should be 'any' or 'all' (meaning that if 'any' of the data contains null values, then it should be dropped; or that if 'all' of the data contains null values, then it should be dropped).");let n=this.copy();if(0===e){let e=n.values.map(t).filter((e,s)=>0!==e.length||(n.index.splice(s,1),!1));if(shape(e).length<2)return new DataFrame;n.values=e}else if(1===e){let e=(n=n.transpose()).values.map(t).filter((e,s)=>0!==e.length||(n.index.splice(s,1),!1));if(shape(e).length<2)return new DataFrame;n.values=e,n=n.transpose()}return n}dropColumns(e){assert(isArray(e),"`columns` must be an array of strings."),assert(1===shape(e).length,"`columns` must be a 1-dimensional array of strings."),e.forEach(e=>{assert(isString(e),"Each item in the `columns` array must be a string.")});let s=this.copy(),a=copy(s.columns);return e.forEach(e=>{let t=a.indexOf(e);assert(t>-1,`The column "${e}" does not exist!`),a.splice(t,1),s.values=s.values.map(e=>(e.splice(t,1),e))}),0===set(s.values).length?new DataFrame:(s.columns=a,s)}dropRows(e){assert(isArray(e),"`rows` must be an array of strings."),assert(1===shape(e).length,"`rows` must be a 1-dimensional array of strings."),e.forEach(e=>{assert(isString(e),"Each item in the `rows` array must be a string.")});let s=this.copy(),a=copy(s.index);return e.forEach(e=>{let t=a.indexOf(e);assert(t>-1,`The row "${e}" does not exist!`),a.splice(t,1),s.values.splice(t,1)}),0===set(s.values).length?new DataFrame:(s.index=a,s)}toObject(){let e=this,s={};return e.values.forEach((a,t)=>{let n={};a.forEach((s,a)=>{n[e.columns[a]]=s}),s[e.index[t]]=n}),s}toCSV(e){let s=this.copy(),a=copy(s.columns);if(s=[(s=(s=s.assign({"(index)":s.index})).loc(null,["(index)"].concat(a))).columns].concat(s.values).map(e=>e.map(e=>"string"==typeof e?quote(e):e).join(",")).join("\n"),"undefined"!=typeof window){if(e.includes("/")){let s=e.split("/");e=s[s.length-1]}let a=document.createElement("a");a.href=`data:text/csv;charset=utf-8,${encodeURIComponent(s)}`,a.download=e,a.dispatchEvent(new MouseEvent("click"))}else{let a=require("fs"),t=require("path");a.writeFileSync(t.resolve(e),s,"utf8")}return this}print(){let e=this.copy(),s="undefined"==typeof window?Math.floor(process.stdout.columns/24)-1:10,a="undefined"==typeof window?20:10;if(e.columns.length>s){let a=(e=e.getSubsetByNames(null,e.columns.slice(0,s/2).concat(e.columns.slice(e.columns.length-s/2,e.columns.length)))).columns;e=(e=e.assign({"...":range(0,e.index.length).map(e=>"...")})).loc(null,a.slice(0,a.length/2).concat(["..."]).concat(a.slice(a.length/2,a.length)))}if(e.index.length>a){let s=(e=e.getSubsetByIndices(range(0,a/2).concat(range(e.index.length-a/2,e.index.length)),null)).index;e.index.push("..."),e.values.push(range(0,e.columns.length).map(e=>"...")),e=e.loc(s.slice(0,s.length/2).concat(["..."]).concat(s.slice(s.length/2,s.length)),null)}return console.table(e.toObject()),this}}if(module.exports=DataFrame,!module.parent&&"undefined"==typeof window){let e=require("../is-equal.js"),s=require("../normal.js"),a=require("../set.js"),t=require("../flatten.js"),n=require("../distance.js"),r=require("../zeros.js"),i=require("../chop.js"),l=require("../random.js"),o=[17,32],u=s(o),h=new DataFrame(u);assert(isDataFrame(h),"`df` is not a DataFrame!"),assert(e(h.shape,o),"The shape of the DataFrame is not the same as the shape of its data!"),assert(!h.isEmpty(),"`df` should not be empty!"),assert((new DataFrame).isEmpty(),"New DataFrames should be empty!");let d=a(h.clear().values);assert(1===d.length&&isUndefined(d[0]),"Cleared DataFrames should only have `undefined` values.");let c=s(100),m=s(100),p=s(100),f=(h=new DataFrame({a:c,b:m,c:p})).shape;assert(e(c,t(h.loc(null,["a"]).values)),"The values in column 'a' are not the same as the values used to create it!"),assert(e(m,t(h.loc(null,["b"]).values)),"The values in column 'b' are not the same as the values used to create it!"),assert(e(p,t(h.loc(null,["c"]).values)),"The values in column 'c' are not the same as the values used to create it!"),assert(e(h.values,h.transpose().transpose().values),"A doubly-transposed DataFrame should have the same values as the original!"),assert(0===i(n(h.values,r(h.shape))-n(h.transpose().values,r(h.transpose().shape))),"A transposed DataFrame's values should have the same 2-norm as the original!"),assert(isSeries(h.getSubsetByNames(null,["a"])),"A one-dimensional result should be a Series, not a DataFrame!"),assert(isDataFrame(h.getSubsetByNames(null,["b","c"])),"A two-dimensional result should be a DataFrame, not a Series!");let g=new Series(s(100));g.name="e",h=h.assign(g),assert(e(g.values,t(h.loc(null,["e"]).values)),"The values in column 'e' are not the same as the values used to create it!");let y=!1;try{h.loc(h.index,h.columns),y=!1}catch(e){y=!0}assert(!y,"`df.loc(df.index, df.columns)` should not have failed!");try{h.loc([],h.columns),y=!1}catch(e){y=!0}assert(y,"`df.loc([], df.columns)` should have failed!");try{h.loc(h.index,[]),y=!1}catch(e){y=!0}assert(y,"`df.loc(df.index, [])` should have failed!");try{h.loc(["this doesn't exist"],["this doesn't exist"]),y=!1}catch(e){y=!0}assert(y,'`df.loc(["this doesn\'t exist"], ["this doesn\'t exist"])` should have failed!');try{h.iloc(range(0,f[0]),range(0,f[1])),y=!1}catch(e){y=!0}assert(!y,"`df.iloc(range(0, dfShape[0]), range(0, dfShape[1]))` should not have failed!");try{h.iloc(),y=!1}catch(e){y=!0}assert(!y,"`df.iloc()` should not have failed!");try{h.iloc([-5],[-7]),y=!1}catch(e){y=!0}assert(y,"`df.iloc([-5], [-7])` should have failed!");try{h.iloc([500],[700]),y=!1}catch(e){y=!0}assert(y,"`df.iloc([500], [700])` should have failed!");let b=h.copy();assert(e(h,b),"A DataFrame and its copy should evaluate as equal!"),assert(!(h===b),"A DataFrame and its copy should not be the same object!"),h.index=range(0,f[0]).map(e=>Math.random().toString()),assert(!e(h.index,b.index),"`df` should now have random row names!"),h=h.resetIndex(),assert(e(h.index,b.index),"`df` should now have its original row names!");let v=s(100);h=h.assign({d:v}),assert(e(v,t(h.loc(null,["d"]).values)),"The values in column 'd' are not the same as the values used to create it!"),c=l(100),h=h.assign({a:c}),assert(e(c,t(h.loc(null,["a"]).values)),"The values in column 'a' are not the same as the values that were assigned to it!"),h=(h=new DataFrame(r([3,3]))).apply((e,s)=>s.map((s,a)=>e+"/"+a));let w=[["col0/0","col1/0","col2/0"],["col0/1","col1/1","col2/1"],["col0/2","col1/2","col2/2"]];assert(e(w,h.values),"The DataFrame's new values should be as I've described!"),h=(h=new DataFrame(r([3,3]))).apply((e,s)=>s.map((s,a)=>e+"/"+a),1),assert(e(w=[["row0/0","row0/1","row0/2"],["row1/0","row1/1","row1/2"],["row2/0","row2/1","row2/2"]],h.values),"The DataFrame's new values should be as I've described!"),h=new DataFrame([[0,null],[1,"foo"],[2,"bar"],[3,null],[4,null],[null,"uh-oh"]]),assert(e(h.dropMissing().shape,[2,2]),"The DataFrame should have a shape of [2, 2] after dropping missing values!"),assert(e(h.dropMissing().index,["row1","row2"]),"The DataFrame's new index should be as I've described!"),assert(h.dropMissing(1).isEmpty(),"The DataFrame should be empty after dropping missing values!"),assert(e(h.dropMissing(1,"all").shape,h.shape),"The DataFrame should have its original shape after trying to drop missing values!"),assert(e(h.dropMissing(1,null,4).shape,h.shape),"The DataFrame should have its original shape after trying to drop missing values!"),assert(e(h.dropMissing(1,null,3).shape,[6,1]),"The DataFrame should have a shape of [6, 1] after dropping missing values!"),assert(h.dropMissing(1,null,1).isEmpty(),"The DataFrame should be empty after dropping missing values!"),console.log("All tests passed!")}
 
 }).call(this)}).call(this,require('_process'))
-},{"../../misc/apply.js":72,"../../misc/assert.js":74,"../chop.js":13,"../copy.js":19,"../distance.js":24,"../flatten.js":27,"../is-array.js":31,"../is-equal.js":33,"../is-function.js":34,"../is-number.js":35,"../is-string.js":36,"../is-undefined.js":37,"../max.js":41,"../min.js":44,"../ndarray.js":46,"../normal.js":47,"../random.js":50,"../range.js":51,"../set.js":56,"../shape.js":57,"../transpose.js":67,"../zeros.js":70,"./series.js":17,"_process":79}],17:[function(require,module,exports){
+},{"../../misc/apply.js":72,"../../misc/assert.js":74,"../chop.js":13,"../copy.js":19,"../distance.js":24,"../flatten.js":27,"../is-array.js":31,"../is-equal.js":33,"../is-function.js":34,"../is-number.js":35,"../is-string.js":36,"../is-undefined.js":37,"../max.js":41,"../min.js":44,"../ndarray.js":46,"../normal.js":47,"../random.js":50,"../range.js":51,"../set.js":56,"../shape.js":57,"../transpose.js":67,"../zeros.js":70,"./series.js":17,"_process":81,"fs":79,"path":80}],17:[function(require,module,exports){
 let assert=require("../../misc/assert.js"),isArray=require("../is-array.js"),isUndefined=require("../is-undefined.js"),shape=require("../shape.js"),transpose=require("../transpose.js"),range=require("../range.js"),isNumber=require("../is-number.js"),isString=require("../is-string.js"),apply=require("../../misc/apply.js"),isFunction=require("../is-function.js"),ndarray=require("../ndarray.js"),copy=require("../copy.js"),set=require("../set.js"),reverse=require("../reverse.js");function isInteger(e){return isNumber(e)&&parseInt(e)===e}function isWholeNumber(e){return isInteger(e)&&e>=0}function isObject(e){return e instanceof Object&&!isArray(e)}function isDataFrame(e){return e instanceof DataFrame}function isSeries(e){return e instanceof Series}class Series{constructor(e){let s=this;if(s.name="data",Object.defineProperty(s,"_values",{value:[],configurable:!0,enumerable:!1,writable:!0}),Object.defineProperty(s,"values",{configurable:!0,enumerable:!0,get:()=>s._values,set(e){assert(isArray(e),"The new values must be a 1-dimensional array!");let r=shape(e);assert(1===r.length,"The new array of values must be 1-dimensional!"),r[0]<s._index.length?s._index=s._index.slice(0,r[0]):r[0]>s._index.length&&(s._index=s._index.concat(range(s._index.length,r[0]).map(e=>"row"+e))),s._values=e}}),Object.defineProperty(s,"_index",{value:[],configurable:!0,enumerable:!1,writable:!0}),Object.defineProperty(s,"index",{configurable:!0,enumerable:!0,get:()=>s._index,set(e){assert(isArray(e),"The new index must be a 1-dimensional array of strings!"),assert(e.length===s.shape[0],"The new index must be the same length as the old index!"),assert(1===shape(e).length,"The new index must be a 1-dimensional array of strings!"),e.forEach(e=>{assert(isString(e),"All of the row names must be strings!")}),s._index=e}}),e){let r=shape(e);assert(1===r.length,"The `data` array passed into the constructor of a DataFrame must be 1-dimensional!"),s.values=e}}get shape(){return shape(this.values)}isEmpty(){return 0===set(this.values).length}clear(){let e=this.copy();return e.values=ndarray(e.shape),e.index=this.index,e}getSubsetByNames(e){let s=this;isUndefined(e)&&(e=s.index),assert(isArray(e),"The `indices` array must be a 1-dimensional array of strings."),assert(1===shape(e).length,"The `indices` array must be a 1-dimensional array of strings."),assert(e.length>0,"The `indices` array must contain at least one index name."),e.forEach(e=>{assert(isString(e),"The `indices` array must contain only strings."),assert(s.index.indexOf(e)>-1,`The name "${e}" does not exist in the index.`)});let r=e.map(e=>s.values[s.index.indexOf(e)]),i=new Series(r);return i.index=e,i}getSubsetByIndices(e){let s=this,r=s.shape;isUndefined(e)&&(e=range(0,r[0])),assert(isArray(e),"The `indices` array must be 1-dimensional array of whole numbers."),assert(1===shape(e).length,"The `indices` array must be a 1-dimensional array of whole numbers."),assert(e.length>0,"The `indices` array must contain at least one index."),e.forEach(e=>{assert(isWholeNumber(e),"The `indices` array must be a 1-dimensional array of whole numbers."),assert(e<s.index.length,`The row index ${e} is out of bounds.`)});let i=e.map(e=>s.index[e]);return s.getSubsetByNames(i)}loc(e){return this.getSubsetByNames(e)}iloc(e){return this.getSubsetByIndices(e)}reverse(){let e=new Series(reverse(this.values));return e.index=reverse(this.index),e}resetIndex(){let e=this.copy();return e.index=range(0,this.shape[0]).map(e=>"row"+e),e}copy(){if(this.isEmpty())return new Series;let e=new Series(copy(this.values));return e.index=this.index.slice(),e}apply(e){assert(isFunction(e),"The parameter to the `apply` method must be a function.");let s=this.copy();return s.values=s.values.map((r,i)=>e(s.index[i],r)),s}dropMissing(e,s){let r=this.copy(),i=[];return r.values=r.values.filter((e,s)=>!isUndefined(e)&&(i.push(r.index[s]),!0)),r.index=i,r}toObject(){let e=this,s={};return s[e.name]={},e.index.forEach((r,i)=>{s[e.name][r]=e.values[i]}),s}}if(module.exports=Series,!module.parent&&"undefined"==typeof window){let e=require("../is-equal.js"),s=require("../normal.js"),r=require("../set.js"),i=(require("../distance.js"),require("../zeros.js"),require("../chop.js"),require("../random.js"),s(100)),a=new Series(i),t=a.shape;assert(isSeries(a),"`series` is not a Series!"),assert(e(a.shape,[100]),"The shape of the Series is not the same as the shape of its data!"),assert(!a.isEmpty(),"`series` should not be empty!"),assert((new Series).isEmpty(),"New Series should be empty!");let n=r(a.clear().values);assert(1===n.length&&isUndefined(n[0]),"Cleared Series should only have `undefined` values."),assert(e(a.values,a.reverse().reverse().values),"A doubly-reversed series should have the same values as the original!");let o=!1;try{a.loc(a.index),o=!1}catch(e){o=!0}assert(!o,"`series.loc(series.index)` should not have failed!");try{a.loc([]),o=!1}catch(e){o=!0}assert(o,"`series.loc([])` should have failed!");try{a.loc(["this doesn't exist"]),o=!1}catch(e){o=!0}assert(o,'`series.loc(["this doesn\'t exist"])` should have failed!');try{a.iloc(range(0,t[0])),o=!1}catch(e){o=!0}assert(!o,"`series.iloc(range(0, seriesShape[0]))` should not have failed!");try{a.iloc(),o=!1}catch(e){o=!0}assert(!o,"`series.iloc()` should not have failed!");try{a.iloc([-5]),o=!1}catch(e){o=!0}assert(o,"`series.iloc([-5])` should have failed!");try{a.iloc([500]),o=!1}catch(e){o=!0}assert(o,"`series.iloc([500])` should have failed!");let l=a.copy();assert(e(a,l),"A Series and its copy should evaluate as equal!"),assert(!(a===l),"A Series and its copy should not be the same object!"),a.index=range(0,t[0]).map(e=>Math.random().toString()),assert(!e(a.index,l.index),"`series` should now have random row names!"),a=a.resetIndex(),assert(e(a.index,l.index),"`series` should now have its original row names!"),a=(a=new Series([0,1,2,3,4])).apply((e,s)=>e+"/"+s),assert(e(a.values,["row0/0","row1/1","row2/2","row3/3","row4/4"]),"The Series' values should be as I described!"),(a=new Series(range(0,10))).values[0]=null,a.values[7]=null,assert(e(a.dropMissing().shape,[8]),"The Series should have a shape of [8] after dropping missing values!"),assert(e(a.dropMissing().index,["row1","row2","row3","row4","row5","row6","row8","row9"]),"The Series' new index should be as I've described!"),assert(a.clear().dropMissing().isEmpty(),"The Series should be empty after dropping missing values!"),console.log("All tests passed!")}
 
 },{"../../misc/apply.js":72,"../../misc/assert.js":74,"../chop.js":13,"../copy.js":19,"../distance.js":24,"../is-array.js":31,"../is-equal.js":33,"../is-function.js":34,"../is-number.js":35,"../is-string.js":36,"../is-undefined.js":37,"../ndarray.js":46,"../normal.js":47,"../random.js":50,"../range.js":51,"../reverse.js":52,"../set.js":56,"../shape.js":57,"../transpose.js":67,"../zeros.js":70}],18:[function(require,module,exports){
@@ -237,6 +237,541 @@ function pause(e){return new Promise(function(t,r){try{return setTimeout(t,e)}ca
 function print(n){return console.log(n)}module.exports=print;
 
 },{}],79:[function(require,module,exports){
+
+},{}],80:[function(require,module,exports){
+(function (process){(function (){
+// 'path' module extracted from Node.js v8.11.1 (only the posix part)
+// transplited with Babel
+
+// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+'use strict';
+
+function assertPath(path) {
+  if (typeof path !== 'string') {
+    throw new TypeError('Path must be a string. Received ' + JSON.stringify(path));
+  }
+}
+
+// Resolves . and .. elements in a path with directory names
+function normalizeStringPosix(path, allowAboveRoot) {
+  var res = '';
+  var lastSegmentLength = 0;
+  var lastSlash = -1;
+  var dots = 0;
+  var code;
+  for (var i = 0; i <= path.length; ++i) {
+    if (i < path.length)
+      code = path.charCodeAt(i);
+    else if (code === 47 /*/*/)
+      break;
+    else
+      code = 47 /*/*/;
+    if (code === 47 /*/*/) {
+      if (lastSlash === i - 1 || dots === 1) {
+        // NOOP
+      } else if (lastSlash !== i - 1 && dots === 2) {
+        if (res.length < 2 || lastSegmentLength !== 2 || res.charCodeAt(res.length - 1) !== 46 /*.*/ || res.charCodeAt(res.length - 2) !== 46 /*.*/) {
+          if (res.length > 2) {
+            var lastSlashIndex = res.lastIndexOf('/');
+            if (lastSlashIndex !== res.length - 1) {
+              if (lastSlashIndex === -1) {
+                res = '';
+                lastSegmentLength = 0;
+              } else {
+                res = res.slice(0, lastSlashIndex);
+                lastSegmentLength = res.length - 1 - res.lastIndexOf('/');
+              }
+              lastSlash = i;
+              dots = 0;
+              continue;
+            }
+          } else if (res.length === 2 || res.length === 1) {
+            res = '';
+            lastSegmentLength = 0;
+            lastSlash = i;
+            dots = 0;
+            continue;
+          }
+        }
+        if (allowAboveRoot) {
+          if (res.length > 0)
+            res += '/..';
+          else
+            res = '..';
+          lastSegmentLength = 2;
+        }
+      } else {
+        if (res.length > 0)
+          res += '/' + path.slice(lastSlash + 1, i);
+        else
+          res = path.slice(lastSlash + 1, i);
+        lastSegmentLength = i - lastSlash - 1;
+      }
+      lastSlash = i;
+      dots = 0;
+    } else if (code === 46 /*.*/ && dots !== -1) {
+      ++dots;
+    } else {
+      dots = -1;
+    }
+  }
+  return res;
+}
+
+function _format(sep, pathObject) {
+  var dir = pathObject.dir || pathObject.root;
+  var base = pathObject.base || (pathObject.name || '') + (pathObject.ext || '');
+  if (!dir) {
+    return base;
+  }
+  if (dir === pathObject.root) {
+    return dir + base;
+  }
+  return dir + sep + base;
+}
+
+var posix = {
+  // path.resolve([from ...], to)
+  resolve: function resolve() {
+    var resolvedPath = '';
+    var resolvedAbsolute = false;
+    var cwd;
+
+    for (var i = arguments.length - 1; i >= -1 && !resolvedAbsolute; i--) {
+      var path;
+      if (i >= 0)
+        path = arguments[i];
+      else {
+        if (cwd === undefined)
+          cwd = process.cwd();
+        path = cwd;
+      }
+
+      assertPath(path);
+
+      // Skip empty entries
+      if (path.length === 0) {
+        continue;
+      }
+
+      resolvedPath = path + '/' + resolvedPath;
+      resolvedAbsolute = path.charCodeAt(0) === 47 /*/*/;
+    }
+
+    // At this point the path should be resolved to a full absolute path, but
+    // handle relative paths to be safe (might happen when process.cwd() fails)
+
+    // Normalize the path
+    resolvedPath = normalizeStringPosix(resolvedPath, !resolvedAbsolute);
+
+    if (resolvedAbsolute) {
+      if (resolvedPath.length > 0)
+        return '/' + resolvedPath;
+      else
+        return '/';
+    } else if (resolvedPath.length > 0) {
+      return resolvedPath;
+    } else {
+      return '.';
+    }
+  },
+
+  normalize: function normalize(path) {
+    assertPath(path);
+
+    if (path.length === 0) return '.';
+
+    var isAbsolute = path.charCodeAt(0) === 47 /*/*/;
+    var trailingSeparator = path.charCodeAt(path.length - 1) === 47 /*/*/;
+
+    // Normalize the path
+    path = normalizeStringPosix(path, !isAbsolute);
+
+    if (path.length === 0 && !isAbsolute) path = '.';
+    if (path.length > 0 && trailingSeparator) path += '/';
+
+    if (isAbsolute) return '/' + path;
+    return path;
+  },
+
+  isAbsolute: function isAbsolute(path) {
+    assertPath(path);
+    return path.length > 0 && path.charCodeAt(0) === 47 /*/*/;
+  },
+
+  join: function join() {
+    if (arguments.length === 0)
+      return '.';
+    var joined;
+    for (var i = 0; i < arguments.length; ++i) {
+      var arg = arguments[i];
+      assertPath(arg);
+      if (arg.length > 0) {
+        if (joined === undefined)
+          joined = arg;
+        else
+          joined += '/' + arg;
+      }
+    }
+    if (joined === undefined)
+      return '.';
+    return posix.normalize(joined);
+  },
+
+  relative: function relative(from, to) {
+    assertPath(from);
+    assertPath(to);
+
+    if (from === to) return '';
+
+    from = posix.resolve(from);
+    to = posix.resolve(to);
+
+    if (from === to) return '';
+
+    // Trim any leading backslashes
+    var fromStart = 1;
+    for (; fromStart < from.length; ++fromStart) {
+      if (from.charCodeAt(fromStart) !== 47 /*/*/)
+        break;
+    }
+    var fromEnd = from.length;
+    var fromLen = fromEnd - fromStart;
+
+    // Trim any leading backslashes
+    var toStart = 1;
+    for (; toStart < to.length; ++toStart) {
+      if (to.charCodeAt(toStart) !== 47 /*/*/)
+        break;
+    }
+    var toEnd = to.length;
+    var toLen = toEnd - toStart;
+
+    // Compare paths to find the longest common path from root
+    var length = fromLen < toLen ? fromLen : toLen;
+    var lastCommonSep = -1;
+    var i = 0;
+    for (; i <= length; ++i) {
+      if (i === length) {
+        if (toLen > length) {
+          if (to.charCodeAt(toStart + i) === 47 /*/*/) {
+            // We get here if `from` is the exact base path for `to`.
+            // For example: from='/foo/bar'; to='/foo/bar/baz'
+            return to.slice(toStart + i + 1);
+          } else if (i === 0) {
+            // We get here if `from` is the root
+            // For example: from='/'; to='/foo'
+            return to.slice(toStart + i);
+          }
+        } else if (fromLen > length) {
+          if (from.charCodeAt(fromStart + i) === 47 /*/*/) {
+            // We get here if `to` is the exact base path for `from`.
+            // For example: from='/foo/bar/baz'; to='/foo/bar'
+            lastCommonSep = i;
+          } else if (i === 0) {
+            // We get here if `to` is the root.
+            // For example: from='/foo'; to='/'
+            lastCommonSep = 0;
+          }
+        }
+        break;
+      }
+      var fromCode = from.charCodeAt(fromStart + i);
+      var toCode = to.charCodeAt(toStart + i);
+      if (fromCode !== toCode)
+        break;
+      else if (fromCode === 47 /*/*/)
+        lastCommonSep = i;
+    }
+
+    var out = '';
+    // Generate the relative path based on the path difference between `to`
+    // and `from`
+    for (i = fromStart + lastCommonSep + 1; i <= fromEnd; ++i) {
+      if (i === fromEnd || from.charCodeAt(i) === 47 /*/*/) {
+        if (out.length === 0)
+          out += '..';
+        else
+          out += '/..';
+      }
+    }
+
+    // Lastly, append the rest of the destination (`to`) path that comes after
+    // the common path parts
+    if (out.length > 0)
+      return out + to.slice(toStart + lastCommonSep);
+    else {
+      toStart += lastCommonSep;
+      if (to.charCodeAt(toStart) === 47 /*/*/)
+        ++toStart;
+      return to.slice(toStart);
+    }
+  },
+
+  _makeLong: function _makeLong(path) {
+    return path;
+  },
+
+  dirname: function dirname(path) {
+    assertPath(path);
+    if (path.length === 0) return '.';
+    var code = path.charCodeAt(0);
+    var hasRoot = code === 47 /*/*/;
+    var end = -1;
+    var matchedSlash = true;
+    for (var i = path.length - 1; i >= 1; --i) {
+      code = path.charCodeAt(i);
+      if (code === 47 /*/*/) {
+          if (!matchedSlash) {
+            end = i;
+            break;
+          }
+        } else {
+        // We saw the first non-path separator
+        matchedSlash = false;
+      }
+    }
+
+    if (end === -1) return hasRoot ? '/' : '.';
+    if (hasRoot && end === 1) return '//';
+    return path.slice(0, end);
+  },
+
+  basename: function basename(path, ext) {
+    if (ext !== undefined && typeof ext !== 'string') throw new TypeError('"ext" argument must be a string');
+    assertPath(path);
+
+    var start = 0;
+    var end = -1;
+    var matchedSlash = true;
+    var i;
+
+    if (ext !== undefined && ext.length > 0 && ext.length <= path.length) {
+      if (ext.length === path.length && ext === path) return '';
+      var extIdx = ext.length - 1;
+      var firstNonSlashEnd = -1;
+      for (i = path.length - 1; i >= 0; --i) {
+        var code = path.charCodeAt(i);
+        if (code === 47 /*/*/) {
+            // If we reached a path separator that was not part of a set of path
+            // separators at the end of the string, stop now
+            if (!matchedSlash) {
+              start = i + 1;
+              break;
+            }
+          } else {
+          if (firstNonSlashEnd === -1) {
+            // We saw the first non-path separator, remember this index in case
+            // we need it if the extension ends up not matching
+            matchedSlash = false;
+            firstNonSlashEnd = i + 1;
+          }
+          if (extIdx >= 0) {
+            // Try to match the explicit extension
+            if (code === ext.charCodeAt(extIdx)) {
+              if (--extIdx === -1) {
+                // We matched the extension, so mark this as the end of our path
+                // component
+                end = i;
+              }
+            } else {
+              // Extension does not match, so our result is the entire path
+              // component
+              extIdx = -1;
+              end = firstNonSlashEnd;
+            }
+          }
+        }
+      }
+
+      if (start === end) end = firstNonSlashEnd;else if (end === -1) end = path.length;
+      return path.slice(start, end);
+    } else {
+      for (i = path.length - 1; i >= 0; --i) {
+        if (path.charCodeAt(i) === 47 /*/*/) {
+            // If we reached a path separator that was not part of a set of path
+            // separators at the end of the string, stop now
+            if (!matchedSlash) {
+              start = i + 1;
+              break;
+            }
+          } else if (end === -1) {
+          // We saw the first non-path separator, mark this as the end of our
+          // path component
+          matchedSlash = false;
+          end = i + 1;
+        }
+      }
+
+      if (end === -1) return '';
+      return path.slice(start, end);
+    }
+  },
+
+  extname: function extname(path) {
+    assertPath(path);
+    var startDot = -1;
+    var startPart = 0;
+    var end = -1;
+    var matchedSlash = true;
+    // Track the state of characters (if any) we see before our first dot and
+    // after any path separator we find
+    var preDotState = 0;
+    for (var i = path.length - 1; i >= 0; --i) {
+      var code = path.charCodeAt(i);
+      if (code === 47 /*/*/) {
+          // If we reached a path separator that was not part of a set of path
+          // separators at the end of the string, stop now
+          if (!matchedSlash) {
+            startPart = i + 1;
+            break;
+          }
+          continue;
+        }
+      if (end === -1) {
+        // We saw the first non-path separator, mark this as the end of our
+        // extension
+        matchedSlash = false;
+        end = i + 1;
+      }
+      if (code === 46 /*.*/) {
+          // If this is our first dot, mark it as the start of our extension
+          if (startDot === -1)
+            startDot = i;
+          else if (preDotState !== 1)
+            preDotState = 1;
+      } else if (startDot !== -1) {
+        // We saw a non-dot and non-path separator before our dot, so we should
+        // have a good chance at having a non-empty extension
+        preDotState = -1;
+      }
+    }
+
+    if (startDot === -1 || end === -1 ||
+        // We saw a non-dot character immediately before the dot
+        preDotState === 0 ||
+        // The (right-most) trimmed path component is exactly '..'
+        preDotState === 1 && startDot === end - 1 && startDot === startPart + 1) {
+      return '';
+    }
+    return path.slice(startDot, end);
+  },
+
+  format: function format(pathObject) {
+    if (pathObject === null || typeof pathObject !== 'object') {
+      throw new TypeError('The "pathObject" argument must be of type Object. Received type ' + typeof pathObject);
+    }
+    return _format('/', pathObject);
+  },
+
+  parse: function parse(path) {
+    assertPath(path);
+
+    var ret = { root: '', dir: '', base: '', ext: '', name: '' };
+    if (path.length === 0) return ret;
+    var code = path.charCodeAt(0);
+    var isAbsolute = code === 47 /*/*/;
+    var start;
+    if (isAbsolute) {
+      ret.root = '/';
+      start = 1;
+    } else {
+      start = 0;
+    }
+    var startDot = -1;
+    var startPart = 0;
+    var end = -1;
+    var matchedSlash = true;
+    var i = path.length - 1;
+
+    // Track the state of characters (if any) we see before our first dot and
+    // after any path separator we find
+    var preDotState = 0;
+
+    // Get non-dir info
+    for (; i >= start; --i) {
+      code = path.charCodeAt(i);
+      if (code === 47 /*/*/) {
+          // If we reached a path separator that was not part of a set of path
+          // separators at the end of the string, stop now
+          if (!matchedSlash) {
+            startPart = i + 1;
+            break;
+          }
+          continue;
+        }
+      if (end === -1) {
+        // We saw the first non-path separator, mark this as the end of our
+        // extension
+        matchedSlash = false;
+        end = i + 1;
+      }
+      if (code === 46 /*.*/) {
+          // If this is our first dot, mark it as the start of our extension
+          if (startDot === -1) startDot = i;else if (preDotState !== 1) preDotState = 1;
+        } else if (startDot !== -1) {
+        // We saw a non-dot and non-path separator before our dot, so we should
+        // have a good chance at having a non-empty extension
+        preDotState = -1;
+      }
+    }
+
+    if (startDot === -1 || end === -1 ||
+    // We saw a non-dot character immediately before the dot
+    preDotState === 0 ||
+    // The (right-most) trimmed path component is exactly '..'
+    preDotState === 1 && startDot === end - 1 && startDot === startPart + 1) {
+      if (end !== -1) {
+        if (startPart === 0 && isAbsolute) ret.base = ret.name = path.slice(1, end);else ret.base = ret.name = path.slice(startPart, end);
+      }
+    } else {
+      if (startPart === 0 && isAbsolute) {
+        ret.name = path.slice(1, startDot);
+        ret.base = path.slice(1, end);
+      } else {
+        ret.name = path.slice(startPart, startDot);
+        ret.base = path.slice(startPart, end);
+      }
+      ret.ext = path.slice(startDot, end);
+    }
+
+    if (startPart > 0) ret.dir = path.slice(0, startPart - 1);else if (isAbsolute) ret.dir = '/';
+
+    return ret;
+  },
+
+  sep: '/',
+  delimiter: ':',
+  win32: null,
+  posix: null
+};
+
+posix.posix = posix;
+
+module.exports = posix;
+
+}).call(this)}).call(this,require('_process'))
+},{"_process":81}],81:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
