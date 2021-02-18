@@ -516,130 +516,29 @@ class DataFrame {
   }
 
   print(){
-    function truncate(text, maxLength){
-      return text.length > maxLength ? text.substring(0, maxLength - 3) + "..." : text
-    }
-
-    function leftPad(text, minLength){
-      while (text.length < minLength) text = " " + text
-      return text
-    }
-
     let self = this
-    let maxColumnWidth = 8
+    let temp = self.copy()
+    let maxColumns = typeof window === "undefined" ?  Math.floor(process.stdout.columns / 24) - 1 : 10
+    let maxRows = typeof window === "undefined" ? 20 : 10
 
-    if (typeof window !== "undefined"){
-      // browser
-      let temp = self.copy()
+    if (temp.columns.length > maxColumns){
+      temp = temp.getSubsetByNames(null, temp.columns.slice(0, maxColumns / 2).concat(temp.columns.slice(temp.columns.length - maxColumns / 2, temp.columns.length)))
+      let newColumns = temp.columns
 
-      if (temp.columns.length > 10){
-        temp = temp.getSubsetByNames(null, temp.columns.slice(0, 5).concat(temp.columns.slice(temp.columns.length - 5, temp.columns.length)))
-        let newColumns = temp.columns
-
-        temp = temp.assign({"...": range(0, temp.index.length).map(i => "...")})
-        temp = temp.loc(null, newColumns.slice(0, newColumns.length / 2).concat(["..."]).concat(newColumns.slice(newColumns.length / 2, newColumns.length)))
-      }
-
-      if (temp.index.length > 10){
-        temp = temp.getSubsetByIndices(range(0, 5).concat(range(temp.index.length - 5, temp.index.length)), null)
-        let newIndex = temp.index
-
-        temp.index.push("...")
-        temp.values.push(range(0, temp.columns.length).map(i => "..."))
-        temp = temp.loc(newIndex.slice(0, newIndex.length / 2).concat(["..."]).concat(newIndex.slice(newIndex.length / 2, newIndex.length)), null)
-      }
-
-      console.table(temp.toObject())
-    } else {
-      // node
-      let totalWidth = process.stdout.columns
-      let defaultWidth = 24
-      let totalHeight = 24
-
-      let temp = self.copy()
-
-      if (temp.columns.length > 20){
-        temp = temp.getSubsetByNames(null, temp.columns.slice(0, 10).concat(temp.columns.slice(temp.columns.length - 10, temp.columns.length)))
-      }
-
-      if (temp.index.length > totalHeight + 1){
-        temp = temp.getSubsetByNames(temp.index.slice(0, 10).concat(temp.index.slice(temp.index.length - 15, temp.index.length)), null)
-      }
-
-      let columnWidths = temp.columns.map(col => {
-        let values = temp.getSubsetByNames(null, [col]).values
-        let lengths = values.concat([col]).map(v => v.toString().length)
-        return min([defaultWidth, max(lengths)])
-      })
-
-      let lengthSoFar = 0
-      let columnsToKeep = []
-      let i = 0
-
-      while (lengthSoFar < totalWidth / 2 && i < columnWidths.length / 2){
-        lengthSoFar += columnWidths[i] + 3
-        lengthSoFar += columnWidths[columnWidths.length - i - 1] + 3
-        columnsToKeep.push(temp.columns[i])
-
-        if (i !== columnWidths.length - i - 1){
-          columnsToKeep.push(temp.columns[temp.columns.length - i - 1])
-        }
-
-        i++
-      }
-
-      columnsToKeep.sort((a, b) => {
-        return self.columns.indexOf(a) < self.columns.indexOf(b) ? -1 : 1
-      })
-
-      let truncatedDataFrame = temp.getSubsetByNames(null, columnsToKeep)
-
-      if (columnsToKeep.length < temp.columns.length){
-        truncatedDataFrame = truncatedDataFrame.assign({
-          "...": range(0, truncatedDataFrame.index.length).map(i => "...")
-        })
-
-        truncatedDataFrame = truncatedDataFrame.loc(null, columnsToKeep.slice(0, columnsToKeep.length / 2).concat(["..."]).concat(columnsToKeep.slice(columnsToKeep.length / 2, columnsToKeep.length)))
-
-        columnWidths = truncatedDataFrame.columns.map(col => {
-          let values = truncatedDataFrame.getSubsetByNames(null, [col]).values
-          let lengths = values.map(v => v.toString().length)
-          return min([defaultWidth, max(lengths)])
-        })
-      }
-
-      if (truncatedDataFrame.values.length > totalHeight){
-        truncatedDataFrame = truncatedDataFrame.iloc(range(0, totalHeight / 2).concat(range(truncatedDataFrame.values.length - totalHeight / 2, truncatedDataFrame.values.length)), null)
-        let originalIndex = copy(truncatedDataFrame.index)
-
-        truncatedDataFrame.index.push("...")
-        truncatedDataFrame.values.push(range(0, truncatedDataFrame.columns.length).map(i => "..."))
-
-        truncatedDataFrame = truncatedDataFrame.loc(originalIndex.slice(0, originalIndex.length / 2).concat(["..."]).concat(originalIndex.slice(originalIndex.length / 2, originalIndex.length)), null)
-      }
-
-      truncatedDataFrame.columns = truncatedDataFrame.columns.map((col, i) => {
-        let width = columnWidths[i]
-        return leftPad(truncate(col, width), width)
-      })
-
-      truncatedDataFrame.values = truncatedDataFrame.values.map(row => {
-        return row.map((value, i) => {
-          let width = columnWidths[i]
-          return leftPad(truncate(value.toString(), width), width)
-        })
-      })
-
-      let maxIndexWidth = min([defaultWidth, max(temp.index.map(row => row.toString().length))])
-
-      truncatedDataFrame.index = truncatedDataFrame.index.map((row, i) => {
-        return leftPad(truncate(row, maxIndexWidth), maxIndexWidth)
-      })
-
-      console.log(leftPad(" ", maxIndexWidth) + " | " + truncatedDataFrame.columns.join(" | "))
-      console.log(leftPad(" ", maxIndexWidth).split("").map(s => "-").join("") + " | " + truncatedDataFrame.columns.map(col => col.split("").map(s => "-").join("")).join(" | "))
-      console.log(truncatedDataFrame.values.map((row, i) => truncatedDataFrame.index[i] + " | " + row.join(" | ")).join("\n"))
+      temp = temp.assign({"...": range(0, temp.index.length).map(i => "...")})
+      temp = temp.loc(null, newColumns.slice(0, newColumns.length / 2).concat(["..."]).concat(newColumns.slice(newColumns.length / 2, newColumns.length)))
     }
+
+    if (temp.index.length > maxRows){
+      temp = temp.getSubsetByIndices(range(0, maxRows / 2).concat(range(temp.index.length - maxRows / 2, temp.index.length)), null)
+      let newIndex = temp.index
+
+      temp.index.push("...")
+      temp.values.push(range(0, temp.columns.length).map(i => "..."))
+      temp = temp.loc(newIndex.slice(0, newIndex.length / 2).concat(["..."]).concat(newIndex.slice(newIndex.length / 2, newIndex.length)), null)
+    }
+
+    console.table(temp.toObject())
   }
 }
 

@@ -222,6 +222,18 @@ class Series {
     out.index = outIndex
     return out
   }
+
+  toObject(){
+    let self = this
+    let out = {}
+    out[self.name] = {}
+
+    self.index.forEach((index, i) => {
+      out[self.name][index] = self.values[i]
+    })
+
+    return out
+  }
 }
 
 module.exports = Series
