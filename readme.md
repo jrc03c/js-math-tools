@@ -332,9 +332,11 @@ console.log(x.toObject())
   row4: { a: 4, b: 9, c: 14, d: 19 }
 }
 */
+
+x.toCSV("data.csv")
 ```
 
-I still need to add functionality to read and write CSV files from `DataFrames`!
+I still need to add functionality to read CSV files!
 
 # Plotting
 
