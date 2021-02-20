@@ -1,11 +1,19 @@
 let assert = require("../misc/assert.js")
 let isUndefined = require("./is-undefined.js")
 let isArray = require("./is-array.js")
+let isFunction = require("./is-function.js")
+
+function alphaSort(a, b){
+  if (a < b) return -1
+  if (a > b) return 1
+  return 0
+}
 
 function sort(arr, fn){
-  assert(!isUndefined(arr) && !isUndefined(fn), "You must pass an array and a function into the `sort` function!")
-  assert(isArray(arr), "You must pass an array and a function into the `sort` function!")
-  assert(typeof(fn) === "function", "You must pass an array and a function into the `sort` function!")
+  if (isUndefined(fn)) fn = alphaSort
+  assert(!isUndefined(arr), "You must pass an array into the `sort` function!")
+  assert(isArray(arr), "You must pass an array into the `sort` function!")
+  assert(isFunction(fn), "The second parameter of the `sort` function must be a comparison function!")
 
   let out = arr.slice()
   out.sort(fn)
@@ -21,16 +29,10 @@ if (!module.parent && typeof(window) === "undefined"){
   let distance = require("./distance.js")
   let normal = require("./normal.js")
 
-  function alphasort(a, b){
-    if (a < b) return -1
-    if (a > b) return 1
-    return 0
-  }
-
   let x = shuffle(range(1, 7))
   let yTrue = range(1, 7)
-  let yPred = sort(x, alphasort)
-  assert(distance(yTrue, yPred) === 0, `sort(shuffle(range(1, 7)), alphasort) should be range(1, 7)!`)
+  let yPred = sort(x, alphaSort)
+  assert(distance(yTrue, yPred) === 0, `sort(shuffle(range(1, 7)), alphaSort) should be range(1, 7)!`)
 
   x = [{x: 5}, {x: 3}, {x: 10}]
   yTrue = [{x: 10}, {x: 5}, {x: 3}]
@@ -45,18 +47,18 @@ if (!module.parent && typeof(window) === "undefined"){
   }
 
   x = normal(10000)
-  yPred = sort(x, alphasort)
+  yPred = sort(x, alphaSort)
 
   for (let i=0; i<yPred.length-1; i++){
-    assert(yPred[i] < yPred[i+1], `${yPred[i]} should be less than ${yPred[i+1]}!`)
+    assert(yPred[i] <= yPred[i+1], `${yPred[i]} should be less than ${yPred[i+1]}!`)
   }
 
   x = ["b", "c", "a", "d", "f", "e"]
   yTrue = ["a", "b", "c", "d", "e", "f"]
-  yPred = sort(x, alphasort)
+  yPred = sort(x, alphaSort)
 
   for (let i=0; i<yTrue.length; i++){
-    assert(yTrue[i] === yPred[i], `sort(["b", "c", "a", "d", "f", "e"], alphasort) should be ["a", "b", "c", "d", "e", "f"]!`)
+    assert(yTrue[i] === yPred[i], `sort(["b", "c", "a", "d", "f", "e"], alphaSort) should be ["a", "b", "c", "d", "e", "f"]!`)
   }
 
   let hasFailed
