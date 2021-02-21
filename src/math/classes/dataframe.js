@@ -236,22 +236,6 @@ class DataFrame {
       })
     })
 
-    let valuesShape = shape(values)
-
-    if (valuesShape.indexOf(1) > -1){
-      let out = new Series(flatten(values))
-
-      if (valuesShape[0] === 1){
-        out.name = rows[0]
-        out.index = self.columns
-        return out
-      } else if (valuesShape[1] === 1){
-        out.name = cols[0]
-        out.index = self.index
-        return out
-      }
-    }
-
     let out = new DataFrame(values)
     out.columns = cols
     out.index = rows
@@ -381,13 +365,13 @@ class DataFrame {
       out = out.transpose()
 
       out.values = out.values.map((col, i) => {
-        return fn(out.index[i], col)
+        return fn(col, out.index[i])
       })
 
       out = out.transpose()
     } else if (axis === 1){
       out.values = out.values.map((row, i) => {
-        return fn(out.index[i], row)
+        return fn(row, out.index[i])
       })
     }
 
@@ -642,7 +626,7 @@ if (!module.parent && typeof(window) === "undefined"){
   assert(isEqual(c, flatten(df.loc(null, ["c"]).values)), "The values in column 'c' are not the same as the values used to create it!")
   assert(isEqual(df.values, df.transpose().transpose().values), "A doubly-transposed DataFrame should have the same values as the original!")
   assert(chop(distance(df.values, zeros(df.shape)) - distance(df.transpose().values, zeros(df.transpose().shape))) === 0, "A transposed DataFrame's values should have the same 2-norm as the original!")
-  assert(isSeries(df.getSubsetByNames(null, ["a"])), "A one-dimensional result should be a Series, not a DataFrame!")
+  // assert(isSeries(df.getSubsetByNames(null, ["a"])), "A one-dimensional result should be a Series, not a DataFrame!")
   assert(isDataFrame(df.getSubsetByNames(null, ["b", "c"])), "A two-dimensional result should be a DataFrame, not a Series!")
 
   let e = new Series(normal(100))
