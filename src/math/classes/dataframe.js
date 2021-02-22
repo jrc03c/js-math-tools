@@ -211,6 +211,17 @@ class DataFrame {
 
   get(rows, cols){
     let self = this
+    let types = set((rows || []).concat(cols || []).map(v => typeof v))
+    assert(types.length <= 2, "Only whole numbers and/or strings are allowed in `get` arrays!")
+
+    if (types.length === 1){
+      assert(types[0] === "string" || types[0] === "number", "Only whole numbers and/or strings are allowed in `get` arrays!")
+    }
+
+    if (types.length === 2){
+      assert(types.indexOf("string") > -1, "Only whole numbers and/or strings are allowed in `get` arrays!")
+      assert(types.indexOf("number") > -1, "Only whole numbers and/or strings are allowed in `get` arrays!")
+    }
 
     if (!isUndefined(rows)){
       rows = rows.map(r => {
