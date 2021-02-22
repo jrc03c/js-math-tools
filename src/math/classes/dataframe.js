@@ -211,6 +211,10 @@ class DataFrame {
 
   get(rows, cols){
     let self = this
+
+    if (isString(rows) || isNumber(rows)) rows = [rows]
+    if (isString(cols) || isNumber(cols)) cols = [cols]
+
     let types = set((rows || []).concat(cols || []).map(v => typeof v))
     assert(types.length <= 2, "Only whole numbers and/or strings are allowed in `get` arrays!")
 
