@@ -8,7 +8,7 @@ let sign = vectorize(function(x){
   assert(isNumber(x), "You must pass a number or an array of numbers into the `sign` function!")
 
   if (x < 0) return -1
-  if (x > 1) return 1
+  if (x > 0) return 1
   return 0
 })
 
@@ -25,14 +25,8 @@ if (!module.parent && typeof(window) === "undefined"){
   let scale = require("./scale.js")
   let add = require("./add.js")
 
-  function alphasort(a, b){
-    if (a < b) return -1
-    if (a > b) return 1
-    return 0
-  }
-
-  let x = sort(set(sign(chop(normal(10000)))), alphasort)
-  assert(x[0] === -1 && x[1] === 0 && x[2] === 1, `sort(set(sign(chop(normal(10000)))), alphasort) should be [-1, 0, 1]!`)
+  let x = sort(set(sign(chop(normal(10000)))).concat(0))
+  assert(x[0] === -1 && x[1] === 0 && x[2] === 1, `sort(set(sign(chop(normal(10000))))) should be [-1, 0, 1]!`)
 
   x = sign(add(random(10000), 100))
   x.forEach(v => assert(v >= 0), `sign(add(random(10000), 100)) should only result in positive values!`)
