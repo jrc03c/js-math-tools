@@ -209,6 +209,44 @@ class DataFrame {
     return out
   }
 
+  get(rows, cols){
+    let self = this
+
+    if (!isUndefined(rows)){
+      rows = rows.map(r => {
+        if (typeof r === "string"){
+          assert(self.index.indexOf(r) > -1, `Row "${r}" does not exist!`)
+          return r
+        }
+
+        if (typeof r === "number"){
+          assert(r >= 0, `Index ${r} is out of bounds!`)
+          assert(parseInt(r) === r, `Row numbers must be integers!`)
+          assert(r < self.index.length, `Index ${r} is out of bounds!`)
+          return self.index[r]
+        }
+      })
+    }
+
+    if (!isUndefined(cols)){
+      cols = cols.map(c => {
+        if (typeof c === "string"){
+          assert(self.columns.indexOf(c) > -1, `Column "${c}" does not exist!`)
+          return c
+        }
+
+        if (typeof c === "number"){
+          assert(c >= 0, `Column ${c} is out of bounds!`)
+          assert(parseInt(c) === c, `Column numbers must be integers!`)
+          assert(c < self.columns.length, `Column ${c} is out of bounds!`)
+          return self.columns[c]
+        }
+      })
+    }
+
+    return self.getSubsetByNames(rows, cols)
+  }
+
   getSubsetByNames(rows, cols){
     let self = this
 
