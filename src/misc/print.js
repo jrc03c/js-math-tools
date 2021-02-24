@@ -1,5 +1,28 @@
+let isArray = require("../math/is-array.js")
+let shape = require("../math/shape.js")
+let DataFrame = require("../math/classes/dataframe.js")
+let Series = require("../math/classes/series.js")
+
 function print(x){
-  return console.log(x)
+  if (isArray(x)){
+    let xShape = shape(x)
+
+    if (xShape.length === 1){
+      new DataFrame([x]).print()
+    } else if (xShape.length == 2){
+      new DataFrame(x).print()
+    } else {
+      console.log(x)
+    }
+  } else if (x instanceof DataFrame){
+    x.print()
+  } else if (x instanceof Series){
+    let temp = {}
+    temp[x.name] = x.values
+    new DataFrame(temp).print()
+  } else {
+    console.log(x)
+  }
 }
 
 module.exports = print

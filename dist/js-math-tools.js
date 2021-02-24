@@ -234,9 +234,9 @@ function dump(o,u=["dump"]){Object.keys(o).forEach(function(d){u.indexOf(d)<0&&(
 function pause(e){return new Promise(function(t,r){try{return setTimeout(t,e)}catch(e){return r(e)}})}module.exports=pause;
 
 },{}],78:[function(require,module,exports){
-function print(n){return console.log(n)}module.exports=print;
+let isArray=require("../math/is-array.js"),shape=require("../math/shape.js"),DataFrame=require("../math/classes/dataframe.js"),Series=require("../math/classes/series.js");function print(e){if(isArray(e)){let a=shape(e);1===a.length?new DataFrame([e]).print():2==a.length?new DataFrame(e).print():console.log(e)}else if(e instanceof DataFrame)e.print();else if(e instanceof Series){let a={};a[e.name]=e.values,new DataFrame(a).print()}else console.log(e)}module.exports=print;
 
-},{}],79:[function(require,module,exports){
+},{"../math/classes/dataframe.js":16,"../math/classes/series.js":17,"../math/is-array.js":31,"../math/shape.js":57}],79:[function(require,module,exports){
 
 },{}],80:[function(require,module,exports){
 (function (process){(function (){
