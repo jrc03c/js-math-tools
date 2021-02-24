@@ -19,7 +19,9 @@ function print(x){
   } else if (x instanceof Series){
     let temp = {}
     temp[x.name] = x.values
-    new DataFrame(temp).print()
+    let df = new DataFrame(temp)
+    df.index = x.index
+    df.print()
   } else {
     console.log(x)
   }

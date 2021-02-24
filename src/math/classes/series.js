@@ -111,7 +111,7 @@ class Series {
 
   isEmpty(){
     let self = this
-    return set(self.values).length === 0
+    return set(self.values).filter(v => !isUndefined(v)).length === 0
   }
 
   clear(){
@@ -190,9 +190,9 @@ class Series {
 
   copy(){
     let self = this
-    if (self.isEmpty()) return new Series()
     let out = new Series(copy(self.values))
     out.index = self.index.slice()
+    out.name = self.name
     return out
   }
 

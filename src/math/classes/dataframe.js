@@ -197,7 +197,7 @@ class DataFrame {
 
   isEmpty(){
     let self = this
-    return self.shape.length < 2
+    return set(self.values).filter(v => !isUndefined(v)).length === 0
   }
 
   clear(){
