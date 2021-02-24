@@ -361,15 +361,33 @@ class DataFrame {
     return out
   }
 
-  assign(obj){
-    assert(isObject(obj) || isSeries(obj), "An object or Series must be passed into the `assign` method.")
+  assign(p1, p2){
+    let name, obj
+
+    if (isUndefined(p2)){
+      obj = p1
+
+      assert(!isArray(obj), "When using only one parameter for the `assign` method, the parameter must be an object or a Series.")
+    } else {
+      name = p1
+      obj = p2
+
+      assert(isString(name), "When using two parameters for the `assign` method, the first parameter must be a string.")
+      assert(isSeries(obj) || (isArray(obj) && shape(obj).length === 1), "When using two parameters for the `assign` method, the second parameter must be a Series or a 1-dimensional array.")
+    }
+
+    assert(isObject(obj) || isSeries(obj) || (isArray(obj) && shape(obj).length === 1), "An object, Series, or 1-dimensional array must be passed into the `assign` method.")
 
     let self = this
 
     if (isSeries(obj)){
       let temp = {}
-      assert (isEqual(obj.index, self.index), "The index of the new data does not match the index of the DataFrame.")
-      temp[obj.name] = obj.values
+      assert (self.isEmpty() || isEqual(obj.index, self.index), "The index of the new data does not match the index of the DataFrame.")
+      temp[name || obj.name] = obj.values
+      return self.assign(temp)
+    } else if (isArray(obj)){
+      let temp = {}
+      temp[name || "data"] = obj
       return self.assign(temp)
     } else {
       let out = self.copy()
@@ -781,7 +799,7 @@ if (!module.parent && typeof(window) === "undefined"){
 
   df = new DataFrame(zeros([3, 3]))
 
-  df = df.apply((colName, colVals) => {
+  df = df.apply((colVals, colName) => {
     return colVals.map((v, j) => {
       return colName + "/" + j
     })
@@ -797,7 +815,7 @@ if (!module.parent && typeof(window) === "undefined"){
 
   df = new DataFrame(zeros([3, 3]))
 
-  df = df.apply((rowName, rowVals) => {
+  df = df.apply((rowVals, rowName) => {
     return rowVals.map((v, i) => {
       return rowName + "/" + i
     })
