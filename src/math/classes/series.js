@@ -271,6 +271,20 @@ class Series {
 
     return out
   }
+
+  print(){
+    let self = this
+    let temp = {}
+
+    self.values.forEach((value, i) => {
+      let obj = {}
+      obj[self.name] = value
+      temp[self.index[i]] = obj
+    })
+
+    console.table(temp)
+    return self
+  }
 }
 
 module.exports = Series

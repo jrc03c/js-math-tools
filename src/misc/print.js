@@ -14,14 +14,8 @@ function print(x){
     } else {
       console.log(x)
     }
-  } else if (x instanceof DataFrame){
+  } else if (x instanceof DataFrame || x instanceof Series){
     x.print()
-  } else if (x instanceof Series){
-    let temp = {}
-    temp[x.name] = x.values
-    let df = new DataFrame(temp)
-    df.index = x.index
-    df.print()
   } else {
     console.log(x)
   }
