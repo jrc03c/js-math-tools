@@ -122,6 +122,43 @@ class Series {
     return out
   }
 
+  get(indices){
+    let self = this
+
+    if (isString(indices) || isNumber(indices)) indices = [indices]
+
+    let types = set((indices || []).map(v => typeof v))
+    assert(types.length <= 2, "Only whole numbers and/or strings are allowed in `get` arrays!")
+
+    if (types.length === 1){
+      assert(types[0] === "string" || types[0] === "number", "Only whole numbers and/or strings are allowed in `get` arrays!")
+    }
+
+    if (types.length === 2){
+      console.log(types)
+      assert(types.indexOf("string") > -1, "Only whole numbers and/or strings are allowed in `get` arrays!")
+      assert(types.indexOf("number") > -1, "Only whole numbers and/or strings are allowed in `get` arrays!")
+    }
+
+    if (!isUndefined(indices)){
+      indices = indices.map(i => {
+        if (typeof i === "string"){
+          assert(self.index.indexOf(i) > -1, `Index "${i}" does not exist!`)
+          return i
+        }
+
+        if (typeof i === "number"){
+          assert(i >= 0, `Index ${i} is out of bounds!`)
+          assert(parseInt(i) === i, `Indices must be integers!`)
+          assert(i < self.index.length, `Index ${i} is out of bounds!`)
+          return self.index[i]
+        }
+      })
+    }
+
+    return self.getSubsetByNames(indices)
+  }
+
   getSubsetByNames(indices){
     let self = this
 
