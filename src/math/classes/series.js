@@ -216,6 +216,7 @@ class Series {
     let self = this
     let out = new Series(reverse(self.values))
     out.index = reverse(self.index)
+    out.name = self.name
     return out
   }
 
