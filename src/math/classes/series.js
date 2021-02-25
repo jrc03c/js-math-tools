@@ -179,6 +179,7 @@ class Series {
 
     let out = new Series(values)
     out.index = indices
+    out.name = self.name
     return out
   }
 
@@ -274,15 +275,27 @@ class Series {
 
   print(){
     let self = this
-    let temp = {}
+    let temp = self.copy()
+    let maxRows = typeof window === "undefined" ? 20 : 10
 
-    self.values.forEach((value, i) => {
+    if (temp.index.length > maxRows){
+      temp = temp.get(range(0, maxRows / 2).concat(range(temp.index.length - maxRows / 2, temp.index.length)))
+      let tempIndex = copy(temp.index)
+      tempIndex.splice(parseInt(tempIndex.length / 2), 0, "...")
+      temp.values.push("...")
+      temp.index.push("...")
+      temp = temp.get(tempIndex)
+    }
+
+    let out = {}
+
+    temp.values.forEach((value, i) => {
       let obj = {}
-      obj[self.name] = value
-      temp[self.index[i]] = obj
+      obj[temp.name] = value
+      out[temp.index[i]] = obj
     })
 
-    console.table(temp)
+    console.table(out)
     return self
   }
 }
