@@ -596,13 +596,11 @@ class DataFrame {
 
   toCSVString(){
     let self = this
-    let out = self.copy()
-    let originalColumns = copy(out.columns)
-    out = out.assign({"(index)": out.index})
-    out = out.loc(null, ["(index)"].concat(originalColumns))
+    let index = ["(index)"].concat(copy(self.index))
+    let columns = copy(self.columns)
 
-    out = [out.columns].concat(out.values).map(row => {
-      return row.map(value => {
+    let out = [columns].concat(self.values).map((row, i) => {
+      return [index[i]].concat(row).map(value => {
         if (typeof value === "string"){
           return quote(value)
         } else {
