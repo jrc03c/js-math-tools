@@ -15,6 +15,7 @@ let flatten = require("../flatten.js")
 let isEqual = require("../is-equal.js")
 let max = require("../max.js")
 let min = require("../min.js")
+let set = require("../set.js")
 
 function isInteger(x){
   return isNumber(x) && parseInt(x) === x
@@ -593,7 +594,7 @@ class DataFrame {
     return out
   }
 
-  toCSV(filename){
+  toCSVString(){
     let self = this
     let out = self.copy()
     let originalColumns = copy(out.columns)
@@ -609,6 +610,13 @@ class DataFrame {
         }
       }).join(",")
     }).join("\n")
+
+    return out
+  }
+
+  toCSV(filename){
+    let self = this
+    let out = self.toCSVString()
 
     // browser
     if (typeof window !== "undefined"){
@@ -667,7 +675,6 @@ module.exports = DataFrame
 if (!module.parent && typeof(window) === "undefined"){
   let isEqual = require("../is-equal.js")
   let normal = require("../normal.js")
-  let set = require("../set.js")
   let flatten = require("../flatten.js")
   let distance = require("../distance.js")
   let zeros = require("../zeros.js")
