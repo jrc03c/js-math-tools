@@ -523,15 +523,73 @@ class DataFrame {
     return out
   }
 
+  drop(rows, cols){
+    let self = this
+
+    if (isUndefined(rows)) rows = []
+    if (isUndefined(cols)) cols = []
+    if (isString(rows) || isNumber(rows)) rows = [rows]
+    if (isString(cols) || isNumber(cols)) cols = [cols]
+
+    assert(isArray(rows), "The `drop` method only works on 1-dimensional arrays of numerical indices and/or strings.")
+    assert(isArray(cols), "The `drop` method only works on 1-dimensional arrays of numerical indices and/or strings.")
+    assert(shape(rows).length === 1, "The `drop` method only works on 1-dimensional arrays of numerical indices and/or strings.")
+    assert(shape(cols).length === 1, "The `drop` method only works on 1-dimensional arrays of numerical indices and/or strings.")
+
+    let out = self.copy()
+
+    rows = rows.map(row => {
+      if (isString(row)){
+        assert(out.index.indexOf(row) > -1, `Row "${row}" does not exist!`)
+        return row
+      }
+
+      if (isNumber(row)){
+        assert(row >= 0, `Row ${row} is out of bounds!`)
+        assert(row < out.index.length, `Row ${row} is out of bounds!`)
+        return out.index[row]
+      }
+    })
+
+    cols = cols.map(col => {
+      if (isString(col)){
+        assert(out.columns.indexOf(col) > -1, `Column "${col}" does not exist!`)
+        return col
+      }
+
+      if (isNumber(col)){
+        assert(col >= 0, `Column ${col} is out of bounds!`)
+        assert(col < out.columns.length, `Column ${col} is out of bounds!`)
+        return out.columns[col]
+      }
+    })
+
+    out = out.dropRows(rows)
+    out = out.dropColumns(cols)
+    return out
+  }
+
   dropColumns(columns){
+    let self = this
+    if (isUndefined(columns)) columns = []
+    if (isNumber(columns) || isString(columns)) columns = [columns]
+
     assert(isArray(columns), "`columns` must be an array of strings.")
     assert(shape(columns).length === 1, "`columns` must be a 1-dimensional array of strings.")
 
-    columns.forEach(col => {
-      assert(isString(col), "Each item in the `columns` array must be a string.")
+    columns = columns.map(col => {
+      if (isString(col)){
+        assert(self.columns.indexOf(col) > -1, `Column "${col}" does not exist!`)
+        return col
+      }
+
+      if (isNumber(col)){
+        assert(col >= 0, `Column ${col} is out of bounds!`)
+        assert(col < self.columns.length, `Column ${col} is out of bounds!`)
+        return self.columns[col]
+      }
     })
 
-    let self = this
     let out = self.copy()
     let outColumns = copy(out.columns)
 
@@ -553,14 +611,26 @@ class DataFrame {
   }
 
   dropRows(rows){
+    let self = this
+    if (isUndefined(rows)) rows = []
+    if (isNumber(rows) || isString(rows)) rows = [rows]
+
     assert(isArray(rows), "`rows` must be an array of strings.")
     assert(shape(rows).length === 1, "`rows` must be a 1-dimensional array of strings.")
 
-    rows.forEach(row => {
-      assert(isString(row), "Each item in the `rows` array must be a string.")
+    rows = rows.map(row => {
+      if (isString(row)){
+        assert(self.index.indexOf(row) > -1, `Row "${row}" does not exist!`)
+        return row
+      }
+
+      if (isNumber(row)){
+        assert(row >= 0, `Row ${row} is out of bounds!`)
+        assert(row < self.index.length, `Row ${row} is out of bounds!`)
+        return self.index[row]
+      }
     })
 
-    let self = this
     let out = self.copy()
     let outIndex = copy(out.index)
 
