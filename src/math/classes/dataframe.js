@@ -739,7 +739,7 @@ class DataFrame {
     return self
   }
 
-  sortBy(cols, directions){
+  sort(cols, directions){
     let self = this
 
     // temporarily assign index as column in dataframe
@@ -757,15 +757,15 @@ class DataFrame {
       if (isBoolean(directions) || isString(directions)) directions = [directions]
     }
 
-    assert(isArray(cols), "The first parameter of the `sortBy` method must be (1) a string or index representing a column name or index, respectively; (2) a 1-dimensional array of strings and/or indices; or (3) null.")
-    assert(shape(cols).length === 1, "The first parameter of the `sortBy` method must be (1) a string or index representing a column name or index, respectively; (2) a 1-dimensional array of strings and/or indices; or (3) null.")
+    assert(isArray(cols), "The first parameter of the `sort` method must be (1) a string or index representing a column name or index, respectively; (2) a 1-dimensional array of strings and/or indices; or (3) null.")
+    assert(shape(cols).length === 1, "The first parameter of the `sort` method must be (1) a string or index representing a column name or index, respectively; (2) a 1-dimensional array of strings and/or indices; or (3) null.")
 
     if (isUndefined(directions)) directions = range(0, cols.length).map(i => true)
 
-    assert(isArray(directions), "The second parameter of the `sortBy` method must be (1) a string or boolean representing the sort direction ('ascending' / 'descending', or true / false); (2) a 1-dimensional array of strings and/or booleans; or (3) null.")
-    assert(shape(directions).length === 1, "The second parameter of the `sortBy` method must be (1) a string or boolean representing the sort direction ('ascending' / 'descending', or true / false); (2) a 1-dimensional array of strings and/or booleans; or (3) null.")
+    assert(isArray(directions), "The second parameter of the `sort` method must be (1) a string or boolean representing the sort direction ('ascending' / 'descending', or true / false); (2) a 1-dimensional array of strings and/or booleans; or (3) null.")
+    assert(shape(directions).length === 1, "The second parameter of the `sort` method must be (1) a string or boolean representing the sort direction ('ascending' / 'descending', or true / false); (2) a 1-dimensional array of strings and/or booleans; or (3) null.")
 
-    assert(cols.length === directions.length, "The arrays passed into the `sortBy` method must be equal in length.")
+    assert(cols.length === directions.length, "The arrays passed into the `sort` method must be equal in length.")
 
     // convert all columns to indices
     cols = cols.map(col => {
@@ -1029,9 +1029,9 @@ if (!module.parent && typeof(window) === "undefined"){
      [ 5,  7,  3,  4,  1,  2,  8,  4,  6,  4],
      [ 3,  3,  7,  5,  1,  8,  9,  2,  6,  8]]
 
-  let sortedX = x.sortBy(["col4", "col5", "col1"], [false, true, false])
+  let sortedX = x.sort(["col4", "col5", "col1"], [false, true, false])
 
-  assert(isEqual(sortedX.values, sortedXValues), "The `sortBy` method didn't work as expected!")
+  assert(isEqual(sortedX.values, sortedXValues), "The `sort` method didn't work as expected!")
   assert(isEqual(sortedX.index, ['row1', 'row7', 'row8', 'row5', 'row0', 'row9', 'row3', 'row6', 'row2',
        'row4']), "The indices of the sorted DataFrame are not correct!")
   assert(isEqual(sortedX.columns, ['col0', 'col1', 'col2', 'col3', 'col4', 'col5', 'col6', 'col7', 'col8',
