@@ -16,6 +16,9 @@ let isEqual = require("../is-equal.js")
 let max = require("../max.js")
 let min = require("../min.js")
 let set = require("../set.js")
+let isBoolean = require("../is-boolean.js")
+let random = require("../random.js")
+let sort = require("../sort.js")
 
 function isInteger(x){
   return isNumber(x) && parseInt(x) === x
@@ -735,6 +738,86 @@ class DataFrame {
     console.table(temp.toObject())
     return self
   }
+
+  sortBy(cols, directions){
+    let self = this
+
+    // temporarily assign index as column in dataframe
+    let out = self.copy()
+    let indexID = random().toString()
+    out = out.assign(indexID, out.index)
+
+    if (isUndefined(cols)){
+      cols = [indexID]
+      directions = [true]
+    }
+
+    if (isNumber(cols) || isString(cols)){
+      cols = [cols]
+      if (isBoolean(directions) || isString(directions)) directions = [directions]
+    }
+
+    assert(isArray(cols), "The first parameter of the `sortBy` method must be (1) a string or index representing a column name or index, respectively; (2) a 1-dimensional array of strings and/or indices; or (3) null.")
+    assert(shape(cols).length === 1, "The first parameter of the `sortBy` method must be (1) a string or index representing a column name or index, respectively; (2) a 1-dimensional array of strings and/or indices; or (3) null.")
+
+    if (isUndefined(directions)) directions = range(0, cols.length).map(i => true)
+
+    assert(isArray(directions), "The second parameter of the `sortBy` method must be (1) a string or boolean representing the sort direction ('ascending' / 'descending', or true / false); (2) a 1-dimensional array of strings and/or booleans; or (3) null.")
+    assert(shape(directions).length === 1, "The second parameter of the `sortBy` method must be (1) a string or boolean representing the sort direction ('ascending' / 'descending', or true / false); (2) a 1-dimensional array of strings and/or booleans; or (3) null.")
+
+    assert(cols.length === directions.length, "The arrays passed into the `sortBy` method must be equal in length.")
+
+    // convert all columns to indices
+    cols = cols.map(col => {
+      assert(isString(col) || isNumber(col), "Column references can either be column names (as strings) or column indices (as whole numbers).")
+
+      if (isString(col)){
+        let index = out.columns.indexOf(col)
+        assert(index > -1, `The column "${col}" does not exist!`)
+        return index
+      }
+
+      if (isNumber(col)){
+        assert(parseInt(col) === col, "Column indices must be whole numbers!")
+        assert(col >= 0, `The column index ${col} is out of bounds!`)
+        assert(col < out.columns.length, `The index ${col} is out of bounds!`)
+        return col
+      }
+    })
+
+    // convert all directions to booleans
+    directions = directions.map(dir => {
+      assert(isString(dir) || isBoolean(dir), "Direction references can either be strings ('ascending' or 'descending') or booleans (true or false).")
+
+      if (isString(dir)){
+        let value = dir.trim().toLowerCase()
+        assert(value === "ascending" || value === "descending", "Direction references can either be strings ('ascending' or 'descending') or booleans (true or false).")
+        return value === "ascending"
+      }
+
+      if (isBoolean(dir)){
+        return dir
+      }
+    })
+
+    // sort
+    out.values = sort(out.values, (a, b) => {
+      let counter = 0
+
+      while(a[cols[counter]] === b[cols[counter]] && counter < cols.length){
+        counter++
+      }
+
+      let isAscending = directions[counter]
+      if (a[cols[counter]] === b[cols[counter]]) return 0
+      if (a[cols[counter]] < b[cols[counter]]) return (isAscending ? -1 : 1)
+      if (a[cols[counter]] > b[cols[counter]]) return (isAscending ? 1 : -1)
+    })
+
+    out.index = flatten(out.get(null, indexID).values)
+    out = out.dropColumns(indexID)
+    return out
+  }
 }
 
 module.exports = DataFrame
@@ -747,7 +830,7 @@ if (!module.parent && typeof(window) === "undefined"){
   let distance = require("../distance.js")
   let zeros = require("../zeros.js")
   let chop = require("../chop.js")
-  let random = require("../random.js")
+  let print = require("../../misc/print.js")
 
   let xShape = [17, 32]
   let x = normal(xShape)
@@ -920,6 +1003,39 @@ if (!module.parent && typeof(window) === "undefined"){
   assert(isEqual(df.dropMissing(1, null, 4).shape, df.shape), "The DataFrame should have its original shape after trying to drop missing values!")
   assert(isEqual(df.dropMissing(1, null, 3).shape, [6, 1]), "The DataFrame should have a shape of [6, 1] after dropping missing values!")
   assert(df.dropMissing(1, null, 1).isEmpty(), "The DataFrame should be empty after dropping missing values!")
+
+  x = new DataFrame(
+    [[ 5,  6,  4,  1,  6,  7,  2,  8,  6,  1],
+     [ 3,  8,  9,  6, 10,  1,  8,  5,  9,  6],
+     [ 5,  7,  3,  4,  1,  2,  8,  4,  6,  4],
+     [ 6,  8,  2,  4,  4,  8,  2,  8,  7,  4],
+     [ 3,  3,  7,  5,  1,  8,  9,  2,  6,  8],
+     [ 1,  5,  7,  7,  7,  1,  0,  9,  8,  5],
+     [10,  8,  0,  4,  4,  8,  4,  2,  5,  3],
+     [ 9,  2,  6,  0, 10,  6,  3,  5, 10,  8],
+     [ 4,  9,  1,  4,  9,  4,  8,  9,  6,  7],
+     [ 3,  3,  1,  2,  5,  5,  8,  5,  3,  2]]
+  )
+
+  let sortedXValues =
+    [[ 3,  8,  9,  6, 10,  1,  8,  5,  9,  6],
+     [ 9,  2,  6,  0, 10,  6,  3,  5, 10,  8],
+     [ 4,  9,  1,  4,  9,  4,  8,  9,  6,  7],
+     [ 1,  5,  7,  7,  7,  1,  0,  9,  8,  5],
+     [ 5,  6,  4,  1,  6,  7,  2,  8,  6,  1],
+     [ 3,  3,  1,  2,  5,  5,  8,  5,  3,  2],
+     [ 6,  8,  2,  4,  4,  8,  2,  8,  7,  4],
+     [10,  8,  0,  4,  4,  8,  4,  2,  5,  3],
+     [ 5,  7,  3,  4,  1,  2,  8,  4,  6,  4],
+     [ 3,  3,  7,  5,  1,  8,  9,  2,  6,  8]]
+
+  let sortedX = x.sortBy(["col4", "col5", "col1"], [false, true, false])
+
+  assert(isEqual(sortedX.values, sortedXValues), "The `sortBy` method didn't work as expected!")
+  assert(isEqual(sortedX.index, ['row1', 'row7', 'row8', 'row5', 'row0', 'row9', 'row3', 'row6', 'row2',
+       'row4']), "The indices of the sorted DataFrame are not correct!")
+  assert(isEqual(sortedX.columns, ['col0', 'col1', 'col2', 'col3', 'col4', 'col5', 'col6', 'col7', 'col8',
+       'col9']), "The columns of the sorted DataFrame are not correct!")
 
   console.log("All tests passed!")
 }
