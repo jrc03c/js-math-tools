@@ -63,6 +63,13 @@ function quote(s){
   return `"${out}"`
 }
 
+function leftPad(x, maxLength){
+  assert(isNumber(x), "The `leftPad` function only works on numbers!")
+  let out = x.toString()
+  while (out.length < maxLength) out = "0" + out
+  return out
+}
+
 class DataFrame {
   constructor(data){
     let self = this
@@ -91,13 +98,13 @@ class DataFrame {
         if (dataShape[0] < self._index.length){
           self._index = self._index.slice(0, dataShape[0])
         } else if (dataShape[0] > self._index.length){
-          self._index = self._index.concat(range(self._index.length, dataShape[0]).map(i => "row" + i))
+          self._index = self._index.concat(range(self._index.length, dataShape[0]).map(i => "row" + leftPad(i, (dataShape[0] - 1).toString().length)))
         }
 
         if (dataShape[1] < self._columns.length){
           self._columns = self._columns.slice(0, dataShape[1])
         } else if (dataShape[1] > self._columns.length){
-          self._columns = self._columns.concat(range(self._columns.length, dataShape[1]).map(i => "col" + i))
+          self._columns = self._columns.concat(range(self._columns.length, dataShape[1]).map(i => "col" + leftPad(i, (dataShape[1] - 1).toString().length)))
         }
 
         self._values = x
@@ -179,7 +186,7 @@ class DataFrame {
         self._values = transpose(temp)
 
         let dataShape = shape(self.values)
-        self._index = range(0, dataShape[0]).map(i => "row" + i)
+        self._index = range(0, dataShape[0]).map(i => "row" + leftPad(i, (dataShape[0] - 1).toString().length))
       }
     }
   }
@@ -352,7 +359,7 @@ class DataFrame {
   resetIndex(){
     let self = this
     let out = self.copy()
-    out.index = range(0, self.shape[0]).map(i => "row" + i)
+    out.index = range(0, self.shape[0]).map(i => "row" + leftPad(i, (out.index.length - 1).toString().length))
     return out
   }
 

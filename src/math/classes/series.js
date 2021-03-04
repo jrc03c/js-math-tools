@@ -70,7 +70,7 @@ class Series {
         if (dataShape[0] < self._index.length){
           self._index = self._index.slice(0, dataShape[0])
         } else if (dataShape[0] > self._index.length){
-          self._index = self._index.concat(range(self._index.length, dataShape[0]).map(i => "row" + leftPad(i, x.length.toString().length)))
+          self._index = self._index.concat(range(self._index.length, dataShape[0]).map(i => "row" + leftPad(i, (x.length - 1).toString().length)))
         }
 
         self._values = x
@@ -231,7 +231,7 @@ class Series {
   resetIndex(){
     let self = this
     let out = self.copy()
-    out.index = range(0, self.shape[0]).map(i => "row" + leftPad(i, out.index.length.toString().length))
+    out.index = range(0, self.shape[0]).map(i => "row" + leftPad(i, (out.index.length - 1).toString().length))
     return out
   }
 
@@ -475,7 +475,7 @@ if (!module.parent && typeof(window) === "undefined"){
   series.values[7] = null
 
   assert(isEqual(series.dropMissing().shape, [8]), "The Series should have a shape of [8] after dropping missing values!")
-  assert(isEqual(series.dropMissing().index, ["row01", "row02", "row03", "row04", "row05", "row06", "row08", "row09"]), "The Series' new index should be as I've described!")
+  assert(isEqual(series.dropMissing().index, ["row1", "row2", "row3", "row4", "row5", "row6", "row8", "row9"]), "The Series' new index should be as I've described!")
   assert(series.clear().dropMissing().isEmpty(), "The Series should be empty after dropping missing values!")
 
   console.log("All tests passed!")
