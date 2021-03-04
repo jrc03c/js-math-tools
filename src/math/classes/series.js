@@ -12,6 +12,7 @@ let ndarray = require("../ndarray.js")
 let copy = require("../copy.js")
 let set = require("../set.js")
 let reverse = require("../reverse.js")
+let sort = require("../sort.js")
 
 function isInteger(x){
   return isNumber(x) && parseInt(x) === x
@@ -31,6 +32,13 @@ function isDataFrame(x){
 
 function isSeries(x){
   return x instanceof Series
+}
+
+function leftPad(x, maxLength){
+  assert(isNumber(x), "The `leftPad` function only works on numbers!")
+  let out = x.toString()
+  while (out.length < maxLength) out = "0" + out
+  return out
 }
 
 class Series {
@@ -62,7 +70,7 @@ class Series {
         if (dataShape[0] < self._index.length){
           self._index = self._index.slice(0, dataShape[0])
         } else if (dataShape[0] > self._index.length){
-          self._index = self._index.concat(range(self._index.length, dataShape[0]).map(i => "row" + i))
+          self._index = self._index.concat(range(self._index.length, dataShape[0]).map(i => "row" + leftPad(i, x.length.toString().length)))
         }
 
         self._values = x
@@ -223,7 +231,7 @@ class Series {
   resetIndex(){
     let self = this
     let out = self.copy()
-    out.index = range(0, self.shape[0]).map(i => "row" + i)
+    out.index = range(0, self.shape[0]).map(i => "row" + leftPad(i, out.index.length.toString().length))
     return out
   }
 
@@ -298,6 +306,58 @@ class Series {
 
     console.table(out)
     return self
+  }
+
+  sort(direction){
+    assert(isBoolean(direction) || isString(direction) || isUndefined(direction), "The `sort` method can take an optional parameter that's either a string representing a direction ('ascending' or 'descending') or a boolean representing whether or not the direction is ascending (true or false).")
+
+    let isAscending = true
+
+    if (isUndefined(direction)){
+      isAscending = true
+    }
+
+    if (isString(direction)){
+      direction = direction.trim().toLowerCase()
+
+      assert(direction === "ascending" || direction === "descending", "The `sort` method can take an optional parameter that's either a string representing a direction ('ascending' or 'descending') or a boolean representing whether or not the direction is ascending (true or false).")
+
+      isAscending = direction === "ascending"
+    }
+
+    if (isBoolean(direction)){
+      isAscending = direction
+    }
+
+    let self = this
+    let temp = transpose([self.values, self.index])
+
+    temp = transpose(sort(temp, (a, b) => {
+      if (a[0] === b[0]) return 0
+      if (a[0] < b[0]) return (isAscending ? -1 : 1)
+      if (a[0] > b[0]) return (isAscending ? 1 : -1)
+    }))
+
+    let out = new Series(temp[0])
+    out.index = temp[1]
+    out.name = self.name
+    return out
+  }
+
+  sortByIndex(){
+    let self = this
+    let temp = transpose([self.values, self.index])
+
+    temp = transpose(sort(temp, (a, b) => {
+      if (a[1] === b[1]) return 0
+      if (a[1] < b[1]) return -1
+      if (a[1] > b[1]) return 1
+    }))
+
+    let out = new Series(temp[0])
+    out.index = temp[1]
+    out.name = self.name
+    return out
   }
 }
 
@@ -415,7 +475,7 @@ if (!module.parent && typeof(window) === "undefined"){
   series.values[7] = null
 
   assert(isEqual(series.dropMissing().shape, [8]), "The Series should have a shape of [8] after dropping missing values!")
-  assert(isEqual(series.dropMissing().index, ["row1", "row2", "row3", "row4", "row5", "row6", "row8", "row9"]), "The Series' new index should be as I've described!")
+  assert(isEqual(series.dropMissing().index, ["row01", "row02", "row03", "row04", "row05", "row06", "row08", "row09"]), "The Series' new index should be as I've described!")
   assert(series.clear().dropMissing().isEmpty(), "The Series should be empty after dropping missing values!")
 
   console.log("All tests passed!")

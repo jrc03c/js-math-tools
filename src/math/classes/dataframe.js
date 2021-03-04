@@ -818,6 +818,11 @@ class DataFrame {
     out = out.dropColumns(indexID)
     return out
   }
+
+  sortByIndex(){
+    let self = this
+    return self.sort()
+  }
 }
 
 module.exports = DataFrame
