@@ -300,6 +300,20 @@ class DataFrame {
       })
     })
 
+    if (rows.length === 1){
+      let out = new Series(flatten(values))
+      out.name = rows[0]
+      out.index = cols
+      return out
+    }
+
+    if (cols.length === 1){
+      let out = new Series(flatten(values))
+      out.name = cols[0]
+      out.index = rows
+      return out
+    }
+
     let out = new DataFrame(values)
     out.columns = cols
     out.index = rows
