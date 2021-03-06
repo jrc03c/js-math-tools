@@ -2,6 +2,7 @@ let assert = require("../misc/assert.js")
 let isArray = require("./is-array.js")
 let isNumber = require("./is-number.js")
 let isUndefined = require("./is-undefined.js")
+let isString = require("./is-string.js")
 let flatten = require("./flatten.js")
 
 function max(arr){
@@ -11,7 +12,7 @@ function max(arr){
   let temp = flatten(arr)
 
   temp.forEach(function(value){
-    assert(isNumber(value), "The `max` function only works on numbers or arrays of numbers!")
+    assert(isNumber(value) || isString(value), "The `max` function only works on numbers or arrays of numbers!")
   })
 
   let out = -Infinity
@@ -106,7 +107,7 @@ if (!module.parent && typeof(window) === "undefined"){
     hasFailed = true
   }
 
-  assert(hasFailed, `max([1, 2, "three"]) should have failed!`)
+  assert(!hasFailed, `max([1, 2, "three"]) should not have failed!`)
 
   try {
     hasFailed = false

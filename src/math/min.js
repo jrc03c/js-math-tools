@@ -2,6 +2,7 @@ let assert = require("../misc/assert.js")
 let isUndefined = require("./is-undefined.js")
 let isArray = require("./is-array.js")
 let isNumber = require("./is-number.js")
+let isString = require("./is-string.js")
 let flatten = require("./flatten.js")
 
 function min(arr){
@@ -11,7 +12,7 @@ function min(arr){
   let temp = flatten(arr)
 
   temp.forEach(function(item){
-    assert(isNumber(item), "The `min` function only works on arrays of numbers!")
+    assert(isNumber(item) || isString(item), "The `min` function only works on arrays of numbers and/or strings!")
   })
 
   let out = Infinity
@@ -99,7 +100,7 @@ if (!module.parent && typeof(window) === "undefined"){
     hasFailed = true
   }
 
-  assert(hasFailed, `min([1, 2, "three"]) should have failed!`)
+  assert(!hasFailed, `min([1, 2, "three"]) should not have failed!`)
 
   try {
     hasFailed = false
