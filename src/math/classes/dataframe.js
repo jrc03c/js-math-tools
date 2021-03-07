@@ -300,6 +300,10 @@ class DataFrame {
       })
     })
 
+    if (rows.length === 1 && cols.length === 1){
+      return flatten(values)[0]
+    }
+
     if (rows.length === 1){
       let out = new Series(flatten(values))
       out.name = rows[0]
