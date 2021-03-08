@@ -359,6 +359,33 @@ class Series {
     out.name = self.name
     return out
   }
+
+  filter(fn){
+    let self = this
+    let out = self.copy()
+    let index = copy(out.index)
+    let indicesToRemove = []
+
+    let newValues = out.values.filter((value, i) => {
+      let shouldKeep = fn(value, i, out.values)
+      if (!shouldKeep) indicesToRemove.push(out.index[i])
+      return shouldKeep
+    })
+
+    indicesToRemove.forEach(i => {
+      index.splice(index.indexOf(i), 1)
+    })
+
+    if (newValues.length === 0){
+      out = new Series()
+      out.name = self.name
+      return out
+    }
+
+    out.values = newValues
+    out.index = index
+    return out
+  }
 }
 
 module.exports = Series
