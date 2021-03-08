@@ -521,35 +521,39 @@ class DataFrame {
 
     let self = this
     let out = self.copy()
+    let tempID = Math.random().toString()
 
     if (axis === 0){
-      let newValues = out.values.map(helper).filter((row, i) => {
-        if (row.length === 0){
-          out.index.splice(i, 1)
-          return false
-        } else {
-          return true
-        }
-      })
+      out = out.assign(tempID, out.index)
+
+      let newValues = out.values.map(helper).filter(row => row.length > 0)
 
       if (shape(newValues).length < 2) return new DataFrame()
 
       out.values = newValues
+
+      let newIndex = out.get(null, tempID)
+      if (isUndefined(newIndex)) return new DataFrame()
+      if (isString(newIndex)) newIndex = [newIndex]
+      if (isSeries(newIndex)) newIndex = newIndex.values
+      out.index = newIndex
+      out = out.drop(null, tempID)
     } else if (axis === 1){
       out = out.transpose()
+      out = out.assign(tempID, out.index)
 
-      let newValues = out.values.map(helper).filter((col, i) => {
-        if (col.length === 0){
-          out.index.splice(i, 1)
-          return false
-        } else {
-          return true
-        }
-      })
+      let newValues = out.values.map(helper).filter(col => col.length > 0)
 
       if (shape(newValues).length < 2) return new DataFrame()
 
       out.values = newValues
+
+      let newIndex = out.get(null, tempID)
+      if (isUndefined(newIndex)) return new DataFrame()
+      if (isString(newIndex)) newIndex = [newIndex]
+      if (isSeries(newIndex)) newIndex = newIndex.values
+      out.index = newIndex
+      out = out.drop(null, tempID)
       out = out.transpose()
     }
 
