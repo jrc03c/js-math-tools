@@ -478,6 +478,11 @@ class DataFrame {
     return out
   }
 
+  map(fn, axis){
+    let self = this
+    return self.apply(fn, axis)
+  }
+
   dropMissing(axis, condition, threshold){
     axis = axis || 0
     assert(axis === 0 || axis === 1, "The first parameter of the `dropMissing` method (the `axis`) must be 0 or 1.")
@@ -847,6 +852,58 @@ class DataFrame {
   sortByIndex(){
     let self = this
     return self.sort()
+  }
+
+  filter(fn, axis){
+    assert(isFunction(fn), "The `filter` method takes a single parameter: a function that is used to filter the values.")
+
+    if (isUndefined(axis)) axis = 0
+    assert(axis === 0 || axis === 1, "The `axis` parameter to the `filter` method must be 0 or 1.")
+
+    let self = this
+    if (self.isEmpty()) return self.copy()
+    let out = self.copy()
+    let index = copy(out.index)
+    let columns = copy(out.columns)
+
+    if (axis === 0){
+      let indexID = Math.random().toString()
+      out = out.assign(indexID, out.index)
+
+      let newValues = out.values.filter((row, i) => {
+        let shouldKeep = fn(row, i, out)
+        if (!shouldKeep) index.splice(i, 1)
+        return shouldKeep
+      })
+
+      if (flatten(newValues).length === 0) return new DataFrame()
+      if (shape(newValues).length === 1) newValues = [newValues]
+
+      out.values = newValues
+      out.index = out.get(null, indexID).values
+      out = out.drop(null, indexID)
+    } else if (axis === 1){
+      out = out.transpose()
+
+      let columnsID = Math.random().toString()
+      out = out.assign(columnsID, out.index)
+
+      let newValues = out.values.filter((row, i) => {
+        let shouldKeep = fn(row, i, out)
+        if (!shouldKeep) columns.splice(i, 1)
+        return shouldKeep
+      })
+
+      if (flatten(newValues).length === 0) return new DataFrame()
+      if (shape(newValues).length === 1) newValues = [newValues]
+
+      out.values = newValues
+      out.index = out.get(null, columnsID).values
+      out = out.drop(null, columnsID)
+      out = out.transpose()
+    }
+
+    return out
   }
 }
 
