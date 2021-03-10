@@ -909,6 +909,17 @@ class DataFrame {
 
     return out
   }
+
+  shuffle(axis){
+    if (isUndefined(axis)) axis = 0
+    assert(axis === 0 || axis === 1, "The `axis` parameter to the `shuffle` must be 0, 1, or undefined.")
+    let self = this
+    
+    return self.get(
+      axis === 0 ? shuffle(self.index) : null,
+      axis === 1 ? shuffle(self.columns) : null,
+    )
+  }
 }
 
 module.exports = DataFrame
