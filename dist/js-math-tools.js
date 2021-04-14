@@ -231,7 +231,7 @@ function dump(o,u=["dump"]){Object.keys(o).forEach(function(d){u.indexOf(d)<0&&(
 function pause(e){return new Promise(function(t,r){try{return setTimeout(t,e)}catch(e){return r(e)}})}module.exports=pause;
 
 },{}],77:[function(require,module,exports){
-let isArray=require("../math/is-array.js"),shape=require("../math/shape.js"),DataFrame=require("../math/classes/dataframe.js"),Series=require("../math/classes/series.js");function print(e){if(isArray(e)){let a=shape(e);1===a.length?new DataFrame([e]).print():2==a.length?new DataFrame(e).print():console.log(e)}else e instanceof DataFrame||e instanceof Series?e.print():console.log(e)}module.exports=print;
+let isArray=require("../math/is-array.js"),shape=require("../math/shape.js"),DataFrame=require("../math/classes/dataframe.js"),Series=require("../math/classes/series.js");function print(){Object.keys(arguments).forEach(e=>{let r=arguments[e];if(isArray(r)){let e=shape(r);1===e.length?new Series(r).print():2==e.length?new DataFrame(r).print():console.log(r)}else r instanceof DataFrame||r instanceof Series?r.print():console.log(r)})}module.exports=print;
 
 },{"../math/classes/dataframe.js":13,"../math/classes/series.js":14,"../math/is-array.js":30,"../math/shape.js":56}],78:[function(require,module,exports){
 
