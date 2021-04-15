@@ -3,7 +3,7 @@ This is a little library of math tools for JS. It was built completely from scra
 # Installation
 
 ```bash
-npm install --save https://gitlab.com/jrc03c/js-math-tools
+npm install --save https://github.com/jrc03c/js-math-tools
 ```
 
 For client-side use, attach the `dist/js-math-tools.js` file to your web page:
