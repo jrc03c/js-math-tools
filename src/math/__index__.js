@@ -22,6 +22,7 @@ let out = {
   float: require("./float.js"),
   floor: require("./floor.js"),
   identity: require("./identity.js"),
+  indexOf: require("./index-of.js"),
   int: require("./int.js"),
   inverse: require("./inverse.js"),
   isArray: require("./is-array.js"),
