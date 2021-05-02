@@ -24,7 +24,6 @@ let out = {
   distrib: require("./distrib.js"),
   dot: require("./dot.js"),
   downloadJson: require("./download-json.js"),
-  dump: require("./dump.js"),
   flatten: require("./flatten.js"),
   float: require("./float.js"),
   floor: require("./floor.js"),
@@ -76,6 +75,12 @@ let out = {
   variance: require("./variance.js"),
   vectorize: require("./vectorize.js"),
   zeros: require("./zeros.js"),
+
+  dump: function(){
+    Object.keys(out).forEach(key => {
+      global[key] = out[key]
+    })
+  },
 }
 
 if (typeof(module) !== "undefined"){

@@ -25,16 +25,14 @@ let tools = require("js-math-tools")
 You can either pull individual functions out, like:
 
 ```js
-let tools = require("js-math-tools")
-let add = tools.math.add
+let { add } = require("js-math-tools")
 add(3, 4) // 7
 ```
 
 Or, for easier access, you can "dump" all of the functions into the global scope:
 
 ```js
-let tools = require("js-math-tools")
-tools.dump()
+require("js-math-tools").dump()
 add(3, 4) // 7
 ```
 
@@ -50,8 +48,7 @@ add(-7, [10, 11, 12]) // [3, 4, 5]
 There's a handy helper function called `vectorize` that can turn any arbitrary function into a function that operates on these mixed types of parameters (individual values or arrays of the same types of values). For example:
 
 ```js
-let tools = require("js-math-tools")
-tools.dump()
+require("js-math-tools").dump()
 
 function divide(a, b){
   return a / b
@@ -70,8 +67,7 @@ divide([20, 30, 40], [40, 30, 20]) // [0.5, 1, 2]
 Unlike some other JS math libraries, this library does _not_ provide a wrapper around standard JS arrays. Therefore, pretty much everything is handled through functions, not objects. Here are some examples of things you might want to do with (_n_-dimensional) arrays.
 
 ```js
-let tools = require("js-math-tools")
-tools.dump()
+require("js-math-tools").dump()
 
 // make an empty array
 let arr1 = ndarray(5)
@@ -183,8 +179,7 @@ flatten([[2, 3, 4], [5, 6, 7]])
 The PRNG (pseudo-random number generator) implemented in this library is technically a [linear congruential generator](https://en.wikipedia.org/wiki/Linear_congruential_generator), in case that matters to you. To seed the PRNG, pass a positive integer into the `seed` function. The `random`, `normal`, and `shuffle` functions can all be seeded. For example:
 
 ```js
-let tools = require("js-math-tools")
-tools.dump()
+require("js-math-tools").dump()
 
 seed(230498349)
 random(5)
@@ -202,10 +197,7 @@ I recently added some helper classes to mimic the behavior of Python's [pandas](
 Here are some of the things that you can do with Series:
 
 ```js
-let tools = require("js-math-tools")
-tools.dump()
-// or:
-// const Series = tools.math.classes.Series
+require("js-math-tools").dump()
 
 let series = new Series([1, 2, 3, 4, 5])
 
@@ -236,10 +228,7 @@ console.log(series.dropMissing().index) // ["row1", "row2", "row4"]
 And here are some of the things you can do with `DataFrame`:
 
 ```js
-let tools = require("js-math-tools")
-tools.dump()
-// or:
-// const DataFrame = tools.math.classes.DataFrame
+require("js-math-tools").dump()
 
 let x = new DataFrame([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
 x.print()
