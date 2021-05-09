@@ -11,7 +11,6 @@
     "url": "git+ssh://git@github.com/jrc03c/js-math-tools.git"
   },
   "author": "jrc03c",
-  "dependencies": {},
   "devDependencies": {
     "uglifyify": "^5.0.2"
   }

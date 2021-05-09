@@ -248,7 +248,7 @@ class Series {
 
     let self = this
     let out = self.copy()
-    out.values = out.values.map((v, i) => fn(out.index[i], v))
+    out.values = out.values.map((v, i) => fn(v, out.index[i]))
     return out
   }
 

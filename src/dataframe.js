@@ -459,23 +459,44 @@ class DataFrame {
     assert(axis === 0 || axis === 1, "The second parameter to the `apply` method (the `axis`) must be 0 or 1.")
 
     let self = this
-    let out = self.copy()
 
     if (axis === 0){
-      out = out.transpose()
+      let temp = transpose(self.values)
 
-      out.values = out.values.map((col, i) => {
-        return fn(col, out.index[i])
+      let newValues = temp.map((col, i) => {
+        return fn(col, self.columns[i])
       })
 
-      out = out.transpose()
+      if (shape(newValues).length === 1){
+        let out = new Series(newValues)
+        out.index = copy(self.columns)
+        return out
+      }
+
+      else {
+        let out = new DataFrame(transpose(newValues))
+        out.index = copy(self.index)
+        out.columns = copy(self.columns)
+        return out
+      }
     } else if (axis === 1){
-      out.values = out.values.map((row, i) => {
-        return fn(row, out.index[i])
+      let newValues = self.values.map((row, i) => {
+        return fn(row, self.index[i])
       })
-    }
 
-    return out
+      if (shape(newValues).length === 1){
+        let out = new Series(newValues)
+        out.index = copy(self.index)
+        return out
+      }
+
+      else {
+        let out = new DataFrame(newValues)
+        out.index = copy(self.index)
+        out.columns = copy(self.columns)
+        return out
+      }
+    }
   }
 
   map(fn, axis){
