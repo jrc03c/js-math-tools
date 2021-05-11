@@ -6,13 +6,14 @@ let flatten = require("./flatten.js")
 let min = require("./min.js")
 let max = require("./max.js")
 let apply = require("./apply.js")
+let dropMissing = require("./drop-missing.js")
 
 function distrib(x, bins){
   assert(!isUndefined(x), "You must pass an array of numbers (and optionally an integer number of bins) into the `distrib` function!")
   assert(isArray(x), "You must pass an array of numbers (and optionally an integer number of bins) into the `distrib` function!")
 
-  let temp = flatten(x)
-  temp.forEach(val => assert(isNumber(val)), "You must pass an array of numbers (and optionally an integer number of bins) into the `distrib` function!")
+  let temp = dropMissing(flatten(x))
+  if (temp.length === 0) return []
 
   if (isUndefined(bins)){
     bins = parseInt(temp.length / 10)
@@ -129,48 +130,48 @@ if (!module.parent && typeof(window) === "undefined"){
 
   try {
     hasFailed = false
-    distrib([], "foo")
+    distrib([1, 2, 3], "foo")
   } catch(e){
     hasFailed = true
   }
 
-  assert(hasFailed, `distrib([], "foo") should have failed!`)
+  assert(hasFailed, `distrib([1, 2, 3], "foo") should have failed!`)
 
   try {
     hasFailed = false
-    distrib([], true)
+    distrib([1, 2, 3], true)
   } catch(e){
     hasFailed = true
   }
 
-  assert(hasFailed, `distrib(true) should have failed!`)
+  assert(hasFailed, `distrib([1, 2, 3], true) should have failed!`)
 
   try {
     hasFailed = false
-    distrib([], [])
+    distrib([1, 2, 3], [])
   } catch(e){
     hasFailed = true
   }
 
-  assert(hasFailed, `distrib([]) should have failed!`)
+  assert(hasFailed, `distrib([1, 2, 3], []) should have failed!`)
 
   try {
     hasFailed = false
-    distrib([], {})
+    distrib([1, 2, 3], {})
   } catch(e){
     hasFailed = true
   }
 
-  assert(hasFailed, `distrib([], {}) should have failed!`)
+  assert(hasFailed, `distrib([1, 2, 3], {}) should have failed!`)
 
   try {
     hasFailed = false
-    distrib([], () => {})
+    distrib([1, 2, 3], () => {})
   } catch(e){
     hasFailed = true
   }
 
-  assert(hasFailed, `distrib([], () => {}) should have failed!`)
+  assert(hasFailed, `distrib([1, 2, 3], () => {}) should have failed!`)
 
   console.log("All tests passed!")
 }

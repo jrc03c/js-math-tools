@@ -4,17 +4,14 @@ let isArray = require("./is-array.js")
 let isNumber = require("./is-number.js")
 let flatten = require("./flatten.js")
 let sum = require("./sum.js")
+let dropNaN = require("./drop-nan.js")
 
 function mean(arr){
   assert(!isUndefined(arr), "You must pass one array of numbers into the `mean` function!")
   assert(isArray(arr), "You must pass one array of numbers into the `mean` function!")
 
-  let temp = flatten(arr)
-
-  temp.forEach(function(value){
-    assert(isNumber(value), "The `mean` function only works on arrays of numbers!")
-  })
-
+  let temp = dropNaN(flatten(arr))
+  if (temp.length === 0) return undefined
   return sum(temp) / temp.length
 }
 
@@ -107,7 +104,7 @@ if (!module.parent && typeof(window) === "undefined"){
     hasFailed = true
   }
 
-  assert(hasFailed, `mean([1, 2, "three"]) should have failed!`)
+  assert(!hasFailed, `mean([1, 2, "three"]) should have failed!`)
 
   console.log("All tests passed!")
 }

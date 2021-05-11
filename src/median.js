@@ -4,16 +4,14 @@ let isArray = require("./is-array.js")
 let isNumber = require("./is-number.js")
 let flatten = require("./flatten.js")
 let sort = require("./sort.js")
+let dropNaN = require("./drop-nan.js")
 
 function median(arr){
   assert(!isUndefined(arr), "You must pass one array of numbers into the `median` function!")
   assert(isArray(arr), "You must pass one array of numbers into the `median` function!")
 
-  let temp = flatten(arr)
-
-  temp.forEach(function(item){
-    assert(isNumber(item), "The `median` function only works on numbers!")
-  })
+  let temp = dropNaN(flatten(arr))
+  if (temp.length === 0) return undefined
 
   temp = sort(temp, function(a, b){
     if (a < b) return -1
@@ -86,7 +84,7 @@ if (!module.parent && typeof(window) === "undefined"){
     hasFailed = true
   }
 
-  assert(hasFailed, `median([1, 2, "three"]) should have failed!`)
+  assert(!hasFailed, `median([1, 2, "three"]) should have failed!`)
 
   try {
     hasFailed = false
@@ -95,7 +93,7 @@ if (!module.parent && typeof(window) === "undefined"){
     hasFailed = true
   }
 
-  assert(hasFailed, `median([true]) should have failed!`)
+  assert(!hasFailed, `median([true]) should have failed!`)
 
   try {
     hasFailed = false
@@ -104,7 +102,7 @@ if (!module.parent && typeof(window) === "undefined"){
     hasFailed = true
   }
 
-  assert(hasFailed, `median([{}]) should have failed!`)
+  assert(!hasFailed, `median([{}]) should have failed!`)
 
   try {
     let foo
@@ -114,7 +112,7 @@ if (!module.parent && typeof(window) === "undefined"){
     hasFailed = true
   }
 
-  assert(hasFailed, `median([foo, foo, foo]) should have failed!`)
+  assert(!hasFailed, `median([foo, foo, foo]) should have failed!`)
 
   try {
     let fn = () => {}
@@ -124,7 +122,7 @@ if (!module.parent && typeof(window) === "undefined"){
     hasFailed = true
   }
 
-  assert(hasFailed, `median([fn, fn, fn]) should have failed!`)
+  assert(!hasFailed, `median([fn, fn, fn]) should have failed!`)
 
   console.log("All tests passed!")
 }

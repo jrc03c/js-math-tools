@@ -3,23 +3,23 @@ let isArray = require("./is-array.js")
 let isUndefined = require("./is-undefined.js")
 let isNumber = require("./is-number.js")
 let mean = require("./mean.js")
+let dropNaNPairwise = require("./drop-nan-pairwise.js")
 
 function covariance(x, y){
   assert(!isUndefined(x) && !isUndefined(y), "You must pass two equally-sized one-dimensional arrays into the `covariance` function!")
-
   assert(isArray(x) && isArray(y), "The `covariance` function only works on two equally-sized one-dimensional arrays of numbers!")
-
-  x.concat(y).forEach(function(v){
-    assert(isNumber(v), "The `covariance` function only works on two equally-sized one-dimensional arrays of numbers!")
-  })
-
   assert(x.length === y.length, "The two one-dimensional arrays passed into the `covariance` function must be of equal length!")
 
-  let mx = mean(x)
-  let my = mean(y)
+  let results = dropNaNPairwise(x, y)
+  let xTemp = results.a
+  let yTemp = results.b
+  if (xTemp.length === 0 || yTemp.length === 0) return undefined
+
+  let mx = mean(xTemp)
+  let my = mean(yTemp)
   let out = 0
-  for (let i=0; i<x.length; i++) out += (x[i] - mx) * (y[i] - my)
-  return out / x.length
+  for (let i=0; i<xTemp.length; i++) out += (xTemp[i] - mx) * (yTemp[i] - my)
+  return out / xTemp.length
 }
 
 module.exports = covariance
@@ -63,7 +63,7 @@ if (!module.parent && typeof(window) === "undefined"){
     hasFailed = true
   }
 
-  assert(hasFailed, `covariance(["foo", "bar", "baz"], ["a", "b", "c"]) should have failed!`)
+  assert(!hasFailed, `covariance(["foo", "bar", "baz"], ["a", "b", "c"]) should have failed!`)
 
   try {
     let foo
@@ -73,7 +73,7 @@ if (!module.parent && typeof(window) === "undefined"){
     hasFailed = true
   }
 
-  assert(hasFailed, `covariance([foo], [foo]) should have failed!`)
+  assert(!hasFailed, `covariance([foo], [foo]) should have failed!`)
 
   try {
     let fn = () => {}
@@ -83,7 +83,7 @@ if (!module.parent && typeof(window) === "undefined"){
     hasFailed = true
   }
 
-  assert(hasFailed, `covariance([fn], [fn]) should have failed!`)
+  assert(!hasFailed, `covariance([fn], [fn]) should have failed!`)
 
   try {
     hasFailed = false

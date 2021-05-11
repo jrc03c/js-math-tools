@@ -3,16 +3,14 @@ let isUndefined = require("./is-undefined.js")
 let isArray = require("./is-array.js")
 let isNumber = require("./is-number.js")
 let flatten = require("./flatten.js")
+let dropNaN = require("./drop-nan.js")
 
 function sum(arr){
   assert(!isUndefined(arr), "You must pass an array of numbers into the `sum` function!")
   assert(isArray(arr), "You must pass an array of numbers into the `sum` function!")
 
-  let temp = flatten(arr)
-
-  temp.forEach(function(v){
-    assert(isNumber(v), "You must pass an array of numbers into the `sum` function!")
-  })
+  let temp = dropNaN(flatten(arr))
+  if (temp.length === 0) return undefined
 
   let out = 0
   temp.forEach(v => out += v)
@@ -38,9 +36,9 @@ if (!module.parent && typeof(window) === "undefined"){
   assert(yTrue === yPred, `sum(range(-100, 101)) should be 0, but instead is ${yPred}!`)
 
   x = []
-  yTrue = 0
+  yTrue = undefined
   yPred = sum(x)
-  assert(yTrue === yPred, `sum([]) should be 0, but instead was ${yPred}!`)
+  assert(yTrue === yPred, `sum([]) should be undefined, but instead was ${yPred}!`)
 
   let hasFailed
 
@@ -105,7 +103,7 @@ if (!module.parent && typeof(window) === "undefined"){
     hasFailed = true
   }
 
-  assert(hasFailed, `sum([1, 2, "three"]) should have failed!`)
+  assert(!hasFailed, `sum([1, 2, "three"]) should have failed!`)
 
   console.log("All tests passed!")
 }

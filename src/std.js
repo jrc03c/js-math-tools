@@ -6,17 +6,14 @@ let flatten = require("./flatten.js")
 let mean = require("./mean.js")
 let pow = require("./pow.js")
 let sqrt = require("./sqrt.js")
+let dropNaN = require("./drop-nan.js")
 
 function std(arr){
   assert(!isUndefined(arr), "You must pass an array of numbers into the `std` function!")
   assert(isArray(arr), "You must pass an array of numbers into the `std` function!")
 
-  let temp = flatten(arr)
+  let temp = dropNaN(flatten(arr))
   if (temp.length === 0) return undefined
-
-  temp.forEach(function(v){
-    assert(isNumber(v), "You must pass an array of numbers into the `std` function!")
-  })
 
   let m = mean(temp)
   let out = 0

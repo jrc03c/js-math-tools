@@ -7,6 +7,7 @@ let pow = require("./pow.js")
 let sum = require("./sum.js")
 let add = require("./add.js")
 let scale = require("./scale.js")
+let dropNaNPairwise = require("./drop-nan-pairwise.js")
 
 function distance(a, b){
   assert(!isUndefined(a) && !isUndefined(b), "You must pass two congruently-shaped arrays of numbers into the `distance` function!")
@@ -15,14 +16,13 @@ function distance(a, b){
   let shape2 = shape(b)
 
   assert(shape1.length === shape2.length, "You must pass two congruently-shaped arrays of numbers into the `distance` function!")
-
   assert(sum(add(shape1, scale(shape2, -1))) === 0, "You must pass two congruently-shaped arrays of numbers into the `distance` function!")
 
-  flatten(a).concat(flatten(b)).forEach(function(value){
-    assert(isNumber(value), "The `distance` function only works on numbers!")
-  })
-
-  return pow(sum(pow(add(a, scale(b, -1)), 2)), 0.5)
+  let results = dropNaNPairwise(flatten(a), flatten(b))
+  let aTemp = results.a
+  let bTemp = results.b
+  if (aTemp.length === 0 || bTemp.length === 0) return undefined
+  return pow(sum(pow(add(aTemp, scale(bTemp, -1)), 2)), 0.5)
 }
 
 module.exports = distance
