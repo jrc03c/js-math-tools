@@ -185,6 +185,8 @@ class Series {
       return self.values[self.index.indexOf(name)]
     })
 
+    if (values.length === 1) return values[0]
+
     let out = new Series(values)
     out.index = indices
     out.name = self.name
