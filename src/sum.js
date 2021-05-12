@@ -1,8 +1,10 @@
 let add = require("./add.js")
+let dropNaN = require("./drop-nan.js")
+let flatten = require("./flatten.js")
 
 function sum(arr){
   try {
-		return add(...arr)
+		return add(...dropNaN(flatten(arr)))
 	} catch(e) {
 		return NaN
 	}
