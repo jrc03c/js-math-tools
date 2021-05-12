@@ -1,6 +1,7 @@
 let assert = require("./assert.js")
 let isUndefined = require("./is-undefined.js")
 let isArray = require("./is-array.js")
+let isNumber = require("./is-number.js")
 let max = require("./max.js")
 let shape = require("./shape.js")
 
@@ -12,7 +13,7 @@ function dropNaNPairwise(a, b){
   let bOut = []
 
   for (let i=0; i<max([a.length, b.length]); i++){
-    if (!isUndefined(a[i]) && !isNaN(a[i]) && !isUndefined(b[i]) && !isNaN(b[i])){
+    if (!isUndefined(a[i]) && isNumber(a[i]) && !isUndefined(b[i]) && isNumber(b[i])){
       aOut.push(a[i])
       bOut.push(b[i])
     }
