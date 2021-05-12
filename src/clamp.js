@@ -4,17 +4,13 @@ let isUndefined = require("./is-undefined.js")
 let vectorize = require("./vectorize.js")
 
 let clamp = vectorize(function(x, a, b){
-  assert(!isUndefined(x) && !isUndefined(a) && !isUndefined(b), "You must pass exactly three numbers (or three equally-sized arrays of numbers) into the `clamp` function!")
-
-  assert(isNumber(x), "The `clamp` function only works on numbers!")
-  assert(isNumber(a), "The `clamp` function only works on numbers!")
-  assert(isNumber(b), "The `clamp` function only works on numbers!")
-
-  assert(a < b, `The minimum parameter, a, must be less than the maximum parameter, b.`)
-
-  if (x < a) return a
-  if (x > b) return b
-  return x
+  try {
+		if (x < a) return a
+  	if (x > b) return b
+  	return x
+	} catch(e) {
+		return NaN
+	}
 })
 
 module.exports = clamp

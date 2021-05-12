@@ -4,12 +4,13 @@ let isNumber = require("./is-number.js")
 let vectorize = require("./vectorize.js")
 
 let sign = vectorize(function(x){
-  assert(!isUndefined(x), "You must pass a number or an array of numbers into the `sign` function!")
-  assert(isNumber(x), "You must pass a number or an array of numbers into the `sign` function!")
-
-  if (x < 0) return -1
-  if (x > 0) return 1
-  return 0
+  try {
+		if (x < 0) return -1
+  	if (x > 0) return 1
+  	return 0
+	} catch(e) {
+		return NaN
+	}
 })
 
 module.exports = sign

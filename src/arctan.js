@@ -4,9 +4,11 @@ let isNumber = require("./is-number.js")
 let vectorize = require("./vectorize.js")
 
 let arctan = vectorize(function(x){
-  assert(!isUndefined(x), "You must pass a number or an array of numbers into the `arctan` function!")
-  assert(isNumber(x), "You must pass a number or an array of numbers into the `arctan` function!")
-  return Math.atan(x)
+  try {
+		return Math.atan(x)
+	} catch(e) {
+		return NaN
+	}
 })
 
 module.exports = arctan

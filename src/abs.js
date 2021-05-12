@@ -5,9 +5,11 @@ let isNumber = require("./is-number.js")
 let isUndefined = require("./is-undefined.js")
 
 let abs = vectorize(function(x){
-  assert(!isUndefined(x), "You must pass exactly one number into the `abs` function!")
-  assert(isNumber(x), "The `abs` function only works on numbers!")
-  return Math.abs(x)
+  try {
+		return Math.abs(x)
+	} catch(e) {
+		return NaN
+	}
 })
 
 module.exports = abs

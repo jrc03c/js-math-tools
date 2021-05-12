@@ -7,27 +7,23 @@ let sort = require("./sort.js")
 let dropNaN = require("./drop-nan.js")
 
 function median(arr){
-  assert(!isUndefined(arr), "You must pass one array of numbers into the `median` function!")
-  assert(isArray(arr), "You must pass one array of numbers into the `median` function!")
+	try {
+	  let temp = dropNaN(flatten(arr))
+  	if (temp.length === 0) return NaN
+  	temp = sort(temp)
 
-  let temp = dropNaN(flatten(arr))
-  if (temp.length === 0) return undefined
+  	let out
 
-  temp = sort(temp, function(a, b){
-    if (a < b) return -1
-    if (a > b) return 1
-    return 0
-  })
+  	if (temp.length % 2 === 0){
+    	out = (temp[temp.length / 2 - 1] + temp[temp.length / 2]) / 2
+  	} else {
+    	out = temp[Math.floor(temp.length / 2)]
+  	}
 
-  let out
-
-  if (temp.length % 2 === 0){
-    out = (temp[temp.length / 2 - 1] + temp[temp.length / 2]) / 2
-  } else {
-    out = temp[Math.floor(temp.length / 2)]
-  }
-
-  return out
+  	return out
+	} catch(e) {
+		return NaN
+	}
 }
 
 module.exports = median

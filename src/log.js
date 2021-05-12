@@ -4,13 +4,12 @@ let isUndefined = require("./is-undefined.js")
 let vectorize = require("./vectorize.js")
 
 let log = vectorize(function(x, base){
-  assert(!isUndefined(x), "You must pass a single number or a single array of numbers into the `log` function!")
-  assert(isNumber(x), "You must pass a single number or a single array of numbers into the `log` function!")
-
-  base = isUndefined(base) ? Math.E : base
-  assert(isNumber(base), "The base parameter of the `log` function must be a number or an array of numbers!")
-
-  return Math.log(x) / Math.log(base)
+  try {
+		base = isUndefined(base) ? Math.E : base
+  	return Math.log(x) / Math.log(base)
+	} catch(e) {
+		return NaN
+	}
 })
 
 module.exports = log

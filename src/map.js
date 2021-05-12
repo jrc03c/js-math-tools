@@ -4,11 +4,11 @@ let isNumber = require("./is-number.js")
 let vectorize = require("./vectorize.js")
 
 let map = vectorize(function(x, a, b, c, d){
-  assert(!isUndefined(x) && !isUndefined(a) && !isUndefined(b) && !isUndefined(c) && !isUndefined(d), "You should pass five numbers (or five equally-sized arrays of numbers) into the `map` function!")
-
-  assert(isNumber(x) && isNumber(a) && isNumber(b) && isNumber(c) && isNumber(d), "The `map` function only works on numbers!")
-
-  return (d - c) * (x - a) / (b - a) + c
+  try {
+		return (d - c) * (x - a) / (b - a) + c
+	} catch(e) {
+		return NaN
+	}
 })
 
 module.exports = map

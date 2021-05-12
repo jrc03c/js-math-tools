@@ -6,20 +6,20 @@ let mean = require("./mean.js")
 let dropNaNPairwise = require("./drop-nan-pairwise.js")
 
 function covariance(x, y){
-  assert(!isUndefined(x) && !isUndefined(y), "You must pass two equally-sized one-dimensional arrays into the `covariance` function!")
-  assert(isArray(x) && isArray(y), "The `covariance` function only works on two equally-sized one-dimensional arrays of numbers!")
-  assert(x.length === y.length, "The two one-dimensional arrays passed into the `covariance` function must be of equal length!")
+  try {
+		let results = dropNaNPairwise(x, y)
+  	let xTemp = results.a
+  	let yTemp = results.b
+  	if (xTemp.length === 0 || yTemp.length === 0) return NaN
 
-  let results = dropNaNPairwise(x, y)
-  let xTemp = results.a
-  let yTemp = results.b
-  if (xTemp.length === 0 || yTemp.length === 0) return undefined
-
-  let mx = mean(xTemp)
-  let my = mean(yTemp)
-  let out = 0
-  for (let i=0; i<xTemp.length; i++) out += (xTemp[i] - mx) * (yTemp[i] - my)
-  return out / xTemp.length
+  	let mx = mean(xTemp)
+  	let my = mean(yTemp)
+  	let out = 0
+  	for (let i=0; i<xTemp.length; i++) out += (xTemp[i] - mx) * (yTemp[i] - my)
+  	return out / xTemp.length
+	} catch(e) {
+		return NaN
+	}
 }
 
 module.exports = covariance

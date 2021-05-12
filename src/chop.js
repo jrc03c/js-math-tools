@@ -5,13 +5,12 @@ let abs = require("./abs.js")
 let vectorize = require("./vectorize.js")
 
 let chop = vectorize(function(x, threshold){
-  assert(!isUndefined(x), "You must pass a single number or a single array of numbers into the `chop` function!")
-  assert(isNumber(x), "The `chop` function only works on numbers!")
-
-  threshold = isUndefined(threshold) ? 1e-10 : threshold
-  assert(isNumber(threshold), "The `chop` function only works on numbers!")
-
-  return abs(x) < threshold ? 0 : x
+	try {
+		threshold = isUndefined(threshold) ? 1e-10 : threshold
+		return abs(x) < threshold ? 0 : x
+	} catch(e) {
+		return NaN
+	}
 })
 
 module.exports = chop

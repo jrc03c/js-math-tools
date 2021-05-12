@@ -4,10 +4,11 @@ let isNumber = require("./is-number.js")
 let vectorize = require("./vectorize.js")
 
 let round = vectorize(function(x){
-  assert(!isUndefined(x), "You must pass a number or an array of numbers into the `round` function!")
-  assert(isNumber(x), "You must pass a number or an array of numbers into the `round` function!")
-
-  return Math.round(x)
+  try {
+		return Math.round(x)
+	} catch(e) {
+		return NaN
+	}
 })
 
 module.exports = round

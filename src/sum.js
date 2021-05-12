@@ -1,20 +1,11 @@
-let assert = require("./assert.js")
-let isUndefined = require("./is-undefined.js")
-let isArray = require("./is-array.js")
-let isNumber = require("./is-number.js")
-let flatten = require("./flatten.js")
-let dropNaN = require("./drop-nan.js")
+let add = require("./add.js")
 
 function sum(arr){
-  assert(!isUndefined(arr), "You must pass an array of numbers into the `sum` function!")
-  assert(isArray(arr), "You must pass an array of numbers into the `sum` function!")
-
-  let temp = dropNaN(flatten(arr))
-  if (temp.length === 0) return undefined
-
-  let out = 0
-  temp.forEach(v => out += v)
-  return out
+  try {
+		return add(...arr)
+	} catch(e) {
+		return NaN
+	}
 }
 
 module.exports = sum

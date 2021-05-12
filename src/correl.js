@@ -8,16 +8,15 @@ let dropNaNPairwise = require("./drop-nan-pairwise.js")
 let shape = require("./shape.js")
 
 function correl(x, y){
-  assert(!isUndefined(x) && !isUndefined(y), "You must pass two equally-sized one-dimensional arrays into the `correl` function!")
-  assert(isArray(x) && isArray(y), "The `correl` function works on exactly two one-dimensional arrays!")
-  assert(shape(x).length === 1 && shape(y).length === 1, "The `correl` function works on exactly two one-dimensional arrays!")
-  assert(x.length === y.length, "The two one-dimensional arrays passed into the `correl` function must have the same length!")
-
-  let results = dropNaNPairwise(x, y)
-  let xTemp = results.a
-  let yTemp = results.b
-  if (xTemp.length === 0 || yTemp.length === 0) return undefined
-  return covariance(xTemp, yTemp) / (std(xTemp) * std(yTemp))
+  try {
+		let results = dropNaNPairwise(x, y)
+  	let xTemp = results.a
+  	let yTemp = results.b
+  	if (xTemp.length === 0 || yTemp.length === 0) return NaN
+  	return covariance(xTemp, yTemp) / (std(xTemp) * std(yTemp))
+	} catch(e) {
+		return NaN
+	}
 }
 
 module.exports = correl

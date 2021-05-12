@@ -7,29 +7,30 @@ let set = require("./set.js")
 let sort = require("./sort.js")
 
 function mode(arr){
-  assert(!isUndefined(arr), "You must pass one array into the `mode` function!")
-  assert(isArray(arr), "You  must pass one array into the `mode` function!")
+  try {
+		let temp = flatten(arr)
+  	let counts = {}
+  	let tempSet = set(temp)
 
-  let temp = flatten(arr)
-  let counts = {}
-  let tempSet = set(temp)
+  	tempSet.forEach(function(item){
+    	counts[item] = count(temp, item)
+  	})
 
-  tempSet.forEach(function(item){
-    counts[item] = count(temp, item)
-  })
+  	let sortedTempSet = sort(tempSet, function(a, b){
+    	let count1 = counts[a]
+    	let count2 = counts[b]
 
-  let sortedTempSet = sort(tempSet, function(a, b){
-    let count1 = counts[a]
-    let count2 = counts[b]
+    	if (count1 > count2) return -1
+    	if (count1 < count2) return 1
+    	return 0
+  	})
 
-    if (count1 > count2) return -1
-    if (count1 < count2) return 1
-    return 0
-  })
-
-  let mostCountedItem = sortedTempSet[0]
-  let out = sort(sortedTempSet.filter(item => counts[item] === counts[mostCountedItem]))
-  return out
+  	let mostCountedItem = sortedTempSet[0]
+  	let out = sort(sortedTempSet.filter(item => counts[item] === counts[mostCountedItem]))
+  	return out
+	} catch(e) {
+		return NaN
+	}
 }
 
 module.exports = mode

@@ -4,11 +4,11 @@ let isUndefined = require("./is-undefined.js")
 let vectorize = require("./vectorize.js")
 
 let floor = vectorize(function(x){
-  assert(!isUndefined(x), "You must pass a single number or a single array of numbers into the `floor` function!")
-
-  assert(isNumber(x), "The `floor` function only works on numbers!")
-
-  return Math.floor(x)
+  try {
+    return Math.floor(x)
+  } catch(e) {
+    return NaN
+  }
 })
 
 module.exports = floor

@@ -9,16 +9,17 @@ let sqrt = require("./sqrt.js")
 let dropNaN = require("./drop-nan.js")
 
 function std(arr){
-  assert(!isUndefined(arr), "You must pass an array of numbers into the `std` function!")
-  assert(isArray(arr), "You must pass an array of numbers into the `std` function!")
+  try {
+		let temp = dropNaN(flatten(arr))
+  	if (temp.length === 0) return NaN
 
-  let temp = dropNaN(flatten(arr))
-  if (temp.length === 0) return undefined
-
-  let m = mean(temp)
-  let out = 0
-  temp.forEach(x => out += pow(x - m, 2))
-  return sqrt(out / temp.length)
+  	let m = mean(temp)
+  	let out = 0
+  	temp.forEach(x => out += pow(x - m, 2))
+  	return sqrt(out / temp.length)
+	} catch(e) {
+		return NaN
+	}
 }
 
 module.exports = std

@@ -1,7 +1,11 @@
 let vectorize = require("./vectorize.js")
 
 let apply = vectorize(function(x, fn){
-  return fn(x)
+  try {
+		return fn(x)
+	} catch(e) {
+		return NaN
+	}
 })
 
 module.exports = apply

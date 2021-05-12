@@ -4,10 +4,11 @@ let isNumber = require("./is-number.js")
 let vectorize = require("./vectorize.js")
 
 let arccos = vectorize(function(x){
-  assert(!isUndefined(x), "You must pass a number or an array of numbers into the `arccos` function!")
-  assert(isNumber(x), "You must pass a number or an array of numbers into the `arccos` function!")
-  assert(x >= -1 && x <= 1, "The `arccos` function is only defined for -1 <= x <= 1!")
-  return Math.acos(x)
+  try {
+		return Math.acos(x)
+	} catch(e) {
+		return NaN
+	}
 })
 
 module.exports = arccos

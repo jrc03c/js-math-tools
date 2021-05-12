@@ -4,10 +4,11 @@ let isUndefined = require("./is-undefined.js")
 let isNumber = require("./is-number.js")
 
 let pow = vectorize(function(x, p){
-  assert(!isUndefined(x) && !isUndefined(p), "You must pass two numbers (or two equally-sized arrays of numbers) into the `pow` function!")
-  assert(isNumber(x) && isNumber(p), "You must pass two numbers (or two equally-sized arrays of numbers) into the `pow` function!")
-
-  return Math.pow(x, p)
+  try {
+		return Math.pow(x, p)
+	} catch(e) {
+		return NaN
+	}
 })
 
 module.exports = pow

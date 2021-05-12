@@ -5,12 +5,13 @@ let vectorize = require("./vectorize.js")
 let floor = require("./floor.js")
 
 let tan = vectorize(function(x){
-  assert(!isUndefined(x), "You must pass a number or an array of numbers into the `tan` function!")
-  assert(isNumber(x), "You must pass a number or an array of numbers into the `tan` function!")
-
-  let k = (x - Math.PI / 2) / Math.PI
-  if (k === floor(k)) return undefined
-  return Math.tan(x)
+  try {
+		let k = (x - Math.PI / 2) / Math.PI
+		if (parseInt(k) === k) return NaN
+		return Math.tan(x)
+	} catch(e) {
+		return NaN
+	}
 })
 
 module.exports = tan

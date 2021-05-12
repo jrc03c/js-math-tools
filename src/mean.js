@@ -7,12 +7,13 @@ let sum = require("./sum.js")
 let dropNaN = require("./drop-nan.js")
 
 function mean(arr){
-  assert(!isUndefined(arr), "You must pass one array of numbers into the `mean` function!")
-  assert(isArray(arr), "You must pass one array of numbers into the `mean` function!")
-
-  let temp = dropNaN(flatten(arr))
-  if (temp.length === 0) return undefined
-  return sum(temp) / temp.length
+  try {
+		let temp = dropNaN(flatten(arr))
+  	if (temp.length === 0) return NaN
+  	return sum(temp) / temp.length
+	} catch(e) {
+		return NaN
+	}
 }
 
 module.exports = mean

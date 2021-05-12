@@ -4,10 +4,11 @@ let isNumber = require("./is-number.js")
 let vectorize = require("./vectorize.js")
 
 let scale = vectorize(function(a, b){
-  assert(!isUndefined(a) && !isUndefined(b), "You must pass two numbers (or an array of numbers and a number, or a number and an array of numbers, or two arrays of numbers) into the `scale` function!")
-  assert(isNumber(a) && isNumber(b), "You must pass two numbers (or an array of numbers and a number, or a number and an array of numbers, or two arrays of numbers) into the `scale` function!")
-
-  return a * b
+  try {
+		return a * b
+	} catch(e) {
+		return NaN
+	}
 })
 
 module.exports = scale

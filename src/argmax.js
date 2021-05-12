@@ -5,9 +5,11 @@ const indexOf = require("./index-of.js")
 const max = require("./max.js")
 
 function argmax(x){
-  assert(!isUndefined(x), "You must pass an array into the `argmax` function!")
-  assert(isArray(x), "You must pass an array into the `argmax` function!")
-  return indexOf(x, max(x))
+  try {
+		return indexOf(x, max(x))
+	} catch(e) {
+		return NaN
+	}
 }
 
 module.exports = argmax

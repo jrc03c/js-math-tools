@@ -5,9 +5,11 @@ const indexOf = require("./index-of.js")
 const min = require("./min.js")
 
 function argmin(x){
-  assert(!isUndefined(x), "You must pass an array into the `argmin` function!")
-  assert(isArray(x), "You must pass an array into the `argmin` function!")
-  return indexOf(x, min(x))
+  try {
+		return indexOf(x, min(x))
+	} catch(e) {
+		return NaN
+	}
 }
 
 module.exports = argmin

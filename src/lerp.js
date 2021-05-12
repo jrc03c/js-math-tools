@@ -4,11 +4,11 @@ let isUndefined = require("./is-undefined.js")
 let vectorize = require("./vectorize.js")
 
 let lerp = vectorize(function(a, b, f){
-  assert(!isUndefined(a) && !isUndefined(b) && !isUndefined(f), "You must pass exactly three numbers (or three equally-sized arrays of numbers) into the `lerp` function!")
-
-  assert(isNumber(a) && isNumber(b) && isNumber(f), "The `lerp` function only works on numbers!")
-
-  return f * (b - a) + a
+  try {
+		return f * (b - a) + a
+	} catch(e) {
+		return NaN
+	}
 })
 
 module.exports = lerp

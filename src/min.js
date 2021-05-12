@@ -6,24 +6,20 @@ let isString = require("./is-string.js")
 let flatten = require("./flatten.js")
 
 function min(arr){
-  assert(!isUndefined(arr), "You must pass one array of numbers into the `min` function!")
-  assert(isArray(arr), "You must pass one array of numbers into the `min` function!")
+  try {
+		let temp = flatten(arr)
+		let out = Infinity
 
-  let temp = flatten(arr)
+  	temp.forEach(function(x){
+    	if (x < out){
+      	out = x
+    	}
+  	})
 
-  temp.forEach(function(item){
-    assert(isNumber(item) || isString(item), "The `min` function only works on arrays of numbers and/or strings!")
-  })
-
-  let out = Infinity
-
-  temp.forEach(function(x){
-    if (x < out){
-      out = x
-    }
-  })
-
-  return out === Infinity ? undefined : out
+  	return out === Infinity ? NaN : out
+	} catch(e) {
+		return NaN
+	}
 }
 
 module.exports = min

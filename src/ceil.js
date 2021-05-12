@@ -4,9 +4,11 @@ let isUndefined = require("./is-undefined.js")
 let vectorize = require("./vectorize.js")
 
 let ceil = vectorize(function(x){
-  assert(!isUndefined(x), "You must pass a single number or a single array of numbers into the `ceil` function!")
-  assert(isNumber(x), "The `ceil` function only works on numbers!")
-  return Math.ceil(x)
+  try {
+		return Math.ceil(x)
+	} catch(e) {
+		return NaN
+	}
 })
 
 module.exports = ceil

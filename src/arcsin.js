@@ -4,10 +4,11 @@ let isNumber = require("./is-number.js")
 let vectorize = require("./vectorize.js")
 
 let arcsin = vectorize(function(x){
-  assert(!isUndefined(x), "You must pass a number or an array of numbers into the `arcsin` function!")
-  assert(isNumber(x), "You must pass a number or an array of numbers into the `arcsin` function!")
-  assert(x >= -1 && x <= 1, "The `arcsin` function is only defined for -1 <= x <= 1!")
-  return Math.asin(x)
+  try {
+		return Math.asin(x)
+	} catch(e) {
+		return NaN
+	}
 })
 
 module.exports = arcsin

@@ -4,9 +4,11 @@ let isUndefined = require("./is-undefined.js")
 let vectorize = require("./vectorize.js")
 
 let cos = vectorize(function(x){
-  assert(!isUndefined(x), "You must pass a single number or single array of numbers into the `cos` function!")
-  assert(isNumber(x), "The `cos` function only works on numbers!")
-  return Math.cos(x)
+  try {
+		return Math.cos(x)
+	} catch(e) {
+		return NaN
+	}
 })
 
 module.exports = cos

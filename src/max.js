@@ -6,24 +6,20 @@ let isString = require("./is-string.js")
 let flatten = require("./flatten.js")
 
 function max(arr){
-  assert(!isUndefined(arr), "You must pass one array of numbers into the `max` function!")
-  assert(isArray(arr), "You must pass one array of numbers into the `max` function!")
+	try {
+	  let temp = flatten(arr)
+		let out = -Infinity
 
-  let temp = flatten(arr)
+		temp.forEach(function(x){
+ 	  	if (x > out){
+ 	    	out = x
+ 	  	}
+ 		})
 
-  temp.forEach(function(value){
-    assert(isNumber(value) || isString(value), "The `max` function only works on numbers or arrays of numbers!")
-  })
-
-  let out = -Infinity
-
-  temp.forEach(function(x){
-    if (x > out){
-      out = x
-    }
-  })
-
-  return out === -Infinity ? undefined : out
+ 		return out === -Infinity ? NaN : out
+	} catch(e) {
+		return NaN
+	}
 }
 
 module.exports = max

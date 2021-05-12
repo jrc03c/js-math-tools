@@ -8,12 +8,13 @@ let std = require("./std.js")
 let dropNaN = require("./drop-nan.js")
 
 function variance(arr){
-  assert(!isUndefined(arr), "You must pass an array of numbers into the `variance` function!")
-  assert(isArray(arr), "You must pass an array of numbers into the `std` function!")
-
-  let temp = dropNaN(flatten(arr))
-  if (temp.length === 0) return undefined
-  return pow(std(temp), 2)
+  try {
+		let temp = dropNaN(flatten(arr))
+  	if (temp.length === 0) return NaN
+  	return pow(std(temp), 2)
+	} catch(e) {
+		return NaN
+	}
 }
 
 module.exports = variance

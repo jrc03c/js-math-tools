@@ -4,10 +4,11 @@ let isNumber = require("./is-number.js")
 let vectorize = require("./vectorize.js")
 
 let sin = vectorize(function(x){
-  assert(!isUndefined(x), "You must pass a number or an array of numbers into the `sin` function!")
-  assert(isNumber(x), "You must pass a number or an array of numbers into the `sin` function!")
-
-  return Math.sin(x)
+  try {
+		return Math.sin(x)
+	} catch(e) {
+		return NaN
+	}
 })
 
 module.exports = sin

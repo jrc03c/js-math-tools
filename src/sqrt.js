@@ -4,11 +4,12 @@ let isNumber = require("./is-number.js")
 let vectorize = require("./vectorize.js")
 
 let sqrt = vectorize(function(x){
-  assert(!isUndefined(x), "You must pass a number or an array of numbers into the `sqrt` function!")
-  assert(isNumber(x), "You must pass a number or an array of numbers into the `sqrt` function!")
-  assert(x >= 0, "The `sqrt` function only operates on zero or positive numbers!")
-
-  return Math.sqrt(x)
+  try {
+		if (x < 0) return NaN
+		return Math.sqrt(x)
+	} catch(e) {
+		return NaN
+	}
 })
 
 module.exports = sqrt

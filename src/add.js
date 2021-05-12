@@ -5,20 +5,18 @@ let isString = require("./is-string.js")
 let isUndefined = require("./is-undefined.js")
 
 let add = vectorize(function(){
-  let out = 0
-  let argKeys = Object.keys(arguments)
-  let argValues = argKeys.map(key => arguments[key])
-  let argTypes = argValues.map(value => typeof(value))
+  try {
+		let out
 
-  argValues.forEach(value => assert(isNumber(value) || isString(value), "The `add` function only works on strings or numbers!"))
+		Object.keys(arguments).forEach(key => {
+			if (!out) out = arguments[key]
+			else out += arguments[key]
+		})
 
-  argValues.forEach(value => assert(!isUndefined(value), "You must pass numbers or equally-sized arrays of numbers into the `add` function!"))
-
-  if (argTypes.indexOf("string") > -1) out = ""
-
-  argValues.forEach(x => out += x)
-
-  return out
+		return out
+	} catch(e) {
+		return NaN
+	}
 })
 
 module.exports = add
