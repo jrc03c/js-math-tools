@@ -217,7 +217,7 @@ class DataFrame {
 
     const lines = raw.split("\n")
 
-    const out = lines.map(line => {
+    let out = lines.map(line => {
       const dict = {}
       const quotePattern = /"(.*?)"/g
       const matches = line.match(quotePattern) || []
@@ -240,6 +240,20 @@ class DataFrame {
         }
       })
     })
+
+		out = new DataFrame(out)
+    const hasHeaderRow = typeof(options.hasHeaderRow) === "boolean" ? options.hasHeaderRow : true
+		const hasIndexColumn = typeof(options.hasIndexColumn) === "boolean" ? options.hasIndexColumn : false
+
+    if (hasHeaderRow){
+			out.columns = copy(out.values[0])
+			out = out.drop(0, null)
+    }
+
+    if (hasIndexColumn){
+			out.index = out.get(null, 0).values
+			out = out.drop(null, 0)
+    }
 
     return out
   }
