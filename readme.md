@@ -337,3 +337,5 @@ DataFrame.fromCSV("path/to/some.csv", {
   // do something with `data`
 })
 ```
+
+Honestly, this library's ability to read CSVs isn't super robust, so if you need something more configurable or flexible, try [`csvtojson`](https://github.com/Keyang/node-csvtojson)!
