@@ -20,6 +20,13 @@ let isBoolean = require("./is-boolean.js")
 let random = require("./random.js")
 let sort = require("./sort.js")
 
+function makeKey(n){
+	let alpha = "abcdefghijklmnopqrstuvwxyz1234567890"
+	let out = ""
+	for (let i=0; i<n; i++) out += alpha[parseInt(Math.random() * alpha.length)]
+	return out
+}
+
 function isInteger(x){
   return isNumber(x) && parseInt(x) === x
 }
@@ -189,6 +196,52 @@ class DataFrame {
         self._index = range(0, dataShape[0]).map(i => "row" + leftPad(i, (dataShape[0] - 1).toString().length))
       }
     }
+  }
+
+  static async fromCSV(path, options){
+    options = options || {}
+    let raw
+
+		// browser
+		if (typeof(window) !== "undefined"){
+	    const response = await fetch(path)
+      raw = await response.text()
+    }
+
+    // node
+    else {
+      const fs = require("fs")
+      const encoding = options.encoding || "utf8"
+    	raw = fs.readFileSync(path, encoding)
+    }
+
+    const lines = raw.split("\n")
+
+    const out = lines.map(line => {
+      const dict = {}
+      const quotePattern = /"(.*?)"/g
+      const matches = line.match(quotePattern) || []
+
+      matches.forEach(match => {
+        const key = makeKey(32)
+        line = line.replaceAll(match, key)
+        dict[key] = match
+      })
+
+      const values = line.split(",")
+
+      return values.map((value, i) => {
+        value = dict[value] || value
+
+        try {
+          return JSON.parse(value)
+        } catch (e) {
+          return value
+        }
+      })
+    })
+
+    return out
   }
 
   get shape(){
