@@ -215,7 +215,7 @@ class DataFrame {
     	raw = fs.readFileSync(path, encoding)
     }
 
-    const lines = raw.split("\n")
+    const lines = raw.split("\n").filter(line => line.length > 0)
 
     let out = lines.map(line => {
       const dict = {}
@@ -240,6 +240,13 @@ class DataFrame {
         }
       })
     })
+
+    const valuesPerRow = max(out.map(line => line.length))
+
+    out = out.map(line => {
+    	line.length = valuesPerRow
+    	return line
+  	})
 
 		out = new DataFrame(out)
     const hasHeaderRow = typeof(options.hasHeaderRow) === "boolean" ? options.hasHeaderRow : true
