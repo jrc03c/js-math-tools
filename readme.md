@@ -327,4 +327,13 @@ console.log(x.toObject())
 x.toCSV("data.csv")
 ```
 
-I still need to add functionality to read CSV files!
+Finally, you can read CSV files like this:
+
+```js
+DataFrame.fromCSV("path/to/some.csv", {
+	hasHeaderRow: true,
+	hasIndexColumn: false,
+}).then(data => {
+	// do something with `data`
+})
+```
