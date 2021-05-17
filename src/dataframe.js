@@ -248,20 +248,22 @@ class DataFrame {
     	return line
   	})
 
-		out = new DataFrame(out)
+		let columns, index
     const hasHeaderRow = typeof(options.hasHeaderRow) === "boolean" ? options.hasHeaderRow : true
 		const hasIndexColumn = typeof(options.hasIndexColumn) === "boolean" ? options.hasIndexColumn : false
 
     if (hasHeaderRow){
-			out.columns = copy(out.values[0])
-			out = out.drop(0, null)
+			columns = out.shift()
     }
 
     if (hasIndexColumn){
-			out.index = out.get(null, 0).values
-			out = out.drop(null, 0)
+			index = out.map(row => row.shift())
+			if (columns) columns.shift()
     }
 
+		out = new DataFrame(out)
+		if (columns) out.columns = columns
+		if (index) out.index = index
     return out
   }
 
