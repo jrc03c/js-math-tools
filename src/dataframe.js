@@ -771,26 +771,34 @@ class DataFrame {
 
   print(){
     let self = this
-    let temp = self.copy()
+		let maxRows = typeof window === "undefined" ? 20 : 10
+		let halfMaxRows = parseInt(maxRows / 2)
     let maxColumns = typeof window === "undefined" ?  Math.floor(process.stdout.columns / 24) - 1 : 10
-    let maxRows = typeof window === "undefined" ? 20 : 10
+		let halfMaxColumns = parseInt(maxColumns / 2)
 
-    if (temp.columns.length > maxColumns){
-      temp = temp.getSubsetByNames(null, temp.columns.slice(0, maxColumns / 2).concat(temp.columns.slice(temp.columns.length - maxColumns / 2, temp.columns.length)))
-      let newColumns = temp.columns
+		let tempRows = maxRows > self.index.length ?
+			null :
+			range(0, halfMaxRows).concat(range(self.index.length - halfMaxRows, self.index.length))
 
-      temp = temp.assign({"...": range(0, temp.index.length).map(i => "...")})
-      temp = temp.loc(null, newColumns.slice(0, newColumns.length / 2).concat(["..."]).concat(newColumns.slice(newColumns.length / 2, newColumns.length)))
-    }
+		let tempColumns = maxColumns > self.columns.length ?
+			null :
+			range(0, halfMaxColumns).concat(range(self.columns.length - halfMaxColumns, self.columns.length))
 
-    if (temp.index.length > maxRows){
-      temp = temp.getSubsetByIndices(range(0, maxRows / 2).concat(range(temp.index.length - maxRows / 2, temp.index.length)), null)
-      let newIndex = temp.index
+		let temp = self.get(tempRows, tempColumns)
 
-      temp.index.push("...")
-      temp.values.push(range(0, temp.columns.length).map(i => "..."))
-      temp = temp.loc(newIndex.slice(0, newIndex.length / 2).concat(["..."]).concat(newIndex.slice(newIndex.length / 2, newIndex.length)), null)
-    }
+		if (maxRows <= self.index.length){
+			temp._index.splice(halfMaxRows, 0, "...")
+			temp._values.splice(halfMaxRows, 0, range(0, temp.columns.length).map(i => "..."))
+		}
+
+		if (maxColumns <= self.columns.length){
+			temp._columns.splice(halfMaxColumns, 0, "...")
+
+			temp._values = temp._values.map(row => {
+				row.splice(halfMaxColumns, 0, "...")
+				return row
+			})
+		}
 
     console.table(temp.toObject())
     return self
