@@ -289,10 +289,9 @@ class DataFrame {
 
   clear(){
     let self = this
-    let out = self.copy()
-    out.values = ndarray(out.shape)
-    out.index = self.index
-    out.columns = self.columns
+    let out = new DataFrame(ndarray(self.shape))
+    out.columns = self.columns.slice()
+    out.index = self.index.slice()
     return out
   }
 
