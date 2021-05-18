@@ -896,8 +896,9 @@ class DataFrame {
     assert(axis === 0 || axis === 1, "The `axis` parameter to the `filter` method must be 0 or 1.")
 
     let self = this
-    if (self.isEmpty()) return self.copy()
     let out = self.copy()
+		if (out.isEmpty()) return out
+		
     let index = copy(out.index)
     let columns = copy(out.columns)
 
