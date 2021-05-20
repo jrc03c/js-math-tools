@@ -29,11 +29,11 @@ test("takes absolute value of 'foo' to be NaN", () => {
 })
 
 test("takes absolute value of `true` to be NaN", () => {
-  expect(abs(true)).toBe(1)
+  expect(abs(true)).toBeNaN()
 })
 
 test("takes absolute value of `false` to be NaN", () => {
-  expect(abs(false)).toBe(0)
+  expect(abs(false)).toBeNaN()
 })
 
 test("takes absolute value of `() => {}` to be NaN", () => {

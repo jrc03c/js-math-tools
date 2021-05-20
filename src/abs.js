@@ -6,6 +6,7 @@ let isUndefined = require("./is-undefined.js")
 
 let abs = vectorize(function(x){
   try {
+    if (typeof(x) === "boolean") return NaN
 		return Math.abs(x)
 	} catch(e) {
 		return NaN
