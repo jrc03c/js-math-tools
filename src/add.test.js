@@ -34,6 +34,6 @@ test("adds [2, 3, 4] and [4, 5, 6, 7] to throw an error", () => {
   }).toThrow()
 })
 
-test("adds 2 and 'foo' to throw an error", () => {
+test("adds 2 and 'foo' to be NaN", () => {
   expect(add(2, "foo")).toBeNaN()
 })
