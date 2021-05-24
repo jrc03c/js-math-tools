@@ -28,7 +28,7 @@ test("adds [2, 3, 4] and [4, 5, 6] to get [6, 8, 10]", () => {
   expect(add([2, 3, 4], [4, 5, 6])).toStrictEqual([6, 8, 10])
 })
 
-test("adds [2, 3, 4] and [4, 5, 6, 7] to throw an error", () => {
+test("throws an error when attempt to add [2, 3, 4] and [4, 5, 6, 7]", () => {
   expect(() => {
     add([2, 3, 4], [4, 5, 6, 7])
   }).toThrow()
