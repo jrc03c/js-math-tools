@@ -3,7 +3,6 @@ const isUndefined = require("./is-undefined.js")
 const isArray = require("./is-array.js")
 const isNumber = require("./is-number.js")
 const shape = require("./shape.js")
-const slice = require("./slice.js")
 const transpose = require("./transpose.js")
 
 function append(a, b, axis = 0) {

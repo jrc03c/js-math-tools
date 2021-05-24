@@ -1,8 +1,4 @@
-const assert = require("./assert.js")
 const vectorize = require("./vectorize.js")
-const isNumber = require("./is-number.js")
-const isString = require("./is-string.js")
-const isUndefined = require("./is-undefined.js")
 
 const add = vectorize(function () {
   try {
