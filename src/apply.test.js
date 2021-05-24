@@ -25,8 +25,7 @@ test("applies an array of functions to an array of values", () => {
 })
 
 test("returns NaN when `apply` is called with no arguments", () => {
-  const yPred = apply()
-  expect(yPred).toBeNaN()
+  expect(apply()).toBeNaN()
 })
 
 test("returns NaN when `x` is not an array", () => {
