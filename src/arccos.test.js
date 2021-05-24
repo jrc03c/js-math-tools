@@ -9,9 +9,9 @@ test("takes arccos of 0", () => {
 })
 
 test("takes arccos of 1", () => {
-  x = 1
-  yTrue = 0
-  yPred = arccos(x)
+  const x = 1
+  const yTrue = 0
+  const yPred = arccos(x)
   expect(yPred).toBe(yTrue)
 })
 
