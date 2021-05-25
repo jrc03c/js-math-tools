@@ -8,7 +8,6 @@ let out = {
   arctan: require("./arctan.js"),
   argmax: require("./argmax.js"),
   argmin: require("./argmin.js"),
-  array: require("./array.js"),
   assert: require("./assert.js"),
   ceil: require("./ceil.js"),
   chop: require("./chop.js"),
@@ -80,17 +79,17 @@ let out = {
   vectorize: require("./vectorize.js"),
   zeros: require("./zeros.js"),
 
-  dump: function(){
+  dump: function () {
     Object.keys(out).forEach(key => {
       global[key] = out[key]
     })
   },
 }
 
-if (typeof(module) !== "undefined"){
+if (typeof module !== "undefined") {
   module.exports = out
 }
 
-if (typeof(window) !== "undefined"){
+if (typeof window !== "undefined") {
   window.JSMathTools = out
 }
