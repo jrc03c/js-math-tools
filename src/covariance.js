@@ -5,27 +5,26 @@ let isNumber = require("./is-number.js")
 let mean = require("./mean.js")
 let dropNaNPairwise = require("./drop-nan-pairwise.js")
 
-function covariance(x, y){
+function covariance(x, y) {
   try {
-		let results = dropNaNPairwise(x, y)
-  	let xTemp = results.a
-  	let yTemp = results.b
-  	if (xTemp.length === 0 || yTemp.length === 0) return NaN
+    let [xTemp, yTemp] = dropNaNPairwise(x, y)
+    if (xTemp.length === 0 || yTemp.length === 0) return NaN
 
-  	let mx = mean(xTemp)
-  	let my = mean(yTemp)
-  	let out = 0
-  	for (let i=0; i<xTemp.length; i++) out += (xTemp[i] - mx) * (yTemp[i] - my)
-  	return out / xTemp.length
-	} catch(e) {
-		return NaN
-	}
+    let mx = mean(xTemp)
+    let my = mean(yTemp)
+    let out = 0
+    for (let i = 0; i < xTemp.length; i++)
+      out += (xTemp[i] - mx) * (yTemp[i] - my)
+    return out / xTemp.length
+  } catch (e) {
+    return NaN
+  }
 }
 
 module.exports = covariance
 
 // tests
-if (!module.parent && typeof(window) === "undefined"){
+if (!module.parent && typeof window === "undefined") {
   let normal = require("./normal.js")
   let abs = require("./abs.js")
   let chop = require("./chop.js")
@@ -33,15 +32,24 @@ if (!module.parent && typeof(window) === "undefined"){
   let x = [2, 3, 4]
   let y = [1, 1, 1]
   let cv = covariance(x, y)
-  assert(cv === 0, `covariance([2, 3, 4], [1, 1, 1]) should be 0, but instead was ${cv}!`)
+  assert(
+    cv === 0,
+    `covariance([2, 3, 4], [1, 1, 1]) should be 0, but instead was ${cv}!`
+  )
 
   x = normal([10000])
   y = normal([10000])
   cv = covariance(x, y)
-  assert(abs(cv) < 0.05, `covariance(normal([10000]), normal(10000)) should be approximately 0, but instead is ${cv}!`)
+  assert(
+    abs(cv) < 0.05,
+    `covariance(normal([10000]), normal(10000)) should be approximately 0, but instead is ${cv}!`
+  )
 
   y = covariance(x, x)
-  assert(y > 0.95, `covariance(x, x) should be approximately 1, but instead is ${y}!`)
+  assert(
+    y > 0.95,
+    `covariance(x, x) should be approximately 1, but instead is ${y}!`
+  )
 
   assert(isNaN(covariance([], [])), `covariance([], []) should be NaN!`)
 
@@ -50,7 +58,7 @@ if (!module.parent && typeof(window) === "undefined"){
   try {
     hasFailed = false
     covariance([1, 2, 3], [1, 2, 3, 4])
-  } catch(e){
+  } catch (e) {
     hasFailed = true
   }
 
@@ -59,17 +67,20 @@ if (!module.parent && typeof(window) === "undefined"){
   try {
     hasFailed = false
     covariance(["foo", "bar", "baz"], ["a", "b", "c"])
-  } catch(e){
+  } catch (e) {
     hasFailed = true
   }
 
-  assert(!hasFailed, `covariance(["foo", "bar", "baz"], ["a", "b", "c"]) should have failed!`)
+  assert(
+    !hasFailed,
+    `covariance(["foo", "bar", "baz"], ["a", "b", "c"]) should have failed!`
+  )
 
   try {
     let foo
     hasFailed = false
     covariance([foo], [foo])
-  } catch(e){
+  } catch (e) {
     hasFailed = true
   }
 
@@ -79,7 +90,7 @@ if (!module.parent && typeof(window) === "undefined"){
     let fn = () => {}
     hasFailed = false
     covariance([fn], [fn])
-  } catch(e){
+  } catch (e) {
     hasFailed = true
   }
 
@@ -88,7 +99,7 @@ if (!module.parent && typeof(window) === "undefined"){
   try {
     hasFailed = false
     covariance({}, {})
-  } catch(e){
+  } catch (e) {
     hasFailed = true
   }
 
