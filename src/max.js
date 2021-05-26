@@ -1,12 +1,13 @@
 const flatten = require("./flatten.js")
+const isUndefined = require("./is-undefined.js")
 
 function max(arr) {
   try {
     const temp = flatten(arr)
     let out = -Infinity
 
-    temp.forEach(function (x) {
-      if (x > out) {
+    temp.forEach(x => {
+      if (!isUndefined(x) && x > out) {
         out = x
       }
     })
