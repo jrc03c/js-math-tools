@@ -14,4 +14,6 @@ test("checks to see if various things are arrays", () => {
   expect(isArray(false)).toBe(false)
   expect(isArray(() => {})).toBe(false)
   expect(isArray(3)).toBe(false)
+  expect(isArray(null)).toBe(false)
+  expect(isArray(undefined)).toBe(false)
 })
