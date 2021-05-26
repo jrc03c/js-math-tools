@@ -20,7 +20,6 @@ let out = {
   covariance: require("./covariance.js"),
   DataFrame: require("./dataframe.js"),
   distance: require("./distance.js"),
-  distrib: require("./distrib.js"),
   dot: require("./dot.js"),
   dropMissing: require("./drop-missing.js"),
   dropMissingPairwise: require("./drop-missing-pairwise.js"),
