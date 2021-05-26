@@ -1,5 +1,7 @@
-function isBoolean(x){
-  return typeof(x) === "boolean"
+const vectorize = require("./vectorize.js")
+
+function isBoolean(x) {
+  return typeof x === "boolean"
 }
 
-module.exports = isBoolean
+module.exports = vectorize(isBoolean)
