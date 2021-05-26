@@ -11,6 +11,7 @@ test("checks to see if various things are numbers", () => {
   expect(isNumber("foo")).toBe(false)
   expect(isNumber([2, 3, 4])).toBe(false)
   expect(isNumber({ x: 5 })).toBe(false)
+  expect(isNumber(() => {})).toBe(false)
   expect(isNumber(null)).toBe(false)
   expect(isNumber(undefined)).toBe(false)
   expect(isNumber(true)).toBe(false)
