@@ -22,7 +22,7 @@ let out = {
   distance: require("./distance.js"),
   distrib: require("./distrib.js"),
   dot: require("./dot.js"),
-  downloadJson: require("./download-json.js"),
+  downloadJSON: require("./download-json.js"),
   dropMissing: require("./drop-missing.js"),
   dropMissingPairwise: require("./drop-missing-pairwise.js"),
   dropNaN: require("./drop-nan.js"),
