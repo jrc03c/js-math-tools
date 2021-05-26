@@ -1,4 +1,6 @@
 const identity = require("./identity.js")
+const sort = require("./sort.js")
+const set = require("./set.js")
 
 function isIdentity(x) {
   for (let i = 0; i < x.length; i++) {
@@ -19,6 +21,7 @@ function isIdentity(x) {
 test("creates an identity matrix", () => {
   const x = identity(100)
   expect(isIdentity(x)).toBe(true)
+  expect(sort(set(x))).toStrictEqual([0, 1])
 })
 
 test("throws an error when attempting to create an identity matrix with a non-whole-number size", () => {
