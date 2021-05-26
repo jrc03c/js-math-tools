@@ -10,6 +10,7 @@ function dropNaNPairwise(a, b) {
     isArray(a) && isArray(b),
     "The two items passed into the `dropNaNPairwise` function must be arrays!"
   )
+
   assert(
     shape(a).length === 1 && shape(b).length === 1,
     "The `dropNaNPairwise` function only works on one-dimensional arrays!"
