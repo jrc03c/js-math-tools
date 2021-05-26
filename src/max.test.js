@@ -21,4 +21,6 @@ test("returns NaN when attempting to get the max of non-arrays", () => {
   expect(max(() => {})).toBeNaN()
   expect(max({})).toBeNaN()
   expect(max([])).toBeNaN()
+  expect(max(true)).toBeNaN()
+  expect(max(false)).toBeNaN()
 })

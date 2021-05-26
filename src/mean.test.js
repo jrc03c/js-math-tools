@@ -18,4 +18,6 @@ test("returns NaN when attempting to get the mean of non-numerical values", () =
   expect(mean(true)).toBeNaN()
   expect(mean({})).toBeNaN()
   expect(mean(() => {})).toBeNaN()
+  expect(mean(null)).toBeNaN()
+  expect(mean(undefined)).toBeNaN()
 })
