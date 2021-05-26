@@ -11,7 +11,7 @@ const range = require("./range.js")
 const set = require("./set.js")
 const isUndefined = require("./is-undefined.js")
 
-test("", () => {
+test("tests DataFrame emptiness", () => {
   const xShape = [17, 32]
   const x = normal(xShape)
   const df = new DataFrame(x)
@@ -26,7 +26,7 @@ test("", () => {
   expect(isUndefined(clearedValues[0])).toBe(true)
 })
 
-test("", () => {
+test("tests DataFrame selectors", () => {
   const a = normal(100)
   const b = normal(100)
   const c = normal(100)
@@ -50,7 +50,7 @@ test("", () => {
   expect(df.get(null, "a") instanceof Series).toBe(true)
 })
 
-test("", () => {
+test("tests DataFrame assignment", () => {
   const a = normal(100)
   const b = normal(100)
   const c = normal(100)
@@ -63,7 +63,7 @@ test("", () => {
   expect(e.values).toStrictEqual(df.get(null, "e").values)
 })
 
-test("", () => {
+test("tests DataFrame selectors (for missing columns)", () => {
   const a = normal(100)
   const b = normal(100)
   const c = normal(100)
@@ -74,7 +74,7 @@ test("", () => {
   }).toThrow()
 })
 
-test("", () => {
+test("tests DataFrame copying and index resetting", () => {
   const a = normal(100)
   const b = normal(100)
   const c = normal(100)
@@ -89,7 +89,7 @@ test("", () => {
   expect(isEqual(df1.index, df2.index)).toBe(true)
 })
 
-test("", () => {
+test("tests DataFrame mapping", () => {
   let df = new DataFrame(zeros([3, 3]))
 
   df = df.apply((colVals, colName) => {
@@ -107,7 +107,7 @@ test("", () => {
   expect(df.values).toStrictEqual(newValuesShouldBe)
 })
 
-test("", () => {
+test("tests DataFrame mapping", () => {
   let df = new DataFrame(zeros([3, 3]))
 
   df = df.apply((rowVals, rowName) => {
@@ -125,7 +125,7 @@ test("", () => {
   expect(df.values).toStrictEqual(newValuesShouldBe)
 })
 
-test("", () => {
+test("tests DataFrame missing value dropping", () => {
   const df = new DataFrame([
     [0, null],
     [1, "foo"],
@@ -144,7 +144,7 @@ test("", () => {
   expect(df.dropMissing(1, null, 1).isEmpty()).toBe(true)
 })
 
-test("", () => {
+test("tests DataFrame sorting", () => {
   const x = new DataFrame([
     [5, 6, 4, 1, 6, 7, 2, 8, 6, 1],
     [3, 8, 9, 6, 10, 1, 8, 5, 9, 6],
