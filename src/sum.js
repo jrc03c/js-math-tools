@@ -4,14 +4,15 @@ const isNumber = require("./is-number.js")
 
 function sum(arr) {
   try {
-    const temp = dropNaN(flatten(arr))
+    const temp = flatten(arr)
     if (temp.length === 0) return NaN
-
     let out = 0
 
-    temp.forEach(value => {
+    for (let i = 0; i < temp.length; i++) {
+      const value = temp[i]
       if (isNumber(value)) out += value
-    })
+      else return NaN
+    }
 
     return out
   } catch (e) {

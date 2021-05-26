@@ -31,5 +31,5 @@ test("returns NaN when `sum` is called on non-numerical values", () => {
 })
 
 test("sums [2, 3, 'four'] to be 5", () => {
-  expect(sum([2, 3, "four"])).toBe(5)
+  expect(sum([2, 3, "four"])).toBeNaN()
 })
