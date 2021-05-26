@@ -15,4 +15,6 @@ test("returns NaN when attempting to ceil non-numerical values", () => {
   expect(ceil(true)).toBeNaN()
   expect(ceil(() => {})).toBeNaN()
   expect(ceil({})).toBeNaN()
+  expect(ceil(null)).toBeNaN()
+  expect(ceil(undefined)).toBeNaN()
 })

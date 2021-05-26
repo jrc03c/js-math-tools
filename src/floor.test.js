@@ -15,4 +15,6 @@ test("returns NaN when attempting to floor non-numerical values", () => {
   expect(floor(true)).toBeNaN()
   expect(floor(() => {})).toBeNaN()
   expect(floor({})).toBeNaN()
+  expect(floor(null)).toBeNaN()
+  expect(floor(undefined)).toBeNaN()
 })
