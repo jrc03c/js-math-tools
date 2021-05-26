@@ -52,4 +52,10 @@ test("throws an error when attempting to drop missing values pairwise on non-vec
   expect(() => {
     dropMissingPairwise(() => {}, true)
   }).toThrow()
+
+  expect(() => {
+    const a = normal([5, 10])
+    const b = normal([5, 10])
+    dropMissingPairwise(a, b)
+  }).toThrow()
 })
