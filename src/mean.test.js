@@ -13,6 +13,7 @@ test("gets the mean of arrays", () => {
 test("returns NaN when attempting to get the mean of non-numerical values", () => {
   expect(mean()).toBeNaN()
   expect(mean([])).toBeNaN()
+  expect(mean(123)).toBeNaN()
   expect(mean([1, 2, "three"])).toBeNaN()
   expect(mean("foo")).toBeNaN()
   expect(mean(true)).toBeNaN()

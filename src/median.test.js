@@ -22,6 +22,7 @@ test("gets the median of arrays of numbers", () => {
 test("returns NaN when attempting to get the median of non-numerical values", () => {
   expect(median()).toBeNaN()
   expect(median([])).toBeNaN()
+  expect(median(123)).toBeNaN()
   expect(median([1, 2, "three"])).toBeNaN()
   expect(median("foo")).toBeNaN()
   expect(median(true)).toBeNaN()

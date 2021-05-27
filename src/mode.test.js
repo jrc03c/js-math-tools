@@ -27,6 +27,7 @@ test("", () => {
 test("returns NaN when attempting to get the mode of non-numerical values", () => {
   expect(mode()).toBeNaN()
   expect(mode([])).toBeNaN()
+  expect(mode(123)).toBeNaN()
   expect(mode("foo")).toBeNaN()
   expect(mode(true)).toBeNaN()
   expect(mode({})).toBeNaN()
