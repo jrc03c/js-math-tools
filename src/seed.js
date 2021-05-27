@@ -1,13 +1,24 @@
-let assert = require("./assert.js")
-let isUndefined = require("./is-undefined.js")
-let isNumber = require("./is-number.js")
+const assert = require("./assert.js")
+const isUndefined = require("./is-undefined.js")
+const isNumber = require("./is-number.js")
 let s = parseInt(Math.random() * 999999)
 
-function seed(val){
-  if (!isUndefined(val)){
-    assert(isNumber(val), "If passing a value into the `seed` function, then that value must be a positive integer!")
-    assert(parseInt(val) === val, "If passing a value into the `seed` function, then that value must be a positive integer!")
-    assert(val >= 0, "If passing a value into the `seed` function, then that value must be a positive integer!")
+function seed(val) {
+  if (!isUndefined(val)) {
+    assert(
+      isNumber(val),
+      "If passing a value into the `seed` function, then that value must be a positive integer!"
+    )
+
+    assert(
+      parseInt(val) === val,
+      "If passing a value into the `seed` function, then that value must be a positive integer!"
+    )
+
+    assert(
+      val >= 0,
+      "If passing a value into the `seed` function, then that value must be a positive integer!"
+    )
   }
 
   if (!isUndefined(val)) s = val
