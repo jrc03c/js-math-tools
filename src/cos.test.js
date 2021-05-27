@@ -28,5 +28,12 @@ test("gets cosine of 3 * pi / 2 to be 0", () => {
 })
 
 test("returns NaN when attempting to take the cosine of non-numerical values", () => {
+  expect(cos()).toBeNaN()
   expect(cos("foo")).toBeNaN()
+  expect(cos(true)).toBeNaN()
+  expect(cos(false)).toBeNaN()
+  expect(cos(null)).toBeNaN()
+  expect(cos(undefined)).toBeNaN()
+  expect(cos(() => {})).toBeNaN()
+  expect(cos({})).toBeNaN()
 })
