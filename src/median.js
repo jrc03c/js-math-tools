@@ -8,9 +8,10 @@ const dropNaN = require("./drop-nan.js")
 
 function median(arr) {
   try {
-    let temp = dropNaN(flatten(arr))
+    let flattenedArr = flatten(arr)
+    let temp = dropNaN(flattenedArr)
     if (temp.length === 0) return NaN
-    if (temp.length < arr.length) return NaN
+    if (temp.length < flattenedArr.length) return NaN
     temp = sort(temp)
 
     let out
