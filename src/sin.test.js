@@ -11,19 +11,10 @@ test("gets the sine of an array of values", () => {
   expect(max(y)).toBeLessThanOrEqual(1)
 })
 
-test("gets sine of 0 to be 1", () => {
+test("gets sine of common angles", () => {
   expect(chop(sin(0))).toBe(0)
-})
-
-test("gets sine of pi / 2 to be 0", () => {
   expect(sin(Math.PI / 2)).toBe(1)
-})
-
-test("gets sine of pi to be -1", () => {
   expect(chop(sin(Math.PI))).toBe(0)
-})
-
-test("gets sine of 3 * pi / 2 to be 0", () => {
   expect(sin((3 * Math.PI) / 2)).toBe(-1)
 })
 
@@ -36,4 +27,5 @@ test("returns NaN when attempting to take the sine of non-numerical values", () 
   expect(sin(undefined)).toBeNaN()
   expect(sin(() => {})).toBeNaN()
   expect(sin({})).toBeNaN()
+  expect(sin([])).toStrictEqual([])
 })
