@@ -49,8 +49,8 @@ function isSeries(x) {
 }
 
 function quote(s) {
-  const pattern = /"(.*?)"/g
-  const matches = s.match(pattern)
+  let pattern = /"(.*?)"/g
+  let matches = s.match(pattern)
   let out = s.slice()
 
   if (matches) {
