@@ -1,106 +1,13 @@
-let assert = require("./assert.js")
-let isUndefined = require("./is-undefined.js")
-let isNumber = require("./is-number.js")
-let vectorize = require("./vectorize.js")
-let floor = require("./floor.js")
+const isNumber = require("./is-number.js")
+const vectorize = require("./vectorize.js")
 
-let tan = vectorize(function(x){
+function tan(x) {
   try {
-		let k = (x - Math.PI / 2) / Math.PI
-		if (parseInt(k) === k) return NaN
-		return Math.tan(x)
-	} catch(e) {
-		return NaN
-	}
-})
-
-module.exports = tan
-
-// tests
-if (!module.parent && typeof(window) === "undefined"){
-  let abs = require("./abs.js")
-  let normal = require("./normal.js")
-
-  let x = Math.PI / 4
-  let yTrue = 1
-  let yPred = tan(x)
-  assert(abs(yTrue - yPred) < 0.01, `tan(pi / 4) should be 1, but instead was ${yPred}!`)
-
-  x = -Math.PI / 2
-  yTrue = undefined
-  yPred = tan(x)
-  assert(yTrue === yPred, "tan(-pi / 2) should be undefined, but instead was ${yPred}!")
-
-  x = 2 * Math.PI
-  yTrue = 0
-  yPred = tan(x)
-  assert(abs(yTrue - yPred) < 0.01, `tan(2 * pi) should be 0, but instead was ${yPred}!`)
-
-  let hasFailed
-
-  try {
-    hasFailed = false
-    tan()
-  } catch(e){
-    hasFailed = true
+    if (!isNumber(x)) return NaN
+    return Math.tan(x)
+  } catch (e) {
+    return NaN
   }
-
-  assert(hasFailed, `tan() should have failed!`)
-
-  try {
-    hasFailed = false
-    tan(normal(10000))
-  } catch(e){
-    hasFailed = true
-  }
-
-  assert(!hasFailed, `tan(normal(10000)) should not have failed!`)
-
-  try {
-    hasFailed = false
-    tan("foo")
-  } catch(e){
-    hasFailed = true
-  }
-
-  assert(hasFailed, `tan("foo") should have failed!`)
-
-  try {
-    hasFailed = false
-    tan(true,)
-  } catch(e){
-    hasFailed = true
-  }
-
-  assert(hasFailed, `tan(true) should have failed!`)
-
-  try {
-    hasFailed = false
-    tan({})
-  } catch(e){
-    hasFailed = true
-  }
-
-  assert(hasFailed, `tan({}) should have failed!`)
-
-  try {
-    hasFailed = false
-    tan(() => {})
-  } catch(e){
-    hasFailed = true
-  }
-
-  assert(hasFailed, `tan(() => {}) should have failed!`)
-
-  try {
-    let foo
-    hasFailed = false
-    tan(foo)
-  } catch(e){
-    hasFailed = true
-  }
-
-  assert(hasFailed, `tan(foo) should have failed!`)
-
-  console.log("All tests passed!")
 }
+
+module.exports = vectorize(tan)

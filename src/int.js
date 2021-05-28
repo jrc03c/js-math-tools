@@ -1,3 +1,13 @@
-// question: should this use JSON.parse()?
 const vectorize = require("./vectorize.js")
-module.exports = vectorize(x => parseInt(x))
+
+function int(x) {
+  try {
+    const temp = JSON.parse(x)
+    if (typeof temp === "number") return parseInt(temp)
+    return NaN
+  } catch (e) {
+    return NaN
+  }
+}
+
+module.exports = vectorize(int)

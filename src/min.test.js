@@ -1,0 +1,26 @@
+const min = require("./min.js")
+const normal = require("./normal.js")
+const random = require("./random.js")
+
+test("gets the min of arrays of values of mixed types", () => {
+  expect(min([2, 3, 4])).toBe(2)
+  expect(min([-10, -5, -20])).toBe(-20)
+  expect(min(random([10, 10, 10, 10]))).toBeLessThanOrEqual(1)
+  expect(min(random([10, 10, 10, 10]))).toBeGreaterThanOrEqual(0)
+  expect(min([2, 3, "four"])).toBe(2)
+  expect(min([null, undefined, 3])).toBe(3)
+  expect(min([true, false])).toBe(false)
+  expect(min([-Infinity, Infinity, 0])).toBe(-Infinity)
+})
+
+test("returns NaN when attempting to get the min of non-arrays", () => {
+  expect(min()).toBeNaN()
+  expect(min("foo")).toBeNaN()
+  expect(min(null)).toBeNaN()
+  expect(min(undefined)).toBeNaN()
+  expect(min(() => {})).toBeNaN()
+  expect(min({})).toBeNaN()
+  expect(min([])).toBeNaN()
+  expect(min(true)).toBeNaN()
+  expect(min(false)).toBeNaN()
+})

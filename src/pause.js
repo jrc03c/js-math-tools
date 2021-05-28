@@ -1,8 +1,8 @@
-function pause(ms){
-  return new Promise(function(resolve, reject){
+function pause(ms) {
+  return new Promise((resolve, reject) => {
     try {
       return setTimeout(resolve, ms)
-    } catch(e){
+    } catch (e) {
       return reject(e)
     }
   })
