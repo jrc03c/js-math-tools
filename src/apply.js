@@ -1,11 +1,11 @@
 const vectorize = require("./vectorize.js")
 
-const apply = vectorize(function (x, fn) {
+function apply(x, fn) {
   try {
     return fn(x)
   } catch (e) {
     return NaN
   }
-})
+}
 
-module.exports = apply
+module.exports = vectorize(apply)

@@ -28,6 +28,7 @@ let out = {
   flatten: require("./flatten.js"),
   float: require("./float.js"),
   floor: require("./floor.js"),
+  getValueAt: require("./get-value-at.js"),
   identity: require("./identity.js"),
   indexOf: require("./index-of.js"),
   int: require("./int.js"),
@@ -62,6 +63,7 @@ let out = {
   seed: require("./seed.js"),
   Series: require("./series.js"),
   set: require("./set.js"),
+  setValueAt: require("./set-value-at.js"),
   shape: require("./shape.js"),
   shuffle: require("./shuffle.js"),
   sign: require("./sign.js"),
@@ -73,9 +75,9 @@ let out = {
   sum: require("./sum.js"),
   tan: require("./tan.js"),
   transpose: require("./transpose.js"),
-  valueAt: require("./value-at.js"),
   variance: require("./variance.js"),
   vectorize: require("./vectorize.js"),
+  where: require("./where.js"),
   zeros: require("./zeros.js"),
 
   dump: function () {

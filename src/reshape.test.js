@@ -4,7 +4,13 @@ const normal = require("./normal.js")
 const flatten = require("./flatten.js")
 const range = require("./range.js")
 
-test("", () => {
+test("reshapes a vector", () => {
+  const x = range(0, 100)
+  const yPred = reshape(x, [20, 5])
+  expect(yPred[0]).toStrictEqual([0, 1, 2, 3, 4])
+})
+
+test("reshapes a matrix", () => {
   const x = [
     [1, 2, 3],
     [4, 5, 6],
@@ -22,26 +28,20 @@ test("", () => {
   expect(shape(yPred)).toStrictEqual(shape(yTrue))
 })
 
-test("", () => {
+test("reshapes a tensor", () => {
   const x = normal([2, 3, 4, 5])
   const yPred = reshape(x, [5, 12, 2])
   expect(shape(yPred)).toStrictEqual([5, 12, 2])
   expect(flatten(yPred)).toStrictEqual(flatten(x))
 })
 
-test("", () => {
-  const x = range(0, 100)
-  const yPred = reshape(x, [20, 5])
-  expect(yPred[0]).toStrictEqual([0, 1, 2, 3, 4])
-})
-
-test("", () => {
+test("reshapes a tensor using a single whole number", () => {
   const x = normal([5, 4, 3, 2])
   const yPred = reshape(x, 5 * 4 * 3 * 2)
   expect(yPred).toStrictEqual(flatten(x))
 })
 
-test("error", () => {
+test("throws an error when attempting to reshape non-tensors with non-shapes", () => {
   expect(() => {
     reshape()
   }).toThrow()
