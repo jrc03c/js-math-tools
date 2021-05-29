@@ -4,7 +4,8 @@
   "description": "some math tools for JS",
   "main": "src/index.js",
   "scripts": {
-    "build": "watchify -e src/index.js -t uglifyify -o dist/js-math-tools.js",
+    "watch": "watchify -e src/index.js -t uglifyify -o dist/js-math-tools.js",
+    "build": "browserify -e src/index.js -t uglifyify -o dist/js-math-tools.js",
     "test": "jest"
   },
   "repository": {
