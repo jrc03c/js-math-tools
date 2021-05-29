@@ -55,6 +55,7 @@ let out = {
   print: require("./print.js"),
   random: require("./random.js"),
   range: require("./range.js"),
+  reshape: require("./reshape.js"),
   reverse: require("./reverse.js"),
   round: require("./round.js"),
   scale: require("./scale.js"),
