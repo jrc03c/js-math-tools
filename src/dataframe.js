@@ -862,7 +862,7 @@ class DataFrame {
     let outIndex, outColumns
 
     self.index.forEach((row, i) => {
-      if (rows.indexOf(row) < 0 && row.indexOf(i) < 0) {
+      if (rows.indexOf(row) < 0 && rows.indexOf(i) < 0) {
         if (!outIndex) outIndex = []
         outIndex.push(row)
       }
