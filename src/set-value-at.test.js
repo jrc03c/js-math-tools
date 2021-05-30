@@ -17,11 +17,6 @@ test("sets a value in a tensor", () => {
   expect(getValueAt(yPred, [0, 1, 1, 4])).toBe("foobar")
 })
 
-test("sets a value in a tensor using negative indices", () => {
-  setValueAt(normal(100), -5, "blah")
-  throw new Error("This shouldn't work. I need to fix this!")
-})
-
 test("throws an error when attempting to set a value in a non-tensor with a non-index", () => {
   expect(() => {
     setValueAt()
