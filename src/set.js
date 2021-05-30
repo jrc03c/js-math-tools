@@ -10,7 +10,7 @@ function set(arr) {
   const out = []
   const temp = {}
 
-  flatten(arr).forEach(function (item) {
+  flatten(arr).forEach(item => {
     const key =
       typeof item === "undefined"
         ? "undefined"

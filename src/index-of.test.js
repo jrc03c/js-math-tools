@@ -2,9 +2,15 @@ const indexOf = require("./index-of.js")
 const normal = require("./normal.js")
 const seed = require("./seed.js")
 const isUndefined = require("./is-undefined.js")
+const reshape = require("./reshape.js")
+const range = require("./range.js")
+const shuffle = require("./shuffle.js")
 
 test("gets the index of a value in a tensor", () => {
-  const x = normal([10, 10, 10, 10])
+  let x = range(0, 10000)
+  x = shuffle(x)
+  x = reshape(x, [10, 10, 10, 10])
+
   const indexTrue = [5, 4, 2, 7]
   const indexPred = indexOf(x, x[5][4][2][7])
   expect(indexPred).toStrictEqual(indexTrue)
