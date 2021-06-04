@@ -967,6 +967,12 @@ class DataFrame {
 
   print() {
     const self = this
+
+    if (isEqual(self.shape, [0])) {
+      console.table({})
+      return self
+    }
+
     const maxRows = typeof window === "undefined" ? 20 : 10
     const halfMaxRows = parseInt(maxRows / 2)
     const maxColumns =
@@ -989,7 +995,21 @@ class DataFrame {
             range(self.columns.length - halfMaxColumns, self.columns.length)
           )
 
-    const temp = self.get(tempRows, tempColumns)
+    let temp = self.get(tempRows, tempColumns)
+
+    if (temp instanceof Series) {
+      if (self.shape[0] === 1) {
+        // data is row-shaped
+        temp = new DataFrame([temp.values])
+        temp.index = self.index
+        temp.columns = new Series(self.columns).get(tempColumns).values
+      } else if (self.shape[1] === 1) {
+        // data is column-shaped
+        temp = new DataFrame([temp.values]).transpose()
+        temp.index = new Series(self.index).get(tempRows).values
+        temp.columns = self.columns
+      }
+    }
 
     if (maxRows <= self.index.length) {
       temp._index.splice(halfMaxRows, 0, "...")
