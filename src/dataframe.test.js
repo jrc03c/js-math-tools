@@ -200,3 +200,79 @@ test("tests DataFrame sorting", () => {
     "col9",
   ])
 })
+
+const filename = "delete-me.csv"
+
+test("tests DataFrame reading & writing to and from disk", async () => {
+  function makeKey(n) {
+    const alpha = "abcdefghijklmnopqrstuvwxyz1234567890"
+    let out = ""
+    for (let i = 0; i < n; i++)
+      out += alpha[parseInt(Math.random() * alpha.length)]
+    return out
+  }
+
+  function pause(ms) {
+    return new Promise((resolve, reject) => {
+      try {
+        return setTimeout(resolve, ms)
+      } catch (e) {
+        return reject(e)
+      }
+    })
+  }
+
+  const x = new DataFrame(normal([1000, 25]))
+  x.columns = x.columns.map(i => makeKey(8))
+  x.index = x.index.map(i => makeKey(8))
+
+  const settings = { hasHeaderRow: true, hasIndexColumn: false }
+  let yPred
+
+  // v1
+  x.toCSV(filename, settings)
+  yPred = await DataFrame.fromCSV(filename, settings)
+  expect(yPred.values).toStrictEqual(x.values)
+  expect(yPred.columns).toStrictEqual(x.columns)
+  expect(yPred.index).not.toStrictEqual(x.index)
+  expect(yPred === x).toBe(false)
+  await pause(1000)
+
+  // v2
+  settings.hasIndexColumn = true
+  x.toCSV(filename, settings)
+  yPred = await DataFrame.fromCSV(filename, settings)
+  expect(yPred.values).toStrictEqual(x.values)
+  expect(yPred.columns).toStrictEqual(x.columns)
+  expect(yPred.index).toStrictEqual(x.index)
+  expect(yPred === x).toBe(false)
+  await pause(1000)
+
+  // v3
+  settings.hasHeaderRow = false
+  x.toCSV(filename, settings)
+  yPred = await DataFrame.fromCSV(filename, settings)
+  expect(yPred.values).toStrictEqual(x.values)
+  expect(yPred.columns).not.toStrictEqual(x.columns)
+  expect(yPred.index).toStrictEqual(x.index)
+  expect(yPred === x).toBe(false)
+  await pause(1000)
+
+  // v4
+  settings.hasIndexColumn = false
+  x.toCSV(filename, settings)
+  yPred = await DataFrame.fromCSV(filename, settings)
+  expect(yPred.values).toStrictEqual(x.values)
+  expect(yPred.columns).not.toStrictEqual(x.columns)
+  expect(yPred.index).not.toStrictEqual(x.index)
+  expect(yPred === x).toBe(false)
+})
+
+afterAll(() => {
+  // clean up
+  const fs = require("fs")
+
+  if (fs.existsSync(filename)) {
+    fs.unlinkSync(filename)
+  }
+})

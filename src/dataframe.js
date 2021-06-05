@@ -251,7 +251,7 @@ class DataFrame {
     let raw
 
     // browser
-    if (typeof window !== "undefined") {
+    if (typeof process === "undefined") {
       const response = await fetch(path)
       raw = await response.text()
     }
@@ -297,12 +297,12 @@ class DataFrame {
     })
 
     let columns, index
-    const hasHeaderRow =
-      typeof options.hasHeaderRow === "boolean" ? options.hasHeaderRow : true
-    const hasIndexColumn =
-      typeof options.hasIndexColumn === "boolean"
-        ? options.hasIndexColumn
-        : false
+    const hasHeaderRow = isBoolean(options.hasHeaderRow)
+      ? options.hasHeaderRow
+      : true
+    const hasIndexColumn = isBoolean(options.hasIndexColumn)
+      ? options.hasIndexColumn
+      : false
 
     if (hasHeaderRow) {
       columns = out.shift()
@@ -916,18 +916,44 @@ class DataFrame {
     return out
   }
 
-  toCSVString() {
+  toCSVString(options) {
     const self = this
-    const index = ["(index)"].concat(copy(self.index))
-    const columns = copy(self.columns)
+    options = isUndefined(options) ? {} : options
 
-    const out = [columns]
-      .concat(self.values)
+    const hasHeaderRow = isBoolean(options.hasHeaderRow)
+      ? options.hasHeaderRow
+      : true
+    const hasIndexColumn = isBoolean(options.hasIndexColumn)
+      ? options.hasIndexColumn
+      : false
+
+    let index, columns, out
+
+    if (hasHeaderRow && hasIndexColumn) {
+      index = ["(index)"].concat(copy(self.index))
+      columns = copy(self.columns)
+
+      out = [columns].concat(self.values).map((row, i) => {
+        return [index[i]].concat(row)
+      })
+    } else if (!hasHeaderRow && hasIndexColumn) {
+      index = copy(self.index)
+
+      out = self.values.map((row, i) => {
+        return [index[i]].concat(row)
+      })
+    } else if (hasHeaderRow && !hasIndexColumn) {
+      columns = copy(self.columns)
+      out = [columns].concat(self.values)
+    } else if (!hasHeaderRow && !hasIndexColumn) {
+      out = self.values
+    }
+
+    out = out
       .map((row, i) => {
-        return [index[i]]
-          .concat(row)
+        return row
           .map(value => {
-            if (typeof value === "string") {
+            if (isString(value)) {
               return quote(value)
             } else {
               return value
@@ -940,12 +966,12 @@ class DataFrame {
     return out
   }
 
-  toCSV(filename) {
+  toCSV(filename, options) {
     const self = this
-    const out = self.toCSVString()
+    const out = self.toCSVString(options)
 
     // browser
-    if (typeof window !== "undefined") {
+    if (typeof process === "undefined") {
       if (filename.includes("/")) {
         const parts = filename.split("/")
         filename = parts[parts.length - 1]
