@@ -10,6 +10,7 @@ const print = require("./print.js")
 const range = require("./range.js")
 const set = require("./set.js")
 const isUndefined = require("./is-undefined.js")
+const filename = "delete-me.csv"
 
 test("tests DataFrame emptiness", () => {
   const xShape = [17, 32]
@@ -200,8 +201,6 @@ test("tests DataFrame sorting", () => {
     "col9",
   ])
 })
-
-const filename = "delete-me.csv"
 
 test("tests DataFrame reading & writing to and from disk", async () => {
   function makeKey(n) {
