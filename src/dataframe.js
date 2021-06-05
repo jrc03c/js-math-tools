@@ -162,8 +162,9 @@ class DataFrame {
           "The new columns list must be a 1-dimensional array of strings!"
         )
 
-        x.forEach(value => {
-          assert(isString(value), "All of the column names must be strings!")
+        x = x.map(v => {
+          if (typeof v === "string") return v
+          return JSON.stringify(v) || v.toString()
         })
 
         self._columns = x
@@ -201,8 +202,9 @@ class DataFrame {
           "The new index must be a 1-dimensional array of strings!"
         )
 
-        x.forEach(value => {
-          assert(isString(value), "All of the row names must be strings!")
+        x = x.map(v => {
+          if (typeof v === "string") return v
+          return JSON.stringify(v) || v.toString()
         })
 
         self._index = x
