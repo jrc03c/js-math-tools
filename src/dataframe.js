@@ -282,7 +282,9 @@ class DataFrame {
         value = dict[value] || value
 
         try {
-          return JSON.parse(value)
+          let parsedValue = JSON.parse(value)
+          if (isArray(parsedValue)) return value
+          return parsedValue
         } catch (e) {
           return value
         }
