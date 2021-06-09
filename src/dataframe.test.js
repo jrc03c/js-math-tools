@@ -145,6 +145,68 @@ test("tests DataFrame missing value dropping", () => {
   expect(df.dropMissing(1, null, 1).isEmpty()).toBe(true)
 })
 
+test("tests DataFrame NaN value dropping", () => {
+  const df = new DataFrame([
+    [0, null, NaN],
+    [1, "foo", 234],
+    [-10, -20, -30],
+    [2, "bar", true],
+    [3, null, 3.5],
+    [4, null, -3.75],
+    [null, "uh-oh", Infinity],
+    [1, 2, 3],
+    [NaN, NaN, NaN],
+  ])
+
+  expect(df.dropNaN(0, "any").values).toStrictEqual([
+    [-10, -20, -30],
+    [1, 2, 3],
+  ])
+
+  expect(df.dropNaN(0, "any").index).toStrictEqual(["row2", "row7"])
+  expect(df.dropNaN(0, "any").columns).toStrictEqual(df.columns)
+
+  expect(df.dropNaN(0, "all").values).toStrictEqual([
+    [0, null, NaN],
+    [1, "foo", 234],
+    [-10, -20, -30],
+    [2, "bar", true],
+    [3, null, 3.5],
+    [4, null, -3.75],
+    [null, "uh-oh", Infinity],
+    [1, 2, 3],
+  ])
+
+  expect(df.dropNaN(0, "all").index).toStrictEqual(
+    df.index.slice(0, df.index.length - 1)
+  )
+  expect(df.dropNaN(0, "all").columns).toStrictEqual(df.columns)
+
+  expect(df.dropNaN(0, null, 2).values).toStrictEqual([
+    [1, "foo", 234],
+    [-10, -20, -30],
+    [3, null, 3.5],
+    [4, null, -3.75],
+    [1, 2, 3],
+  ])
+
+  expect(df.dropNaN(0, null, 2).index).toStrictEqual([
+    "row1",
+    "row2",
+    "row4",
+    "row5",
+    "row7",
+  ])
+
+  expect(df.dropNaN(0, null, 2).columns).toStrictEqual(df.columns)
+
+  expect(df.dropNaN(1, "any").isEmpty()).toBe(true)
+  expect(df.dropNaN(1, "all").values).toStrictEqual(df.values)
+  expect(df.dropNaN(1, null, 3).values).toStrictEqual(
+    flatten([[0], [1], [-10], [2], [3], [4], [null], [1], [NaN]])
+  )
+})
+
 test("tests DataFrame sorting", () => {
   const x = new DataFrame([
     [5, 6, 4, 1, 6, 7, 2, 8, 6, 1],
