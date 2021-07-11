@@ -252,17 +252,17 @@ class DataFrame {
     let raw
 
     // browser
-    if (typeof process === "undefined") {
+    try {
       const response = await fetch(path)
       raw = await response.text()
-    }
+    } catch (e) {}
 
     // node
-    else {
+    try {
       const fs = require("fs")
       const encoding = options.encoding || "utf8"
       raw = fs.readFileSync(path, encoding)
-    }
+    } catch (e) {}
 
     const lines = raw.split("\n").filter(line => line.length > 0)
 
@@ -1028,33 +1028,28 @@ class DataFrame {
   toCSV(filename, options) {
     const self = this
     const out = self.toCSVString(options)
-    let fs, path
-    let isBrowser = false
-
-    try {
-      fs = require("fs")
-      path = require("path")
-    } catch (e) {
-      isBrowser = true
-    }
 
     // browser
-    if (isBrowser) {
+    try {
       if (filename.includes("/")) {
         const parts = filename.split("/")
-        filename = parts[parts.length - 1]
+        const newFilename = parts[parts.length - 1]
+      } else {
+        const newFilename = filename
       }
 
       const a = document.createElement("a")
       a.href = `data:text/csv;charset=utf-8,${encodeURIComponent(out)}`
-      a.download = filename
+      a.download = newFilename
       a.dispatchEvent(new MouseEvent("click"))
-    }
+    } catch (e) {}
 
     // node
-    else {
+    try {
+      const fs = require("fs")
+      const path = require("path")
       fs.writeFileSync(path.resolve(filename), out, "utf8")
-    }
+    } catch (e) {}
 
     return self
   }
