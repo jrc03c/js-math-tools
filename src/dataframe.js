@@ -1028,9 +1028,18 @@ class DataFrame {
   toCSV(filename, options) {
     const self = this
     const out = self.toCSVString(options)
+    let fs, path
+    let isBrowser = false
+
+    try {
+      fs = require("fs")
+      path = require("path")
+    } catch (e) {
+      isBrowser = true
+    }
 
     // browser
-    if (typeof process === "undefined") {
+    if (isBrowser) {
       if (filename.includes("/")) {
         const parts = filename.split("/")
         filename = parts[parts.length - 1]
@@ -1044,8 +1053,6 @@ class DataFrame {
 
     // node
     else {
-      const fs = require("fs")
-      const path = require("path")
       fs.writeFileSync(path.resolve(filename), out, "utf8")
     }
 
