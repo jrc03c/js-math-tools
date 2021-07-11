@@ -1031,11 +1031,11 @@ class DataFrame {
 
     // browser
     try {
+      let newFilename = filename
+
       if (filename.includes("/")) {
         const parts = filename.split("/")
-        const newFilename = parts[parts.length - 1]
-      } else {
-        const newFilename = filename
+        newFilename = parts[parts.length - 1]
       }
 
       const a = document.createElement("a")
