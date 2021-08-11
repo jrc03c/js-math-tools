@@ -1,5 +1,5 @@
 {
-  "name": "js-math-tools",
+  "name": "@jrc03c/js-math-tools",
   "version": "0.0.1",
   "description": "some math tools for JS",
   "main": "src/index.js",
@@ -13,8 +13,13 @@
     "url": "git+ssh://git@github.com/jrc03c/js-math-tools.git"
   },
   "author": "jrc03c",
-  "devDependencies": {
-    "jest": "^26.6.3",
-    "uglifyify": "^5.0.2"
-  }
+  "bugs": {
+    "url": "https://github.com/jrc03c/js-math-tools/issues"
+  },
+  "homepage": "https://github.com/jrc03c/js-math-tools#readme",
+  "keywords": [
+    "js",
+    "math"
+  ],
+  "license": "ISC"
 }
