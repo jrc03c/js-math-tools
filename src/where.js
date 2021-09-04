@@ -19,7 +19,7 @@ function where(x, fn) {
 
   const n = flatten(x).length
   let temp = apply(x, fn)
-  const out = {}
+  const out = []
   let count = 0
   let isDone = false
 

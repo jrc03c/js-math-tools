@@ -11,11 +11,11 @@ test("tests `where` on a matrix", () => {
     [8, 1, 4, 3],
   ]
 
-  const yTrue = {
-    "0": [0, 0],
-    "1": [1, 0],
-    "2": [1, 2],
-  }
+  const yTrue = [
+    [0, 0],
+    [1, 0],
+    [1, 2],
+  ]
 
   const yPred = where(x, v => v % 2 === 0)
   expect(yPred).toStrictEqual(yTrue)
