@@ -50,6 +50,7 @@ let out = {
   median: require("./median.js"),
   min: require("./min.js"),
   mode: require("./mode.js"),
+  multiply: require("./multiply.js"),
   ndarray: require("./ndarray.js"),
   normal: require("./normal.js"),
   ones: require("./ones.js"),
