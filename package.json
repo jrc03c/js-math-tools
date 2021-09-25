@@ -21,5 +21,8 @@
     "js",
     "math"
   ],
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "uglifyify": "^5.0.2"
+  }
 }
