@@ -1,6 +1,6 @@
 const variance = require("./variance.js")
 const normal = require("./normal.js")
-const random = require("./random.js")
+const { random } = require("./random.js")
 const abs = require("./abs.js")
 
 test("gets the variance of arrays", () => {

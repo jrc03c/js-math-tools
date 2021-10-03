@@ -1,6 +1,6 @@
 const shuffle = require("./shuffle.js")
 const normal = require("./normal.js")
-const seed = require("./seed.js")
+const seed = require("./random.js").seed
 const distance = require("./distance.js")
 
 test("shuffles a vector", () => {

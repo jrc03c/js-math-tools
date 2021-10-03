@@ -1,5 +1,5 @@
 const round = require("./round.js")
-const random = require("./random.js")
+const { random } = require("./random.js")
 const zeros = require("./zeros.js")
 const sort = require("./sort.js")
 const set = require("./set.js")

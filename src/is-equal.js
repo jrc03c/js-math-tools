@@ -7,7 +7,7 @@ function isEqual(a, b) {
 
   if (aType === "undefined") return true
   if (aType === "boolean") return a === b
-  if (aType === "number") return a === b
+  if (aType === "number" || aType === "bigint") return a === b
   if (aType === "string") return a === b
   if (aType === "function") return a === b
 

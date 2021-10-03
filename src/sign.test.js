@@ -1,5 +1,5 @@
 const sign = require("./sign.js")
-const random = require("./random.js")
+const { random } = require("./random.js")
 const normal = require("./normal.js")
 const set = require("./set.js")
 const sort = require("./sort.js")

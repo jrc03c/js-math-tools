@@ -2,7 +2,7 @@ const normal = require("./normal.js")
 const std = require("./std.js")
 const mean = require("./mean.js")
 const abs = require("./abs.js")
-const seed = require("./seed.js")
+const seed = require("./random.js").seed
 
 test("generates a vector of normally-distributed random numbers", () => {
   const x = normal([10000])

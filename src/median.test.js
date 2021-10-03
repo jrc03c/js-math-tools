@@ -1,7 +1,7 @@
 const median = require("./median.js")
 const shuffle = require("./shuffle.js")
 const normal = require("./normal.js")
-const random = require("./random.js")
+const { random } = require("./random.js")
 const round = require("./round.js")
 const scale = require("./scale.js")
 const add = require("./add.js")

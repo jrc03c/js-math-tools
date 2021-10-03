@@ -1,8 +1,7 @@
-const random = require("./random.js")
+const { random, seed } = require("./random.js")
 const std = require("./std.js")
 const mean = require("./mean.js")
 const abs = require("./abs.js")
-const seed = require("./seed.js")
 
 test("generates a vector of random numbers", () => {
   const x = random([10000])

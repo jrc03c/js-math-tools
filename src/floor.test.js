@@ -1,5 +1,5 @@
 const floor = require("./floor.js")
-const random = require("./random.js")
+const { random } = require("./random.js")
 const zeros = require("./zeros.js")
 
 test("floors some values", () => {

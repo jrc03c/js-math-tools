@@ -1,5 +1,5 @@
 const mode = require("./mode.js")
-const random = require("./random.js")
+const { random } = require("./random.js")
 const round = require("./round.js")
 const shuffle = require("./shuffle.js")
 const scale = require("./scale.js")

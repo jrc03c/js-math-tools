@@ -1,5 +1,5 @@
 const ceil = require("./ceil.js")
-const random = require("./random.js")
+const { random } = require("./random.js")
 const ones = require("./ones.js")
 
 test("ceils some values", () => {

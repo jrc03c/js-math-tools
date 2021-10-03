@@ -1,6 +1,6 @@
 const indexOf = require("./index-of.js")
 const normal = require("./normal.js")
-const seed = require("./seed.js")
+const seed = require("./random.js").seed
 const isUndefined = require("./is-undefined.js")
 const reshape = require("./reshape.js")
 const range = require("./range.js")

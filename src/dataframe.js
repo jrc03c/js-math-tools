@@ -17,7 +17,7 @@ const max = require("./max.js")
 const min = require("./min.js")
 const set = require("./set.js")
 const isBoolean = require("./is-boolean.js")
-const random = require("./random.js")
+const { random } = require("./random.js")
 const sort = require("./sort.js")
 const dropNaN = require("./drop-nan.js")
 

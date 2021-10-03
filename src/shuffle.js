@@ -2,7 +2,7 @@ const assert = require("./assert.js")
 const isUndefined = require("./is-undefined.js")
 const isArray = require("./is-array.js")
 const floor = require("./floor.js")
-const random = require("./random.js")
+const { random } = require("./random.js")
 
 function shuffle(arr) {
   assert(

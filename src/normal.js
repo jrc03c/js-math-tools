@@ -1,7 +1,7 @@
 const isUndefined = require("./is-undefined.js")
 const ndarray = require("./ndarray.js")
 const apply = require("./apply.js")
-const random = require("./random.js")
+const { random } = require("./random.js")
 
 function normal(shape) {
   function n() {

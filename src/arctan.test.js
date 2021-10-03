@@ -1,5 +1,5 @@
 const arctan = require("./arctan.js")
-const random = require("./random.js")
+const { random } = require("./random.js")
 
 test("takes arctan of 0", () => {
   const x = 0
