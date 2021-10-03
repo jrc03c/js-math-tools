@@ -4,8 +4,7 @@
   "description": "some math tools for JS",
   "main": "src/index.js",
   "scripts": {
-    "watch": "watchify -e src/index.js -t uglifyify -o dist/js-math-tools.js",
-    "build": "browserify -e src/index.js -t uglifyify -o dist/js-math-tools.js",
+    "build": "browserify -e src/index.js | uglifyjs -cm > dist/js-math-tools.js",
     "test": "jest"
   },
   "repository": {
@@ -23,6 +22,7 @@
   ],
   "license": "ISC",
   "devDependencies": {
-    "uglifyify": "^5.0.2"
+    "browserify": "^17.0.0",
+    "uglifyjs": "^2.4.11"
   }
 }
