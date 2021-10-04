@@ -75,6 +75,7 @@ let out = {
   sort: require("./sort.js"),
   sqrt: require("./sqrt.js"),
   std: require("./std.js"),
+  stdev: require("./stdev.js"),
   subtract: require("./subtract.js"),
   sum: require("./sum.js"),
   tan: require("./tan.js"),
