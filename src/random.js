@@ -7,15 +7,28 @@ const copy = require("./copy.js")
 
 // This is an implementation of the xoroshiro256++ algorithm:
 // https://prng.di.unimi.it/xoshiro256plusplus.c
+// It also includes the splitmix64 function for seeding from:
+// https://rosettacode.org/wiki/Pseudo-random_numbers/Splitmix64
 
 const MAX = Math.pow(2, 64)
+const s = []
+seed(parseInt(Math.random() * MAX))
 
-const s = [
-  uint(parseInt(Math.random() * Number.MAX_SAFE_INTEGER)),
-  uint(parseInt(Math.random() * Number.MAX_SAFE_INTEGER)),
-  uint(parseInt(Math.random() * Number.MAX_SAFE_INTEGER)),
-  uint(parseInt(Math.random() * Number.MAX_SAFE_INTEGER)),
-]
+function splitmix64(state, n) {
+  state = uint(state)
+
+  function helper() {
+    state += uint("0x9e3779b97f4a7c15")
+    let z = copy(state)
+    z = (z ^ (z >> 30n)) * uint("0xbf58476d1ce4e5b9")
+    z = (z ^ (z >> 27n)) * uint("0x94d049bb133111eb")
+    return z ^ (z >> 31n)
+  }
+
+  const out = []
+  for (let i = 0; i < n; i++) out.push(helper())
+  return out
+}
 
 function uint(x) {
   return BigInt.asUintN(64, BigInt(x))
@@ -31,18 +44,14 @@ function seed(val) {
   if (!isUndefined(val)) {
     assert(
       isNumber(val),
-      "If passing a value into the `seed` function, then that value must be a positive integer!"
+      "If passing a value into the `seed` function, then that value must be an integer!"
     )
 
-    assert(
-      parseInt(val) === val,
-      "If passing a value into the `seed` function, then that value must be a positive integer!"
-    )
-
-    s[0] = rotl(val, 8)
-    s[1] = rotl(val, 24)
-    s[2] = rotl(val, 40)
-    s[3] = rotl(val, 56)
+    const temp = splitmix64(parseInt(val), 4)
+    s[0] = temp[0]
+    s[1] = temp[1]
+    s[2] = temp[2]
+    s[3] = temp[3]
   } else {
     return copy(s)
   }
