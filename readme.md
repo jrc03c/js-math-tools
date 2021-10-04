@@ -50,7 +50,7 @@ There's a handy helper function called `vectorize` that can turn any arbitrary f
 ```js
 require("js-math-tools").dump()
 
-function divide(a, b){
+function divide(a, b) {
   return a / b
 }
 
@@ -103,7 +103,7 @@ let x = normal(10000)
 mean(x)
 median(x)
 mode(x)
-std(x)
+stdev(x)
 variance(x)
 min(x)
 max(x)
@@ -144,7 +144,7 @@ shuffle(range(0, 10))
 // [3, 2, 6, 5, 4, 9, 8, 1, 0, 7]
 
 // sort an array by a function
-sort(["b", "c", "a"], function(a, b){
+sort(["b", "c", "a"], function (a, b) {
   if (a < b) return -1
   if (a > b) return 1
   return 0
@@ -154,7 +154,7 @@ sort(["b", "c", "a"], function(a, b){
 // get a slice of an array
 let arr7 = [
   [2, 3, 4],
-  [5, 6, 7]
+  [5, 6, 7],
 ]
 
 let which = [null, 1]
@@ -170,31 +170,34 @@ slice(arr7, which)
 // [7]
 
 // flatten an array
-flatten([[2, 3, 4], [5, 6, 7]])
+flatten([
+  [2, 3, 4],
+  [5, 6, 7],
+])
 // [2, 3, 4, 5, 6, 7]
 ```
 
 # Working with Random Numbers
 
-The PRNG (pseudo-random number generator) implemented in this library is technically a [linear congruential generator](https://en.wikipedia.org/wiki/Linear_congruential_generator), in case that matters to you. To seed the PRNG, pass a positive integer into the `seed` function. The `random`, `normal`, and `shuffle` functions can all be seeded. For example:
+The PRNG (pseudo-random number generator) implemented in this library uses the [xoroshiro256++](https://prng.di.unimi.it/) algorithm, in case that matters to you. To seed the PRNG, pass a number into the `seed` function. The `random`, `normal`, and `shuffle` functions can all be seeded. For example:
 
 ```js
 require("js-math-tools").dump()
 
 seed(230498349)
 random(5)
-// [0.5713683813810349, 0.36495184898376465, 0.04452776908874512, 0.015275746583938599, 0.23413866385817528]
+// [0.018838884276985594, 0.5304929121766935, 0.7364885210604148, 0.005920131518888056, 0.8434281063536071]
 
 seed(230498349)
 random(5)
-// [0.5713683813810349, 0.36495184898376465, 0.04452776908874512, 0.015275746583938599, 0.23413866385817528]
+// [0.018838884276985594, 0.5304929121766935, 0.7364885210604148, 0.005920131518888056, 0.8434281063536071]
 ```
 
 # Series & DataFrames
 
 I recently added some helper classes to mimic the behavior of Python's [pandas](https://pandas.pydata.org/) library. Note that these classes do not fully implement the functionality of the pandas `DataFrames` and `Series`!
 
-Here are some of the things that you can do with Series:
+Here are some of the things that you can do with `Series`:
 
 ```js
 require("js-math-tools").dump()
@@ -230,7 +233,11 @@ And here are some of the things you can do with `DataFrame`:
 ```js
 require("js-math-tools").dump()
 
-let x = new DataFrame([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+let x = new DataFrame([
+  [1, 2, 3],
+  [4, 5, 6],
+  [7, 8, 9],
+])
 x.print()
 /*
      | col0 | col1 | col2
@@ -240,7 +247,7 @@ row1 |    4 |    5 |    6
 row2 |    7 |    8 |    9
 */
 
-x = new DataFrame({a: range(0, 5), b: range(5, 10), c: range(10, 15)})
+x = new DataFrame({ a: range(0, 5), b: range(5, 10), c: range(10, 15) })
 x.print()
 /*
      | a | b |  c
@@ -289,7 +296,7 @@ let xCopy = x.copy()
 console.log(isEqual(x, xCopy)) // true
 console.log(x === xCopy) // false
 
-x = x.assign({d: range(15, 20)})
+x = x.assign({ d: range(15, 20) })
 x.print()
 /*
      | a | b |  c |  d
