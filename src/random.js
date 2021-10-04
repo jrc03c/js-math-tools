@@ -4,6 +4,7 @@ const isUndefined = require("./is-undefined.js")
 const assert = require("./assert.js")
 const isNumber = require("./is-number.js")
 const copy = require("./copy.js")
+const reshape = require("./reshape.js")
 
 // This is an implementation of the xoroshiro256++ algorithm:
 // https://prng.di.unimi.it/xoshiro256plusplus.c
@@ -71,7 +72,13 @@ function next() {
 
 function random(shape) {
   if (isUndefined(shape)) return next()
-  return apply(ndarray(shape), next)
+
+  if (isNumber(shape)) shape = [shape]
+  const out = []
+  let n = 1
+  shape.forEach(v => (n *= v))
+  for (let i = 0; i < n; i++) out.push(next())
+  return reshape(out, shape)
 }
 
 module.exports = { random, seed }

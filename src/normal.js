@@ -11,18 +11,13 @@ function helper() {
   return Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2)
 }
 
-function product(vals) {
-  let out = 1
-  vals.forEach(v => (out *= v))
-  return out
-}
-
 function normal(shape) {
   if (isUndefined(shape)) return helper()
 
   if (isNumber(shape)) shape = [shape]
   const out = []
-  const n = product(shape)
+  let n = 1
+  shape.forEach(v => (n *= v))
   for (let i = 0; i < n; i++) out.push(helper())
   return reshape(out, shape)
 }
