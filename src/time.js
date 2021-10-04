@@ -1,4 +1,8 @@
+const isFunction = require("./is-function.js")
+
 function timeSync(fn, args) {
+  assert(isFunction(fn), "`fn` must be a function!")
+
   const start = new Date()
 
   if (args) {
@@ -11,6 +15,8 @@ function timeSync(fn, args) {
 }
 
 async function timeAsync(fn, args) {
+  assert(isFunction(fn), "`fn` must be a function!")
+
   const start = new Date()
 
   if (args) {
