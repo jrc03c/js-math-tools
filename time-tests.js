@@ -91,7 +91,7 @@ const pairs = [
   // ["union", [2, 3, 4], [3, 4, 5]],
   // ["variance", [2, 3, 4]],
   // ["where", [2, 3, 4], () => {}],
-  // ["zeros", [2, 3, 4]],
+  ["zeros", [2, 3, 4]],
 ]
 
 const results = { function: [], time: [] }
