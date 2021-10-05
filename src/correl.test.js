@@ -46,6 +46,5 @@ test("gets the correlation of vectors that have missing values", () => {
     y[parseInt(Math.random() * y.length)] = null
   }
 
-  const r = correl(x, y)
-  expect(abs(r)).toBeLessThan(0.05)
+  expect(correl(x, y)).toBeNaN()
 })
