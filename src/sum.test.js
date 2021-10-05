@@ -21,8 +21,8 @@ test("returns NaN when `sum` is called with no arguments", () => {
   expect(sum()).toBeNaN()
 })
 
-test("returns NaN when `sum` is called on an empty array", () => {
-  expect(sum([])).toBeNaN()
+test("returns 0 when `sum` is called on an empty array", () => {
+  expect(sum([])).toBe(0)
 })
 
 test("returns NaN when `sum` is called on non-numerical values", () => {

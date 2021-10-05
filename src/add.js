@@ -1,17 +1,13 @@
-const isNumber = require("./is-number.js")
 const vectorize = require("./vectorize.js")
 
 const add = vectorize(function () {
   try {
-    let out
-    const keys = Object.keys(arguments)
+    let out = 0
+    const x = Object.values(arguments)
 
-    for (let i = 0; i < keys.length; i++) {
-      const key = keys[i]
-      const value = arguments[key]
-      if (!isNumber(value)) return NaN
-      if (!out) out = value
-      else out += arguments[key]
+    for (let i = 0; i < x.length; i++) {
+      if (isNaN(x[i])) return NaN
+      out += x[i]
     }
 
     return out
