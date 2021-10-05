@@ -12,14 +12,12 @@ function shuffle(arr) {
 
   assert(isArray(arr), "You must pass an array into the `shuffle` function!")
 
-  const out = arr.slice()
+  const out = []
+  let temp = arr.slice()
 
   for (let i = 0; i < arr.length; i++) {
-    const index1 = floor(random() * arr.length)
-    const index2 = floor(random() * arr.length)
-    const buffer = out[index1]
-    out[index1] = out[index2]
-    out[index2] = buffer
+    const index = parseInt(random() * temp.length)
+    out.push(temp.splice(index, 1)[0])
   }
 
   return out
