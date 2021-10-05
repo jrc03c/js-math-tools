@@ -8,9 +8,16 @@ const flatten = require("./flatten.js")
 
 function distance(a, b) {
   try {
-    const types = set(flatten(a.concat(b)).map(v => typeof v))
-    if (types.length > 1 || types[0] !== "number") return NaN
-    return sqrt(sum(pow(add(a, scale(b, -1)), 2)))
+    const atemp = flatten(a)
+    const btemp = flatten(b)
+
+    let s = 0
+
+    for (let i = 0; i < atemp.length; i++) {
+      s += (atemp[i] - btemp[i]) * (atemp[i] - btemp[i])
+    }
+
+    return Math.sqrt(s)
   } catch (e) {
     return NaN
   }
