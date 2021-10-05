@@ -2,32 +2,35 @@ const assert = require("./assert.js")
 const isUndefined = require("./is-undefined.js")
 const isArray = require("./is-array.js")
 const isNumber = require("./is-number.js")
-const floor = require("./floor.js")
-const range = require("./range.js")
+const flatten = require("./flatten.js")
 
 const error =
-  "You must pass an integer or a one-dimensional array of natural numbers into the `ndarray` function!"
+  "You must pass a natural number or a one-dimensional array of natural numbers into the `ndarray` function!"
 
-function ndarray(shape) {
-  assert(!isUndefined(shape), error)
+function ndarray(shape, shouldSkipChecks) {
+  if (!shouldSkipChecks) {
+    assert(!isUndefined(shape), error)
+    if (!isArray(shape)) shape = [shape]
+    shape = flatten(shape)
 
-  if (!isArray(shape)) shape = [shape]
+    assert(shape.length > 0, error)
 
-  assert(shape.length > 0, error)
-
-  shape.forEach(function (x) {
-    assert(isNumber(x), error)
-    assert(floor(x) === x, error)
-    assert(x >= 0, error)
-  })
+    shape.forEach(x => {
+      assert(isNumber(x), error)
+      assert(parseInt(x) === x, error)
+      assert(x >= 0, error)
+    })
+  }
 
   if (shape.length === 1) {
-    return range(0, shape[0]).map(v => undefined)
+    const out = []
+    for (let i = 0; i < shape[0]; i++) out.push(undefined)
+    return out
   } else {
     const out = []
 
     for (let i = 0; i < shape[0]; i++) {
-      out.push(ndarray(shape.slice(1, shape.length)))
+      out.push(ndarray(shape.slice(1), true))
     }
 
     return out
