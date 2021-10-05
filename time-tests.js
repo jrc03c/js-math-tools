@@ -43,7 +43,7 @@ const pairs = [
   // ["float", "234.567"],
   // ["floor", 234.567],
   // ["getValueAt", [2, 3, 4], 0],
-  // ["identity", 5],
+  ["identity", 5],
   // ["indexOf", [2, 3, 4], 2],
   // ["int", "234.567"],
   // ["intersect", [2, 3, 4], [3, 4, 5]],
