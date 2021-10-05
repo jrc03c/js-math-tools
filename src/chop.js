@@ -1,16 +1,22 @@
-let isUndefined = require("./is-undefined.js")
-let abs = require("./abs.js")
-let vectorize = require("./vectorize.js")
+const isUndefined = require("./is-undefined.js")
+const abs = require("./abs.js")
+const vectorize = require("./vectorize.js")
+const isNumber = require("./is-number.js")
 
-let chop = vectorize(function (x, threshold) {
+function chop(x, threshold) {
   try {
-    if (isNaN(x)) return NaN
-    if (!!threshold && isNaN(threshold)) return NaN
-    threshold = isUndefined(threshold) || isNaN(threshold) ? 1e-10 : threshold
+    if (!isNumber(x)) return NaN
+
+    if (isUndefined(threshold)) {
+      threshold = 1e-10
+    } else if (!isNumber(threshold)) {
+      return NaN
+    }
+
     return abs(x) < threshold ? 0 : x
   } catch (e) {
     return NaN
   }
-})
+}
 
-module.exports = chop
+module.exports = vectorize(chop)

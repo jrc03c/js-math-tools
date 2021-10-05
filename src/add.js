@@ -1,12 +1,13 @@
+const isNumber = require("./is-number.js")
 const vectorize = require("./vectorize.js")
 
-const add = vectorize(function () {
+function add() {
   try {
     let out = 0
     const x = Object.values(arguments)
 
     for (let i = 0; i < x.length; i++) {
-      if (isNaN(x[i])) return NaN
+      if (!isNumber(x[i])) return NaN
       out += x[i]
     }
 
@@ -14,6 +15,6 @@ const add = vectorize(function () {
   } catch (e) {
     return NaN
   }
-})
+}
 
-module.exports = add
+module.exports = vectorize(add)

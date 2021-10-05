@@ -1,11 +1,13 @@
+const isNumber = require("./is-number.js")
 const vectorize = require("./vectorize.js")
 
-const arctan = vectorize(function (x) {
+function arctan(x) {
   try {
+    if (!isNumber(x)) return NaN
     return Math.atan(x)
   } catch (e) {
     return NaN
   }
-})
+}
 
-module.exports = arctan
+module.exports = vectorize(arctan)

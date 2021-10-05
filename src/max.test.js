@@ -7,9 +7,9 @@ test("gets the max of arrays of values of mixed types", () => {
   expect(max([-10, -5, -20])).toBe(-5)
   expect(max(random([10, 10, 10, 10]))).toBeLessThanOrEqual(1)
   expect(max(random([10, 10, 10, 10]))).toBeGreaterThanOrEqual(0)
-  expect(max([2, 3, "four"])).toBe(3)
-  expect(max([null, undefined, 3])).toBe(3)
-  expect(max([true, false])).toBe(true)
+  expect(max([2, 3, "four"])).toBeNaN()
+  expect(max([null, undefined, 3])).toBeNaN()
+  expect(max([true, false])).toBeNaN()
   expect(max([-Infinity, Infinity, 0])).toBe(Infinity)
 })
 

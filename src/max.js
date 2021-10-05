@@ -1,16 +1,15 @@
 const flatten = require("./flatten.js")
-const isUndefined = require("./is-undefined.js")
+const isNumber = require("./is-number.js")
 
 function max(arr) {
   try {
     const temp = flatten(arr)
     let out = -Infinity
 
-    temp.forEach(x => {
-      if (!isUndefined(x) && x > out) {
-        out = x
-      }
-    })
+    for (let i = 0; i < temp.length; i++) {
+      if (!isNumber(temp[i])) return NaN
+      if (temp[i] > out) out = temp[i]
+    }
 
     return out === -Infinity ? NaN : out
   } catch (e) {

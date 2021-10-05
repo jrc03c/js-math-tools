@@ -7,9 +7,9 @@ test("gets the min of arrays of values of mixed types", () => {
   expect(min([-10, -5, -20])).toBe(-20)
   expect(min(random([10, 10, 10, 10]))).toBeLessThanOrEqual(1)
   expect(min(random([10, 10, 10, 10]))).toBeGreaterThanOrEqual(0)
-  expect(min([2, 3, "four"])).toBe(2)
-  expect(min([null, undefined, 3])).toBe(3)
-  expect(min([true, false])).toBe(false)
+  expect(min([2, 3, "four"])).toBeNaN()
+  expect(min([null, undefined, 3])).toBeNaN()
+  expect(min([true, false])).toBeNaN()
   expect(min([-Infinity, Infinity, 0])).toBe(-Infinity)
 })
 

@@ -1,12 +1,13 @@
-let vectorize = require("./vectorize.js")
+const isNumber = require("./is-number.js")
+const vectorize = require("./vectorize.js")
 
-let ceil = vectorize(function (x) {
+function ceil(x) {
   try {
-    if (typeof x !== "number") return NaN
+    if (!isNumber(x)) return NaN
     return Math.ceil(x)
   } catch (e) {
     return NaN
   }
-})
+}
 
-module.exports = ceil
+module.exports = vectorize(ceil)

@@ -1,7 +1,7 @@
 const vectorize = require("./vectorize.js")
 const isNumber = require("./is-number.js")
 
-const lerp = vectorize(function (a, b, f) {
+function lerp(a, b, f) {
   try {
     if (!isNumber(a)) return NaN
     if (!isNumber(b)) return NaN
@@ -11,6 +11,6 @@ const lerp = vectorize(function (a, b, f) {
   } catch (e) {
     return NaN
   }
-})
+}
 
-module.exports = lerp
+module.exports = vectorize(lerp)

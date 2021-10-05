@@ -1,7 +1,7 @@
-const vectorize = require("./vectorize.js")
 const isNumber = require("./is-number.js")
+const vectorize = require("./vectorize.js")
 
-const map = vectorize(function (x, a, b, c, d) {
+function map(x, a, b, c, d) {
   try {
     if (!isNumber(x)) return NaN
     if (!isNumber(a)) return NaN
@@ -13,6 +13,6 @@ const map = vectorize(function (x, a, b, c, d) {
   } catch (e) {
     return NaN
   }
-})
+}
 
-module.exports = map
+module.exports = vectorize(map)

@@ -1,9 +1,10 @@
+const isNumber = require("./is-number.js")
 const vectorize = require("./vectorize.js")
 
 function float(x) {
   try {
-    const temp = JSON.parse(x)
-    if (typeof temp === "number") return temp
+    const out = JSON.parse(x)
+    if (isNumber(out)) return out
     return NaN
   } catch (e) {
     return NaN

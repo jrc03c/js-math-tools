@@ -1,4 +1,4 @@
-const isUndefined = require("./is-undefined.js")
+const isNumber = require("./is-number.js")
 const flatten = require("./flatten.js")
 
 function mean(arr) {
@@ -7,7 +7,7 @@ function mean(arr) {
     let out = 0
 
     for (let i = 0; i < temp.length; i++) {
-      if (isUndefined(temp[i])) return NaN
+      if (!isNumber(temp[i])) return NaN
       out += temp[i]
     }
 

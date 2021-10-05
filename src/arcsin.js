@@ -1,11 +1,13 @@
+const isNumber = require("./is-number.js")
 const vectorize = require("./vectorize.js")
 
-const arcsin = vectorize(function (x) {
+function arcsin(x) {
   try {
+    if (!isNumber(x)) return NaN
     return Math.asin(x)
   } catch (e) {
     return NaN
   }
-})
+}
 
-module.exports = arcsin
+module.exports = vectorize(arcsin)

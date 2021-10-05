@@ -4,7 +4,6 @@ const vectorize = require("./vectorize.js")
 function sqrt(x) {
   try {
     if (!isNumber(x)) return NaN
-    if (x < 0) return NaN
     return Math.sqrt(x)
   } catch (e) {
     return NaN

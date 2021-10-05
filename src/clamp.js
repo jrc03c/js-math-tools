@@ -1,10 +1,11 @@
+const isNumber = require("./is-number.js")
 const vectorize = require("./vectorize.js")
 
-const clamp = vectorize(function (x, a, b) {
+function clamp(x, a, b) {
   try {
-    if (isNaN(x)) return NaN
-    if (isNaN(a)) return NaN
-    if (isNaN(b)) return NaN
+    if (!isNumber(x)) return NaN
+    if (!isNumber(a)) return NaN
+    if (!isNumber(b)) return NaN
 
     if (x < a) return a
     if (x > b) return b
@@ -12,6 +13,6 @@ const clamp = vectorize(function (x, a, b) {
   } catch (e) {
     return NaN
   }
-})
+}
 
-module.exports = clamp
+module.exports = vectorize(clamp)

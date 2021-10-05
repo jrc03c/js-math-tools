@@ -1,14 +1,7 @@
-const vectorize = require("./vectorize.js")
-const isNumber = require("./is-number.js")
+const multiply = require("./multiply.js")
 
 function scale(a, b) {
-  try {
-    if (!isNumber(a)) return NaN
-    if (!isNumber(b)) return NaN
-    return a * b
-  } catch (e) {
-    return NaN
-  }
+  return multiply(a, b)
 }
 
-module.exports = vectorize(scale)
+module.exports = scale

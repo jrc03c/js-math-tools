@@ -1,11 +1,13 @@
+const isNumber = require("./is-number.js")
 const vectorize = require("./vectorize.js")
 
-const arccos = vectorize(function (x) {
+function arccos(x) {
   try {
+    if (!isNumber(x)) return NaN
     return Math.acos(x)
   } catch (e) {
     return NaN
   }
-})
+}
 
-module.exports = arccos
+module.exports = vectorize(arccos)

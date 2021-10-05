@@ -1,13 +1,13 @@
 const isNumber = require("./is-number.js")
 const vectorize = require("./vectorize.js")
 
-const round = vectorize(function (x) {
+function round(x) {
   try {
     if (!isNumber(x)) return NaN
     return Math.round(x)
   } catch (e) {
     return NaN
   }
-})
+}
 
-module.exports = round
+module.exports = vectorize(round)
