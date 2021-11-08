@@ -13,6 +13,7 @@ let out = {
   chop: require("./chop.js"),
   clamp: require("./clamp.js"),
   cohensd: require("./cohens-d.js"),
+  combine: require("./combine.js"),
   copy: require("./copy.js"),
   correl: require("./correl.js"),
   cos: require("./cos.js"),
