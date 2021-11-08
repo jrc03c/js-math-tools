@@ -9,7 +9,7 @@ function permute(arr, r) {
   assert(isNumber(r), "`r` must be a whole number!")
 
   if (r > arr.length) {
-    return [arr]
+    return permute(arr)
   }
 
   if (r <= 0) {
