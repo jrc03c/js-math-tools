@@ -25,11 +25,13 @@ function combine(arr, r) {
       "It is not recommended to get combinations of arrays of arrays. Weird things happen, and I haven't figured out how to account for such a scenario yet. A possible workaround is: convert each sub-array to a string (using `JSON.stringify`), get the combinations using the array of strings, and then convert each string in each combination back to a sub-array (using `JSON.parse`)."
     )
 
-    const children = combine(arr.slice(i + 1), r - 1)
+    const after = arr.slice(i + 1)
+    if (after.length < r - 1) return
+    const children = combine(after, r - 1)
 
     children.forEach(child => {
       const temp = [item].concat(child)
-      if (temp.length === r) out.push(temp)
+      out.push(temp)
     })
   })
 
