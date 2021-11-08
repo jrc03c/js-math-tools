@@ -56,6 +56,7 @@ let out = {
   ndarray: require("./ndarray.js"),
   normal: require("./normal.js"),
   ones: require("./ones.js"),
+  permute: require("./permute.js"),
   pow: require("./pow.js"),
   print: require("./print.js"),
   random: require("./random.js").random,

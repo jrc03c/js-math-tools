@@ -1,6 +1,6 @@
 const factorial = require("./factorial.js")
 
-test("", () => {
+test("tests that the `factorial` function works as expected", () => {
   const pairs = [
     [-2, 1],
     [0, 1],
