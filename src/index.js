@@ -27,6 +27,7 @@ let out = {
   dropMissingPairwise: require("./drop-missing-pairwise.js"),
   dropNaN: require("./drop-nan.js"),
   dropNaNPairwise: require("./drop-nan-pairwise.js"),
+  factorial: require("./factorial.js"),
   flatten: require("./flatten.js"),
   float: require("./float.js"),
   floor: require("./floor.js"),
