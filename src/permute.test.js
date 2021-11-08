@@ -2,11 +2,15 @@ const permute = require("./permute.js")
 const sort = require("./sort.js")
 const set = require("./set.js")
 const range = require("./range.js")
-const int = require("./int.js")
 const factorial = require("./factorial.js")
 
 function turnIntoStrings(arr) {
   return arr.map(item => JSON.stringify(item))
+}
+
+function getNumberOfPermutations(arr, r) {
+  const n = arr.length
+  return factorial(n) / factorial(n - r)
 }
 
 test("", () => {
@@ -67,6 +71,11 @@ test("", () => {
   for (let i = 2; i < 10; i++) {
     const e = range(0, i)
     expect(permute(e).length).toBe(factorial(i))
+  }
+
+  for (let i = 1; i < 8; i++) {
+    const e = range(0, 8)
+    expect(permute(e, i).length).toBe(getNumberOfPermutations(e, i))
   }
 })
 

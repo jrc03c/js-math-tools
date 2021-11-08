@@ -30,8 +30,7 @@ function combine(arr, r) {
     const children = combine(after, r - 1)
 
     children.forEach(child => {
-      const temp = [item].concat(child)
-      out.push(temp)
+      out.push([item].concat(child))
     })
   })
 
