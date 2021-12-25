@@ -4,7 +4,8 @@
   "description": "some math tools for JS",
   "main": "src/index.js",
   "scripts": {
-    "build": "browserify -e src/index.js | uglifyjs -cm > dist/js-math-tools.js",
+    "build": "esbuild src/index.js --bundle --outfile=dist/js-math-tools.js --minify",
+    "watch": "esbuild src/index.js --bundle --outfile=dist/js-math-tools.js --minify --watch",
     "test": "jest --testTimeout 60000"
   },
   "repository": {
@@ -24,5 +25,8 @@
   "devDependencies": {
     "browserify": "^17.0.0",
     "uglifyjs": "^2.4.11"
+  },
+  "dependencies": {
+    "esbuild": "^0.14.8"
   }
 }
