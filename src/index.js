@@ -95,7 +95,13 @@ let out = {
 
   dump: function () {
     Object.keys(out).forEach(key => {
-      global[key] = out[key]
+      if (typeof global !== "undefined") {
+        global[key] = out[key]
+      }
+
+      if (typeof window !== "undefined") {
+        window[key] = out[key]
+      }
     })
   },
 }
