@@ -1,6 +1,9 @@
 const exp = require("./exp.js")
 const normal = require("./normal.js")
 const apply = require("./apply.js")
+const distance = require("./distance.js")
+const product = require("./product.js")
+const shape = require("./shape.js")
 
 test("", () => {
   const x = normal([2, 3, 4, 5])
@@ -18,7 +21,9 @@ test("", () => {
   ]
 
   rights.forEach(pair => {
-    expect(exp(pair[0])).toStrictEqual(pair[1])
+    expect(
+      distance(exp([pair[0]]), [pair[1]]) / product(shape([pair[0]]))
+    ).toBeLessThan(1e-5)
   })
 
   const wrongs = ["foo", true, false, null, undefined, {}, () => {}]
