@@ -10,6 +10,9 @@ const print = require("./print.js")
 const range = require("./range.js")
 const set = require("./set.js")
 const isUndefined = require("./is-undefined.js")
+const sort = require("./sort.js")
+const shape = require("./shape.js")
+const sum = require("./sum.js")
 const filename = "delete-me.csv"
 
 test("tests DataFrame emptiness", () => {
@@ -262,6 +265,52 @@ test("tests DataFrame sorting", () => {
     "col8",
     "col9",
   ])
+})
+
+test("tests DataFrame filtering", () => {
+  const x = new DataFrame({
+    foo: [2, 3, 4],
+    bar: [10, 100, 1000],
+    baz: [0, 0, 0],
+  })
+
+  // test row filtering (that returns a dataframe)
+  const f1 = x.filter(row => {
+    return row.every(v => v % 2 === 0)
+  })
+
+  expect(f1.shape).toStrictEqual([2, 3])
+  expect(sort(f1.columns)).toStrictEqual(["bar", "baz", "foo"])
+  expect(sort(f1.index)).toStrictEqual(["row0", "row2"])
+  expect(sort(flatten(f1.values))).toStrictEqual([0, 0, 2, 4, 10, 1000])
+
+  // test row filtering (that returns a series)
+  const f2 = x.filter((row, i, df) => {
+    return x.index[i].includes("row1")
+  })
+
+  expect(f2 instanceof Series).toBe(true)
+  expect(f2.name).toBe("row1")
+  expect(sort(f2.index)).toStrictEqual(["bar", "baz", "foo"])
+  expect(sort(f2.values)).toStrictEqual([0, 3, 100])
+
+  // test column filtering (that returns a dataframe)
+  const f3 = x.filter(col => sum(col) < 1000, 1)
+
+  expect(f3.shape).toStrictEqual([3, 2])
+  expect(sort(f3.columns)).toStrictEqual(["baz", "foo"])
+  expect(sort(f3.index)).toStrictEqual(["row0", "row1", "row2"])
+  expect(sort(flatten(f3.values))).toStrictEqual([0, 0, 0, 2, 3, 4])
+
+  // test column filtering (that returns a series)
+  const f4 = x.filter((col, i, df) => {
+    return x.columns[i].includes("baz")
+  }, 1)
+
+  expect(f4 instanceof Series).toBe(true)
+  expect(f4.name).toBe("baz")
+  expect(sort(f4.index)).toStrictEqual(["row0", "row1", "row2"])
+  expect(sort(f4.values)).toStrictEqual([0, 0, 0])
 })
 
 test("tests DataFrame reading & writing to and from disk", async () => {

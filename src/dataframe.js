@@ -79,6 +79,20 @@ function leftPad(x, maxLength) {
   return out
 }
 
+function arrayToObject(x) {
+  const out = {}
+
+  flatten(x).forEach((value, i) => {
+    out[value] = i
+  })
+
+  return out
+}
+
+function undoArrayToObject(obj) {
+  return Object.keys(obj).sort((a, b) => obj[a] - obj[b])
+}
+
 class DataFrame {
   constructor(data) {
     const self = this
@@ -1255,43 +1269,56 @@ class DataFrame {
     let out = self.copy()
     if (out.isEmpty()) return out
 
-    const index = copy(out.index)
-    const columns = copy(out.columns)
+    const index = arrayToObject(out.index)
+    const columns = arrayToObject(out.columns)
 
+    // filter rows
     if (axis === 0) {
-      const indexID = Math.random().toString()
-      out = out.assign(indexID, out.index)
-
       let newValues = out.values.filter((row, i) => {
-        const shouldKeep = fn(row, i, out)
-        if (!shouldKeep) index.splice(i, 1)
+        const shouldKeep = fn(row, i, self)
+        if (!shouldKeep) delete index[out.index[i]]
         return shouldKeep
       })
 
-      if (flatten(newValues).length === 0) return new DataFrame()
-      if (shape(newValues).length === 1) newValues = [newValues]
+      if (flatten(newValues).length === 0) {
+        return new DataFrame()
+      }
+
+      if (newValues.length === 1) {
+        const temp = new Series(flatten(newValues))
+        temp.name = undoArrayToObject(index)[0]
+        temp.index = undoArrayToObject(columns)
+        return temp
+      }
 
       out.values = newValues
-      out.index = out.get(null, indexID).values
-      out = out.drop(null, indexID)
-    } else if (axis === 1) {
+      out.index = undoArrayToObject(index)
+    }
+
+    // filter columns
+    else if (axis === 1) {
       out = out.transpose()
 
-      const columnsID = Math.random().toString()
-      out = out.assign(columnsID, out.index)
-
       let newValues = out.values.filter((row, i) => {
-        const shouldKeep = fn(row, i, out)
-        if (!shouldKeep) columns.splice(i, 1)
+        const shouldKeep = fn(row, i, self)
+        if (!shouldKeep) delete columns[out.index[i]]
         return shouldKeep
       })
 
-      if (flatten(newValues).length === 0) return new DataFrame()
-      if (shape(newValues).length === 1) newValues = [newValues]
+      if (flatten(newValues).length === 0) {
+        return new DataFrame()
+      }
+
+      if (newValues.length === 1) {
+        const temp = new Series(flatten(newValues))
+        temp.name = undoArrayToObject(columns)[0]
+        temp.index = undoArrayToObject(index)
+        return temp
+      }
 
       out.values = newValues
-      out.index = out.get(null, columnsID).values
-      out = out.drop(null, columnsID)
+      out.index = undoArrayToObject(columns)
+
       out = out.transpose()
     }
 
