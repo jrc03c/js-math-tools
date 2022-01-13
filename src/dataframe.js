@@ -1,25 +1,26 @@
+const { random } = require("./random.js")
+const apply = require("./apply.js")
 const assert = require("./assert.js")
+const copy = require("./copy.js")
+const count = require("./count.js")
+const dropNaN = require("./drop-nan.js")
+const flatten = require("./flatten.js")
 const isArray = require("./is-array.js")
-const isUndefined = require("./is-undefined.js")
-const shape = require("./shape.js")
-const transpose = require("./transpose.js")
-const range = require("./range.js")
+const isBoolean = require("./is-boolean.js")
+const isEqual = require("./is-equal.js")
+const isFunction = require("./is-function.js")
 const isNumber = require("./is-number.js")
 const isString = require("./is-string.js")
-const apply = require("./apply.js")
-const isFunction = require("./is-function.js")
-const ndarray = require("./ndarray.js")
-const copy = require("./copy.js")
-const Series = require("./series.js")
-const flatten = require("./flatten.js")
-const isEqual = require("./is-equal.js")
+const isUndefined = require("./is-undefined.js")
 const max = require("./max.js")
 const min = require("./min.js")
+const ndarray = require("./ndarray.js")
+const range = require("./range.js")
+const Series = require("./series.js")
 const set = require("./set.js")
-const isBoolean = require("./is-boolean.js")
-const { random } = require("./random.js")
+const shape = require("./shape.js")
 const sort = require("./sort.js")
-const dropNaN = require("./drop-nan.js")
+const transpose = require("./transpose.js")
 
 function makeKey(n) {
   const alpha = "abcdefghijklmnopqrstuvwxyz1234567890"
@@ -178,8 +179,34 @@ class DataFrame {
         )
 
         x = x.map(v => {
-          if (typeof v === "string") return v
-          return JSON.stringify(v) || v.toString()
+          if (typeof v !== "string") {
+            v = JSON.stringify(v) || v.toString()
+          }
+
+          if (v.trim().length === 0) {
+            return "untitled_" + makeKey(8)
+          }
+
+          return v.trim()
+        })
+
+        const counts = (() => {
+          const temp = count(x)
+          const out = {}
+
+          temp.forEach(obj => {
+            out[obj.item] = obj.count
+          })
+
+          return out
+        })()
+
+        x = x.map(v => {
+          if (counts[v] > 1) {
+            return v + "_" + makeKey(8)
+          }
+
+          return v
         })
 
         self._columns = x
@@ -218,8 +245,34 @@ class DataFrame {
         )
 
         x = x.map(v => {
-          if (typeof v === "string") return v
-          return JSON.stringify(v) || v.toString()
+          if (typeof v !== "string") {
+            v = JSON.stringify(v) || v.toString()
+          }
+
+          if (v.trim().length === 0) {
+            return "untitled_" + makeKey(8)
+          }
+
+          return v.trim()
+        })
+
+        const counts = (() => {
+          const temp = count(x)
+          const out = {}
+
+          temp.forEach(obj => {
+            out[obj.item] = obj.count
+          })
+
+          return out
+        })()
+
+        x = x.map(v => {
+          if (counts[v] > 1) {
+            return v + "_" + makeKey(8)
+          }
+
+          return v
         })
 
         self._index = x
