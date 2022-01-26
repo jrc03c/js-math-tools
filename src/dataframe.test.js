@@ -96,9 +96,9 @@ test("tests DataFrame copying and index resetting", () => {
 test("tests DataFrame mapping", () => {
   let df = new DataFrame(zeros([3, 3]))
 
-  df = df.apply((colVals, colName) => {
-    return colVals.map((v, j) => {
-      return colName + "/" + j
+  df = df.apply((col, i, df) => {
+    return col.values.map((v, j) => {
+      return col.name + "/" + j
     })
   })
 
@@ -114,9 +114,9 @@ test("tests DataFrame mapping", () => {
 test("tests DataFrame mapping", () => {
   let df = new DataFrame(zeros([3, 3]))
 
-  df = df.apply((rowVals, rowName) => {
-    return rowVals.map((v, i) => {
-      return rowName + "/" + i
+  df = df.apply((row, i, df) => {
+    return row.values.map((v, i) => {
+      return row.name + "/" + i
     })
   }, 1)
 

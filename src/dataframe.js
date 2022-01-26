@@ -778,7 +778,10 @@ class DataFrame {
       const temp = transpose(self.values)
 
       const newValues = temp.map((col, i) => {
-        return fn(col, self.columns[i])
+        const series = new Series(col)
+        series.name = self.columns[i]
+        series.index = self.index
+        return fn(series, i, self)
       })
 
       if (shape(newValues).length === 1) {
@@ -793,7 +796,10 @@ class DataFrame {
       }
     } else if (axis === 1) {
       const newValues = self.values.map((row, i) => {
-        return fn(row, self.index[i])
+        const series = new Series(row)
+        series.name = self.index[i]
+        series.index = self.columns
+        return fn(series, i, self)
       })
 
       if (shape(newValues).length === 1) {
