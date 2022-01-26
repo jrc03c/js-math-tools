@@ -276,7 +276,7 @@ test("tests DataFrame filtering", () => {
 
   // test row filtering (that returns a dataframe)
   const f1 = x.filter(row => {
-    return row.every(v => v % 2 === 0)
+    return row.values.every(v => v % 2 === 0)
   })
 
   expect(f1.shape).toStrictEqual([2, 3])
@@ -286,7 +286,7 @@ test("tests DataFrame filtering", () => {
 
   // test row filtering (that returns a series)
   const f2 = x.filter((row, i, df) => {
-    return x.index[i].includes("row1")
+    return row.name === "row1"
   })
 
   expect(f2 instanceof Series).toBe(true)
@@ -295,7 +295,7 @@ test("tests DataFrame filtering", () => {
   expect(sort(f2.values)).toStrictEqual([0, 3, 100])
 
   // test column filtering (that returns a dataframe)
-  const f3 = x.filter(col => sum(col) < 1000, 1)
+  const f3 = x.filter(col => sum(col.values) < 1000, 1)
 
   expect(f3.shape).toStrictEqual([3, 2])
   expect(sort(f3.columns)).toStrictEqual(["baz", "foo"])
@@ -304,7 +304,7 @@ test("tests DataFrame filtering", () => {
 
   // test column filtering (that returns a series)
   const f4 = x.filter((col, i, df) => {
-    return x.columns[i].includes("baz")
+    return col.name === "baz"
   }, 1)
 
   expect(f4 instanceof Series).toBe(true)

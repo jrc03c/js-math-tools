@@ -1328,7 +1328,10 @@ class DataFrame {
     // filter rows
     if (axis === 0) {
       let newValues = out.values.filter((row, i) => {
-        const shouldKeep = fn(row, i, self)
+        const series = new Series(row)
+        series.name = self.index[i]
+        series.index = self.columns
+        const shouldKeep = fn(series, i, self)
         if (!shouldKeep) delete index[out.index[i]]
         return shouldKeep
       })
@@ -1353,7 +1356,10 @@ class DataFrame {
       out = out.transpose()
 
       let newValues = out.values.filter((row, i) => {
-        const shouldKeep = fn(row, i, self)
+        const series = new Series(row)
+        series.name = self.columns[i]
+        series.index = self.index
+        const shouldKeep = fn(series, i, self)
         if (!shouldKeep) delete columns[out.index[i]]
         return shouldKeep
       })
