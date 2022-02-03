@@ -44,6 +44,7 @@ let out = {
   isEqual: require("./is-equal.js"),
   isFunction: require("./is-function.js"),
   isNumber: require("./is-number.js"),
+  isObject: require("./is-object.js"),
   isString: require("./is-string.js"),
   isUndefined: require("./is-undefined.js"),
   lerp: require("./lerp.js"),
