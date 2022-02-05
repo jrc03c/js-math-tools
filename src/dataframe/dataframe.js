@@ -1,26 +1,27 @@
-const { random } = require("./random.js")
-const apply = require("./apply.js")
-const assert = require("./assert.js")
-const copy = require("./copy.js")
-const count = require("./count.js")
-const dropNaN = require("./drop-nan.js")
-const flatten = require("./flatten.js")
-const isArray = require("./is-array.js")
-const isBoolean = require("./is-boolean.js")
-const isEqual = require("./is-equal.js")
-const isFunction = require("./is-function.js")
-const isNumber = require("./is-number.js")
-const isString = require("./is-string.js")
-const isUndefined = require("./is-undefined.js")
-const max = require("./max.js")
-const min = require("./min.js")
-const ndarray = require("./ndarray.js")
-const range = require("./range.js")
-const Series = require("./series.js")
-const set = require("./set.js")
-const shape = require("./shape.js")
-const sort = require("./sort.js")
-const transpose = require("./transpose.js")
+const { random } = require("../random.js")
+const apply = require("../apply.js")
+const assert = require("../assert.js")
+const copy = require("../copy.js")
+const count = require("../count.js")
+const dropNaN = require("../drop-nan.js")
+const flatten = require("../flatten.js")
+const isArray = require("../is-array.js")
+const isBoolean = require("../is-boolean.js")
+const isEqual = require("../is-equal.js")
+const isFunction = require("../is-function.js")
+const isNumber = require("../is-number.js")
+const isString = require("../is-string.js")
+const isUndefined = require("../is-undefined.js")
+const max = require("../max.js")
+const min = require("../min.js")
+const ndarray = require("../ndarray.js")
+const range = require("../range.js")
+const Series = require("../series/series.js")
+const set = require("../set.js")
+const shape = require("../shape.js")
+const sort = require("../sort.js")
+const transpose = require("../transpose.js")
+const leftPad = require("./left-pad.js")
 
 function makeKey(n) {
   const alpha = "abcdefghijklmnopqrstuvwxyz1234567890"
@@ -71,13 +72,6 @@ function quote(s) {
   }
 
   return `"${out}"`
-}
-
-function leftPad(x, maxLength) {
-  assert(isNumber(x), "The `leftPad` function only works on numbers!")
-  let out = x.toString()
-  while (out.length < maxLength) out = "0" + out
-  return out
 }
 
 function arrayToObject(x) {
@@ -312,81 +306,6 @@ class DataFrame {
         })
       }
     }
-  }
-
-  static async fromCSV(path, options) {
-    options = options || {}
-    let raw
-
-    // browser
-    try {
-      const response = await fetch(path)
-      raw = await response.text()
-    } catch (e) {}
-
-    // node
-    try {
-      const fs = require("fs")
-      const encoding = options.encoding || "utf8"
-      raw = fs.readFileSync(path, encoding)
-    } catch (e) {}
-
-    const lines = raw.split("\n").filter(line => line.length > 0)
-
-    let out = lines.map(line => {
-      const dict = {}
-      const quotePattern = /"(.*?)"/g
-      const matches = line.match(quotePattern) || []
-
-      matches.forEach(match => {
-        const key = makeKey(32)
-        line = line.replaceAll(match, key)
-        dict[key] = match
-      })
-
-      const values = line.split(",")
-
-      return values.map((value, i) => {
-        value = dict[value] || value
-
-        try {
-          let parsedValue = JSON.parse(value)
-          if (isArray(parsedValue)) return value
-          return parsedValue
-        } catch (e) {
-          return value
-        }
-      })
-    })
-
-    const valuesPerRow = max(out.map(line => line.length))
-
-    out = out.map(line => {
-      line.length = valuesPerRow
-      return line
-    })
-
-    let columns, index
-    const hasHeaderRow = isBoolean(options.hasHeaderRow)
-      ? options.hasHeaderRow
-      : true
-    const hasIndexColumn = isBoolean(options.hasIndexColumn)
-      ? options.hasIndexColumn
-      : false
-
-    if (hasHeaderRow) {
-      columns = out.shift()
-    }
-
-    if (hasIndexColumn) {
-      index = out.map(row => row.shift())
-      if (columns) columns.shift()
-    }
-
-    out = new DataFrame(out)
-    if (columns) out.columns = columns
-    if (index) out.index = index
-    return out
   }
 
   get shape() {
@@ -1128,6 +1047,18 @@ class DataFrame {
   }
 
   print() {
+    function truncate(s, maxLength) {
+      if (isString(s)) {
+        if (s.length > maxLength) {
+          return s.substring(0, maxLength - 3) + "..."
+        } else {
+          return s
+        }
+      } else {
+        return s
+      }
+    }
+
     const self = this
 
     if (isEqual(self.shape, [0])) {
@@ -1189,6 +1120,21 @@ class DataFrame {
         row.splice(halfMaxColumns, 0, "...")
         return row
       })
+    }
+
+    const maxLength = 28
+
+    if (temp instanceof Series) {
+      temp.values = temp.values.map(value => truncate(value, maxLength))
+      temp.name = truncate(temp.name, maxLength)
+      temp.index = temp.index.map(row => truncate(row, maxLength))
+    } else {
+      temp.values = temp.values.map(row => {
+        return row.map(value => truncate(value, maxLength))
+      })
+
+      temp.columns = temp.columns.map(col => truncate(col, maxLength))
+      temp.index = temp.index.map(row => truncate(row, maxLength))
     }
 
     console.table(temp.toObject())
@@ -1407,4 +1353,6 @@ class DataFrame {
   }
 }
 
+DataFrame.fromCSV = require("./from-csv.js")
+DataFrame.fromCSVString = require("./from-csv-string.js")
 module.exports = DataFrame
