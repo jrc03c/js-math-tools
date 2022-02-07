@@ -6,8 +6,11 @@ const max = require("../max.js")
 const range = require("../range.js")
 const isString = require("../is-string.js")
 const MathError = require("../math-error.js")
+const isUndefined = require("../is-undefined.js")
+const assert = require("../assert.js")
 
 function fromCSVString(
+  DataFrame,
   raw,
   hasHeaderRow,
   hasIndexColumn,
@@ -15,29 +18,27 @@ function fromCSVString(
   stringDelimiter
 ) {
   hasHeaderRow = (() => {
-    if (!isUndefined(hasHeaderRow)) {
-      assert(
-        isBoolean(hasHeaderRow),
-        "The `hasHeaderRow` parameter of the `fromCSV` method must be a boolean!"
-      )
-
+    if (isUndefined(hasHeaderRow)) {
+      return false
+    } else if (isBoolean(hasHeaderRow)) {
       return hasHeaderRow
-    } else {
-      return true
     }
+
+    throw new MathError(
+      "The `hasHeaderRow` parameter of the `fromCSV` method must be a boolean!"
+    )
   })()
 
   hasIndexColumn = (() => {
-    if (!isUndefined(hasIndexColumn)) {
-      assert(
-        isBoolean(hasIndexColumn),
-        "The `hasIndexColumn` parameter of the `fromCSV` method must be a boolean!"
-      )
-
-      return hasIndexColumn
-    } else {
+    if (isUndefined(hasIndexColumn)) {
       return false
+    } else if (isBoolean(hasIndexColumn)) {
+      return hasIndexColumn
     }
+
+    throw new MathError(
+      "The `hasIndexColumn` parameter of the `fromCSV` method must be a boolean!"
+    )
   })()
 
   fieldDelimiter = (() => {
@@ -155,19 +156,27 @@ function fromCSVString(
       return row
     })
 
+    const columns = (() => {
+      const temp = hasHeaderRow
+        ? rows.shift()
+        : range(0, rows[0].length).map(i => "col" + i)
+
+      if (hasIndexColumn) {
+        temp.shift()
+      }
+
+      return temp
+    })()
+
+    const index = (() => {
+      const temp = hasIndexColumn
+        ? rows.map(row => row.shift())
+        : range(0, rows.length).map(i => "row" + i)
+
+      return temp
+    })()
+
     const maxRowLength = max(rows.map(row => row.length))
-
-    const columns = hasHeaderRow
-      ? rows.shift()
-      : range(0, maxRowLength).map(
-          i => `col${leftPad(i, maxRowLength.toString().length)}`
-        )
-
-    const index = hasIndexColumn
-      ? rows.map(row => row.splice(0, 1)[0])
-      : range(0, rows.length).map(
-          i => `row${leftPad(i, rows.length.toString().length)}`
-        )
 
     const temp = new DataFrame(
       rows.map(row => {
@@ -176,8 +185,8 @@ function fromCSVString(
       })
     )
 
-    temp.columns = columns
-    temp.index = index
+    if (hasHeaderRow) temp.columns = columns
+    if (hasIndexColumn) temp.index = index
     return temp
   })()
 

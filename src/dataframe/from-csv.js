@@ -5,6 +5,7 @@ const isUndefined = require("../is-undefined.js")
 const MathError = require("../math-error.js")
 
 async function fromCSV(
+  DataFrame,
   path,
   encoding,
   hasHeaderRow,
@@ -42,6 +43,7 @@ async function fromCSV(
   })()
 
   return fromCSVString(
+    DataFrame,
     raw,
     hasHeaderRow,
     hasIndexColumn,

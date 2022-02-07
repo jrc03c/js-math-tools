@@ -1,18 +1,18 @@
 const DataFrame = require("./dataframe.js")
-const Series = require("./series.js")
-const isEqual = require("./is-equal.js")
-const normal = require("./normal.js")
-const flatten = require("./flatten.js")
-const distance = require("./distance.js")
-const zeros = require("./zeros.js")
-const chop = require("./chop.js")
-const print = require("./print.js")
-const range = require("./range.js")
-const set = require("./set.js")
-const isUndefined = require("./is-undefined.js")
-const sort = require("./sort.js")
-const shape = require("./shape.js")
-const sum = require("./sum.js")
+const Series = require("../series/series.js")
+const isEqual = require("../is-equal.js")
+const normal = require("../normal.js")
+const flatten = require("../flatten.js")
+const distance = require("../distance.js")
+const zeros = require("../zeros.js")
+const chop = require("../chop.js")
+const print = require("../print.js")
+const range = require("../range.js")
+const set = require("../set.js")
+const isUndefined = require("../is-undefined.js")
+const sort = require("../sort.js")
+const shape = require("../shape.js")
+const sum = require("../sum.js")
 const filename = "delete-me.csv"
 
 test("tests DataFrame emptiness", () => {
@@ -336,12 +336,20 @@ test("tests DataFrame reading & writing to and from disk", async () => {
   x.columns = x.columns.map(i => makeKey(8))
   x.index = x.index.map(i => makeKey(8))
 
-  const settings = { hasHeaderRow: true, hasIndexColumn: false }
   let yPred
+  let shouldIncludeIndex = false
+  let hasHeaderRow = true
 
   // v1
-  x.toCSV(filename, settings)
-  yPred = await DataFrame.fromCSV(filename, settings)
+  x.toCSV(filename, shouldIncludeIndex)
+
+  yPred = await DataFrame.fromCSV(
+    filename,
+    null,
+    hasHeaderRow,
+    shouldIncludeIndex
+  )
+
   expect(yPred.values).toStrictEqual(x.values)
   expect(yPred.columns).toStrictEqual(x.columns)
   expect(yPred.index).not.toStrictEqual(x.index)
@@ -349,33 +357,22 @@ test("tests DataFrame reading & writing to and from disk", async () => {
   await pause(1000)
 
   // v2
-  settings.hasIndexColumn = true
-  x.toCSV(filename, settings)
-  yPred = await DataFrame.fromCSV(filename, settings)
+  shouldIncludeIndex = false
+
+  x.toCSV(filename, shouldIncludeIndex)
+
+  yPred = await DataFrame.fromCSV(
+    filename,
+    null,
+    hasHeaderRow,
+    shouldIncludeIndex
+  )
+
   expect(yPred.values).toStrictEqual(x.values)
   expect(yPred.columns).toStrictEqual(x.columns)
-  expect(yPred.index).toStrictEqual(x.index)
+  expect(yPred.index).toStrictEqual(x.resetIndex().index)
   expect(yPred === x).toBe(false)
   await pause(1000)
-
-  // v3
-  settings.hasHeaderRow = false
-  x.toCSV(filename, settings)
-  yPred = await DataFrame.fromCSV(filename, settings)
-  expect(yPred.values).toStrictEqual(x.values)
-  expect(yPred.columns).not.toStrictEqual(x.columns)
-  expect(yPred.index).toStrictEqual(x.index)
-  expect(yPred === x).toBe(false)
-  await pause(1000)
-
-  // v4
-  settings.hasIndexColumn = false
-  x.toCSV(filename, settings)
-  yPred = await DataFrame.fromCSV(filename, settings)
-  expect(yPred.values).toStrictEqual(x.values)
-  expect(yPred.columns).not.toStrictEqual(x.columns)
-  expect(yPred.index).not.toStrictEqual(x.index)
-  expect(yPred === x).toBe(false)
 })
 
 afterAll(() => {

@@ -22,6 +22,10 @@ const shape = require("../shape.js")
 const sort = require("../sort.js")
 const transpose = require("../transpose.js")
 const leftPad = require("./left-pad.js")
+const toCSV = require("./to-csv.js")
+const toCSVString = require("./to-csv-string.js")
+const fromCSV = require("./from-csv.js")
+const fromCSVString = require("./from-csv-string.js")
 
 function makeKey(n) {
   const alpha = "abcdefghijklmnopqrstuvwxyz1234567890"
@@ -967,83 +971,14 @@ class DataFrame {
     return out
   }
 
-  toCSVString(options) {
+  toCSVString(shouldIncludeIndex) {
     const self = this
-    options = isUndefined(options) ? {} : options
-
-    const hasHeaderRow = isBoolean(options.hasHeaderRow)
-      ? options.hasHeaderRow
-      : true
-    const hasIndexColumn = isBoolean(options.hasIndexColumn)
-      ? options.hasIndexColumn
-      : false
-
-    let index, columns, out
-
-    if (hasHeaderRow && hasIndexColumn) {
-      index = ["(index)"].concat(copy(self.index))
-      columns = copy(self.columns)
-
-      out = [columns].concat(self.values).map((row, i) => {
-        return [index[i]].concat(row)
-      })
-    } else if (!hasHeaderRow && hasIndexColumn) {
-      index = copy(self.index)
-
-      out = self.values.map((row, i) => {
-        return [index[i]].concat(row)
-      })
-    } else if (hasHeaderRow && !hasIndexColumn) {
-      columns = copy(self.columns)
-      out = [columns].concat(self.values)
-    } else if (!hasHeaderRow && !hasIndexColumn) {
-      out = self.values
-    }
-
-    out = out
-      .map((row, i) => {
-        return row
-          .map(value => {
-            if (isString(value)) {
-              return quote(value)
-            } else {
-              return value
-            }
-          })
-          .join(",")
-      })
-      .join("\n")
-
-    return out
+    return toCSVString(self, shouldIncludeIndex)
   }
 
-  toCSV(filename, options) {
+  toCSV(filename, shouldIncludeIndex) {
     const self = this
-    const out = self.toCSVString(options)
-
-    // browser
-    try {
-      let newFilename = filename
-
-      if (filename.includes("/")) {
-        const parts = filename.split("/")
-        newFilename = parts[parts.length - 1]
-      }
-
-      const a = document.createElement("a")
-      a.href = `data:text/csv;charset=utf-8,${encodeURIComponent(out)}`
-      a.download = newFilename
-      a.dispatchEvent(new MouseEvent("click"))
-    } catch (e) {}
-
-    // node
-    try {
-      const fs = require("fs")
-      const path = require("path")
-      fs.writeFileSync(path.resolve(filename), out, "utf8")
-    } catch (e) {}
-
-    return self
+    return toCSV(self, filename, shouldIncludeIndex)
   }
 
   print() {
@@ -1353,6 +1288,12 @@ class DataFrame {
   }
 }
 
-DataFrame.fromCSV = require("./from-csv.js")
-DataFrame.fromCSVString = require("./from-csv-string.js")
+DataFrame.fromCSV = function () {
+  return fromCSV(DataFrame, ...arguments)
+}
+
+DataFrame.fromCSVString = function () {
+  return fromCSVString(DataFrame, ...arguments)
+}
+
 module.exports = DataFrame
