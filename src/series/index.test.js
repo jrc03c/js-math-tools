@@ -1,4 +1,4 @@
-const Series = require("./series.js")
+const Series = require(".")
 const isEqual = require("../is-equal.js")
 const normal = require("../normal.js")
 const set = require("../set.js")

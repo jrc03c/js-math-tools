@@ -14,7 +14,7 @@ const set = require("../set.js")
 const reverse = require("../reverse.js")
 const sort = require("../sort.js")
 const isBoolean = require("../is-boolean.js")
-const DataFrame = require("../dataframe/dataframe.js")
+const DataFrame = require("../dataframe")
 
 function isInteger(x) {
   return isNumber(x) && parseInt(x) === x

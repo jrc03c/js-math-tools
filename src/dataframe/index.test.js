@@ -1,5 +1,5 @@
-const DataFrame = require("./dataframe.js")
-const Series = require("../series/series.js")
+const DataFrame = require(".")
+const Series = require("../series")
 const isEqual = require("../is-equal.js")
 const normal = require("../normal.js")
 const flatten = require("../flatten.js")
