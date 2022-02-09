@@ -22,10 +22,11 @@ const shape = require("../shape.js")
 const sort = require("../sort.js")
 const transpose = require("../transpose.js")
 const leftPad = require("./left-pad.js")
-const toCSV = require("./to-csv.js")
-const toCSVString = require("./to-csv-string.js")
-const fromCSV = require("./from-csv.js")
-const fromCSVString = require("./from-csv-string.js")
+const dfToCSV = require("./df-to-csv.js")
+const dfToCSVString = require("./df-to-csv-string.js")
+const dfFromCSV = require("./df-from-csv.js")
+const dfFromCSVString = require("./df-from-csv-string.js")
+const dfShuffle = require("./df-shuffle.js")
 
 function makeKey(n) {
   const alpha = "abcdefghijklmnopqrstuvwxyz1234567890"
@@ -973,12 +974,12 @@ class DataFrame {
 
   toCSVString(shouldIncludeIndex) {
     const self = this
-    return toCSVString(self, shouldIncludeIndex)
+    return dfToCSVString(self, shouldIncludeIndex)
   }
 
   toCSV(filename, shouldIncludeIndex) {
     const self = this
-    return toCSV(self, filename, shouldIncludeIndex)
+    return dfToCSV(self, filename, shouldIncludeIndex)
   }
 
   print() {
@@ -1272,28 +1273,17 @@ class DataFrame {
   }
 
   shuffle(axis) {
-    if (isUndefined(axis)) axis = 0
-
-    assert(
-      axis === 0 || axis === 1,
-      "The `axis` parameter to the `shuffle` must be 0, 1, or undefined."
-    )
-
     const self = this
-
-    return self.get(
-      axis === 0 ? shuffle(self.index) : null,
-      axis === 1 ? shuffle(self.columns) : null
-    )
+    return dfShuffle(self, axis)
   }
 }
 
 DataFrame.fromCSV = function () {
-  return fromCSV(DataFrame, ...arguments)
+  return dfFromCSV(DataFrame, ...arguments)
 }
 
 DataFrame.fromCSVString = function () {
-  return fromCSVString(DataFrame, ...arguments)
+  return dfFromCSVString(DataFrame, ...arguments)
 }
 
 module.exports = DataFrame

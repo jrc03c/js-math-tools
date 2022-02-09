@@ -1,7 +1,7 @@
-const toCSVString = require("./to-csv-string.js")
+const dfToCSVString = require("./df-to-csv-string.js")
 
 function toCSV(df, filename, shouldIncludeIndex) {
-  const out = toCSVString(df, shouldIncludeIndex)
+  const out = dfToCSVString(df, shouldIncludeIndex)
 
   // browser
   try {

@@ -1,5 +1,5 @@
 const assert = require("../assert.js")
-const fromCSVString = require("./from-csv-string.js")
+const dfFromCSVString = require("./df-from-csv-string.js")
 const isString = require("../is-string.js")
 const isUndefined = require("../is-undefined.js")
 const MathError = require("../math-error.js")
@@ -42,7 +42,7 @@ async function fromCSV(
     throw new MathError(`The path "${path}" could not be loaded!`)
   })()
 
-  return fromCSVString(
+  return dfFromCSVString(
     DataFrame,
     raw,
     hasHeaderRow,
