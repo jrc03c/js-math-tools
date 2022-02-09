@@ -29,6 +29,7 @@ const dfFromCSVString = require("./df-from-csv-string.js")
 const dfShuffle = require("./df-shuffle.js")
 const dfFilter = require("./df-filter.js")
 const dfSort = require("./df-sort.js")
+const dfPrint = require("./df-print.js")
 
 function makeKey(n) {
   const alpha = "abcdefghijklmnopqrstuvwxyz1234567890"
@@ -971,98 +972,8 @@ class DataFrame {
   }
 
   print() {
-    function truncate(s, maxLength) {
-      if (isString(s)) {
-        if (s.length > maxLength) {
-          return s.substring(0, maxLength - 3) + "..."
-        } else {
-          return s
-        }
-      } else {
-        return s
-      }
-    }
-
     const self = this
-
-    if (isEqual(self.shape, [0])) {
-      console.table({})
-      return self
-    }
-
-    const maxRows = typeof window === "undefined" ? 20 : 10
-    const halfMaxRows = parseInt(maxRows / 2)
-    const maxColumns =
-      typeof window === "undefined"
-        ? Math.floor(process.stdout.columns / 24) - 1
-        : 10
-    const halfMaxColumns = parseInt(maxColumns / 2)
-
-    const tempRows =
-      maxRows > self.index.length
-        ? null
-        : range(0, halfMaxRows).concat(
-            range(self.index.length - halfMaxRows, self.index.length)
-          )
-
-    const tempColumns =
-      maxColumns > self.columns.length
-        ? null
-        : range(0, halfMaxColumns).concat(
-            range(self.columns.length - halfMaxColumns, self.columns.length)
-          )
-
-    let temp = self.get(tempRows, tempColumns)
-
-    if (temp instanceof Series) {
-      if (self.shape[0] === 1) {
-        // data is row-shaped
-        temp = new DataFrame([temp.values])
-        temp.index = self.index
-        temp.columns = new Series(self.columns).get(tempColumns).values
-      } else if (self.shape[1] === 1) {
-        // data is column-shaped
-        temp = new DataFrame([temp.values]).transpose()
-        temp.index = new Series(self.index).get(tempRows).values
-        temp.columns = self.columns
-      }
-    }
-
-    if (maxRows <= self.index.length) {
-      temp._index.splice(halfMaxRows, 0, "...")
-      temp._values.splice(
-        halfMaxRows,
-        0,
-        range(0, temp.columns.length).map(i => "...")
-      )
-    }
-
-    if (maxColumns <= self.columns.length) {
-      temp._columns.splice(halfMaxColumns, 0, "...")
-
-      temp._values = temp._values.map(row => {
-        row.splice(halfMaxColumns, 0, "...")
-        return row
-      })
-    }
-
-    const maxLength = 28
-
-    if (temp instanceof Series) {
-      temp.values = temp.values.map(value => truncate(value, maxLength))
-      temp.name = truncate(temp.name, maxLength)
-      temp.index = temp.index.map(row => truncate(row, maxLength))
-    } else {
-      temp.values = temp.values.map(row => {
-        return row.map(value => truncate(value, maxLength))
-      })
-
-      temp.columns = temp.columns.map(col => truncate(col, maxLength))
-      temp.index = temp.index.map(row => truncate(row, maxLength))
-    }
-
-    console.table(temp.toObject())
-    return self
+    return dfPrint(DataFrame, self)
   }
 
   sort(cols, directions) {
