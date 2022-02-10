@@ -36,6 +36,7 @@ const isSeries = require("./is-series.js")
 const dfDropNaN = require("./df-drop-nan.js")
 const isWholeNumber = require("./is-whole-number.js")
 const dfDropMissing = require("./df-drop-missing.js")
+const dfApply = require("./df-apply.js")
 
 function makeKey(n) {
   const alpha = "abcdefghijklmnopqrstuvwxyz1234567890"
@@ -667,59 +668,8 @@ class DataFrame {
   }
 
   apply(fn, axis) {
-    axis = axis || 0
-
-    assert(
-      isFunction(fn),
-      "The first parameter to the `apply` method must be a function."
-    )
-
-    assert(
-      axis === 0 || axis === 1,
-      "The second parameter to the `apply` method (the `axis`) must be 0 or 1."
-    )
-
     const self = this
-
-    if (axis === 0) {
-      const temp = transpose(self.values)
-
-      const newValues = temp.map((col, i) => {
-        const series = new Series(col)
-        series.name = self.columns[i]
-        series.index = self.index
-        return fn(series, i, self)
-      })
-
-      if (shape(newValues).length === 1) {
-        const out = new Series(newValues)
-        out.index = copy(self.columns)
-        return out
-      } else {
-        const out = new DataFrame(transpose(newValues))
-        out.index = copy(self.index)
-        out.columns = copy(self.columns)
-        return out
-      }
-    } else if (axis === 1) {
-      const newValues = self.values.map((row, i) => {
-        const series = new Series(row)
-        series.name = self.index[i]
-        series.index = self.columns
-        return fn(series, i, self)
-      })
-
-      if (shape(newValues).length === 1) {
-        const out = new Series(newValues)
-        out.index = copy(self.index)
-        return out
-      } else {
-        const out = new DataFrame(newValues)
-        out.index = copy(self.index)
-        out.columns = copy(self.columns)
-        return out
-      }
-    }
+    return dfApply(DataFrame, self, fn, axis)
   }
 
   map(fn, axis) {
