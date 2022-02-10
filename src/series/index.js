@@ -15,6 +15,7 @@ const set = require("../set.js")
 const shape = require("../shape.js")
 const sort = require("../sort.js")
 const transpose = require("../transpose.js")
+const seriesFilter = require("./series-filter.js")
 
 class Series {
   constructor(data) {
@@ -431,29 +432,7 @@ class Series {
 
   filter(fn) {
     const self = this
-    let out = self.copy()
-    const index = copy(out.index)
-    const indicesToRemove = []
-
-    const newValues = out.values.filter((value, i) => {
-      const shouldKeep = fn(value, i, out.values)
-      if (!shouldKeep) indicesToRemove.push(out.index[i])
-      return shouldKeep
-    })
-
-    indicesToRemove.forEach(i => {
-      index.splice(index.indexOf(i), 1)
-    })
-
-    if (newValues.length === 0) {
-      out = new Series()
-      out.name = self.name
-      return out
-    }
-
-    out.values = newValues
-    out.index = index
-    return out
+    return seriesFilter(Series, self, fn)
   }
 }
 
