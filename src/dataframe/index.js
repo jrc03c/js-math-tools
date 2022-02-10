@@ -31,6 +31,8 @@ const dfFilter = require("./df-filter.js")
 const dfSort = require("./df-sort.js")
 const dfPrint = require("./df-print.js")
 const dfToObject = require("./df-to-object.js")
+const dfDrop = require("./df-drop.js")
+const isSeries = require("./is-series.js")
 
 function makeKey(n) {
   const alpha = "abcdefghijklmnopqrstuvwxyz1234567890"
@@ -54,10 +56,6 @@ function isObject(x) {
 
 function isDataFrame(x) {
   return x instanceof DataFrame
-}
-
-function isSeries(x) {
-  return x instanceof Series
 }
 
 function quote(s) {
@@ -881,58 +879,7 @@ class DataFrame {
 
   drop(rows, cols) {
     const self = this
-
-    if (isUndefined(rows)) rows = []
-    if (isUndefined(cols)) cols = []
-    if (isString(rows) || isNumber(rows)) rows = [rows]
-    if (isString(cols) || isNumber(cols)) cols = [cols]
-
-    assert(
-      isArray(rows),
-      "The `drop` method only works on 1-dimensional arrays of numerical indices and/or strings."
-    )
-
-    assert(
-      isArray(cols),
-      "The `drop` method only works on 1-dimensional arrays of numerical indices and/or strings."
-    )
-
-    assert(
-      shape(rows).length === 1,
-      "The `drop` method only works on 1-dimensional arrays of numerical indices and/or strings."
-    )
-
-    assert(
-      shape(cols).length === 1,
-      "The `drop` method only works on 1-dimensional arrays of numerical indices and/or strings."
-    )
-
-    let outIndex, outColumns
-
-    self.index.forEach((row, i) => {
-      if (rows.indexOf(row) < 0 && rows.indexOf(i) < 0) {
-        if (!outIndex) outIndex = []
-        outIndex.push(row)
-      }
-    })
-
-    self.columns.forEach((col, i) => {
-      if (cols.indexOf(col) < 0 && cols.indexOf(i) < 0) {
-        if (!outColumns) outColumns = []
-        outColumns.push(col)
-      }
-    })
-
-    let out = self.get(outIndex, outColumns)
-
-    if (isSeries(out)) {
-      let temp = new DataFrame()
-      temp = temp.assign(out)
-      if (self.index.indexOf(out.name) > -1) temp = temp.transpose()
-      out = temp
-    }
-
-    return out
+    return dfDrop(DataFrame, self, rows, cols)
   }
 
   dropColumns(columns) {
