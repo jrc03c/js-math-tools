@@ -10,6 +10,7 @@ const leftPad = require("../helpers/left-pad.js")
 const ndarray = require("../ndarray.js")
 const range = require("../range.js")
 const reverse = require("../reverse.js")
+const seriesDropMissing = require("./series-drop-missing.js")
 const seriesFilter = require("./series-filter.js")
 const seriesPrint = require("./series-print.js")
 const seriesSort = require("./series-sort.js")
@@ -310,20 +311,7 @@ class Series {
 
   dropMissing(condition, threshold) {
     const self = this
-    const out = self.copy()
-    const outIndex = []
-
-    out.values = out.values.filter((v, i) => {
-      if (isUndefined(v)) {
-        return false
-      } else {
-        outIndex.push(out.index[i])
-        return true
-      }
-    })
-
-    out.index = outIndex
-    return out
+    return seriesDropMissing(self, condition, threshold)
   }
 
   toObject() {
