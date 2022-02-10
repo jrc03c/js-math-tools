@@ -42,6 +42,7 @@ const dfCopy = require("./df-copy.js")
 const dfResetIndex = require("./df-reset-index.js")
 const dfGetSubsetByIndices = require("./df-get-subset-by-indices.js")
 const dfGetSubsetByNames = require("./df-get-subset-by-names.js")
+const dfGet = require("./df-get.js")
 
 function makeKey(n) {
   const alpha = "abcdefghijklmnopqrstuvwxyz1234567890"
@@ -332,69 +333,7 @@ class DataFrame {
 
   get(rows, cols) {
     const self = this
-
-    if (isString(rows) || isNumber(rows)) rows = [rows]
-    if (isString(cols) || isNumber(cols)) cols = [cols]
-
-    const types = set((rows || []).concat(cols || []).map(v => typeof v))
-
-    assert(
-      types.length <= 2,
-      "Only whole numbers and/or strings are allowed in `get` arrays!"
-    )
-
-    if (types.length === 1) {
-      assert(
-        types[0] === "string" || types[0] === "number",
-        "Only whole numbers and/or strings are allowed in `get` arrays!"
-      )
-    }
-
-    if (types.length === 2) {
-      assert(
-        types.indexOf("string") > -1,
-        "Only whole numbers and/or strings are allowed in `get` arrays!"
-      )
-
-      assert(
-        types.indexOf("number") > -1,
-        "Only whole numbers and/or strings are allowed in `get` arrays!"
-      )
-    }
-
-    if (!isUndefined(rows)) {
-      rows = rows.map(r => {
-        if (typeof r === "string") {
-          assert(self.index.indexOf(r) > -1, `Row "${r}" does not exist!`)
-          return r
-        }
-
-        if (typeof r === "number") {
-          assert(r >= 0, `Index ${r} is out of bounds!`)
-          assert(parseInt(r) === r, `Row numbers must be integers!`)
-          assert(r < self.index.length, `Index ${r} is out of bounds!`)
-          return self.index[r]
-        }
-      })
-    }
-
-    if (!isUndefined(cols)) {
-      cols = cols.map(c => {
-        if (typeof c === "string") {
-          assert(self.columns.indexOf(c) > -1, `Column "${c}" does not exist!`)
-          return c
-        }
-
-        if (typeof c === "number") {
-          assert(c >= 0, `Column ${c} is out of bounds!`)
-          assert(parseInt(c) === c, `Column numbers must be integers!`)
-          assert(c < self.columns.length, `Column ${c} is out of bounds!`)
-          return self.columns[c]
-        }
-      })
-    }
-
-    return self.getSubsetByNames(rows, cols)
+    return dfGet(self, rows, cols)
   }
 
   getSubsetByNames(rows, cols) {
