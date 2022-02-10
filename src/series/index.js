@@ -12,6 +12,7 @@ const seriesApply = require("./series-apply.js")
 const seriesDropMissing = require("./series-drop-missing.js")
 const seriesFilter = require("./series-filter.js")
 const seriesGetSubsetByIndices = require("./series-get-subset-by-indices.js")
+const seriesGetSubsetByNames = require("./series-get-subset-by-names.js")
 const seriesPrint = require("./series-print.js")
 const seriesSort = require("./series-sort.js")
 const seriesSortByIndex = require("./series-sort-by-index.js")
@@ -184,43 +185,7 @@ class Series {
 
   getSubsetByNames(indices) {
     const self = this
-
-    if (isUndefined(indices)) indices = self.index
-
-    assert(
-      isArray(indices),
-      "The `indices` array must be a 1-dimensional array of strings."
-    )
-
-    assert(
-      shape(indices).length === 1,
-      "The `indices` array must be a 1-dimensional array of strings."
-    )
-
-    assert(
-      indices.length > 0,
-      "The `indices` array must contain at least one index name."
-    )
-
-    indices.forEach(name => {
-      assert(isString(name), "The `indices` array must contain only strings.")
-
-      assert(
-        self.index.indexOf(name) > -1,
-        `The name "${name}" does not exist in the index.`
-      )
-    })
-
-    const values = indices.map(name => {
-      return self.values[self.index.indexOf(name)]
-    })
-
-    if (values.length === 1) return values[0]
-
-    const out = new Series(values)
-    out.index = indices
-    out.name = self.name
-    return out
+    return seriesGetSubsetByNames(Series, self, indices)
   }
 
   getSubsetByIndices(indices) {
