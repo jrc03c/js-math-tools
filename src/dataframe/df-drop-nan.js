@@ -1,6 +1,6 @@
 const assert = require("../assert.js")
 const dropNaN = require("../drop-nan.js")
-const isWholeNumber = require("./is-whole-number.js")
+const isWholeNumber = require("../helpers/is-whole-number.js")
 
 function dfDropNaN(DataFrame, df, axis, condition, threshold) {
   axis = axis || 0

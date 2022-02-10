@@ -1,4 +1,4 @@
-const leftPad = require("./left-pad.js")
+const leftPad = require("../helpers/left-pad.js")
 const range = require("../range.js")
 
 function dfResetIndex(df) {

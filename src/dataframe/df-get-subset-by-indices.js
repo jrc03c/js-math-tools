@@ -2,7 +2,7 @@ const assert = require("../assert.js")
 const isArray = require("../is-array.js")
 const isNumber = require("../is-number.js")
 const isUndefined = require("../is-undefined.js")
-const isWholeNumber = require("./is-whole-number.js")
+const isWholeNumber = require("../helpers/is-whole-number.js")
 const range = require("../range.js")
 const shape = require("../shape.js")
 
