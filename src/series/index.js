@@ -1,47 +1,20 @@
 const assert = require("../assert.js")
+const copy = require("../copy.js")
 const isArray = require("../is-array.js")
-const isUndefined = require("../is-undefined.js")
-const shape = require("../shape.js")
-const transpose = require("../transpose.js")
-const range = require("../range.js")
+const isBoolean = require("../is-boolean.js")
+const isFunction = require("../is-function.js")
 const isNumber = require("../is-number.js")
 const isString = require("../is-string.js")
-const apply = require("../apply.js")
-const isFunction = require("../is-function.js")
+const isUndefined = require("../is-undefined.js")
+const isWholeNumber = require("../helpers/is-whole-number.js")
+const leftPad = require("../helpers/left-pad.js")
 const ndarray = require("../ndarray.js")
-const copy = require("../copy.js")
-const set = require("../set.js")
+const range = require("../range.js")
 const reverse = require("../reverse.js")
+const set = require("../set.js")
+const shape = require("../shape.js")
 const sort = require("../sort.js")
-const isBoolean = require("../is-boolean.js")
-const DataFrame = require("../dataframe")
-
-function isInteger(x) {
-  return isNumber(x) && parseInt(x) === x
-}
-
-function isWholeNumber(x) {
-  return isInteger(x) && x >= 0
-}
-
-function isObject(x) {
-  return x instanceof Object && !isArray(x) && x !== null
-}
-
-function isDataFrame(x) {
-  return x instanceof DataFrame
-}
-
-function isSeries(x) {
-  return x instanceof Series
-}
-
-function leftPad(x, maxLength) {
-  assert(isNumber(x), "The `leftPad` function only works on numbers!")
-  let out = x.toString()
-  while (out.length < maxLength) out = "0" + out
-  return out
-}
+const transpose = require("../transpose.js")
 
 class Series {
   constructor(data) {
