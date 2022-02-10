@@ -52,37 +52,6 @@ function makeKey(n) {
   return out
 }
 
-function isObject(x) {
-  return x instanceof Object && !isArray(x)
-}
-
-function isDataFrame(x) {
-  return x instanceof DataFrame
-}
-
-function quote(s) {
-  let pattern = /"(.*?)"/g
-  let matches = s.match(pattern)
-  let out = s.slice()
-
-  if (matches) {
-    matches.forEach(item => {
-      out = out.replace(item, `“${item.substring(1, item.length - 1)}”`)
-    })
-  }
-
-  pattern = /'(.*?)'/g
-  matches = s.match(pattern)
-
-  if (matches) {
-    matches.forEach(item => {
-      out = out.replace(item, `‘${item.substring(1, item.length - 1)}’`)
-    })
-  }
-
-  return `"${out}"`
-}
-
 class DataFrame {
   constructor(data) {
     const self = this
@@ -318,7 +287,7 @@ class DataFrame {
     self.index = rows
   }
 
-  isEmpty() {
+  get isEmpty() {
     const self = this
     return set(self.values).filter(v => !isUndefined(v)).length === 0
   }

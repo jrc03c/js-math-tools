@@ -22,8 +22,8 @@ test("tests DataFrame emptiness", () => {
 
   expect(df instanceof DataFrame).toBe(true)
   expect(df.shape).toStrictEqual(xShape)
-  expect(!df.isEmpty()).toBe(true)
-  expect(new DataFrame().isEmpty()).toBe(true)
+  expect(!df.isEmpty).toBe(true)
+  expect(new DataFrame().isEmpty).toBe(true)
 
   const clearedValues = set(df.clear().values)
   expect(clearedValues.length).toBe(1)
@@ -141,11 +141,11 @@ test("tests DataFrame missing value dropping", () => {
 
   expect(df.dropMissing().shape).toStrictEqual([2, 2])
   expect(df.dropMissing().index).toStrictEqual(["row1", "row2"])
-  expect(df.dropMissing(1).isEmpty()).toBe(true)
+  expect(df.dropMissing(1).isEmpty).toBe(true)
   expect(df.dropMissing(1, "all").shape).toStrictEqual(df.shape)
   expect(df.dropMissing(1, null, 4).shape).toStrictEqual(df.shape)
   expect(df.dropMissing(1, null, 3).shape).toStrictEqual([6, 1])
-  expect(df.dropMissing(1, null, 1).isEmpty()).toBe(true)
+  expect(df.dropMissing(1, null, 1).isEmpty).toBe(true)
 })
 
 test("tests DataFrame NaN value dropping", () => {
@@ -203,7 +203,7 @@ test("tests DataFrame NaN value dropping", () => {
 
   expect(df.dropNaN(0, null, 2).columns).toStrictEqual(df.columns)
 
-  expect(df.dropNaN(1, "any").isEmpty()).toBe(true)
+  expect(df.dropNaN(1, "any").isEmpty).toBe(true)
   expect(df.dropNaN(1, "all").values).toStrictEqual(df.values)
   expect(df.dropNaN(1, null, 3).values).toStrictEqual(
     flatten([[0], [1], [-10], [2], [3], [4], [null], [1], [NaN]])

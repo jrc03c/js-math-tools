@@ -32,7 +32,7 @@ function dfFilter(DataFrame, df, fn, axis) {
   )
 
   let out = df.copy()
-  if (out.isEmpty()) return out
+  if (out.isEmpty) return out
 
   const index = arrayToObject(out.index)
   const columns = arrayToObject(out.columns)

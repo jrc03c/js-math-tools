@@ -42,7 +42,7 @@ function dfAssign(df, p1, p2) {
     const temp = {}
 
     assert(
-      df.isEmpty() || isEqual(obj.index, df.index),
+      df.isEmpty || isEqual(obj.index, df.index),
       "The index of the new data does not match the index of the DataFrame."
     )
 
@@ -69,7 +69,7 @@ function dfAssign(df, p1, p2) {
         "Each key-value pair must be (respectively) a string and a 1-dimensional array of values."
       )
 
-      if (out.isEmpty()) {
+      if (out.isEmpty) {
         out.values = transpose([values])
         out.columns = [col]
         outShape = out.shape
