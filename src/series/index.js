@@ -4,7 +4,6 @@ const isArray = require("../is-array.js")
 const isNumber = require("../is-number.js")
 const isString = require("../is-string.js")
 const isUndefined = require("../is-undefined.js")
-const isWholeNumber = require("../helpers/is-whole-number.js")
 const leftPad = require("../helpers/left-pad.js")
 const ndarray = require("../ndarray.js")
 const range = require("../range.js")
@@ -12,6 +11,7 @@ const reverse = require("../reverse.js")
 const seriesApply = require("./series-apply.js")
 const seriesDropMissing = require("./series-drop-missing.js")
 const seriesFilter = require("./series-filter.js")
+const seriesGetSubsetByIndices = require("./series-get-subset-by-indices.js")
 const seriesPrint = require("./series-print.js")
 const seriesSort = require("./series-sort.js")
 const seriesSortByIndex = require("./series-sort-by-index.js")
@@ -225,39 +225,7 @@ class Series {
 
   getSubsetByIndices(indices) {
     const self = this
-    const dataShape = self.shape
-
-    if (isUndefined(indices)) indices = range(0, dataShape[0])
-
-    assert(
-      isArray(indices),
-      "The `indices` array must be 1-dimensional array of whole numbers."
-    )
-
-    assert(
-      shape(indices).length === 1,
-      "The `indices` array must be a 1-dimensional array of whole numbers."
-    )
-
-    assert(
-      indices.length > 0,
-      "The `indices` array must contain at least one index."
-    )
-
-    indices.forEach(index => {
-      assert(
-        isWholeNumber(index),
-        "The `indices` array must be a 1-dimensional array of whole numbers."
-      )
-
-      assert(
-        index < self.index.length,
-        `The row index ${index} is out of bounds.`
-      )
-    })
-
-    const rows = indices.map(i => self.index[i])
-    return self.getSubsetByNames(rows)
+    return seriesGetSubsetByIndices(self, indices)
   }
 
   loc(indices) {
