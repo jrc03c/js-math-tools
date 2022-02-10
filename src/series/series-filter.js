@@ -1,3 +1,5 @@
+const copy = require("../copy.js")
+
 function seriesFilter(Series, series, fn) {
   let out = series.copy()
   const index = copy(out.index)

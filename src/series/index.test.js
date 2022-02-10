@@ -1,20 +1,15 @@
-const Series = require(".")
 const isEqual = require("../is-equal.js")
-const normal = require("../normal.js")
-const set = require("../set.js")
-const distance = require("../distance.js")
-const zeros = require("../zeros.js")
-const chop = require("../chop.js")
-const { random } = require("../random.js")
-const isUndefined = require("../is-undefined.js")
-const scale = require("../scale.js")
-const range = require("../range.js")
 const isSeries = s => s instanceof Series
+const isUndefined = require("../is-undefined.js")
+const normal = require("../normal.js")
+const range = require("../range.js")
+const scale = require("../scale.js")
+const Series = require(".")
+const set = require("../set.js")
 
 test("tests Series stuff", () => {
   const x = normal(100)
   const series = new Series(x)
-  const seriesShape = series.shape
 
   expect(isSeries(series)).toBe(true)
   expect(series.shape).toStrictEqual([100])

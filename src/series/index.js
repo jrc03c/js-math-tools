@@ -11,11 +11,12 @@ const leftPad = require("../helpers/left-pad.js")
 const ndarray = require("../ndarray.js")
 const range = require("../range.js")
 const reverse = require("../reverse.js")
+const seriesFilter = require("./series-filter.js")
+const seriesSortByIndex = require("./series-sort-by-index.js")
 const set = require("../set.js")
 const shape = require("../shape.js")
 const sort = require("../sort.js")
 const transpose = require("../transpose.js")
-const seriesFilter = require("./series-filter.js")
 
 class Series {
   constructor(data) {
@@ -414,20 +415,7 @@ class Series {
 
   sortByIndex() {
     const self = this
-    let temp = transpose([self.values, self.index])
-
-    temp = transpose(
-      sort(temp, (a, b) => {
-        if (a[1] === b[1]) return 0
-        if (a[1] < b[1]) return -1
-        if (a[1] > b[1]) return 1
-      })
-    )
-
-    const out = new Series(temp[0])
-    out.index = temp[1]
-    out.name = self.name
-    return out
+    return seriesSortByIndex(Series, self)
   }
 
   filter(fn) {
