@@ -39,6 +39,7 @@ const dfDropMissing = require("./df-drop-missing.js")
 const dfApply = require("./df-apply.js")
 const dfAssign = require("./df-assign.js")
 const dfCopy = require("./df-copy.js")
+const dfResetIndex = require("./df-reset-index.js")
 
 function makeKey(n) {
   const alpha = "abcdefghijklmnopqrstuvwxyz1234567890"
@@ -559,13 +560,7 @@ class DataFrame {
 
   resetIndex() {
     const self = this
-    const out = self.copy()
-
-    out.index = range(0, self.shape[0]).map(i => {
-      return "row" + leftPad(i, (out.index.length - 1).toString().length)
-    })
-
-    return out
+    return dfResetIndex(self)
   }
 
   copy() {
