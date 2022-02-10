@@ -119,7 +119,7 @@ class Series {
     return shape(self.values)
   }
 
-  isEmpty() {
+  get isEmpty() {
     const self = this
     return self.values.filter(v => !isUndefined(v)).length === 0
   }

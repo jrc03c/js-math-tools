@@ -13,8 +13,8 @@ test("tests Series stuff", () => {
 
   expect(isSeries(series)).toBe(true)
   expect(series.shape).toStrictEqual([100])
-  expect(series.isEmpty()).toBe(false)
-  expect(new Series().isEmpty()).toBe(true)
+  expect(series.isEmpty).toBe(false)
+  expect(new Series().isEmpty).toBe(true)
   expect(series.apply(v => v * 2).values).toStrictEqual(scale(x, 2))
 
   const clearedValues = set(series.clear().values)
