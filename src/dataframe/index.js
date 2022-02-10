@@ -30,6 +30,7 @@ const dfShuffle = require("./df-shuffle.js")
 const dfFilter = require("./df-filter.js")
 const dfSort = require("./df-sort.js")
 const dfPrint = require("./df-print.js")
+const dfToObject = require("./df-to-object.js")
 
 function makeKey(n) {
   const alpha = "abcdefghijklmnopqrstuvwxyz1234567890"
@@ -946,19 +947,7 @@ class DataFrame {
 
   toObject() {
     const self = this
-    const out = {}
-
-    self.values.forEach((row, i) => {
-      const temp = {}
-
-      row.forEach((value, j) => {
-        temp[self.columns[j]] = value
-      })
-
-      out[self.index[i]] = temp
-    })
-
-    return out
+    return dfToObject(self)
   }
 
   toCSVString(shouldIncludeIndex) {
