@@ -1,5 +1,5 @@
-const range = require("../range.js")
 const leftPad = require("./left-pad.js")
+const range = require("../range.js")
 
 function dfResetIndex(df) {
   const out = df.copy()

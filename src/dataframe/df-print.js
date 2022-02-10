@@ -1,5 +1,5 @@
-const isString = require("../is-string.js")
 const isEqual = require("../is-equal.js")
+const isString = require("../is-string.js")
 const range = require("../range.js")
 const Series = require("../series")
 

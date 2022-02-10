@@ -1,10 +1,10 @@
-const isUndefined = require("../is-undefined.js")
-const range = require("../range.js")
+const assert = require("../assert.js")
 const isArray = require("../is-array.js")
 const isNumber = require("../is-number.js")
-const assert = require("../assert.js")
-const shape = require("../shape.js")
+const isUndefined = require("../is-undefined.js")
 const isWholeNumber = require("./is-whole-number.js")
+const range = require("../range.js")
+const shape = require("../shape.js")
 
 function dfGetSubsetByIndices(df, rowIndices, colIndices) {
   const dataShape = df.shape

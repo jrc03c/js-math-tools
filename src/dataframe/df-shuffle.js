@@ -1,5 +1,5 @@
-const isUndefined = require("../is-undefined.js")
 const assert = require("../assert.js")
+const isUndefined = require("../is-undefined.js")
 const shuffle = require("../shuffle.js")
 
 function dfShuffle(df, axis) {

@@ -1,8 +1,8 @@
-const isString = require("../is-string.js")
-const isNumber = require("../is-number.js")
 const assert = require("../assert.js")
-const set = require("../set.js")
+const isNumber = require("../is-number.js")
+const isString = require("../is-string.js")
 const isUndefined = require("../is-undefined.js")
+const set = require("../set.js")
 
 function dfGet(df, rows, cols) {
   if (isString(rows) || isNumber(rows)) rows = [rows]

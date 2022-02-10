@@ -1,6 +1,6 @@
-const isString = require("../is-string.js")
-const isObject = require("../is-object.js")
 const isBoolean = require("../is-boolean.js")
+const isObject = require("../is-object.js")
+const isString = require("../is-string.js")
 const isUndefined = require("../is-undefined.js")
 const MathError = require("../math-error.js")
 

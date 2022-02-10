@@ -1,10 +1,10 @@
-const isUndefined = require("../is-undefined.js")
-const isString = require("../is-string.js")
-const isArray = require("../is-array.js")
-const shape = require("../shape.js")
 const assert = require("../assert.js")
 const flatten = require("../flatten.js")
+const isArray = require("../is-array.js")
+const isString = require("../is-string.js")
+const isUndefined = require("../is-undefined.js")
 const Series = require("../series")
+const shape = require("../shape.js")
 
 function dfGetSubsetByNames(DataFrame, df, rows, cols) {
   if (isUndefined(rows)) rows = df.index

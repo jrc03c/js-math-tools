@@ -1,9 +1,9 @@
-const isFunction = require("../is-function.js")
 const assert = require("../assert.js")
-const transpose = require("../transpose.js")
+const copy = require("../copy.js")
+const isFunction = require("../is-function.js")
 const Series = require("../series")
 const shape = require("../shape.js")
-const copy = require("../copy.js")
+const transpose = require("../transpose.js")
 
 function dfApply(DataFrame, df, fn, axis) {
   axis = axis || 0

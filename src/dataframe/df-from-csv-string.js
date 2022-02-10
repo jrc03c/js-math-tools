@@ -1,13 +1,11 @@
+const assert = require("../assert.js")
 const isArray = require("../is-array.js")
 const isBoolean = require("../is-boolean.js")
-const isObject = require("../is-object.js")
-const leftPad = require("./left-pad.js")
+const isString = require("../is-string.js")
+const isUndefined = require("../is-undefined.js")
+const MathError = require("../math-error.js")
 const max = require("../max.js")
 const range = require("../range.js")
-const isString = require("../is-string.js")
-const MathError = require("../math-error.js")
-const isUndefined = require("../is-undefined.js")
-const assert = require("../assert.js")
 
 function fromCSVString(
   DataFrame,

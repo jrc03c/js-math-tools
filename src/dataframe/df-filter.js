@@ -1,8 +1,8 @@
 const assert = require("../assert.js")
+const flatten = require("../flatten.js")
 const isFunction = require("../is-function.js")
 const isUndefined = require("../is-undefined.js")
 const Series = require("../series")
-const flatten = require("../flatten.js")
 
 function arrayToObject(x) {
   const out = {}

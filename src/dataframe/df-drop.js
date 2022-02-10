@@ -1,10 +1,10 @@
-const isUndefined = require("../is-undefined.js")
-const isString = require("../is-string.js")
-const isNumber = require("../is-number.js")
 const assert = require("../assert.js")
 const isArray = require("../is-array.js")
-const shape = require("../shape.js")
+const isNumber = require("../is-number.js")
 const isSeries = require("./is-series.js")
+const isString = require("../is-string.js")
+const isUndefined = require("../is-undefined.js")
+const shape = require("../shape.js")
 
 function dfDrop(DataFrame, df, rows, cols) {
   if (isUndefined(rows)) rows = []

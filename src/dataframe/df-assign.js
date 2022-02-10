@@ -1,11 +1,11 @@
-const isUndefined = require("../is-undefined.js")
 const assert = require("../assert.js")
-const isString = require("../is-string.js")
-const isSeries = require("./is-series.js")
 const isArray = require("../is-array.js")
-const shape = require("../shape.js")
-const isObject = require("../is-object.js")
 const isEqual = require("../is-equal.js")
+const isObject = require("../is-object.js")
+const isSeries = require("./is-series.js")
+const isString = require("../is-string.js")
+const isUndefined = require("../is-undefined.js")
+const shape = require("../shape.js")
 const transpose = require("../transpose.js")
 
 function dfAssign(df, p1, p2) {

@@ -1,14 +1,14 @@
 const { random } = require("../random.js")
-const isUndefined = require("../is-undefined.js")
+const assert = require("../assert.js")
+const flatten = require("../flatten.js")
+const isArray = require("../is-array.js")
+const isBoolean = require("../is-boolean.js")
 const isNumber = require("../is-number.js")
 const isString = require("../is-string.js")
-const isBoolean = require("../is-boolean.js")
-const isArray = require("../is-array.js")
-const assert = require("../assert.js")
-const shape = require("../shape.js")
+const isUndefined = require("../is-undefined.js")
 const range = require("../range.js")
+const shape = require("../shape.js")
 const sort = require("../sort.js")
-const flatten = require("../flatten.js")
 
 function dfSort(df, cols, directions) {
   // temporarily assign index as column in dataframe
