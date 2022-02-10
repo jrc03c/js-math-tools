@@ -1,7 +1,6 @@
 const assert = require("../assert.js")
 const copy = require("../copy.js")
 const isArray = require("../is-array.js")
-const isNumber = require("../is-number.js")
 const isString = require("../is-string.js")
 const isUndefined = require("../is-undefined.js")
 const leftPad = require("../helpers/left-pad.js")
@@ -11,13 +10,13 @@ const reverse = require("../reverse.js")
 const seriesApply = require("./series-apply.js")
 const seriesDropMissing = require("./series-drop-missing.js")
 const seriesFilter = require("./series-filter.js")
+const seriesGet = require("./series-get.js")
 const seriesGetSubsetByIndices = require("./series-get-subset-by-indices.js")
 const seriesGetSubsetByNames = require("./series-get-subset-by-names.js")
 const seriesPrint = require("./series-print.js")
 const seriesSort = require("./series-sort.js")
 const seriesSortByIndex = require("./series-sort-by-index.js")
 const seriesToObject = require("./series-to-object.js")
-const set = require("../set.js")
 const shape = require("../shape.js")
 
 class Series {
@@ -135,52 +134,7 @@ class Series {
 
   get(indices) {
     const self = this
-
-    if (isString(indices) || isNumber(indices)) indices = [indices]
-
-    const types = set((indices || []).map(v => typeof v))
-
-    assert(
-      types.length <= 2,
-      "Only whole numbers and/or strings are allowed in `get` arrays!"
-    )
-
-    if (types.length === 1) {
-      assert(
-        types[0] === "string" || types[0] === "number",
-        "Only whole numbers and/or strings are allowed in `get` arrays!"
-      )
-    }
-
-    if (types.length === 2) {
-      assert(
-        types.indexOf("string") > -1,
-        "Only whole numbers and/or strings are allowed in `get` arrays!"
-      )
-
-      assert(
-        types.indexOf("number") > -1,
-        "Only whole numbers and/or strings are allowed in `get` arrays!"
-      )
-    }
-
-    if (!isUndefined(indices)) {
-      indices = indices.map(i => {
-        if (typeof i === "string") {
-          assert(self.index.indexOf(i) > -1, `Index "${i}" does not exist!`)
-          return i
-        }
-
-        if (typeof i === "number") {
-          assert(i >= 0, `Index ${i} is out of bounds!`)
-          assert(parseInt(i) === i, `Indices must be integers!`)
-          assert(i < self.index.length, `Index ${i} is out of bounds!`)
-          return self.index[i]
-        }
-      })
-    }
-
-    return self.getSubsetByNames(indices)
+    return seriesGet(self, indices)
   }
 
   getSubsetByNames(indices) {
