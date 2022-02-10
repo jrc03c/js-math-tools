@@ -38,6 +38,7 @@ const isWholeNumber = require("./is-whole-number.js")
 const dfDropMissing = require("./df-drop-missing.js")
 const dfApply = require("./df-apply.js")
 const dfAssign = require("./df-assign.js")
+const dfCopy = require("./df-copy.js")
 
 function makeKey(n) {
   const alpha = "abcdefghijklmnopqrstuvwxyz1234567890"
@@ -569,11 +570,7 @@ class DataFrame {
 
   copy() {
     const self = this
-    if (self.isEmpty()) return new DataFrame()
-    const out = new DataFrame(copy(self.values))
-    out.columns = self.columns.slice()
-    out.index = self.index.slice()
-    return out
+    return dfCopy(DataFrame, self)
   }
 
   assign(p1, p2) {
