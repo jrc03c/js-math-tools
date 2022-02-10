@@ -11,6 +11,7 @@ const ndarray = require("../ndarray.js")
 const range = require("../range.js")
 const reverse = require("../reverse.js")
 const seriesFilter = require("./series-filter.js")
+const seriesPrint = require("./series-print.js")
 const seriesSort = require("./series-sort.js")
 const seriesSortByIndex = require("./series-sort-by-index.js")
 const set = require("../set.js")
@@ -338,33 +339,7 @@ class Series {
 
   print() {
     const self = this
-    let temp = self.copy()
-    const maxRows = typeof window === "undefined" ? 20 : 10
-
-    if (temp.index.length > maxRows) {
-      temp = temp.get(
-        range(0, maxRows / 2).concat(
-          range(temp.index.length - maxRows / 2, temp.index.length)
-        )
-      )
-
-      const tempIndex = copy(temp.index)
-      tempIndex.splice(parseInt(tempIndex.length / 2), 0, "...")
-      temp.values.push("...")
-      temp.index.push("...")
-      temp = temp.get(tempIndex)
-    }
-
-    const out = {}
-
-    temp.values.forEach((value, i) => {
-      const obj = {}
-      obj[temp.name] = value
-      out[temp.index[i]] = obj
-    })
-
-    console.table(out)
-    return self
+    return seriesPrint(self)
   }
 
   sort(direction) {
