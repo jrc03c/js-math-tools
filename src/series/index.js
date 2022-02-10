@@ -14,6 +14,7 @@ const seriesFilter = require("./series-filter.js")
 const seriesPrint = require("./series-print.js")
 const seriesSort = require("./series-sort.js")
 const seriesSortByIndex = require("./series-sort-by-index.js")
+const seriesToObject = require("./series-to-object.js")
 const set = require("../set.js")
 const shape = require("../shape.js")
 
@@ -327,14 +328,7 @@ class Series {
 
   toObject() {
     const self = this
-    const out = {}
-    out[self.name] = {}
-
-    self.index.forEach((index, i) => {
-      out[self.name][index] = self.values[i]
-    })
-
-    return out
+    return seriesToObject(self)
   }
 
   print() {
