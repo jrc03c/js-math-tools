@@ -1,9 +1,8 @@
 const assert = require("../assert.js")
-const copy = require("../copy.js")
 const isFunction = require("../is-function.js")
 const Series = require("../series")
-const shape = require("../shape.js")
-const transpose = require("../transpose.js")
+const isArray = require("../is-array.js")
+const isUndefined = require("../is-undefined.js")
 
 function dfApply(DataFrame, df, fn, axis) {
   axis = axis || 0
@@ -18,42 +17,68 @@ function dfApply(DataFrame, df, fn, axis) {
     "The second parameter to the `apply` method (the `axis`) must be 0 or 1."
   )
 
+  // apply to columns
   if (axis === 0) {
-    const temp = transpose(df.values)
+    const temp = {}
+    let shouldReturnADataFrame
 
-    const newValues = temp.map((col, i) => {
-      const series = new Series(col)
-      series.name = df.columns[i]
+    df.columns.forEach((colName, i) => {
+      const series = new Series(df.values.map(row => row[i]))
+      series.name = colName
       series.index = df.index
-      return fn(series, i, df)
+      const value = fn(series, i, df)
+
+      if (value instanceof Series) {
+        temp[colName] = value.values
+      } else {
+        temp[colName] = value
+      }
+
+      if (isUndefined(shouldReturnADataFrame)) {
+        shouldReturnADataFrame = value instanceof Series || isArray(value)
+      }
     })
 
-    if (shape(newValues).length === 1) {
-      const out = new Series(newValues)
-      out.index = copy(df.columns)
+    if (shouldReturnADataFrame) {
+      const out = new DataFrame(temp)
+      out.index = df.index
       return out
     } else {
-      const out = new DataFrame(transpose(newValues))
-      out.index = copy(df.index)
-      out.columns = copy(df.columns)
+      const out = new Series(df.columns.map(colName => temp[colName]))
+      out.index = df.columns
       return out
     }
-  } else if (axis === 1) {
-    const newValues = df.values.map((row, i) => {
+  }
+
+  // apply to rows
+  else if (axis === 1) {
+    let shouldReturnADataFrame
+
+    const temp = df.values.map((row, i) => {
       const series = new Series(row)
       series.name = df.index[i]
       series.index = df.columns
-      return fn(series, i, df)
+      const value = fn(series, i, df)
+
+      if (isUndefined(shouldReturnADataFrame)) {
+        shouldReturnADataFrame = value instanceof Series || isArray(value)
+      }
+
+      if (value instanceof Series) {
+        return value.values
+      } else {
+        return value
+      }
     })
 
-    if (shape(newValues).length === 1) {
-      const out = new Series(newValues)
-      out.index = copy(df.index)
+    if (shouldReturnADataFrame) {
+      const out = new DataFrame(temp)
+      out.index = df.index
+      out.columns = df.columns
       return out
     } else {
-      const out = new DataFrame(newValues)
-      out.index = copy(df.index)
-      out.columns = copy(df.columns)
+      const out = new Series(temp)
+      out.index = df.index
       return out
     }
   }
