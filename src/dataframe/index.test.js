@@ -1,19 +1,15 @@
-const DataFrame = require("./dataframe.js")
-const Series = require("./series.js")
-const isEqual = require("./is-equal.js")
-const normal = require("./normal.js")
-const flatten = require("./flatten.js")
-const distance = require("./distance.js")
-const zeros = require("./zeros.js")
-const chop = require("./chop.js")
-const print = require("./print.js")
-const range = require("./range.js")
-const set = require("./set.js")
-const isUndefined = require("./is-undefined.js")
-const sort = require("./sort.js")
-const shape = require("./shape.js")
-const sum = require("./sum.js")
+const DataFrame = require(".")
 const filename = "delete-me.csv"
+const flatten = require("../flatten.js")
+const isEqual = require("../is-equal.js")
+const isUndefined = require("../is-undefined.js")
+const normal = require("../normal.js")
+const range = require("../range.js")
+const Series = require("../series")
+const set = require("../set.js")
+const sort = require("../sort.js")
+const sum = require("../sum.js")
+const zeros = require("../zeros.js")
 
 test("tests DataFrame emptiness", () => {
   const xShape = [17, 32]
@@ -22,8 +18,8 @@ test("tests DataFrame emptiness", () => {
 
   expect(df instanceof DataFrame).toBe(true)
   expect(df.shape).toStrictEqual(xShape)
-  expect(!df.isEmpty()).toBe(true)
-  expect(new DataFrame().isEmpty()).toBe(true)
+  expect(!df.isEmpty).toBe(true)
+  expect(new DataFrame().isEmpty).toBe(true)
 
   const clearedValues = set(df.clear().values)
   expect(clearedValues.length).toBe(1)
@@ -141,11 +137,11 @@ test("tests DataFrame missing value dropping", () => {
 
   expect(df.dropMissing().shape).toStrictEqual([2, 2])
   expect(df.dropMissing().index).toStrictEqual(["row1", "row2"])
-  expect(df.dropMissing(1).isEmpty()).toBe(true)
+  expect(df.dropMissing(1).isEmpty).toBe(true)
   expect(df.dropMissing(1, "all").shape).toStrictEqual(df.shape)
   expect(df.dropMissing(1, null, 4).shape).toStrictEqual(df.shape)
   expect(df.dropMissing(1, null, 3).shape).toStrictEqual([6, 1])
-  expect(df.dropMissing(1, null, 1).isEmpty()).toBe(true)
+  expect(df.dropMissing(1, null, 1).isEmpty).toBe(true)
 })
 
 test("tests DataFrame NaN value dropping", () => {
@@ -203,7 +199,7 @@ test("tests DataFrame NaN value dropping", () => {
 
   expect(df.dropNaN(0, null, 2).columns).toStrictEqual(df.columns)
 
-  expect(df.dropNaN(1, "any").isEmpty()).toBe(true)
+  expect(df.dropNaN(1, "any").isEmpty).toBe(true)
   expect(df.dropNaN(1, "all").values).toStrictEqual(df.values)
   expect(df.dropNaN(1, null, 3).values).toStrictEqual(
     flatten([[0], [1], [-10], [2], [3], [4], [null], [1], [NaN]])
@@ -336,12 +332,20 @@ test("tests DataFrame reading & writing to and from disk", async () => {
   x.columns = x.columns.map(i => makeKey(8))
   x.index = x.index.map(i => makeKey(8))
 
-  const settings = { hasHeaderRow: true, hasIndexColumn: false }
   let yPred
+  let shouldIncludeIndex = false
+  let hasHeaderRow = true
 
   // v1
-  x.toCSV(filename, settings)
-  yPred = await DataFrame.fromCSV(filename, settings)
+  x.toCSV(filename, shouldIncludeIndex)
+
+  yPred = await DataFrame.fromCSV(
+    filename,
+    null,
+    hasHeaderRow,
+    shouldIncludeIndex
+  )
+
   expect(yPred.values).toStrictEqual(x.values)
   expect(yPred.columns).toStrictEqual(x.columns)
   expect(yPred.index).not.toStrictEqual(x.index)
@@ -349,33 +353,22 @@ test("tests DataFrame reading & writing to and from disk", async () => {
   await pause(1000)
 
   // v2
-  settings.hasIndexColumn = true
-  x.toCSV(filename, settings)
-  yPred = await DataFrame.fromCSV(filename, settings)
+  shouldIncludeIndex = false
+
+  x.toCSV(filename, shouldIncludeIndex)
+
+  yPred = await DataFrame.fromCSV(
+    filename,
+    null,
+    hasHeaderRow,
+    shouldIncludeIndex
+  )
+
   expect(yPred.values).toStrictEqual(x.values)
   expect(yPred.columns).toStrictEqual(x.columns)
-  expect(yPred.index).toStrictEqual(x.index)
+  expect(yPred.index).toStrictEqual(x.resetIndex().index)
   expect(yPred === x).toBe(false)
   await pause(1000)
-
-  // v3
-  settings.hasHeaderRow = false
-  x.toCSV(filename, settings)
-  yPred = await DataFrame.fromCSV(filename, settings)
-  expect(yPred.values).toStrictEqual(x.values)
-  expect(yPred.columns).not.toStrictEqual(x.columns)
-  expect(yPred.index).toStrictEqual(x.index)
-  expect(yPred === x).toBe(false)
-  await pause(1000)
-
-  // v4
-  settings.hasIndexColumn = false
-  x.toCSV(filename, settings)
-  yPred = await DataFrame.fromCSV(filename, settings)
-  expect(yPred.values).toStrictEqual(x.values)
-  expect(yPred.columns).not.toStrictEqual(x.columns)
-  expect(yPred.index).not.toStrictEqual(x.index)
-  expect(yPred === x).toBe(false)
 })
 
 afterAll(() => {
