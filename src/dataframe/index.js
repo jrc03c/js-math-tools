@@ -37,6 +37,7 @@ const dfDropNaN = require("./df-drop-nan.js")
 const isWholeNumber = require("./is-whole-number.js")
 const dfDropMissing = require("./df-drop-missing.js")
 const dfApply = require("./df-apply.js")
+const dfAssign = require("./df-assign.js")
 
 function makeKey(n) {
   const alpha = "abcdefghijklmnopqrstuvwxyz1234567890"
@@ -576,95 +577,8 @@ class DataFrame {
   }
 
   assign(p1, p2) {
-    let name, obj
-
-    if (isUndefined(p2)) {
-      obj = p1
-
-      assert(
-        !isArray(obj),
-        "When using only one parameter for the `assign` method, the parameter must be an object or a Series."
-      )
-    } else {
-      name = p1
-      obj = p2
-
-      assert(
-        isString(name),
-        "When using two parameters for the `assign` method, the first parameter must be a string."
-      )
-
-      assert(
-        isSeries(obj) || (isArray(obj) && shape(obj).length === 1),
-        "When using two parameters for the `assign` method, the second parameter must be a Series or a 1-dimensional array."
-      )
-    }
-
-    assert(
-      isObject(obj) ||
-        isSeries(obj) ||
-        (isArray(obj) && shape(obj).length === 1),
-      "An object, Series, or 1-dimensional array must be passed into the `assign` method."
-    )
-
     const self = this
-
-    if (isSeries(obj)) {
-      const temp = {}
-
-      assert(
-        self.isEmpty() || isEqual(obj.index, self.index),
-        "The index of the new data does not match the index of the DataFrame."
-      )
-
-      temp[name || obj.name] = obj.values
-      return self.assign(temp)
-    } else if (isArray(obj)) {
-      const temp = {}
-      temp[name || "data"] = obj
-      return self.assign(temp)
-    } else {
-      let out = self.copy()
-      let outShape = out.shape
-
-      Object.keys(obj).forEach(col => {
-        const values = obj[col]
-
-        assert(
-          isArray(values),
-          "Each key-value pair must be (respectively) a string and a 1-dimensional array of values."
-        )
-
-        assert(
-          shape(values).length === 1,
-          "Each key-value pair must be (respectively) a string and a 1-dimensional array of values."
-        )
-
-        if (out.isEmpty()) {
-          out.values = transpose([values])
-          out.columns = [col]
-          outShape = out.shape
-        } else {
-          assert(
-            values.length === outShape[0],
-            `Column "${col}" in the new data is not the same length as the other columns in the original DataFrame.`
-          )
-
-          let colIndex = out.columns.indexOf(col)
-
-          if (colIndex < 0) {
-            out.columns.push(col)
-            colIndex = out.columns.indexOf(col)
-          }
-
-          out.values.forEach((row, i) => {
-            row[colIndex] = values[i]
-          })
-        }
-      })
-
-      return out
-    }
+    return dfAssign(self, p1, p2)
   }
 
   apply(fn, axis) {
