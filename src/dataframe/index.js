@@ -40,6 +40,7 @@ const dfApply = require("./df-apply.js")
 const dfAssign = require("./df-assign.js")
 const dfCopy = require("./df-copy.js")
 const dfResetIndex = require("./df-reset-index.js")
+const dfGetSubsetByIndices = require("./df-get-subset-by-indices.js")
 
 function makeKey(n) {
   const alpha = "abcdefghijklmnopqrstuvwxyz1234567890"
@@ -479,60 +480,7 @@ class DataFrame {
 
   getSubsetByIndices(rowIndices, colIndices) {
     const self = this
-    const dataShape = self.shape
-
-    if (isUndefined(rowIndices)) rowIndices = range(0, dataShape[0])
-    if (isUndefined(colIndices)) colIndices = range(0, dataShape[1])
-    if (typeof rowIndices === "number") rowIndices = [rowIndices]
-    if (typeof colIndices === "number") colIndices = [colIndices]
-
-    assert(
-      isArray(rowIndices) && isArray(colIndices),
-      "The `rowIndices` and `colIndices` parameters must be 1-dimensional arrays of whole numbers."
-    )
-
-    assert(
-      shape(rowIndices).length === 1 && shape(colIndices).length === 1,
-      "The `rowIndices` and `colIndices` parameters must be 1-dimensional arrays of whole numbers."
-    )
-
-    assert(
-      rowIndices.length > 0,
-      "The `rowIndices` array must contain at least one index."
-    )
-
-    assert(
-      colIndices.length > 0,
-      "The `colIndices` array must contain at least one index."
-    )
-
-    rowIndices.forEach(rowIndex => {
-      assert(
-        isWholeNumber(rowIndex),
-        "The `rowIndices` and `colIndices` parameters must be 1-dimensional arrays of whole numbers."
-      )
-
-      assert(
-        rowIndex < self.index.length,
-        `The row index ${rowIndex} is out of bounds.`
-      )
-    })
-
-    colIndices.forEach(colIndex => {
-      assert(
-        isWholeNumber(colIndex),
-        "The `rowIndices` and `colIndices` parameters must be 1-dimensional arrays of whole numbers."
-      )
-
-      assert(
-        colIndex < self.columns.length,
-        `The column index ${colIndex} is out of bounds.`
-      )
-    })
-
-    const rows = rowIndices.map(i => self.index[i])
-    const cols = colIndices.map(i => self.columns[i])
-    return self.getSubsetByNames(rows, cols)
+    return dfGetSubsetByIndices(self, rowIndices, colIndices)
   }
 
   loc(rows, cols) {
