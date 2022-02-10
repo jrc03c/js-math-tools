@@ -1,7 +1,6 @@
 const assert = require("../assert.js")
 const copy = require("../copy.js")
 const isArray = require("../is-array.js")
-const isFunction = require("../is-function.js")
 const isNumber = require("../is-number.js")
 const isString = require("../is-string.js")
 const isUndefined = require("../is-undefined.js")
@@ -10,6 +9,7 @@ const leftPad = require("../helpers/left-pad.js")
 const ndarray = require("../ndarray.js")
 const range = require("../range.js")
 const reverse = require("../reverse.js")
+const seriesApply = require("./series-apply.js")
 const seriesDropMissing = require("./series-drop-missing.js")
 const seriesFilter = require("./series-filter.js")
 const seriesPrint = require("./series-print.js")
@@ -298,15 +298,8 @@ class Series {
   }
 
   apply(fn) {
-    assert(
-      isFunction(fn),
-      "The parameter to the `apply` method must be a function."
-    )
-
     const self = this
-    const out = self.copy()
-    out.values = out.values.map((v, i) => fn(v, out.index[i]))
-    return out
+    return seriesApply(self, fn)
   }
 
   dropMissing(condition, threshold) {
