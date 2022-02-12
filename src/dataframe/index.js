@@ -52,6 +52,13 @@ class DataFrame {
       enumerable: true,
 
       get() {
+        if (
+          self._values.length === 0 ||
+          (!isUndefined(self._values[0]) && self._values[0].length === 0)
+        ) {
+          return [[]]
+        }
+
         return self._values
       },
 
@@ -111,7 +118,7 @@ class DataFrame {
         )
 
         assert(
-          x.length === self.shape[1],
+          self.isEmpty || x.length === self.shape[1],
           "The new columns list must be the same length as the old columns list!"
         )
 
@@ -177,7 +184,7 @@ class DataFrame {
         )
 
         assert(
-          x.length === self.shape[0],
+          self.isEmpty || x.length === self.shape[0],
           "The new index must be the same length as the old index!"
         )
 
@@ -334,7 +341,7 @@ class DataFrame {
 
   assign(p1, p2) {
     const self = this
-    return dfAssign(self, p1, p2)
+    return dfAssign(DataFrame, self, p1, p2)
   }
 
   apply(fn, axis) {

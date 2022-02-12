@@ -6,6 +6,7 @@ const isWholeNumber = require("../helpers/is-whole-number.js")
 const shape = require("../shape.js")
 
 function dfDropMissing(DataFrame, df, axis, condition, threshold) {
+  console.log("axis:", axis)
   axis = axis || 0
 
   assert(
@@ -56,6 +57,7 @@ function dfDropMissing(DataFrame, df, axis, condition, threshold) {
   let out = df.copy()
   const tempID = Math.random().toString()
 
+  // drop rows
   if (axis === 0) {
     out = out.assign(tempID, out.index)
 
@@ -71,23 +73,28 @@ function dfDropMissing(DataFrame, df, axis, condition, threshold) {
     if (isSeries(newIndex)) newIndex = newIndex.values
     out.index = newIndex
     out = out.drop(null, tempID)
-  } else if (axis === 1) {
-    out = out.transpose()
-    out = out.assign(tempID, out.index)
+  }
 
-    const newValues = out.values.map(helper).filter(col => col.length > 0)
+  // drop columns
+  else if (axis === 1) {
+    const temp = {}
 
-    if (shape(newValues).length < 2) return new DataFrame()
+    out.columns.forEach((colName, i) => {
+      const values = out.values.map(row => row[i])
+      const newValues = helper(values)
 
-    out.values = newValues
+      if (newValues.length > 0) {
+        temp[colName] = newValues
+      }
+    })
 
-    let newIndex = out.get(null, tempID)
-    if (isUndefined(newIndex)) return new DataFrame()
-    if (isString(newIndex)) newIndex = [newIndex]
-    if (isSeries(newIndex)) newIndex = newIndex.values
-    out.index = newIndex
-    out = out.drop(null, tempID)
-    out = out.transpose()
+    if (Object.keys(temp).length === 0) {
+      return new DataFrame()
+    }
+
+    const newOut = new DataFrame(temp)
+    newOut.index = out.index
+    return newOut
   }
 
   return out

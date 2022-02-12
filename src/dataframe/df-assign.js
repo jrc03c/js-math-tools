@@ -1,99 +1,124 @@
 const assert = require("../assert.js")
 const isArray = require("../is-array.js")
-const isEqual = require("../is-equal.js")
 const isObject = require("../is-object.js")
 const isSeries = require("../helpers/is-series.js")
 const isString = require("../is-string.js")
 const isUndefined = require("../is-undefined.js")
 const shape = require("../shape.js")
-const transpose = require("../transpose.js")
+const copy = require("../copy.js")
+const MathError = require("../math-error.js")
+const sort = require("../sort.js")
 
-function dfAssign(df, p1, p2) {
-  let name, obj
+function dfAssign(DataFrame, df, p1, p2) {
+  // options:
+  // assign(object)
+  // assign(string, array or series)
 
-  if (isUndefined(p2)) {
-    obj = p1
+  const obj = (() => {
+    const out = {}
 
-    assert(
-      !isArray(obj),
-      "When using only one parameter for the `assign` method, the parameter must be an object or a Series."
-    )
-  } else {
-    name = p1
-    obj = p2
+    // one argument
+    if (isUndefined(p2)) {
+      if (isSeries(p1)) {
+        const temp = df.index.map(rowName => p1.get(rowName))
 
-    assert(
-      isString(name),
-      "When using two parameters for the `assign` method, the first parameter must be a string."
-    )
-
-    assert(
-      isSeries(obj) || (isArray(obj) && shape(obj).length === 1),
-      "When using two parameters for the `assign` method, the second parameter must be a Series or a 1-dimensional array."
-    )
-  }
-
-  assert(
-    isObject(obj) || isSeries(obj) || (isArray(obj) && shape(obj).length === 1),
-    "An object, Series, or 1-dimensional array must be passed into the `assign` method."
-  )
-
-  if (isSeries(obj)) {
-    const temp = {}
-
-    assert(
-      df.isEmpty || isEqual(obj.index, df.index),
-      "The index of the new data does not match the index of the DataFrame."
-    )
-
-    temp[name || obj.name] = obj.values
-    return df.assign(temp)
-  } else if (isArray(obj)) {
-    const temp = {}
-    temp[name || "data"] = obj
-    return df.assign(temp)
-  } else {
-    let out = df.copy()
-    let outShape = out.shape
-
-    Object.keys(obj).forEach(col => {
-      const values = obj[col]
-
-      assert(
-        isArray(values),
-        "Each key-value pair must be (respectively) a string and a 1-dimensional array of values."
-      )
-
-      assert(
-        shape(values).length === 1,
-        "Each key-value pair must be (respectively) a string and a 1-dimensional array of values."
-      )
-
-      if (out.isEmpty) {
-        out.values = transpose([values])
-        out.columns = [col]
-        outShape = out.shape
-      } else {
         assert(
-          values.length === outShape[0],
-          `Column "${col}" in the new data is not the same length as the other columns in the original DataFrame.`
+          temp.length === df.index.length,
+          "Each column of values to be assigned must have the same length as the number of rows in the target DataFrame!"
         )
 
-        let colIndex = out.columns.indexOf(col)
+        out[p1.name] = temp
+      } else if (isObject(p1)) {
+        Object.keys(p1).forEach(key => {
+          const values = p1[key]
 
-        if (colIndex < 0) {
-          out.columns.push(col)
-          colIndex = out.columns.indexOf(col)
-        }
+          if (isSeries(values)) {
+            const temp = df.index.map(rowName => values.get(rowName))
 
-        out.values.forEach((row, i) => {
-          row[colIndex] = values[i]
+            assert(
+              temp.length === df.index.length,
+              "Each column of values to be assigned must have the same length as the number of rows in the target DataFrame!"
+            )
+
+            out[key] = temp
+          } else if (isArray(values)) {
+            assert(
+              shape(values).length === 1,
+              "When using a single argument for the `assign` method, the argument must be either (1) a Series, or (2) an object consisting of key-value pairs where each key is a string representing a column name and each value is a one-dimensional array or Series!"
+            )
+
+            assert(
+              values.length === df.index.length,
+              "Each column of values to be assigned must have the same length as the number of rows in the target DataFrame!"
+            )
+
+            out[key] = values
+          } else {
+            throw new MathError(
+              "When using a single argument for the `assign` method, the argument must be either (1) a Series, or (2) an object consisting of key-value pairs where each key is a string representing a column name and each value is a one-dimensional array or Series!"
+            )
+          }
         })
+      } else {
+        throw new MathError(
+          "When using a single argument for the `assign` method, the argument must be either (1) a Series, or (2) an object consisting of key-value pairs where each key is a string representing a column name and each value is a one-dimensional array or Series!"
+        )
       }
-    })
+    }
+
+    // two arguments
+    else {
+      assert(
+        isString(p1),
+        "When using two arguments for the `assign` method, the first argument must be a string representing a column name, and the second argument must be a one-dimensional array or Series!"
+      )
+
+      if (isSeries(p2)) {
+        const temp = df.index.map(rowName => p2.get(rowName))
+
+        assert(
+          temp.length === df.index.length,
+          "The one-dimensional array or Series to be assigned must have the same length as the number of rows in the target DataFrame!"
+        )
+
+        out[p1] = temp
+      } else if (isArray(p2)) {
+        assert(
+          shape(p2).length === 1,
+          "When using two arguments for the `assign` method, the first argument must be a string representing a column name, and the second argument must be a one-dimensional array or Series!"
+        )
+
+        assert(
+          p2.length === df.index.length,
+          "The one-dimensional array or Series to be assigned must have the same length as the number of rows in the target DataFrame!"
+        )
+
+        out[p1] = p2
+      } else {
+        throw new MathError(
+          "When using two arguments for the `assign` method, the first argument must be a string representing a column name, and the second argument must be a one-dimensional array or Series!"
+        )
+      }
+    }
 
     return out
-  }
+  })()
+
+  const columns = df.columns
+  const index = df.index
+  const values = copy(df.values)
+  const newColumnNames = sort(Object.keys(obj))
+
+  values.forEach((row, i) => {
+    newColumnNames.forEach(colName => {
+      row.push(obj[colName][i])
+    })
+  })
+
+  const out = new DataFrame(values)
+  out.columns = columns.concat(newColumnNames)
+  out.index = index
+  return out
 }
 
 module.exports = dfAssign
