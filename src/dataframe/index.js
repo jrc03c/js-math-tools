@@ -10,6 +10,7 @@ const dfFilter = require("./df-filter.js")
 const dfFromCSV = require("./df-from-csv.js")
 const dfFromCSVString = require("./df-from-csv-string.js")
 const dfGet = require("./df-get.js")
+const dfGetDummies = require("./df-get-dummies.js")
 const dfGetSubsetByIndices = require("./df-get-subset-by-indices.js")
 const dfGetSubsetByNames = require("./df-get-subset-by-names.js")
 const dfPrint = require("./df-print.js")
@@ -314,6 +315,16 @@ class DataFrame {
   iloc(rowIndices, colIndices) {
     const self = this
     return self.getSubsetByIndices(rowIndices, colIndices)
+  }
+
+  getDummies(columns) {
+    const self = this
+    return dfGetDummies(DataFrame, self, columns)
+  }
+
+  oneHotEncode(columns) {
+    const self = this
+    return dfGetDummies(DataFrame, self, columns)
   }
 
   transpose() {

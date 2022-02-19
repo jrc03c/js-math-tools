@@ -6,7 +6,6 @@ const isWholeNumber = require("../helpers/is-whole-number.js")
 const shape = require("../shape.js")
 
 function dfDropMissing(DataFrame, df, axis, condition, threshold) {
-  console.log("axis:", axis)
   axis = axis || 0
 
   assert(

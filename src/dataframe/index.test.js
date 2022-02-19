@@ -371,6 +371,66 @@ test("tests DataFrame reading & writing to and from disk", async () => {
   await pause(1000)
 })
 
+test("tests DataFrame one-hot encoding", () => {
+  const x = new DataFrame({
+    favoriteIceCream: [
+      "chocolate",
+      "strawberry",
+      "strawberry",
+      "chocolate",
+      "chocolate",
+      "vanilla",
+      "chocolate",
+      "rocky road",
+    ],
+
+    randomNumber: [7, 3, 4, 7, 2, 1, 6, 7],
+  })
+
+  const yPred = x.getDummies(["favoriteIceCream", "randomNumber"])
+
+  const yTrue = new DataFrame({
+    favoriteIceCream_chocolate: [1, 0, 0, 1, 1, 0, 1, 0],
+    favoriteIceCream_rockyRoad: [0, 0, 0, 0, 0, 0, 0, 1],
+    favoriteIceCream_strawberry: [0, 1, 1, 0, 0, 0, 0, 0],
+    favoriteIceCream_vanilla: [0, 0, 0, 0, 0, 1, 0, 0],
+
+    randomNumber_1: [0, 0, 0, 0, 0, 1, 0, 0],
+    randomNumber_2: [0, 0, 0, 0, 1, 0, 0, 0],
+    randomNumber_3: [0, 1, 0, 0, 0, 0, 0, 0],
+    randomNumber_4: [0, 0, 1, 0, 0, 0, 0, 0],
+    randomNumber_6: [0, 0, 0, 0, 0, 0, 1, 0],
+    randomNumber_7: [1, 0, 0, 1, 0, 0, 0, 1],
+  })
+
+  expect(isEqual(yPred, yTrue.get(null, sort(yTrue.columns)))).toBe(true)
+
+  expect(isEqual(yPred, x.getDummies().get(null, sort(yPred.columns)))).toBe(
+    true
+  )
+
+  const favoriteIceCreamColumns = sort(
+    yTrue.columns.filter(c => c.includes("favoriteIceCream"))
+  )
+  const randomNumberColumns = sort(
+    yTrue.columns.filter(c => c.includes("randomNumber"))
+  )
+
+  expect(
+    isEqual(
+      x.getDummies("favoriteIceCream").get(null, favoriteIceCreamColumns),
+      yTrue.get(null, favoriteIceCreamColumns)
+    )
+  ).toBe(true)
+
+  expect(
+    isEqual(
+      x.getDummies("randomNumber").get(null, randomNumberColumns),
+      yTrue.get(null, randomNumberColumns)
+    )
+  ).toBe(true)
+})
+
 afterAll(() => {
   // clean up
   const fs = require("fs")
