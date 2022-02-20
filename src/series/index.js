@@ -18,6 +18,7 @@ const seriesSort = require("./series-sort.js")
 const seriesSortByIndex = require("./series-sort-by-index.js")
 const seriesToObject = require("./series-to-object.js")
 const shape = require("../shape.js")
+const transpose = require("../transpose.js")
 
 module.exports = function (DataFrame) {
   class Series {
@@ -218,6 +219,24 @@ module.exports = function (DataFrame) {
     filter(fn) {
       const self = this
       return seriesFilter(Series, self, fn)
+    }
+
+    toDataFrame() {
+      const self = this
+      const out = new DataFrame(transpose([self.values]))
+      out.columns = [self.name]
+      out.index = self.index
+      return out
+    }
+
+    getDummies() {
+      const self = this
+      return self.toDataFrame().getDummies()
+    }
+
+    oneHotEncode() {
+      const self = this
+      return self.getDummies()
     }
   }
 

@@ -1,13 +1,15 @@
+const { DataFrame, Series } = require("../dataframe")
 const isEqual = require("../is-equal.js")
-const isSeries = s => s instanceof Series
 const isUndefined = require("../is-undefined.js")
 const normal = require("../normal.js")
 const range = require("../range.js")
 const scale = require("../scale.js")
-const { Series } = require("../dataframe")
 const set = require("../set.js")
+const sort = require("../sort.js")
 
 test("tests Series stuff", () => {
+  const isSeries = s => s instanceof Series
+
   const x = normal(100)
   const series = new Series(x)
 
@@ -41,6 +43,29 @@ test("tests Series stuff", () => {
   expect(series4.sort("ascending").values).toStrictEqual([2, 3, 4, 5])
   expect(series4.sort(false).values).toStrictEqual([5, 4, 3, 2])
   expect(series4.sort("descending").values).toStrictEqual([5, 4, 3, 2])
+
+  const series5 = new Series(["a", "b", "c", "b", "a"])
+  series5.name = "foo"
+  series5.index = series5.index.map((row, i) => "foo" + i)
+
+  const yPred = series5.getDummies()
+
+  const yTrue = new DataFrame({
+    foo_a: [1, 0, 0, 0, 1],
+    foo_b: [0, 1, 0, 1, 0],
+    foo_c: [0, 0, 1, 0, 0],
+  })
+
+  yTrue.index = yTrue.index.map((row, i) => "foo" + i)
+
+  expect(
+    isEqual(
+      yPred.get(null, sort(yPred.columns)),
+      yTrue.get(null, sort(yTrue.columns))
+    )
+  ).toBe(true)
+
+  expect(series5.toDataFrame().shape).toStrictEqual([5, 1])
 })
 
 test("throws an error when attempting to do unsavory things with Series", () => {
