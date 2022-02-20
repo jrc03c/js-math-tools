@@ -1,7 +1,6 @@
 const assert = require("../assert.js")
 const isArray = require("../is-array.js")
 const isObject = require("../is-object.js")
-const isSeries = require("../helpers/is-series.js")
 const isString = require("../is-string.js")
 const isUndefined = require("../is-undefined.js")
 const shape = require("../shape.js")
@@ -9,10 +8,12 @@ const copy = require("../copy.js")
 const MathError = require("../math-error.js")
 const sort = require("../sort.js")
 
-function dfAssign(DataFrame, df, p1, p2) {
+function dfAssign(DataFrame, Series, df, p1, p2) {
   // options:
   // assign(object)
   // assign(string, array or series)
+
+  const isSeries = x => x instanceof Series
 
   const obj = (() => {
     const out = {}

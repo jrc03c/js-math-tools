@@ -3,10 +3,9 @@ const flatten = require("../flatten.js")
 const isArray = require("../is-array.js")
 const isString = require("../is-string.js")
 const isUndefined = require("../is-undefined.js")
-const Series = require("../series")
 const shape = require("../shape.js")
 
-function dfGetSubsetByNames(DataFrame, df, rows, cols) {
+function dfGetSubsetByNames(DataFrame, Series, df, rows, cols) {
   if (isUndefined(rows)) rows = df.index
   if (isUndefined(cols)) cols = df.columns
   if (isString(rows)) rows = [rows]

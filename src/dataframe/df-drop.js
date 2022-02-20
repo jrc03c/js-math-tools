@@ -1,12 +1,11 @@
 const assert = require("../assert.js")
 const isArray = require("../is-array.js")
 const isNumber = require("../is-number.js")
-const isSeries = require("../helpers/is-series.js")
 const isString = require("../is-string.js")
 const isUndefined = require("../is-undefined.js")
 const shape = require("../shape.js")
 
-function dfDrop(DataFrame, df, rows, cols) {
+function dfDrop(DataFrame, Series, df, rows, cols) {
   if (isUndefined(rows)) rows = []
   if (isUndefined(cols)) cols = []
   if (isString(rows) || isNumber(rows)) rows = [rows]
@@ -50,7 +49,7 @@ function dfDrop(DataFrame, df, rows, cols) {
 
   let out = df.get(outIndex, outColumns)
 
-  if (isSeries(out)) {
+  if (out instanceof Series) {
     let temp = new DataFrame()
     temp = temp.assign(out)
     if (df.index.indexOf(out.name) > -1) temp = temp.transpose()

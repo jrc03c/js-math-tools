@@ -299,7 +299,7 @@ class DataFrame {
 
   getSubsetByNames(rows, cols) {
     const self = this
-    return dfGetSubsetByNames(DataFrame, self, rows, cols)
+    return dfGetSubsetByNames(DataFrame, Series, self, rows, cols)
   }
 
   getSubsetByIndices(rowIndices, colIndices) {
@@ -352,12 +352,12 @@ class DataFrame {
 
   assign(p1, p2) {
     const self = this
-    return dfAssign(DataFrame, self, p1, p2)
+    return dfAssign(DataFrame, Series, self, p1, p2)
   }
 
   apply(fn, axis) {
     const self = this
-    return dfApply(DataFrame, self, fn, axis)
+    return dfApply(DataFrame, Series, self, fn, axis)
   }
 
   map(fn, axis) {
@@ -367,7 +367,7 @@ class DataFrame {
 
   dropMissing(axis, condition, threshold) {
     const self = this
-    return dfDropMissing(DataFrame, self, axis, condition, threshold)
+    return dfDropMissing(DataFrame, Series, self, axis, condition, threshold)
   }
 
   dropNaN(axis, condition, threshold) {
@@ -377,7 +377,7 @@ class DataFrame {
 
   drop(rows, cols) {
     const self = this
-    return dfDrop(DataFrame, self, rows, cols)
+    return dfDrop(DataFrame, Series, self, rows, cols)
   }
 
   dropColumns(columns) {
@@ -407,7 +407,7 @@ class DataFrame {
 
   print() {
     const self = this
-    return dfPrint(DataFrame, self)
+    return dfPrint(DataFrame, Series, self)
   }
 
   sort(cols, directions) {
@@ -422,7 +422,7 @@ class DataFrame {
 
   filter(fn, axis) {
     const self = this
-    return dfFilter(DataFrame, self, fn, axis)
+    return dfFilter(DataFrame, Series, self, fn, axis)
   }
 
   shuffle(axis) {
@@ -439,4 +439,5 @@ DataFrame.fromCSVString = function () {
   return dfFromCSVString(DataFrame, ...arguments)
 }
 
-module.exports = DataFrame
+const Series = require("../series")(DataFrame)
+module.exports = { DataFrame, Series }

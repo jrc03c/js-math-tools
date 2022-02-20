@@ -4,7 +4,7 @@ const isUndefined = require("../is-undefined.js")
 const normal = require("../normal.js")
 const range = require("../range.js")
 const scale = require("../scale.js")
-const Series = require(".")
+const { Series } = require("../dataframe")
 const set = require("../set.js")
 
 test("tests Series stuff", () => {

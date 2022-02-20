@@ -1,11 +1,10 @@
-const DataFrame = require(".")
+const { DataFrame, Series } = require(".")
 const filename = "delete-me.csv"
 const flatten = require("../flatten.js")
 const isEqual = require("../is-equal.js")
 const isUndefined = require("../is-undefined.js")
 const normal = require("../normal.js")
 const range = require("../range.js")
-const Series = require("../series")
 const set = require("../set.js")
 const sort = require("../sort.js")
 const sum = require("../sum.js")

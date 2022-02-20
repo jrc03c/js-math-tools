@@ -1,4 +1,6 @@
-let out = {
+const { DataFrame, Series } = require("./dataframe")
+
+const out = {
   abs: require("./abs.js"),
   add: require("./add.js"),
   append: require("./append.js"),
@@ -19,7 +21,7 @@ let out = {
   cos: require("./cos.js"),
   count: require("./count.js"),
   covariance: require("./covariance.js"),
-  DataFrame: require("./dataframe"),
+  DataFrame,
   diff: require("./diff.js"),
   distance: require("./distance.js"),
   divide: require("./divide.js"),
@@ -70,7 +72,7 @@ let out = {
   round: require("./round.js"),
   scale: require("./scale.js"),
   seed: require("./random.js").seed,
-  Series: require("./series"),
+  Series,
   set: require("./set.js"),
   setValueAt: require("./set-value-at.js"),
   shape: require("./shape.js"),

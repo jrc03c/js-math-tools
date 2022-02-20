@@ -2,7 +2,6 @@ const assert = require("../assert.js")
 const flatten = require("../flatten.js")
 const isFunction = require("../is-function.js")
 const isUndefined = require("../is-undefined.js")
-const Series = require("../series")
 
 function arrayToObject(x) {
   const out = {}
@@ -18,7 +17,7 @@ function undoArrayToObject(obj) {
   return Object.keys(obj).sort((a, b) => obj[a] - obj[b])
 }
 
-function dfFilter(DataFrame, df, fn, axis) {
+function dfFilter(DataFrame, Series, df, fn, axis) {
   assert(
     isFunction(fn),
     "The `filter` method takes a single parameter: a function that is used to filter the values."

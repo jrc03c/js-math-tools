@@ -1,9 +1,8 @@
 const isEqual = require("../is-equal.js")
 const isString = require("../is-string.js")
 const range = require("../range.js")
-const Series = require("../series")
 
-function dfPrint(DataFrame, df) {
+function dfPrint(DataFrame, Series, df) {
   function truncate(s, maxLength) {
     if (isString(s)) {
       if (s.length > maxLength) {

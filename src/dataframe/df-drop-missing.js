@@ -1,11 +1,10 @@
 const assert = require("../assert.js")
-const isSeries = require("../helpers/is-series.js")
 const isString = require("../is-string.js")
 const isUndefined = require("../is-undefined.js")
 const isWholeNumber = require("../helpers/is-whole-number.js")
 const shape = require("../shape.js")
 
-function dfDropMissing(DataFrame, df, axis, condition, threshold) {
+function dfDropMissing(DataFrame, Series, df, axis, condition, threshold) {
   axis = axis || 0
 
   assert(
@@ -69,7 +68,7 @@ function dfDropMissing(DataFrame, df, axis, condition, threshold) {
     let newIndex = out.get(null, tempID)
     if (isUndefined(newIndex)) return new DataFrame()
     if (isString(newIndex)) newIndex = [newIndex]
-    if (isSeries(newIndex)) newIndex = newIndex.values
+    if (newIndex instanceof Series) newIndex = newIndex.values
     out.index = newIndex
     out = out.drop(null, tempID)
   }

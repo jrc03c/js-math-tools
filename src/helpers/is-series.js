@@ -1,4 +1,4 @@
-const Series = require("../series")
+const { Series } = require("../dataframe")
 
 function isSeries(x) {
   return x instanceof Series
