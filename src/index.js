@@ -99,12 +99,12 @@ const out = {
 
   dump: function () {
     Object.keys(out).forEach(key => {
-      if (typeof global !== "undefined") {
+      try {
         global[key] = out[key]
-      }
-
-      if (typeof window !== "undefined") {
-        window[key] = out[key]
+      } catch (e) {
+        try {
+          window[key] = out[key]
+        } catch (e) {}
       }
     })
   },
