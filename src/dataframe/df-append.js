@@ -11,7 +11,7 @@ function dfAppend(DataFrame, Series, df, data) {
   if (data instanceof Series) {
     assert(
       isEqual(sort(df.columns), sort(data.index)),
-      "The index of the Series you're trying to append must match the columns of the target DataFrame!"
+      "The index of the incoming Series must match the columns of the target DataFrame!"
     )
 
     const newValues = copy(df.values)
@@ -28,7 +28,7 @@ function dfAppend(DataFrame, Series, df, data) {
   else if (data instanceof DataFrame) {
     assert(
       isEqual(sort(df.columns), sort(data.columns)),
-      "The columns of the DataFrame you're trying to append must match the columns of the target DataFrame!"
+      "The columns of the incoming DataFrame must match the columns of the target DataFrame!"
     )
 
     const newValues = copy(df.values)
@@ -80,7 +80,7 @@ function dfAppend(DataFrame, Series, df, data) {
     // otherwise, throw an error
     else {
       throw new MathError(
-        "When passing an array into the `append` method, the array must be 1- or 2-dimensional. If 1-dimensional, it must be as long as the number of columns in the target DataFrame. If 2-dimensional, each row must be as long as the number of columns in the target DataFrame."
+        "When passing an array into the `append` method, the array must be 1- or 2-dimensional! If 1-dimensional, it must be as long as the number of columns in the target DataFrame. If 2-dimensional, each row must be as long as the number of columns in the target DataFrame."
       )
     }
   }

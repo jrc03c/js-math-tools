@@ -8,6 +8,7 @@ const range = require("../range.js")
 const set = require("../set.js")
 const sort = require("../sort.js")
 const sum = require("../sum.js")
+const transpose = require("../transpose.js")
 const zeros = require("../zeros.js")
 
 test("tests DataFrame emptiness", () => {
@@ -433,7 +434,7 @@ test("tests DataFrame one-hot encoding", () => {
 test("tests appending new rows to a DataFrame", () => {
   const x = new DataFrame({ a: [2, 3, 4], b: [5, 6, 7], c: [8, 9, 0] })
 
-  // try appending a 1-dimensional array
+  // try appending a vector
   const yTrue1 = new DataFrame({
     a: [2, 3, 4, "foo"],
     b: [5, 6, 7, "bar"],
@@ -449,7 +450,7 @@ test("tests appending new rows to a DataFrame", () => {
     )
   ).toBe(true)
 
-  // try appending a 2-dimensional array
+  // try appending a matrix
   const yTrue2 = new DataFrame({
     a: [2, 3, 4, "foo", true],
     b: [5, 6, 7, "bar", false],
@@ -495,6 +496,101 @@ test("tests appending new rows to a DataFrame", () => {
   const yPred4 = x.append(df1)
 
   expect(isEqual(yPred4, yTrue4)).toBe(true)
+})
+
+test("tests joining new columns to a DataFrame", () => {
+  const x = new DataFrame({
+    a: [2, 3, 4],
+    b: [5, 6, 7],
+    c: [8, 9, 10],
+    d: [11, 12, 13],
+  })
+
+  // try joining a vector
+  const yTrue1 = new DataFrame({
+    a: [2, 3, 4],
+    b: [5, 6, 7],
+    c: [8, 9, 10],
+    d: [11, 12, 13],
+    col4: ["foo", "bar", "baz"],
+  })
+
+  const yPred1 = x.join(["foo", "bar", "baz"])
+
+  expect(
+    isEqual(
+      yPred1.get(null, sort(yTrue1.columns)),
+      yTrue1.get(null, sort(yTrue1.columns))
+    )
+  ).toBe(true)
+
+  // try joining a matrix
+  const yTrue2 = new DataFrame({
+    a: [2, 3, 4],
+    b: [5, 6, 7],
+    c: [8, 9, 10],
+    d: [11, 12, 13],
+    col4: ["foo", "bar", "baz"],
+    col5: [true, false, null],
+  })
+
+  const yPred2 = x.join(
+    transpose([
+      ["foo", "bar", "baz"],
+      [true, false, null],
+    ])
+  )
+
+  expect(
+    isEqual(
+      yPred2.get(null, sort(yTrue2.columns)),
+      yTrue2.get(null, sort(yTrue2.columns))
+    )
+  ).toBe(true)
+
+  // try joining a Series
+  const series1 = new Series(["baz", "foo", "bar"])
+  series1.name = "blah"
+  series1.index = ["row2", "row0", "row1"]
+
+  const yTrue3 = new DataFrame({
+    a: [2, 3, 4],
+    b: [5, 6, 7],
+    c: [8, 9, 10],
+    d: [11, 12, 13],
+    blah: ["foo", "bar", "baz"],
+  })
+
+  const yPred3 = x.join(series1)
+
+  expect(
+    isEqual(
+      yPred3.get(null, sort(yTrue3.columns)),
+      yTrue3.get(null, sort(yTrue3.columns))
+    )
+  ).toBe(true)
+
+  // try joining a DataFrame
+  let df1 = new DataFrame({ e: [1000, 1001, 1002], f: [1003, 1004, 1005] })
+  df1 = df1.get([2, 1, 0], null)
+
+  const yTrue4 = new DataFrame({
+    a: [2, 3, 4],
+    b: [5, 6, 7],
+    c: [8, 9, 10],
+    d: [11, 12, 13],
+    e: [1000, 1001, 1002],
+    f: [1003, 1004, 1005],
+  })
+
+  const yPred4 = x.join(df1)
+
+  expect(
+    isEqual(
+      yPred4.get(null, sort(yTrue4.columns)),
+      yTrue4.get(null, sort(yTrue4.columns))
+    )
+  ).toBe(true)
 })
 
 afterAll(() => {

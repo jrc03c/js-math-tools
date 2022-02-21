@@ -14,6 +14,7 @@ const dfGet = require("./df-get.js")
 const dfGetDummies = require("./df-get-dummies.js")
 const dfGetSubsetByIndices = require("./df-get-subset-by-indices.js")
 const dfGetSubsetByNames = require("./df-get-subset-by-names.js")
+const dfJoin = require("./df-join.js")
 const dfPrint = require("./df-print.js")
 const dfResetIndex = require("./df-reset-index.js")
 const dfShuffle = require("./df-shuffle.js")
@@ -434,6 +435,11 @@ class DataFrame {
   append(data) {
     const self = this
     return dfAppend(DataFrame, Series, self, data)
+  }
+
+  join(data) {
+    const self = this
+    return dfJoin(DataFrame, Series, self, data)
   }
 }
 
