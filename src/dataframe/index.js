@@ -1,5 +1,6 @@
 const assert = require("../assert.js")
 const count = require("../count.js")
+const dfAppend = require("./df-append.js")
 const dfApply = require("./df-apply.js")
 const dfAssign = require("./df-assign.js")
 const dfCopy = require("./df-copy.js")
@@ -340,9 +341,9 @@ class DataFrame {
     return self.transpose()
   }
 
-  resetIndex() {
+  resetIndex(shouldSkipCopying) {
     const self = this
-    return dfResetIndex(self)
+    return dfResetIndex(self, shouldSkipCopying)
   }
 
   copy() {
@@ -428,6 +429,11 @@ class DataFrame {
   shuffle(axis) {
     const self = this
     return dfShuffle(self, axis)
+  }
+
+  append(data) {
+    const self = this
+    return dfAppend(DataFrame, Series, self, data)
   }
 }
 

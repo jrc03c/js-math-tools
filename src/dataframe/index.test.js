@@ -430,6 +430,73 @@ test("tests DataFrame one-hot encoding", () => {
   ).toBe(true)
 })
 
+test("tests appending new rows to a DataFrame", () => {
+  const x = new DataFrame({ a: [2, 3, 4], b: [5, 6, 7], c: [8, 9, 0] })
+
+  // try appending a 1-dimensional array
+  const yTrue1 = new DataFrame({
+    a: [2, 3, 4, "foo"],
+    b: [5, 6, 7, "bar"],
+    c: [8, 9, 0, "baz"],
+  })
+
+  const yPred1 = x.append(["foo", "bar", "baz"])
+
+  expect(
+    isEqual(
+      yTrue1.get(null, sort(x.columns)),
+      yPred1.get(null, sort(x.columns))
+    )
+  ).toBe(true)
+
+  // try appending a 2-dimensional array
+  const yTrue2 = new DataFrame({
+    a: [2, 3, 4, "foo", true],
+    b: [5, 6, 7, "bar", false],
+    c: [8, 9, 0, "baz", null],
+  })
+
+  const yPred2 = x.append([
+    ["foo", "bar", "baz"],
+    [true, false, null],
+  ])
+
+  expect(isEqual(yPred2, yTrue2)).toBe(true)
+
+  // try appending a Series
+  const series1 = new Series(["x", "y", "z"])
+  series1.index = ["b", "c", "a"]
+
+  const yTrue3 = new DataFrame({
+    a: [2, 3, 4, "z"],
+    b: [5, 6, 7, "x"],
+    c: [8, 9, 0, "y"],
+  })
+
+  const yPred3 = x.append(series1)
+
+  expect(isEqual(yPred3, yTrue3)).toBe(true)
+
+  // try appending a DataFrame
+  let df1 = new DataFrame([
+    ["hello", "world", "my"],
+    ["name", "is", "Josh"],
+  ])
+
+  df1.columns = x.columns
+  df1 = df1.get(null, ["c", "a", "b"])
+
+  const yTrue4 = new DataFrame({
+    a: [2, 3, 4, "hello", "name"],
+    b: [5, 6, 7, "world", "is"],
+    c: [8, 9, 0, "my", "Josh"],
+  })
+
+  const yPred4 = x.append(df1)
+
+  expect(isEqual(yPred4, yTrue4)).toBe(true)
+})
+
 afterAll(() => {
   // clean up
   const fs = require("fs")
