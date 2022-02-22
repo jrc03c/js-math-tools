@@ -16,6 +16,7 @@ function dfPrint(DataFrame, Series, df) {
 
   if (df.isEmpty) {
     console.table({})
+    console.log("Shape:", [0, 0], "\n")
     return df
   }
 
@@ -91,6 +92,7 @@ function dfPrint(DataFrame, Series, df) {
   }
 
   console.table(temp.toObject())
+  console.log("Shape:", df.shape, "\n")
   return df
 }
 

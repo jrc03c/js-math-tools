@@ -28,6 +28,7 @@ function seriesPrint(series) {
   })
 
   console.table(out)
+  console.log("Shape:", series.shape, "\n")
   return series
 }
 

@@ -1,7 +1,6 @@
 let isArray = require("./is-array.js")
 let shape = require("./shape.js")
-let DataFrame = require("./dataframe")
-let Series = require("./series")
+let { DataFrame, Series } = require("./dataframe")
 
 function print() {
   Object.keys(arguments).forEach(key => {
