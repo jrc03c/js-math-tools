@@ -1,4 +1,3 @@
-const isEqual = require("../is-equal.js")
 const isString = require("../is-string.js")
 const range = require("../range.js")
 
@@ -15,7 +14,7 @@ function dfPrint(DataFrame, Series, df) {
     }
   }
 
-  if (isEqual(df.shape, [0])) {
+  if (df.isEmpty) {
     console.table({})
     return df
   }
