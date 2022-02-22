@@ -32,8 +32,7 @@ function toCSVString(df, shouldIncludeIndex) {
           } else if (isObject(value)) {
             return JSON.stringify(JSON.stringify(value))
           } else if (isUndefined(value)) {
-            if (value === undefined) return "undefined"
-            return "null"
+            return ""
           } else {
             return value.toString()
           }
