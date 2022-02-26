@@ -21,6 +21,8 @@ const dfShuffle = require("./df-shuffle.js")
 const dfSort = require("./df-sort.js")
 const dfToCSV = require("./df-to-csv.js")
 const dfToCSVString = require("./df-to-csv-string.js")
+const dfToJSONString = require("./df-to-json-string.js")
+const dfToJSON = require("./df-to-json.js")
 const dfToObject = require("./df-to-object.js")
 const isArray = require("../is-array.js")
 const isUndefined = require("../is-undefined.js")
@@ -392,9 +394,9 @@ class DataFrame {
     return self.drop(rows, null)
   }
 
-  toObject() {
+  toObject(axis) {
     const self = this
-    return dfToObject(self)
+    return dfToObject(self, axis)
   }
 
   toCSVString(shouldIncludeIndex) {
@@ -405,6 +407,16 @@ class DataFrame {
   toCSV(filename, shouldIncludeIndex) {
     const self = this
     return dfToCSV(self, filename, shouldIncludeIndex)
+  }
+
+  toJSON(filename, axis) {
+    const self = this
+    return dfToJSON(self, filename, axis)
+  }
+
+  toJSONString(axis) {
+    const self = this
+    return dfToJSONString(self, axis)
   }
 
   print() {
