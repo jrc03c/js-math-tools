@@ -1,8 +1,8 @@
-const dfToCSVString = require("./df-to-csv-string.js")
+const dfToJSONString = require("./df-to-json-string.js")
 const MathError = require("../math-error.js")
 
-function toCSV(df, filename, shouldIncludeIndex) {
-  const out = dfToCSVString(df, shouldIncludeIndex)
+function toJSON(df, filename, axis) {
+  const out = dfToJSONString(df, axis)
   let downloadedInBrowser = false
   let wroteToDiskInNode = false
   let browserError, nodeError
@@ -17,7 +17,7 @@ function toCSV(df, filename, shouldIncludeIndex) {
     }
 
     const a = document.createElement("a")
-    a.href = `data:text/csv;charset=utf-8,${encodeURIComponent(out)}`
+    a.href = `data:application/json;charset=utf-8,${encodeURIComponent(out)}`
     a.download = newFilename
     a.dispatchEvent(new MouseEvent("click"))
 
@@ -51,4 +51,4 @@ function toCSV(df, filename, shouldIncludeIndex) {
   return df
 }
 
-module.exports = toCSV
+module.exports = toJSON
