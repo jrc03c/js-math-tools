@@ -24,6 +24,7 @@ const dfToCSVString = require("./df-to-csv-string.js")
 const dfToJSONString = require("./df-to-json-string.js")
 const dfToJSON = require("./df-to-json.js")
 const dfToObject = require("./df-to-object.js")
+const flatten = require("../flatten.js")
 const isArray = require("../is-array.js")
 const isUndefined = require("../is-undefined.js")
 const leftPad = require("../helpers/left-pad.js")
@@ -285,7 +286,7 @@ class DataFrame {
 
   get isEmpty() {
     const self = this
-    return set(self.values).filter(v => !isUndefined(v)).length === 0
+    return flatten(self.values).length === 0
   }
 
   clear() {
