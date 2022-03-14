@@ -66,6 +66,15 @@ test("tests Series stuff", () => {
   ).toBe(true)
 
   expect(series5.toDataFrame().shape).toStrictEqual([5, 1])
+
+  const series6 = new Series(["foo", true, false, null, 1, 0, -1, {}, () => {}])
+  series6.name = "Blah"
+  series6.index = series6.values.map((v, i) => "b" + i)
+
+  const series7 = series6.dropNaN()
+  expect(isEqual(series7.values, [1, 0, -1]))
+  expect(isEqual(series7.index, ["b4", "b5", "b6"]))
+  expect(series7.name).toBe("Blah")
 })
 
 test("throws an error when attempting to do unsavory things with Series", () => {

@@ -9,6 +9,7 @@ const range = require("../range.js")
 const reverse = require("../reverse.js")
 const seriesApply = require("./series-apply.js")
 const seriesDropMissing = require("./series-drop-missing.js")
+const seriesDropNaN = require("./series-drop-nan.js")
 const seriesFilter = require("./series-filter.js")
 const seriesGet = require("./series-get.js")
 const seriesGetSubsetByIndices = require("./series-get-subset-by-indices.js")
@@ -194,6 +195,11 @@ module.exports = function (DataFrame) {
     dropMissing(condition, threshold) {
       const self = this
       return seriesDropMissing(self, condition, threshold)
+    }
+
+    dropNaN() {
+      const self = this
+      return seriesDropNaN(Series, self)
     }
 
     toObject() {
