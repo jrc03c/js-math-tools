@@ -1,8 +1,9 @@
 const diff = require("./diff.js")
+const isEqual = require("./is-equal.js")
 const range = require("./range.js")
-const sort = require("./sort.js")
-const shuffle = require("./shuffle.js")
 const reshape = require("./reshape.js")
+const shuffle = require("./shuffle.js")
+const sort = require("./sort.js")
 
 test("gets the difference of two manually-defined sets", () => {
   const a = [2, 3, 4, 5, 6]
@@ -18,6 +19,14 @@ test("gets the difference of two randomly-defined tensors", () => {
   const yTrue = range(50, 100)
   const yPred = sort(diff(a, b))
   expect(yPred).toStrictEqual(yTrue)
+})
+
+test("gets the difference of two lists that contain objects", () => {
+  const a = [{ foo: "bar" }, { hello: "world" }]
+  const b = [{ foo: "bar" }, { hello: "nobody" }]
+  const yTrue = [{ hello: "world" }]
+  const yPred = diff(a, b)
+  expect(isEqual(yTrue, yPred)).toBe(true)
 })
 
 test("throws an error when attempting to get the difference of two non-arrays", () => {

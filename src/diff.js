@@ -1,6 +1,8 @@
 const assert = require("./assert.js")
-const isArray = require("./is-array.js")
 const flatten = require("./flatten.js")
+const isArray = require("./is-array.js")
+const isEqual = require("./is-equal.js")
+const isUndefined = require("./is-undefined.js")
 
 function diff(a, b) {
   assert(isArray(a), "You must pass two arrays into the `diff` function!")
@@ -11,7 +13,11 @@ function diff(a, b) {
   const out = []
 
   aTemp.forEach(item => {
-    if (bTemp.indexOf(item) < 0) out.push(item)
+    const equivalent = bTemp.find(other => isEqual(other, item))
+
+    if (isUndefined(equivalent)) {
+      out.push(item)
+    }
   })
 
   return out
