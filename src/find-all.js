@@ -3,10 +3,10 @@ const isArray = require("./is-array.js")
 const isFunction = require("./is-function.js")
 const isObject = require("./is-object.js")
 
-function indexOf(x, fn) {
+function findAll(x, fn) {
   assert(
     isObject(x) || isArray(x),
-    "You must pass (1) an object or array and (2) a function or value into the `indexOf` function!"
+    "You must pass (1) an object or array and (2) a function or value into the `findAll` function!"
   )
 
   if (!isFunction(fn)) {
@@ -24,40 +24,54 @@ function indexOf(x, fn) {
     if (isObject(x)) {
       checked.push(x)
       const keys = Object.keys(x)
+      const out = []
 
       for (let i = 0; i < keys.length; i++) {
         const key = keys[i]
         const value = x[key]
+        let alreadyStoredThisValue = false
 
         if (fn(value)) {
-          return [key]
+          out.push(value)
+          alreadyStoredThisValue = true
         }
 
         const results = helper(value, fn, checked)
 
         if (results && results.length > 0) {
-          return [key].concat(results)
+          results
+            .slice(alreadyStoredThisValue ? 1 : 0)
+            .forEach(r => out.push(r))
         }
       }
+
+      return out
     } else if (isArray(x)) {
       checked.push(x)
+      const out = []
 
       for (let i = 0; i < x.length; i++) {
         const value = x[i]
+        let alreadyStoredThisValue = false
 
         if (fn(value)) {
-          return [i]
+          out.push(value)
+          alreadyStoredThisValue = true
         }
 
         const results = helper(value, fn, checked)
 
         if (results && results.length > 0) {
-          return [i].concat(results)
+          results
+            .slice(alreadyStoredThisValue ? 1 : 0)
+            .forEach(r => out.push(r))
         }
       }
+
+      return out
     } else {
       if (fn(x)) {
-        return []
+        return [x]
       }
     }
 
@@ -72,13 +86,13 @@ function indexOf(x, fn) {
     }
   }
 
-  const paths = helper(x, safeFn)
+  const results = helper(x, safeFn)
 
-  if (paths && paths.length > 0) {
-    return paths
+  if (results && results.length > 0) {
+    return results
   } else {
     return null
   }
 }
 
-module.exports = indexOf
+module.exports = findAll

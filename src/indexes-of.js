@@ -3,10 +3,10 @@ const isArray = require("./is-array.js")
 const isFunction = require("./is-function.js")
 const isObject = require("./is-object.js")
 
-function indexOf(x, fn) {
+function indexesOf(x, fn) {
   assert(
     isObject(x) || isArray(x),
-    "You must pass (1) an object or array and (2) a function or value into the `indexOf` function!"
+    "You must pass (1) an object or array and (2) a function or value into the `indexesOf` function!"
   )
 
   if (!isFunction(fn)) {
@@ -24,37 +24,43 @@ function indexOf(x, fn) {
     if (isObject(x)) {
       checked.push(x)
       const keys = Object.keys(x)
+      const paths = []
 
       for (let i = 0; i < keys.length; i++) {
         const key = keys[i]
         const value = x[key]
 
         if (fn(value)) {
-          return [key]
+          paths.push([key])
         }
 
         const results = helper(value, fn, checked)
 
         if (results && results.length > 0) {
-          return [key].concat(results)
+          results.forEach(result => paths.push([key].concat(result)))
         }
       }
+
+      return paths
     } else if (isArray(x)) {
       checked.push(x)
+      const paths = []
 
       for (let i = 0; i < x.length; i++) {
         const value = x[i]
 
         if (fn(value)) {
-          return [i]
+          paths.push([i])
         }
 
         const results = helper(value, fn, checked)
 
         if (results && results.length > 0) {
-          return [i].concat(results)
+          results.forEach(result => paths.push([i].concat(result)))
         }
       }
+
+      return paths
     } else {
       if (fn(x)) {
         return []
@@ -81,4 +87,4 @@ function indexOf(x, fn) {
   }
 }
 
-module.exports = indexOf
+module.exports = indexesOf
