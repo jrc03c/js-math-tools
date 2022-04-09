@@ -1,32 +1,27 @@
-const indexOf = require("./index-of.js")
+const indexesOf = require("./indexes-of.js")
 const range = require("./range.js")
 const reshape = require("./reshape.js")
 
 test("tests that items can be found in nested arrays using values", () => {
-  const a = [2, 3, 4]
-  expect(indexOf(a, 4)).toStrictEqual([2])
+  const a = [2, 3, 4, 3, 4, 3, 2]
+  expect(indexesOf(a, 3)).toStrictEqual([[1], [3], [5]])
 
   const b = reshape(range(0, 24), [2, 3, 4])
-  expect(indexOf(b, b[1][2][0])).toStrictEqual([1, 2, 0])
+  expect(indexesOf(b, 13)).toStrictEqual([[1, 0, 1]])
 })
 
 test("tests that items can be found in nested arrays using functions", () => {
-  const a = [2, 3, 4]
-  expect(indexOf(a, v => v > 3)).toStrictEqual([2])
+  const a = [2, 3, 4, 3, 4, 3, 2]
+  expect(indexesOf(a, v => v > 3)).toStrictEqual([[2], [4]])
 
   const b = reshape(range(0, 24), [2, 3, 4])
-  expect(indexOf(b, v => v === b[1][2][0])).toStrictEqual([1, 2, 0])
-})
 
-test("tests that arrays and non-arrays can both be found in nested arrays", () => {
-  const x = ["foobar", [1, 2, 3, 4, 5], "hello", ["a", "b", "c"]]
-
-  expect(indexOf(x, v => v.length > 5)).toStrictEqual([0])
-  expect(indexOf(x, v => v.length === 5)).toStrictEqual([1])
-
-  expect(
-    indexOf(x, v => typeof v === "string" && v.length === 5)
-  ).toStrictEqual([2])
+  expect(indexesOf(b, v => v % 6 === 0)).toStrictEqual([
+    [0, 0, 0],
+    [0, 1, 2],
+    [1, 0, 0],
+    [1, 1, 2],
+  ])
 })
 
 test("tests that items can be found in objects using values", () => {
@@ -45,8 +40,11 @@ test("tests that items can be found in objects using values", () => {
   alice.friends.push(bob)
   alice.friends.push(clarissa)
 
-  expect(indexOf(alice, clarissa.age)).toStrictEqual(["friends", 1, "age"])
-  expect(indexOf(alice, bob.name)).toStrictEqual(["friends", 0, "name"])
+  expect(indexesOf(alice, bob.age)).toStrictEqual([["friends", 0, "age"]])
+
+  expect(indexesOf(alice, clarissa.name)).toStrictEqual([
+    ["friends", 1, "name"],
+  ])
 })
 
 test("tests that items can be found in objects using functions", () => {
@@ -68,15 +66,15 @@ test("tests that items can be found in objects using functions", () => {
   const allNames = [alice.name, bob.name, clarissa.name]
 
   expect(
-    indexOf(alice, v => typeof v === "number" && v > bob.age)
-  ).toStrictEqual(["friends", 1, "age"])
+    indexesOf(alice, v => typeof v === "number" && v > alice.age)
+  ).toStrictEqual([
+    ["friends", 0, "age"],
+    ["friends", 1, "age"],
+  ])
 
   expect(
-    indexOf(
-      alice,
-      v => allNames.indexOf(v) > -1 && v !== alice.name && v !== clarissa.name
-    )
-  ).toStrictEqual(["friends", 0, "name"])
+    indexesOf(alice, v => allNames.indexOf(v) > -1 && v !== "uh-oh")
+  ).toStrictEqual([["name"], ["friends", 0, "name"], ["friends", 1, "name"]])
 })
 
 test("tests that the function isn't tripped up by faulty functions", () => {
@@ -89,7 +87,7 @@ test("tests that the function isn't tripped up by faulty functions", () => {
   }).toThrow()
 
   expect(() => {
-    indexOf([2, 3, 4], errorFn)
+    indexesOf([2, 3, 4], errorFn)
   }).not.toThrow()
 })
 
@@ -97,5 +95,5 @@ test("tests that the function isn't tripped up by circular references", () => {
   const x = { foo: "bar" }
   x.self = x
 
-  expect(indexOf(x, "bar")).toStrictEqual(["foo"])
+  expect(indexesOf(x, "bar")).toStrictEqual([["foo"]])
 })

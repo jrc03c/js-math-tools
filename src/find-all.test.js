@@ -1,32 +1,21 @@
-const indexOf = require("./index-of.js")
+const findAll = require("./find-all.js")
 const range = require("./range.js")
 const reshape = require("./reshape.js")
 
 test("tests that items can be found in nested arrays using values", () => {
-  const a = [2, 3, 4]
-  expect(indexOf(a, 4)).toStrictEqual([2])
+  const a = [2, 3, 4, 3, 4, 3, 2]
+  expect(findAll(a, 3)).toStrictEqual([3, 3, 3])
 
   const b = reshape(range(0, 24), [2, 3, 4])
-  expect(indexOf(b, b[1][2][0])).toStrictEqual([1, 2, 0])
+  expect(findAll(b, 13)).toStrictEqual([13])
 })
 
 test("tests that items can be found in nested arrays using functions", () => {
-  const a = [2, 3, 4]
-  expect(indexOf(a, v => v > 3)).toStrictEqual([2])
+  const a = [2, 3, 4, 3, 4, 3, 2]
+  expect(findAll(a, v => v > 3)).toStrictEqual([4, 4])
 
   const b = reshape(range(0, 24), [2, 3, 4])
-  expect(indexOf(b, v => v === b[1][2][0])).toStrictEqual([1, 2, 0])
-})
-
-test("tests that arrays and non-arrays can both be found in nested arrays", () => {
-  const x = ["foobar", [1, 2, 3, 4, 5], "hello", ["a", "b", "c"]]
-
-  expect(indexOf(x, v => v.length > 5)).toStrictEqual([0])
-  expect(indexOf(x, v => v.length === 5)).toStrictEqual([1])
-
-  expect(
-    indexOf(x, v => typeof v === "string" && v.length === 5)
-  ).toStrictEqual([2])
+  expect(findAll(b, v => v % 6 === 0)).toStrictEqual([0, 6, 12, 18])
 })
 
 test("tests that items can be found in objects using values", () => {
@@ -45,8 +34,8 @@ test("tests that items can be found in objects using values", () => {
   alice.friends.push(bob)
   alice.friends.push(clarissa)
 
-  expect(indexOf(alice, clarissa.age)).toStrictEqual(["friends", 1, "age"])
-  expect(indexOf(alice, bob.name)).toStrictEqual(["friends", 0, "name"])
+  expect(findAll(alice, bob.age)).toStrictEqual([bob.age])
+  expect(findAll(alice, clarissa.name)).toStrictEqual([clarissa.name])
 })
 
 test("tests that items can be found in objects using functions", () => {
@@ -68,15 +57,12 @@ test("tests that items can be found in objects using functions", () => {
   const allNames = [alice.name, bob.name, clarissa.name]
 
   expect(
-    indexOf(alice, v => typeof v === "number" && v > bob.age)
-  ).toStrictEqual(["friends", 1, "age"])
+    findAll(alice, v => typeof v === "number" && v > alice.age)
+  ).toStrictEqual([bob.age, clarissa.age])
 
   expect(
-    indexOf(
-      alice,
-      v => allNames.indexOf(v) > -1 && v !== alice.name && v !== clarissa.name
-    )
-  ).toStrictEqual(["friends", 0, "name"])
+    findAll(alice, v => allNames.indexOf(v) > -1 && v !== "uh-oh")
+  ).toStrictEqual([alice.name, bob.name, clarissa.name])
 })
 
 test("tests that the function isn't tripped up by faulty functions", () => {
@@ -89,7 +75,7 @@ test("tests that the function isn't tripped up by faulty functions", () => {
   }).toThrow()
 
   expect(() => {
-    indexOf([2, 3, 4], errorFn)
+    findAll([2, 3, 4], errorFn)
   }).not.toThrow()
 })
 
@@ -97,5 +83,5 @@ test("tests that the function isn't tripped up by circular references", () => {
   const x = { foo: "bar" }
   x.self = x
 
-  expect(indexOf(x, "bar")).toStrictEqual(["foo"])
+  expect(findAll(x, "bar")).toStrictEqual(["bar"])
 })

@@ -3,10 +3,10 @@ const isArray = require("./is-array.js")
 const isFunction = require("./is-function.js")
 const isObject = require("./is-object.js")
 
-function indexOf(x, fn) {
+function find(x, fn) {
   assert(
     isObject(x) || isArray(x),
-    "You must pass (1) an object or array and (2) a function or value into the `indexOf` function!"
+    "You must pass (1) an object or array and (2) a function or value into the `find` function!"
   )
 
   if (!isFunction(fn)) {
@@ -30,13 +30,13 @@ function indexOf(x, fn) {
         const value = x[key]
 
         if (fn(value)) {
-          return [key]
+          return value
         }
 
-        const results = helper(value, fn, checked)
+        const result = helper(value, fn, checked)
 
-        if (results && results.length > 0) {
-          return [key].concat(results)
+        if (result) {
+          return result
         }
       }
     } else if (isArray(x)) {
@@ -46,18 +46,18 @@ function indexOf(x, fn) {
         const value = x[i]
 
         if (fn(value)) {
-          return [i]
+          return value
         }
 
-        const results = helper(value, fn, checked)
+        const result = helper(value, fn, checked)
 
-        if (results && results.length > 0) {
-          return [i].concat(results)
+        if (result) {
+          return result
         }
       }
     } else {
       if (fn(x)) {
-        return []
+        return x
       }
     }
 
@@ -72,13 +72,7 @@ function indexOf(x, fn) {
     }
   }
 
-  const paths = helper(x, safeFn)
-
-  if (paths && paths.length > 0) {
-    return paths
-  } else {
-    return null
-  }
+  return helper(x, safeFn)
 }
 
-module.exports = indexOf
+module.exports = find
