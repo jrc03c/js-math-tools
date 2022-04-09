@@ -51,3 +51,20 @@ test("copies a function", () => {
   const double = x => x * 2
   expect(isACopy(double, copy(double))).toBe(true)
 })
+
+test("tests that the `copy` function isn't tripped up by cyclic references", () => {
+  const a = [2]
+  a.push(a)
+  a.push(3)
+
+  const bTrue = [2, "<cyclic reference>", 3]
+  const bPred = copy(a)
+  expect(bPred).toStrictEqual(bTrue)
+
+  const c = { hello: "world" }
+  c.self = c
+
+  const dTrue = { hello: "world", self: "<cyclic reference>" }
+  const dPred = copy(c)
+  expect(isEqual(dPred, dTrue)).toBe(true)
+})

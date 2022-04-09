@@ -87,6 +87,7 @@ const out = {
   sqrt: require("./sqrt.js"),
   std: require("./std.js"),
   stdev: require("./stdev.js"),
+  stringify: require("./stringify.js"),
   subtract: require("./subtract.js"),
   sum: require("./sum.js"),
   tan: require("./tan.js"),
