@@ -57,14 +57,28 @@ test("tests that the `copy` function isn't tripped up by cyclic references", () 
   a.push(a)
   a.push(3)
 
-  const bTrue = [2, "<cyclic reference>", 3]
+  const bTrue = [2, `<reference to "/">`, 3]
   const bPred = copy(a)
   expect(bPred).toStrictEqual(bTrue)
 
   const c = { hello: "world" }
   c.self = c
 
-  const dTrue = { hello: "world", self: "<cyclic reference>" }
+  const dTrue = { hello: "world", self: `<reference to "/">` }
   const dPred = copy(c)
   expect(isEqual(dPred, dTrue)).toBe(true)
+
+  const e = { this: { is: { a: "test" } } }
+  e.this.is.not = e.this.is
+  e.here = { it: { is: { again: e.this.is } } }
+
+  const fTrue = {
+    this: { is: { a: "test", not: `<reference to "/this/is">` } },
+    here: {
+      it: { is: { again: { a: "test", not: `<reference to "/this/is">` } } },
+    },
+  }
+
+  const fPred = copy(e)
+  expect(isEqual(fPred, fTrue)).toBe(true)
 })
