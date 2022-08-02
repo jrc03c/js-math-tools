@@ -5,7 +5,7 @@ const range = require("./range.js")
 test("gets the argmax of a linear range of values", () => {
   const x = shuffle(range(0, 100))
   const indexTrue = x.indexOf(99)
-  const indexPred = argmax(x)[0]
+  const indexPred = argmax(x)
   expect(indexPred).toStrictEqual(indexTrue)
 })
 
