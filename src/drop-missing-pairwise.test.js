@@ -1,4 +1,5 @@
 const dropMissingPairwise = require("./drop-missing-pairwise.js")
+const normal = require("./normal.js")
 
 test("drops missing values pairwise on vectors that don't actually have missing values", () => {
   const a = [1, 2, 3, 4]

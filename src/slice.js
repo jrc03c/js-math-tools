@@ -1,11 +1,10 @@
 const assert = require("./assert.js")
-const isUndefined = require("./is-undefined.js")
-const isNumber = require("./is-number.js")
-const isArray = require("./is-array.js")
-const range = require("./range.js")
 const flatten = require("./flatten.js")
-const shape = require("./shape.js")
 const floor = require("./floor.js")
+const isArray = require("./is-array.js")
+const isNumber = require("./is-number.js")
+const isUndefined = require("./is-undefined.js")
+const range = require("./range.js")
 
 function slice(arr, indices) {
   assert(!isUndefined(arr), "You must pass an array into the `slice` function!")

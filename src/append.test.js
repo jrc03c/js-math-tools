@@ -1,5 +1,4 @@
 const append = require("./append.js")
-const isEqual = require("./is-equal.js")
 const normal = require("./normal.js")
 const range = require("./range.js")
 const slice = require("./slice.js")

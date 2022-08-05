@@ -38,7 +38,7 @@ function dfFilter(DataFrame, Series, df, fn, axis) {
 
   // filter rows
   if (axis === 0) {
-    let newValues = out.values.filter((row, i) => {
+    const newValues = out.values.filter((row, i) => {
       const series = new Series(row)
       series.name = df.index[i]
       series.index = df.columns
@@ -66,7 +66,7 @@ function dfFilter(DataFrame, Series, df, fn, axis) {
   else if (axis === 1) {
     out = out.transpose()
 
-    let newValues = out.values.filter((row, i) => {
+    const newValues = out.values.filter((row, i) => {
       const series = new Series(row)
       series.name = df.columns[i]
       series.index = df.index

@@ -1,5 +1,3 @@
-const isArray = require("./is-array.js")
-
 function isEqual(a, b) {
   const aType = typeof a
   const bType = typeof b
@@ -21,7 +19,7 @@ function isEqual(a, b) {
 
       for (let i = 0; i < aKeys.length; i++) {
         const key = aKeys[i]
-        if (!b.hasOwnProperty(key)) return false
+        if (typeof b[key] === "undefined") return false
         if (!isEqual(a[key], b[key])) return false
       }
 

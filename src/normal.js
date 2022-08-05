@@ -1,9 +1,7 @@
-const isUndefined = require("./is-undefined.js")
-const ndarray = require("./ndarray.js")
-const apply = require("./apply.js")
 const { random } = require("./random.js")
-const reshape = require("./reshape.js")
 const isNumber = require("./is-number.js")
+const isUndefined = require("./is-undefined.js")
+const reshape = require("./reshape.js")
 
 function helper() {
   const u1 = random()

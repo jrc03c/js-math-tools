@@ -1,8 +1,5 @@
-const tan = require("./tan.js")
-const min = require("./min.js")
-const max = require("./max.js")
-const normal = require("./normal.js")
 const chop = require("./chop.js")
+const tan = require("./tan.js")
 
 test("gets tangent of common angles", () => {
   expect(chop(tan(0))).toBe(0)

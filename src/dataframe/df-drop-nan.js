@@ -32,8 +32,7 @@ function dfDropNaN(DataFrame, df, axis, condition, threshold) {
     return true
   }
 
-  let out = df.copy()
-  const tempID = Math.random().toString()
+  const out = df.copy()
 
   if (axis === 0) {
     const rowsToKeep = out.index.filter(row => {

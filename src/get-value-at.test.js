@@ -1,6 +1,4 @@
 const getValueAt = require("./get-value-at.js")
-const isEqual = require("./is-equal.js")
-const indexOf = require("./index-of.js")
 const normal = require("./normal.js")
 
 test("", () => {

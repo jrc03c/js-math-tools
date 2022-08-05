@@ -1,7 +1,5 @@
-const sum = require("./sum.js")
 const range = require("./range.js")
-const normal = require("./normal.js")
-const abs = require("./abs.js")
+const sum = require("./sum.js")
 
 test("sums [2, 3, 4] to get 9", () => {
   const x = [2, 3, 4]

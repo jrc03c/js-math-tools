@@ -10,7 +10,7 @@ function findAll(x, fn) {
   )
 
   if (!isFunction(fn)) {
-    value = fn
+    const value = fn
     fn = v => v === value
   }
 

@@ -4,7 +4,7 @@ const set = require("./set.js")
 
 function isIdentity(x) {
   for (let i = 0; i < x.length; i++) {
-    let row = x[i]
+    const row = x[i]
 
     for (let j = 0; j < row.length; j++) {
       if (i === j) {

@@ -31,7 +31,6 @@ test("tests DataFrame selectors", () => {
   const b = normal(100)
   const c = normal(100)
   const df = new DataFrame({ a, b, c })
-  const dfShape = df.shape
 
   expect(a).toStrictEqual(df.get(null, "a").values)
   expect(a).toStrictEqual(df.loc(null, "a").values)
@@ -79,11 +78,11 @@ test("tests DataFrame copying and index resetting", () => {
   const b = normal(100)
   const c = normal(100)
   let df1 = new DataFrame({ a, b, c })
-  let df2 = df1.copy()
+  const df2 = df1.copy()
   expect(isEqual(df1, df2)).toBe(true)
   expect(df1 === df2).toBe(false)
 
-  df1.index = range(0, df1.shape[0]).map(i => Math.random().toString())
+  df1.index = range(0, df1.shape[0]).map(() => Math.random().toString())
   expect(isEqual(df1.index, df2.index)).toBe(false)
   df1 = df1.resetIndex()
   expect(isEqual(df1.index, df2.index)).toBe(true)
@@ -92,7 +91,7 @@ test("tests DataFrame copying and index resetting", () => {
 test("tests DataFrame mapping", () => {
   let df = new DataFrame(zeros([3, 3]))
 
-  df = df.apply((col, i, df) => {
+  df = df.apply(col => {
     return col.values.map((v, j) => {
       return col.name + "/" + j
     })
@@ -110,7 +109,7 @@ test("tests DataFrame mapping", () => {
 test("tests DataFrame mapping", () => {
   let df = new DataFrame(zeros([3, 3]))
 
-  df = df.apply((row, i, df) => {
+  df = df.apply(row => {
     return row.values.map((v, i) => {
       return row.name + "/" + i
     })
@@ -281,7 +280,7 @@ test("tests DataFrame filtering", () => {
   expect(sort(flatten(f1.values))).toStrictEqual([0, 0, 2, 4, 10, 1000])
 
   // test row filtering (that returns a series)
-  const f2 = x.filter((row, i, df) => {
+  const f2 = x.filter(row => {
     return row.name === "row1"
   })
 
@@ -299,7 +298,7 @@ test("tests DataFrame filtering", () => {
   expect(sort(flatten(f3.values))).toStrictEqual([0, 0, 0, 2, 3, 4])
 
   // test column filtering (that returns a series)
-  const f4 = x.filter((col, i, df) => {
+  const f4 = x.filter(col => {
     return col.name === "baz"
   }, 1)
 
@@ -329,12 +328,12 @@ test("tests DataFrame reading & writing to and from disk", async () => {
   }
 
   const x = new DataFrame(normal([1000, 25]))
-  x.columns = x.columns.map(i => makeKey(8))
-  x.index = x.index.map(i => makeKey(8))
+  x.columns = x.columns.map(() => makeKey(8))
+  x.index = x.index.map(() => makeKey(8))
 
   let yPred
   let shouldIncludeIndex = false
-  let hasHeaderRow = true
+  const hasHeaderRow = true
 
   // v1
   x.toCSV(filename, shouldIncludeIndex)

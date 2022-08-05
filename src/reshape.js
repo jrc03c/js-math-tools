@@ -32,18 +32,18 @@ function reshape(x, newShape) {
 
   if (newShape.length <= 1) return flatten(x)
 
-  let temp = flatten(x)
+  const temp = flatten(x)
 
   assert(
     product(newShape) === temp.length,
     "The new shape doesn't match the number of values available in `x` (the first argument passed into the `reshape` function)!"
   )
 
-  let out = []
-  let step = parseInt(temp.length / newShape[0])
+  const out = []
+  const step = parseInt(temp.length / newShape[0])
 
   for (let i = 0; i < newShape[0]; i++) {
-    let row = temp.slice(i * step, (i + 1) * step)
+    const row = temp.slice(i * step, (i + 1) * step)
     out.push(reshape(row, newShape.slice(1)))
   }
 

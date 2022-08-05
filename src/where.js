@@ -4,7 +4,6 @@ const isFunction = require("./is-function.js")
 const apply = require("./apply.js")
 const indexOf = require("./index-of.js")
 const setValueAt = require("./set-value-at.js")
-const flatten = require("./flatten.js")
 
 function where(x, fn) {
   assert(
@@ -17,7 +16,6 @@ function where(x, fn) {
     "The second argument passed into the `where` function must be a function!"
   )
 
-  const n = flatten(x).length
   let temp = apply(x, fn)
   const out = []
   let count = 0

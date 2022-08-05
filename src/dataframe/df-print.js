@@ -63,7 +63,7 @@ function dfPrint(DataFrame, Series, df) {
     temp._values.splice(
       halfMaxRows,
       0,
-      range(0, temp.columns.length).map(i => "...")
+      range(0, temp.columns.length).map(() => "...")
     )
   }
 

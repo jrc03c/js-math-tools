@@ -41,8 +41,8 @@ test("tests inequality", () => {
   for (let i = 0; i < others.length - 1; i++) {
     for (let j = i; j < others.length; j++) {
       if (i !== j) {
-        a = others[i]
-        b = others[j]
+        const a = others[i]
+        const b = others[j]
         expect(isEqual(a, b)).toBe(false)
       }
     }

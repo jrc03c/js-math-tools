@@ -1,4 +1,3 @@
-const assert = require("./assert.js")
 const set = require("./set.js")
 
 function union() {

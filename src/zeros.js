@@ -1,5 +1,3 @@
-const ndarray = require("./ndarray.js")
-const apply = require("./apply.js")
 const isNumber = require("./is-number.js")
 const reshape = require("./reshape.js")
 

@@ -1,5 +1,4 @@
 const arccos = require("./arccos.js")
-const { random } = require("./random.js")
 
 test("takes arccos of 0", () => {
   const x = 0

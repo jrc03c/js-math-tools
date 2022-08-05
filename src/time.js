@@ -1,3 +1,4 @@
+const assert = require("./assert.js")
 const isFunction = require("./is-function.js")
 
 function timeSync(fn, args) {

@@ -16,7 +16,7 @@ function setValueAt(x, index, value) {
     "The second argument passed into the `setValueAt` function must be an integer or an array of integers!"
   )
 
-  let out = copy(x)
+  const out = copy(x)
   let temp = out
 
   for (let i = 0; i < index.length - 1; i++) {

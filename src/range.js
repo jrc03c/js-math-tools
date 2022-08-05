@@ -23,7 +23,7 @@ function range(a, b, step = 1) {
 
   if (a > b) {
     shouldReverse = true
-    let buffer = a
+    const buffer = a
     a = b + step
     b = buffer + step
   }

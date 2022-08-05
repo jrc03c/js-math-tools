@@ -1,7 +1,6 @@
-const slice = require("./slice.js")
-const indexOf = require("./index-of.js")
-const zeros = require("./zeros.js")
 const flatten = require("./flatten.js")
+const slice = require("./slice.js")
+const zeros = require("./zeros.js")
 
 test("gets a slice of a vector", () => {
   const x = [5, 6, 7]

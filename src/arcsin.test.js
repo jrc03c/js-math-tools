@@ -1,5 +1,4 @@
 const arcsin = require("./arcsin.js")
-const { random } = require("./random.js")
 
 test("takes arcsin of 0", () => {
   const x = 0

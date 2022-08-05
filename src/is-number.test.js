@@ -3,7 +3,7 @@ const isNumber = require("./is-number.js")
 test("checks to see if various things are numbers", () => {
   expect(isNumber(3)).toBe(true)
   expect(isNumber(-3.5)).toBe(true)
-  expect(isNumber(2573.2903482093482035023948)).toBe(true)
+  expect(isNumber(2573.290348209348)).toBe(true)
   expect(isNumber(Infinity)).toBe(true)
   expect(isNumber(Math.PI)).toBe(true)
 

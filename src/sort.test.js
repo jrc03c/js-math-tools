@@ -1,9 +1,8 @@
-const sort = require("./sort.js")
-const shuffle = require("./shuffle.js")
-const range = require("./range.js")
-const distance = require("./distance.js")
-const normal = require("./normal.js")
 const isEqual = require("./is-equal.js")
+const normal = require("./normal.js")
+const range = require("./range.js")
+const shuffle = require("./shuffle.js")
+const sort = require("./sort.js")
 
 test("sorts a set of numbers", () => {
   const x = shuffle(range(1, 7))
@@ -42,7 +41,7 @@ test("sorts an array of letters", () => {
 })
 
 test("sorts a weirdly-shaped, nested array", () => {
-  let x = []
+  const x = []
 
   for (let i = 0; i < 5; i++) {
     x.push(range(0, i + 1))

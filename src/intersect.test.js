@@ -1,8 +1,7 @@
 const intersect = require("./intersect.js")
 const range = require("./range.js")
-const shuffle = require("./shuffle.js")
-const sort = require("./sort.js")
 const reshape = require("./reshape.js")
+const sort = require("./sort.js")
 
 test("gets the intersection of manually-defined arrays", () => {
   const a = [2, 3, 4, 5]

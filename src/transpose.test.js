@@ -1,6 +1,5 @@
-const transpose = require("./transpose.js")
-const isEqual = require("./is-equal.js")
 const normal = require("./normal.js")
+const transpose = require("./transpose.js")
 
 test("transposes a vector", () => {
   const x = [2, 3, 4]

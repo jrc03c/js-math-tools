@@ -1,9 +1,7 @@
-const ndarray = require("./ndarray.js")
-const apply = require("./apply.js")
-const isUndefined = require("./is-undefined.js")
 const assert = require("./assert.js")
-const isNumber = require("./is-number.js")
 const copy = require("./copy.js")
+const isNumber = require("./is-number.js")
+const isUndefined = require("./is-undefined.js")
 const reshape = require("./reshape.js")
 
 // This is an implementation of the xoroshiro256++ algorithm:

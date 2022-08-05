@@ -1,10 +1,9 @@
-const mode = require("./mode.js")
-const { random } = require("./random.js")
-const round = require("./round.js")
-const shuffle = require("./shuffle.js")
-const scale = require("./scale.js")
 const add = require("./add.js")
+const mode = require("./mode.js")
 const normal = require("./normal.js")
+const round = require("./round.js")
+const scale = require("./scale.js")
+const shuffle = require("./shuffle.js")
 
 test("", () => {
   expect(mode([2, 3, 3, 3, 2, 4])).toBe(3)

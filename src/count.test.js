@@ -1,6 +1,4 @@
 const count = require("./count.js")
-const set = require("./set.js")
-const isEqual = require("./is-equal.js")
 const sort = require("./sort.js")
 
 test("gets count of items one at a time", () => {

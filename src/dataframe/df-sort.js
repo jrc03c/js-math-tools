@@ -37,7 +37,8 @@ function dfSort(df, cols, directions) {
     "The first parameter of the `sort` method must be (1) a string or index representing a column name or index, respectively; (2) a 1-dimensional array of strings and/or indices; or (3) null."
   )
 
-  if (isUndefined(directions)) directions = range(0, cols.length).map(i => true)
+  if (isUndefined(directions))
+    directions = range(0, cols.length).map(() => true)
 
   assert(
     isArray(directions),

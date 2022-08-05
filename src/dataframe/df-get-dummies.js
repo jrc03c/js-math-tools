@@ -5,7 +5,7 @@ const set = require("../set.js")
 const sort = require("../sort.js")
 
 function camelify(text) {
-  let temp = text.toLowerCase()
+  const temp = text.toLowerCase()
   let out = ""
 
   for (let i = 0; i < temp.length; i++) {

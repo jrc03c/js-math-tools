@@ -1,14 +1,10 @@
-const assert = require("./assert.js")
-const isUndefined = require("./is-undefined.js")
-const isArray = require("./is-array.js")
-const isNumber = require("./is-number.js")
+const dropNaN = require("./drop-nan.js")
 const flatten = require("./flatten.js")
 const sort = require("./sort.js")
-const dropNaN = require("./drop-nan.js")
 
 function median(arr) {
   try {
-    let flattenedArr = flatten(arr)
+    const flattenedArr = flatten(arr)
     let temp = dropNaN(flattenedArr)
     if (temp.length === 0) return NaN
     if (temp.length < flattenedArr.length) return NaN

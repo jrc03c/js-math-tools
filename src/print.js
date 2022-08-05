@@ -1,13 +1,13 @@
-let isArray = require("./is-array.js")
-let shape = require("./shape.js")
-let { DataFrame, Series } = require("./dataframe")
+const isArray = require("./is-array.js")
+const shape = require("./shape.js")
+const { DataFrame, Series } = require("./dataframe")
 
 function print() {
   Object.keys(arguments).forEach(key => {
-    let x = arguments[key]
+    const x = arguments[key]
 
     if (isArray(x)) {
-      let xShape = shape(x)
+      const xShape = shape(x)
 
       if (xShape.length === 1) {
         new Series(x).print()

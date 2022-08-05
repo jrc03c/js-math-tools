@@ -1,12 +1,11 @@
 const assert = require("./assert.js")
-const isUndefined = require("./is-undefined.js")
+const flatten = require("./flatten.js")
 const isArray = require("./is-array.js")
 const isNumber = require("./is-number.js")
-const isEqual = require("./is-equal.js")
-const flatten = require("./flatten.js")
+const isUndefined = require("./is-undefined.js")
+const scale = require("./scale.js")
 const shape = require("./shape.js")
 const sum = require("./sum.js")
-const scale = require("./scale.js")
 const transpose = require("./transpose.js")
 
 function dot(a, b) {

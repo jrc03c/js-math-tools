@@ -1,4 +1,5 @@
 const dropNaNPairwise = require("./drop-nan-pairwise.js")
+const normal = require("./normal.js")
 const range = require("./range.js")
 
 test("drops NaN values pairwise on vectors that don't actually have NaN values", () => {
@@ -18,8 +19,8 @@ test("drops NaN values pairwise on vectors that have NaN values", () => {
 })
 
 test("drops NaN values pairwise on vectors that contain only NaN values", () => {
-  const a = range(0, 5).map(i => "foo")
-  const b = range(0, 5).map(i => "bar")
+  const a = range(0, 5).map(() => "foo")
+  const b = range(0, 5).map(() => "bar")
   const [aTemp, bTemp] = dropNaNPairwise(a, b)
   expect(aTemp.length).toBe(0)
   expect(bTemp.length).toBe(0)

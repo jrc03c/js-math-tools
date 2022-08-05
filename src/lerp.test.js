@@ -51,7 +51,7 @@ test("returns NaN when attempting to lerp using non-numerical values", () => {
   let foo
   expect(lerp(foo, foo, foo)).toBeNaN()
 
-  let fn = () => {}
+  const fn = () => {}
   expect(lerp(fn, fn, fn)).toBeNaN()
 
   expect(lerp(1, 2)).toBeNaN()

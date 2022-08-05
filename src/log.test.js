@@ -1,6 +1,7 @@
-const log = require("./log.js")
-const abs = require("./abs.js")
 const distance = require("./distance.js")
+const log = require("./log.js")
+const normal = require("./normal.js")
+const range = require("./range.js")
 
 test("takes the log of E using base E to get 1", () => {
   const x = Math.E

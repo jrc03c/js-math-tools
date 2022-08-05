@@ -30,7 +30,6 @@ const isUndefined = require("../is-undefined.js")
 const leftPad = require("../helpers/left-pad.js")
 const ndarray = require("../ndarray.js")
 const range = require("../range.js")
-const set = require("../set.js")
 const shape = require("../shape.js")
 const transpose = require("../transpose.js")
 

@@ -10,7 +10,7 @@ test("tests function vectorization", () => {
 
 test("tests function vectorization", () => {
   const x = [0, 1, 2, 3]
-  const tens = vectorize(x => 10)
+  const tens = vectorize(() => 10)
   const yTrue = [10, 10, 10, 10]
   const yPred = tens(x)
   expect(yPred).toStrictEqual(yTrue)

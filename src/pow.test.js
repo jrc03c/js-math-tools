@@ -1,4 +1,6 @@
+const normal = require("./normal.js")
 const pow = require("./pow.js")
+const range = require("./range.js")
 
 test("", () => {
   expect(pow(3, 2)).toBe(9)
