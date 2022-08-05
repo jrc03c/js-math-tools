@@ -1,6 +1,6 @@
 const argmin = require("./argmin.js")
-const shuffle = require("./shuffle.js")
 const range = require("./range.js")
+const shuffle = require("./shuffle.js")
 
 test("gets the argmin of a linear range of values", () => {
   const x = shuffle(range(0, 100))

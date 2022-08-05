@@ -1,9 +1,9 @@
 const assert = require("./assert.js")
-const isUndefined = require("./is-undefined.js")
 const isArray = require("./is-array.js")
-const shape = require("./shape.js")
-const reverse = require("./reverse.js")
+const isUndefined = require("./is-undefined.js")
 const ndarray = require("./ndarray.js")
+const reverse = require("./reverse.js")
+const shape = require("./shape.js")
 
 function transpose(arr) {
   assert(

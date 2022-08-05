@@ -1,8 +1,8 @@
 const assert = require("./assert.js")
-const isUndefined = require("./is-undefined.js")
-const isArray = require("./is-array.js")
 const flatten = require("./flatten.js")
+const isArray = require("./is-array.js")
 const isEqual = require("./is-equal.js")
+const isUndefined = require("./is-undefined.js")
 const set = require("./set.js")
 
 function count(arr, items) {

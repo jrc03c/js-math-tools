@@ -1,9 +1,9 @@
 const assert = require("./assert.js")
-const isUndefined = require("./is-undefined.js")
+const int = require("./int.js")
 const isArray = require("./is-array.js")
 const isNumber = require("./is-number.js")
+const isUndefined = require("./is-undefined.js")
 const shape = require("./shape.js")
-const int = require("./int.js")
 
 function getValueAt(x, index) {
   assert(

@@ -1,9 +1,9 @@
+const MathError = require("../math-error.js")
 const assert = require("../assert.js")
 const copy = require("../copy.js")
 const isArray = require("../is-array.js")
 const isEqual = require("../is-equal.js")
 const leftPad = require("../helpers/left-pad.js")
-const MathError = require("../math-error.js")
 const shape = require("../shape.js")
 const sort = require("../sort.js")
 

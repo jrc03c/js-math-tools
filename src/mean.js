@@ -1,5 +1,5 @@
-const isNumber = require("./is-number.js")
 const flatten = require("./flatten.js")
+const isNumber = require("./is-number.js")
 
 function mean(arr) {
   try {

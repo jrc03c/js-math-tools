@@ -1,9 +1,9 @@
+const MathError = require("../math-error.js")
 const assert = require("../assert.js")
 const isArray = require("../is-array.js")
 const isBoolean = require("../is-boolean.js")
 const isString = require("../is-string.js")
 const isUndefined = require("../is-undefined.js")
-const MathError = require("../math-error.js")
 const max = require("../max.js")
 const range = require("../range.js")
 

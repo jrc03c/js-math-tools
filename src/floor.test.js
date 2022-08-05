@@ -1,6 +1,6 @@
 const floor = require("./floor.js")
-const { random } = require("./random.js")
 const zeros = require("./zeros.js")
+const { random } = require("./random.js")
 
 test("floors some values", () => {
   expect(floor(5.95)).toBe(5)

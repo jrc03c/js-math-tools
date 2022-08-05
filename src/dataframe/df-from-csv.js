@@ -1,8 +1,8 @@
+const MathError = require("../math-error.js")
 const assert = require("../assert.js")
 const dfFromCSVString = require("./df-from-csv-string.js")
 const isString = require("../is-string.js")
 const isUndefined = require("../is-undefined.js")
-const MathError = require("../math-error.js")
 
 async function fromCSV(
   DataFrame,

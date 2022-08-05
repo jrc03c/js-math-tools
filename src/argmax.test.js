@@ -1,6 +1,6 @@
 const argmax = require("./argmax.js")
-const shuffle = require("./shuffle.js")
 const range = require("./range.js")
+const shuffle = require("./shuffle.js")
 
 test("gets the argmax of a linear range of values", () => {
   const x = shuffle(range(0, 100))

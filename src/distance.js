@@ -1,7 +1,7 @@
 const pow = require("./pow.js")
-const sum = require("./sum.js")
 const sqrt = require("./sqrt.js")
 const subtract = require("./subtract.js")
+const sum = require("./sum.js")
 
 function distance(a, b) {
   try {

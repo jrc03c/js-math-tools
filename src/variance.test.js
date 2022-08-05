@@ -1,7 +1,7 @@
-const variance = require("./variance.js")
-const normal = require("./normal.js")
-const { random } = require("./random.js")
 const abs = require("./abs.js")
+const normal = require("./normal.js")
+const variance = require("./variance.js")
+const { random } = require("./random.js")
 
 test("gets the variance of arrays", () => {
   expect(abs(variance(normal(10000)) - 1)).toBeLessThan(0.05)

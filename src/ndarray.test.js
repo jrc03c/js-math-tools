@@ -1,6 +1,6 @@
-const ndarray = require("./ndarray.js")
-const flatten = require("./flatten.js")
 const dropMissing = require("./drop-missing.js")
+const flatten = require("./flatten.js")
+const ndarray = require("./ndarray.js")
 const shape = require("./shape.js")
 
 test("creates ndarrays of various shapes", () => {

@@ -1,8 +1,8 @@
+const flatten = require("./flatten.js")
+const normal = require("./normal.js")
+const range = require("./range.js")
 const reshape = require("./reshape.js")
 const shape = require("./shape.js")
-const normal = require("./normal.js")
-const flatten = require("./flatten.js")
-const range = require("./range.js")
 
 test("reshapes a vector", () => {
   const x = range(0, 100)

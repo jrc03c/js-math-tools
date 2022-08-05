@@ -1,6 +1,6 @@
 const ones = require("./ones.js")
-const shape = require("./shape.js")
 const set = require("./set.js")
+const shape = require("./shape.js")
 
 test("gets a tensor of ones", () => {
   const x = ones([2, 3, 4, 5])

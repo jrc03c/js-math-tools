@@ -1,5 +1,5 @@
-const flatten = require("./flatten.js")
 const count = require("./count.js")
+const flatten = require("./flatten.js")
 const set = require("./set.js")
 const sort = require("./sort.js")
 

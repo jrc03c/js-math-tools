@@ -1,4 +1,3 @@
-const { random } = require("./random.js")
 const add = require("./add.js")
 const distance = require("./distance.js")
 const dot = require("./dot.js")
@@ -8,6 +7,7 @@ const normal = require("./normal.js")
 const round = require("./round.js")
 const scale = require("./scale.js")
 const zeros = require("./zeros.js")
+const { random } = require("./random.js")
 
 test("gets the inverse of a matrix", () => {
   const x = normal([10, 10])

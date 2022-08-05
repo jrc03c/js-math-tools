@@ -1,11 +1,11 @@
+const MathError = require("../math-error.js")
 const assert = require("../assert.js")
+const copy = require("../copy.js")
 const isArray = require("../is-array.js")
 const isObject = require("../is-object.js")
 const isString = require("../is-string.js")
 const isUndefined = require("../is-undefined.js")
 const shape = require("../shape.js")
-const copy = require("../copy.js")
-const MathError = require("../math-error.js")
 const sort = require("../sort.js")
 
 function dfAssign(DataFrame, Series, df, p1, p2) {

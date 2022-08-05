@@ -1,6 +1,6 @@
 const assert = require("./assert.js")
-const isUndefined = require("./is-undefined.js")
 const isArray = require("./is-array.js")
+const isUndefined = require("./is-undefined.js")
 const max = require("./max.js")
 
 function shape(arr) {

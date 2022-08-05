@@ -1,6 +1,6 @@
 const identity = require("./identity.js")
-const sort = require("./sort.js")
 const set = require("./set.js")
+const sort = require("./sort.js")
 
 function isIdentity(x) {
   for (let i = 0; i < x.length; i++) {

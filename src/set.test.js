@@ -1,8 +1,8 @@
+const range = require("./range.js")
+const round = require("./round.js")
 const set = require("./set.js")
 const sort = require("./sort.js")
-const round = require("./round.js")
 const { random } = require("./random.js")
-const range = require("./range.js")
 
 test("", () => {
   const x = [2, 2, 2, 2, 3, 3, 3, 3, 3, 4, 3, 4, 3, 2, 2, 3, 3, 3, 3, 4]

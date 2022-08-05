@@ -1,7 +1,7 @@
-const exp = require("./exp.js")
-const normal = require("./normal.js")
 const apply = require("./apply.js")
 const distance = require("./distance.js")
+const exp = require("./exp.js")
+const normal = require("./normal.js")
 const product = require("./product.js")
 const shape = require("./shape.js")
 

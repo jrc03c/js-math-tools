@@ -1,8 +1,8 @@
 const assert = require("./assert.js")
-const isUndefined = require("./is-undefined.js")
+const flatten = require("./flatten.js")
 const isArray = require("./is-array.js")
 const isNumber = require("./is-number.js")
-const flatten = require("./flatten.js")
+const isUndefined = require("./is-undefined.js")
 
 const error =
   "You must pass a natural number or a one-dimensional array of natural numbers into the `ndarray` function!"

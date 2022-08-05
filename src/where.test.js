@@ -1,9 +1,9 @@
-const where = require("./where.js")
-const normal = require("./normal.js")
 const getValueAt = require("./get-value-at.js")
+const normal = require("./normal.js")
+const set = require("./set.js")
 const setValueAt = require("./set-value-at.js")
 const sign = require("./sign.js")
-const set = require("./set.js")
+const where = require("./where.js")
 
 test("tests `where` on a matrix", () => {
   const x = [

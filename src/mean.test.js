@@ -1,7 +1,7 @@
+const abs = require("./abs.js")
 const mean = require("./mean.js")
 const normal = require("./normal.js")
 const { random } = require("./random.js")
-const abs = require("./abs.js")
 
 test("gets the mean of arrays", () => {
   expect(mean([2, 3, 4])).toBe(3)

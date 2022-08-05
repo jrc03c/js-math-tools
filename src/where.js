@@ -1,8 +1,8 @@
+const apply = require("./apply.js")
 const assert = require("./assert.js")
+const indexOf = require("./index-of.js")
 const isArray = require("./is-array.js")
 const isFunction = require("./is-function.js")
-const apply = require("./apply.js")
-const indexOf = require("./index-of.js")
 const setValueAt = require("./set-value-at.js")
 
 function where(x, fn) {

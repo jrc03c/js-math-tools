@@ -1,6 +1,6 @@
 const copy = require("./copy.js")
-const normal = require("./normal.js")
 const isEqual = require("./is-equal.js")
+const normal = require("./normal.js")
 const isTheSameObject = (a, b) => a === b
 
 function isACopy(a, b) {

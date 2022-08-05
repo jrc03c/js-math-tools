@@ -1,5 +1,5 @@
-const isArray = require("./is-array.js")
 const flatten = require("./flatten.js")
+const isArray = require("./is-array.js")
 const union = require("./union.js")
 
 function intersect() {

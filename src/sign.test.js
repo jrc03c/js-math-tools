@@ -1,11 +1,11 @@
-const sign = require("./sign.js")
-const { random } = require("./random.js")
-const normal = require("./normal.js")
-const set = require("./set.js")
-const sort = require("./sort.js")
-const scale = require("./scale.js")
 const add = require("./add.js")
+const normal = require("./normal.js")
 const ones = require("./ones.js")
+const scale = require("./scale.js")
+const set = require("./set.js")
+const sign = require("./sign.js")
+const sort = require("./sort.js")
+const { random } = require("./random.js")
 
 test("gets the sign of some numbers", () => {
   const a = sort(set(sign(normal(10000))).concat(0))

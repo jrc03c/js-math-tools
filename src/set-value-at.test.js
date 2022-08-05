@@ -1,7 +1,7 @@
-const setValueAt = require("./set-value-at.js")
 const getValueAt = require("./get-value-at.js")
 const indexOf = require("./index-of.js")
 const normal = require("./normal.js")
+const setValueAt = require("./set-value-at.js")
 
 test("sets a value in a vector", () => {
   const x = [2, 3, 4, 5, 6]

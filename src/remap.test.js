@@ -1,5 +1,5 @@
-const remap = require("./remap.js")
 const normal = require("./normal.js")
+const remap = require("./remap.js")
 
 test("remaps a single value from one range to another", () => {
   const x = 1

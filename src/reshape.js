@@ -1,8 +1,8 @@
 const assert = require("./assert.js")
+const flatten = require("./flatten.js")
 const isArray = require("./is-array.js")
 const isNumber = require("./is-number.js")
 const shape = require("./shape.js")
-const flatten = require("./flatten.js")
 const product = x => x.reduce((a, b) => a * b)
 
 function reshape(x, newShape) {

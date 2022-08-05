@@ -1,7 +1,7 @@
 const assert = require("./assert.js")
-const isUndefined = require("./is-undefined.js")
 const isArray = require("./is-array.js")
 const isFunction = require("./is-function.js")
+const isUndefined = require("./is-undefined.js")
 
 function alphaSort(a, b) {
   if (a < b) return -1

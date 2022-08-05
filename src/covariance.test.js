@@ -1,6 +1,6 @@
+const abs = require("./abs.js")
 const covariance = require("./covariance.js")
 const normal = require("./normal.js")
-const abs = require("./abs.js")
 
 test("gets covariance for two arrays, one of which has only one unique value, to be 0", () => {
   const x = [2, 3, 4]

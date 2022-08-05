@@ -1,5 +1,5 @@
-const shape = require("./shape.js")
 const normal = require("./normal.js")
+const shape = require("./shape.js")
 
 test("gets the shape of some arrays", () => {
   expect(shape(normal(500))).toStrictEqual([500])

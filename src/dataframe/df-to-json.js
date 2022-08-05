@@ -1,5 +1,5 @@
-const dfToJSONString = require("./df-to-json-string.js")
 const MathError = require("../math-error.js")
+const dfToJSONString = require("./df-to-json-string.js")
 
 function toJSON(df, filename, axis) {
   const out = dfToJSONString(df, axis)

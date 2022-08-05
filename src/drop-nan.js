@@ -1,7 +1,7 @@
 const assert = require("./assert.js")
 const isArray = require("./is-array.js")
-const isUndefined = require("./is-undefined.js")
 const isNumber = require("./is-number.js")
+const isUndefined = require("./is-undefined.js")
 const shape = require("./shape.js")
 
 function dropNaN(x) {

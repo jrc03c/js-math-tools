@@ -1,5 +1,5 @@
-const reverse = require("./reverse.js")
 const range = require("./range.js")
+const reverse = require("./reverse.js")
 
 test("", () => {
   expect(reverse([2, 3, 5, 4])).toStrictEqual([4, 5, 3, 2])

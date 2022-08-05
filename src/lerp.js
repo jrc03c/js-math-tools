@@ -1,5 +1,5 @@
-const vectorize = require("./vectorize.js")
 const isNumber = require("./is-number.js")
+const vectorize = require("./vectorize.js")
 
 function lerp(a, b, f) {
   try {

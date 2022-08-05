@@ -1,7 +1,7 @@
-const { random } = require("./random.js")
 const isNumber = require("./is-number.js")
 const isUndefined = require("./is-undefined.js")
 const reshape = require("./reshape.js")
+const { random } = require("./random.js")
 
 function helper() {
   const u1 = random()

@@ -1,8 +1,8 @@
-const permute = require("./permute.js")
-const sort = require("./sort.js")
-const set = require("./set.js")
-const range = require("./range.js")
 const factorial = require("./factorial.js")
+const permute = require("./permute.js")
+const range = require("./range.js")
+const set = require("./set.js")
+const sort = require("./sort.js")
 
 function turnIntoStrings(arr) {
   return arr.map(item => JSON.stringify(item))

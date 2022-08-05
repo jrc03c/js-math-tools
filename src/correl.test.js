@@ -1,7 +1,7 @@
-const correl = require("./correl.js")
-const normal = require("./normal.js")
 const abs = require("./abs.js")
 const add = require("./add.js")
+const correl = require("./correl.js")
+const normal = require("./normal.js")
 const scale = require("./scale.js")
 
 test("gets the correlation of completely unrelated vectors", () => {

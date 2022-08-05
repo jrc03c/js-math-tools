@@ -1,7 +1,7 @@
-const std = require("./std.js")
-const normal = require("./normal.js")
-const { random } = require("./random.js")
 const abs = require("./abs.js")
+const normal = require("./normal.js")
+const std = require("./std.js")
+const { random } = require("./random.js")
 
 test("gets the standard deviation of arrays", () => {
   expect(abs(std(normal(10000)) - 1)).toBeLessThan(0.05)

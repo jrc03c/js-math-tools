@@ -1,7 +1,7 @@
 const assert = require("./assert.js")
-const isNumber = require("./is-number.js")
-const isArray = require("./is-array.js")
 const copy = require("./copy.js")
+const isArray = require("./is-array.js")
+const isNumber = require("./is-number.js")
 
 function setValueAt(x, index, value) {
   assert(

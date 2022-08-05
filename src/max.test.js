@@ -1,5 +1,5 @@
-const { random } = require("./random.js")
 const max = require("./max.js")
+const { random } = require("./random.js")
 
 test("gets the max of arrays of values of mixed types", () => {
   expect(max([2, 3, 4])).toBe(4)

@@ -1,6 +1,6 @@
-const mean = require("./mean.js")
 const flatten = require("./flatten.js")
 const isNumber = require("./is-number.js")
+const mean = require("./mean.js")
 
 function variance(arr) {
   try {

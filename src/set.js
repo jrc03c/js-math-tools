@@ -1,7 +1,7 @@
 const assert = require("./assert.js")
-const isUndefined = require("./is-undefined.js")
-const isArray = require("./is-array.js")
 const flatten = require("./flatten.js")
+const isArray = require("./is-array.js")
+const isUndefined = require("./is-undefined.js")
 
 function set(arr) {
   assert(!isUndefined(arr), "You must pass an array into the `set` function!")

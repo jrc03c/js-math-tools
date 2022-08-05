@@ -1,6 +1,6 @@
+const assert = require("./assert.js")
 const isArray = require("./is-array.js")
 const isNumber = require("./is-number.js")
-const assert = require("./assert.js")
 
 function combine(arr, r) {
   assert(isArray(arr), "The `combine` function only works on arrays!")

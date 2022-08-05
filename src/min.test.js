@@ -1,5 +1,5 @@
-const { random } = require("./random.js")
 const min = require("./min.js")
+const { random } = require("./random.js")
 
 test("gets the min of arrays of values of mixed types", () => {
   expect(min([2, 3, 4])).toBe(2)

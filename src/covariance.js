@@ -1,5 +1,5 @@
-const mean = require("./mean.js")
 const isUndefined = require("./is-undefined.js")
+const mean = require("./mean.js")
 
 function covariance(x, y) {
   try {

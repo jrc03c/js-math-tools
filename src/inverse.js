@@ -1,15 +1,15 @@
+const add = require("./add.js")
+const append = require("./append.js")
 const assert = require("./assert.js")
-const isUndefined = require("./is-undefined.js")
+const dot = require("./dot.js")
+const flatten = require("./flatten.js")
 const isArray = require("./is-array.js")
 const isNumber = require("./is-number.js")
-const flatten = require("./flatten.js")
+const isUndefined = require("./is-undefined.js")
+const range = require("./range.js")
+const scale = require("./scale.js")
 const shape = require("./shape.js")
 const slice = require("./slice.js")
-const dot = require("./dot.js")
-const add = require("./add.js")
-const scale = require("./scale.js")
-const append = require("./append.js")
-const range = require("./range.js")
 
 function inverse(x) {
   assert(

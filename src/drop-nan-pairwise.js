@@ -1,7 +1,7 @@
 const assert = require("./assert.js")
-const isUndefined = require("./is-undefined.js")
 const isArray = require("./is-array.js")
 const isNumber = require("./is-number.js")
+const isUndefined = require("./is-undefined.js")
 const max = require("./max.js")
 const shape = require("./shape.js")
 

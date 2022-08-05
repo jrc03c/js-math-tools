@@ -1,8 +1,8 @@
-const cos = require("./cos.js")
-const min = require("./min.js")
-const max = require("./max.js")
-const normal = require("./normal.js")
 const chop = require("./chop.js")
+const cos = require("./cos.js")
+const max = require("./max.js")
+const min = require("./min.js")
+const normal = require("./normal.js")
 
 test("gets the cosine of an array of values", () => {
   const x = normal([10000]).map(v => v * 100)

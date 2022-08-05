@@ -1,4 +1,3 @@
-const { DataFrame, Series } = require("../dataframe")
 const isEqual = require("../is-equal.js")
 const isUndefined = require("../is-undefined.js")
 const normal = require("../normal.js")
@@ -6,6 +5,7 @@ const range = require("../range.js")
 const scale = require("../scale.js")
 const set = require("../set.js")
 const sort = require("../sort.js")
+const { DataFrame, Series } = require("../dataframe")
 
 test("tests Series stuff", () => {
   const isSeries = s => s instanceof Series

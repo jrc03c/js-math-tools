@@ -1,6 +1,6 @@
 const ceil = require("./ceil.js")
-const { random } = require("./random.js")
 const ones = require("./ones.js")
+const { random } = require("./random.js")
 
 test("ceils some values", () => {
   expect(ceil(5.95)).toBe(6)

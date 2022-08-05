@@ -1,7 +1,7 @@
-const { random } = require("./random.js")
 const round = require("./round.js")
 const set = require("./set.js")
 const sort = require("./sort.js")
+const { random } = require("./random.js")
 
 test("rounds some values", () => {
   expect(round(5.95)).toBe(6)

@@ -1,6 +1,6 @@
+const assert = require("./assert.js")
 const isArray = require("./is-array.js")
 const isNumber = require("./is-number.js")
-const assert = require("./assert.js")
 const isUndefined = require("./is-undefined.js")
 
 function permute(arr, r) {

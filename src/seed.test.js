@@ -1,5 +1,5 @@
-const { random, seed } = require("./random.js")
 const isEqual = require("./is-equal.js")
+const { random, seed } = require("./random.js")
 
 test("seeds the pseudo-random number generator", () => {
   const s1 = seed()

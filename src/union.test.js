@@ -1,11 +1,11 @@
-const union = require("./union.js")
-const sort = require("./sort.js")
-const count = require("./count.js")
-const round = require("./round.js")
-const { random } = require("./random.js")
-const range = require("./range.js")
-const scale = require("./scale.js")
 const add = require("./add.js")
+const count = require("./count.js")
+const range = require("./range.js")
+const round = require("./round.js")
+const scale = require("./scale.js")
+const sort = require("./sort.js")
+const union = require("./union.js")
+const { random } = require("./random.js")
 
 test("gets the union of manually-defined sets", () => {
   const obj = { hello: "world" }
