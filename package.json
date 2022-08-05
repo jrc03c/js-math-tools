@@ -6,7 +6,7 @@
   "scripts": {
     "build": "esbuild src/index.js --bundle --outfile=dist/js-math-tools.js --minify",
     "watch": "esbuild src/index.js --bundle --outfile=dist/js-math-tools.js --minify --watch",
-    "test": "jest --testTimeout 60000; madge --circular src/index.js; echo 'Remember to test coverage as well!'"
+    "test": "jest --testTimeout 60000; madge --circular src/index.js; eslint src; echo 'Remember to test coverage as well!'"
   },
   "repository": {
     "type": "git",
@@ -24,6 +24,7 @@
   "license": "ISC",
   "devDependencies": {
     "esbuild": "^0.14.21",
+    "eslint": "^8.21.0",
     "madge": "^5.0.1"
   }
 }
