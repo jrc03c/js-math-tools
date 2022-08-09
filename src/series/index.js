@@ -21,11 +21,28 @@ const seriesToObject = require("./series-to-object.js")
 const shape = require("../shape.js")
 const transpose = require("../transpose.js")
 
+const SERIES_SYMBOL = Symbol.for("@jrc03c/js-math-tools/series")
+
 module.exports = function (DataFrame) {
   class Series {
+    static [Symbol.hasInstance](x) {
+      try {
+        return !!x.symbol && x.symbol === SERIES_SYMBOL
+      } catch (e) {
+        return false
+      }
+    }
+
     constructor(data) {
       const self = this
       self.name = "data"
+
+      Object.defineProperty(self, "symbol", {
+        configurable: false,
+        enumerable: false,
+        writable: false,
+        value: SERIES_SYMBOL,
+      })
 
       Object.defineProperty(self, "_values", {
         value: [],
@@ -106,14 +123,38 @@ module.exports = function (DataFrame) {
       })
 
       if (data) {
-        const dataShape = shape(data)
+        if (data instanceof Series) {
+          self.name = data.name
+          self.index = copy(data.index)
+          self.values = copy(data.values)
+        } else if (isArray(data)) {
+          const dataShape = shape(data)
 
-        assert(
-          dataShape.length === 1,
-          "The `data` array passed into the constructor of a DataFrame must be 1-dimensional!"
-        )
+          assert(
+            dataShape.length === 1,
+            "When passing an array into the constructor of a Series, the array must be 1-dimensional!"
+          )
 
-        self.values = data
+          self.values = data
+        } else if (data instanceof Object) {
+          const keys = Object.keys(data)
+
+          assert(
+            keys.length === 1,
+            "When passing an object into the constructor of a Series, the object must have only 1 key-value pair, where the key is the name of the data and the value is the 1-dimensional array of values!"
+          )
+
+          const name = keys[0]
+          const values = data[name]
+
+          assert(
+            shape(values).length === 1,
+            "When passing an object into the constructor of a Series, the object must have only 1 key-value pair, where the key is the name of the data and the value is the 1-dimensional array of values!"
+          )
+
+          self.name = name
+          self.values = copy(values)
+        }
       }
     }
 

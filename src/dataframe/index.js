@@ -1,4 +1,5 @@
 const assert = require("../assert.js")
+const copy = require("../copy.js")
 const count = require("../count.js")
 const dfAppend = require("./df-append.js")
 const dfApply = require("./df-apply.js")
@@ -33,6 +34,8 @@ const range = require("../range.js")
 const shape = require("../shape.js")
 const transpose = require("../transpose.js")
 
+const DATAFRAME_SYMBOL = Symbol.for("@jrc03c/js-math-tools/dataframe")
+
 function makeKey(n) {
   const alpha = "abcdefghijklmnopqrstuvwxyz1234567890"
   let out = ""
@@ -42,8 +45,23 @@ function makeKey(n) {
 }
 
 class DataFrame {
+  static [Symbol.hasInstance](x) {
+    try {
+      return !!x._symbol && x._symbol === DATAFRAME_SYMBOL
+    } catch (e) {
+      return false
+    }
+  }
+
   constructor(data) {
     const self = this
+
+    Object.defineProperty(self, "_symbol", {
+      configurable: false,
+      enumerable: false,
+      writable: false,
+      value: DATAFRAME_SYMBOL,
+    })
 
     Object.defineProperty(self, "_values", {
       value: [],
@@ -239,7 +257,11 @@ class DataFrame {
     )
 
     if (data) {
-      if (isArray(data)) {
+      if (data instanceof DataFrame) {
+        self.values = copy(data.values)
+        self.columns = copy(data.columns)
+        self.index = copy(data.index)
+      } else if (isArray(data)) {
         const dataShape = shape(data)
 
         assert(

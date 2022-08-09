@@ -19,7 +19,6 @@ function isEqual(a, b) {
 
       for (let i = 0; i < aKeys.length; i++) {
         const key = aKeys[i]
-        if (typeof b[key] === "undefined") return false
         if (!isEqual(a[key], b[key])) return false
       }
 

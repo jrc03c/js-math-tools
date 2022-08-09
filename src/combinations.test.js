@@ -1,4 +1,4 @@
-const combine = require("./combine.js")
+const combinations = require("./combinations.js")
 const factorial = require("./factorial.js")
 const range = require("./range.js")
 const set = require("./set.js")
@@ -31,15 +31,15 @@ test("", () => {
     )
   )
 
-  const aPred = sort(set(turnIntoStrings(combine(range(0, 5), 3))))
+  const aPred = sort(set(turnIntoStrings(combinations(range(0, 5), 3))))
   expect(aPred).toStrictEqual(aTrue)
 
   const x = range(0, 10)
   const r = 3
-  expect(combine(x, r).length).toBe(getNumberOfCombinations(x, r))
+  expect(combinations(x, r).length).toBe(getNumberOfCombinations(x, r))
 
-  expect(combine(range(0, 10), -1)).toStrictEqual([[]])
-  expect(combine(range(0, 10), 100)).toStrictEqual([range(0, 10)])
+  expect(combinations(range(0, 10), -1)).toStrictEqual([[]])
+  expect(combinations(range(0, 10), 100)).toStrictEqual([range(0, 10)])
 })
 
 test("", () => {
@@ -58,7 +58,7 @@ test("", () => {
 
   failures.forEach(f => {
     expect(() => {
-      combine(f[0], f[1])
+      combinations(f[0], f[1])
     }).toThrow()
   })
 })

@@ -1,21 +1,26 @@
 const assert = require("./assert.js")
 const isArray = require("./is-array.js")
 const isNumber = require("./is-number.js")
-const isUndefined = require("./is-undefined.js")
-const shape = require("./shape.js")
 
 function dropNaN(x) {
   assert(
     isArray(x),
-    "The value passed into the `dropNaN` function must be a one-dimensional array!"
+    "The value passed into the `dropNaN` function must be an array!"
   )
 
-  assert(
-    shape(x).length === 1,
-    "The value passed into the `dropNaN` function must be a one-dimensional array"
-  )
+  const out = []
 
-  return x.filter(v => !isUndefined(v) && isNumber(v))
+  x.forEach(v => {
+    try {
+      return out.push(dropNaN(v))
+    } catch (e) {
+      if (isNumber(v)) {
+        return out.push(v)
+      }
+    }
+  })
+
+  return out
 }
 
 module.exports = dropNaN

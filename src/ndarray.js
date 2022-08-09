@@ -7,20 +7,18 @@ const isUndefined = require("./is-undefined.js")
 const error =
   "You must pass a natural number or a one-dimensional array of natural numbers into the `ndarray` function!"
 
-function ndarray(shape, shouldSkipChecks) {
-  if (!shouldSkipChecks) {
-    assert(!isUndefined(shape), error)
-    if (!isArray(shape)) shape = [shape]
-    shape = flatten(shape)
+function ndarray(shape) {
+  assert(!isUndefined(shape), error)
+  if (!isArray(shape)) shape = [shape]
+  shape = flatten(shape)
 
-    assert(shape.length > 0, error)
+  assert(shape.length > 0, error)
 
-    shape.forEach(x => {
-      assert(isNumber(x), error)
-      assert(parseInt(x) === x, error)
-      assert(x >= 0, error)
-    })
-  }
+  shape.forEach(x => {
+    assert(isNumber(x), error)
+    assert(parseInt(x) === x, error)
+    assert(x >= 0, error)
+  })
 
   if (shape.length === 1) {
     const out = []

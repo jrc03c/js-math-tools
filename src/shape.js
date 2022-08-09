@@ -1,35 +1,52 @@
-const assert = require("./assert.js")
 const isArray = require("./is-array.js")
+const isEqual = require("./is-equal.js")
 const isUndefined = require("./is-undefined.js")
-const max = require("./max.js")
 
-function shape(arr) {
-  assert(!isUndefined(arr), "You must pass an array into the `shape` function!")
-  assert(isArray(arr), "You must pass an array into the `shape` function!")
+function shape(x) {
+  if (isArray(x)) {
+    const out = [x.length]
+    let childArrayCount = 0
 
-  let out = [arr.length]
-  const childrenAreArrays = arr.map(x => isArray(x))
+    const childShapes = x.map(v => {
+      const s = shape(v)
 
-  if (childrenAreArrays.indexOf(true) > -1) {
-    assert(
-      childrenAreArrays.indexOf(false) < 0,
-      "The array passed into the `shape` function has some children that are not themselves arrays!"
-    )
+      if (!isUndefined(s)) {
+        childArrayCount++
 
-    const lengths = arr.map(x => x.length)
-    const maxLength = max(lengths)
-
-    lengths.forEach(function (length) {
-      assert(
-        length === maxLength,
-        "The array passed into the `shape` function has some children of inconsistent length!"
-      )
+        if (s.length === 1) {
+          return s[0]
+        } else {
+          return s
+        }
+      } else {
+        return s
+      }
     })
 
-    out = out.concat(shape(arr[0]))
-  }
+    if (childArrayCount > 0) {
+      if (childArrayCount === x.length) {
+        const childShapesAreIdentical = childShapes
+          .slice(0, -1)
+          .every((s, i) => {
+            return isEqual(s, childShapes[i + 1])
+          })
 
-  return out
+        if (childShapesAreIdentical) {
+          return out.concat(childShapes[0])
+        } else {
+          out.push(childShapes)
+          return out
+        }
+      } else {
+        out.push(childShapes)
+        return out
+      }
+    } else {
+      return out
+    }
+  } else {
+    return undefined
+  }
 }
 
 module.exports = shape

@@ -1,8 +1,11 @@
 const assert = require("./assert.js")
 const isArray = require("./is-array.js")
+const isEqual = require("./is-equal.js")
 const isFunction = require("./is-function.js")
 const isUndefined = require("./is-undefined.js")
 const max = require("./max.js")
+const range = require("./range.js")
+const shape = require("./shape.js")
 
 function vectorize(fn) {
   assert(
@@ -16,35 +19,31 @@ function vectorize(fn) {
   )
 
   return function temp() {
-    const atLeastOneArgumentIsAnArray =
-      Object.keys(arguments)
-        .map(key => isArray(arguments[key]))
-        .indexOf(true) > -1
+    const childArrays = Object.keys(arguments)
+      .filter(key => isArray(arguments[key]))
+      .map(key => arguments[key])
 
-    if (atLeastOneArgumentIsAnArray) {
-      const out = []
-      const lengths = Object.keys(arguments)
-        .filter(key => isArray(arguments[key]))
-        .map(key => arguments[key].length)
-      const maxLength = max(lengths)
+    childArrays.slice(0, -1).forEach((s, i) => {
+      assert(
+        isEqual(shape(s), shape(childArrays[i + 1])),
+        `When passing multiple arrays into the \`${fn.name}\` function, all of the arrays must have the same shape!`
+      )
+    })
 
-      lengths.forEach(length => {
-        assert(
-          length === maxLength,
-          `If using arrays for all arguments to this function, then the arrays must all have equal length!`
-        )
-      })
+    if (childArrays.length > 0) {
+      const maxLength = max(childArrays.map(a => a.length))
 
-      for (let i = 0; i < maxLength; i++) {
+      return range(0, maxLength).map(i => {
         const args = Object.keys(arguments).map(key => {
-          if (isArray(arguments[key])) return arguments[key][i]
-          return arguments[key]
+          if (isArray(arguments[key])) {
+            return arguments[key][i]
+          } else {
+            return arguments[key]
+          }
         })
 
-        out.push(temp(...args))
-      }
-
-      return out
+        return temp(...args)
+      })
     } else {
       return fn(...arguments)
     }

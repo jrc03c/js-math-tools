@@ -1,8 +1,7 @@
 const assert = require("./assert.js")
 const isArray = require("./is-array.js")
+const isEqual = require("./is-equal.js")
 const isNumber = require("./is-number.js")
-const isUndefined = require("./is-undefined.js")
-const max = require("./max.js")
 const shape = require("./shape.js")
 
 function dropNaNPairwise(a, b) {
@@ -12,22 +11,23 @@ function dropNaNPairwise(a, b) {
   )
 
   assert(
-    shape(a).length === 1 && shape(b).length === 1,
-    "The `dropNaNPairwise` function only works on one-dimensional arrays!"
+    isEqual(shape(a), shape(b)),
+    "The two arrays passed into the `dropNaNPairwise` must have the same shape!"
   )
 
   const aOut = []
   const bOut = []
 
-  for (let i = 0; i < max([a.length, b.length]); i++) {
-    if (
-      !isUndefined(a[i]) &&
-      isNumber(a[i]) &&
-      !isUndefined(b[i]) &&
-      isNumber(b[i])
-    ) {
-      aOut.push(a[i])
-      bOut.push(b[i])
+  for (let i = 0; i < a.length; i++) {
+    try {
+      const [aChildren, bChildren] = dropNaNPairwise(a[i], b[i])
+      aOut.push(aChildren)
+      bOut.push(bChildren)
+    } catch (e) {
+      if (isNumber(a[i]) && isNumber(b[i])) {
+        aOut.push(a[i])
+        bOut.push(b[i])
+      }
     }
   }
 

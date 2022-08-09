@@ -1,42 +1,46 @@
+const { random } = require("./random.js")
 const dropMissing = require("./drop-missing.js")
+const isEqual = require("./is-equal.js")
+const isJagged = require("./is-jagged.js")
 const normal = require("./normal.js")
+const reshape = require("./reshape.js")
 
-test("drops missing values from a vector with no missing values", () => {
+test("drops missing values from an array with no missing values", () => {
   const a = [1, 2, 3, 4, 5]
   const aTemp = dropMissing(a)
   expect(aTemp).toStrictEqual(a)
 })
 
-test("drops missing values from a vector with missing values", () => {
+test("drops missing values from an array with some missing values", () => {
   const a = [1, 2, null, undefined, 5]
   const aTemp = dropMissing(a)
   expect(aTemp).toStrictEqual([1, 2, 5])
 })
 
-test("drops missing values from a vector with only missing values", () => {
-  const a = [null, null, null, undefined, undefined]
+test("drops missing values from an array with only missing values", () => {
+  const a = [null, undefined, null, undefined, null]
   const aTemp = dropMissing(a)
   expect(aTemp.length).toBe(0)
 })
 
-test("throw an error when attempting to drop missing values from non-vectors", () => {
-  expect(() => {
-    dropMissing()
-  }).toThrow()
+test("drops missing values from nested arrays", () => {
+  let x = normal(100)
 
-  expect(() => {
-    dropMissing(normal([10, 10, 10]))
-  }).toThrow()
+  for (let i = 0; i < 0.1 * x.length; i++) {
+    x[parseInt(random() * x.length)] = null
+  }
 
-  expect(() => {
-    dropMissing("foo")
-  }).toThrow()
+  x = reshape(x, [2, 5, 2, 5])
+  const y = dropMissing(x)
+  expect(isEqual(x, y)).toBe(false)
+  expect(isJagged(x)).toBe(false)
+  expect(isJagged(y)).toBe(true)
+})
 
-  expect(() => {
-    dropMissing(true)
-  }).toThrow()
+test("throws errors when attempting to drop missing values from non-arrays", () => {
+  const wrongs = [234, "foo", true, false, null, undefined, () => {}, {}]
 
-  expect(() => {
-    dropMissing(1, 2, 3)
-  }).toThrow()
+  wrongs.forEach(x => {
+    expect(() => dropMissing(x)).toThrow()
+  })
 })
