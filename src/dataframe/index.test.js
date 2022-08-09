@@ -57,6 +57,7 @@ test("tests DataFrame assignment", () => {
 
   const e = new Series(normal(100))
   e.name = "e"
+  e.index = df.index.slice()
   df = df.assign(e)
 
   expect(e.values).toStrictEqual(df.get(null, "e").values)

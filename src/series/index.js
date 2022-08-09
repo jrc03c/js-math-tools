@@ -74,7 +74,7 @@ module.exports = function (DataFrame) {
           } else if (dataShape[0] > self._index.length) {
             self._index = self._index.concat(
               range(self._index.length, dataShape[0]).map(i => {
-                return "row" + leftPad(i, (x.length - 1).toString().length)
+                return "item" + leftPad(i, (x.length - 1).toString().length)
               })
             )
           }
@@ -219,7 +219,7 @@ module.exports = function (DataFrame) {
       const out = self.copy()
 
       out.index = range(0, self.shape[0]).map(i => {
-        return "row" + leftPad(i, (out.index.length - 1).toString().length)
+        return "item" + leftPad(i, (out.index.length - 1).toString().length)
       })
 
       return out
