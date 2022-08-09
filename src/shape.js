@@ -2,7 +2,39 @@ const isArray = require("./is-array.js")
 const isEqual = require("./is-equal.js")
 const isUndefined = require("./is-undefined.js")
 
+// note: these have been defined locally even though they already exist as
+// standalone functions because importing those functions creates circular
+// dependencies :(
+
+function isSeries(x) {
+  try {
+    return (
+      !!x._symbol && x._symbol === Symbol.for("@jrc03c/js-math-tools/series")
+    )
+  } catch (e) {
+    return false
+  }
+}
+
+function isDataFrame(x) {
+  try {
+    return (
+      !!x._symbol && x._symbol === Symbol.for("@jrc03c/js-math-tools/dataframe")
+    )
+  } catch (e) {
+    return false
+  }
+}
+
 function shape(x) {
+  if (isSeries(x)) {
+    return x.shape
+  }
+
+  if (isDataFrame(x)) {
+    return x.shape
+  }
+
   if (isArray(x)) {
     const out = [x.length]
     let childArrayCount = 0

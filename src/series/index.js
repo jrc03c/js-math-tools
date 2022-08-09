@@ -27,7 +27,7 @@ module.exports = function (DataFrame) {
   class Series {
     static [Symbol.hasInstance](x) {
       try {
-        return !!x.symbol && x.symbol === SERIES_SYMBOL
+        return !!x._symbol && x._symbol === SERIES_SYMBOL
       } catch (e) {
         return false
       }
@@ -37,7 +37,7 @@ module.exports = function (DataFrame) {
       const self = this
       self.name = "data"
 
-      Object.defineProperty(self, "symbol", {
+      Object.defineProperty(self, "_symbol", {
         configurable: false,
         enumerable: false,
         writable: false,
