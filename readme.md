@@ -17,7 +17,7 @@ For client-side use, attach the `dist/js-math-tools.js` file to your web page:
 For use in Node:
 
 ```js
-let tools = require("js-math-tools")
+const tools = require("js-math-tools")
 ```
 
 # Usage
@@ -25,7 +25,7 @@ let tools = require("js-math-tools")
 You can either pull individual functions out, like:
 
 ```js
-let { add } = require("js-math-tools")
+const { add } = require("js-math-tools")
 add(3, 4) // 7
 ```
 
