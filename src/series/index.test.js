@@ -75,6 +75,10 @@ test("tests Series stuff", () => {
   expect(isEqual(series7.values, [1, 0, -1]))
   expect(isEqual(series7.index, ["b4", "b5", "b6"]))
   expect(series7.name).toBe("Blah")
+
+  const series8 = new Series(normal(100))
+  expect(series8.length).toBe(100)
+  expect(series8.width).toBe(undefined)
 })
 
 test("throws an error when attempting to do unsavory things with Series", () => {

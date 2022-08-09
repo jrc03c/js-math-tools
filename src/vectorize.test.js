@@ -1,4 +1,8 @@
+const { DataFrame, Series } = require("./dataframe")
+const isDataFrame = require("./is-dataframe.js")
 const isEqual = require("./is-equal.js")
+const isSeries = require("./is-series.js")
+const normal = require("./normal.js")
 const vectorize = require("./vectorize.js")
 
 test("tests function vectorization on single-argument functions", () => {
@@ -40,9 +44,76 @@ test("tests passing weirdly-shaped arrays into vectorized functions", () => {
   expect(isEqual(sum(a, b), c)).toBe(true)
 })
 
+test("tests passing in single values, arrays, Series, and DataFrames", () => {
+  const add = vectorize((a, b) => a + b)
+  expect(add(3, 4)).toBe(7)
+  expect(add(3, [4, 5, 6])).toStrictEqual([7, 8, 9])
+  expect(add([3, 4, 5], 6)).toStrictEqual([9, 10, 11])
+  expect(add([3, 4, 5], [6, 7, 8])).toStrictEqual([9, 11, 13])
+
+  const a = new Series([2, 3, 4])
+  const b = new Series([5, 6, 7])
+  expect(isEqual(add(a, 5), new Series([7, 8, 9]))).toBe(true)
+  expect(isEqual(add(5, b), new Series([10, 11, 12]))).toBe(true)
+  expect(isEqual(add(a, b), new Series([7, 9, 11]))).toBe(true)
+  expect(isSeries(add(a, b))).toBe(true)
+
+  const c = new DataFrame([
+    [2, 3],
+    [4, 5],
+    [6, 7],
+  ])
+
+  const d = new DataFrame([
+    [20, 30],
+    [40, 50],
+    [60, 70],
+  ])
+
+  expect(
+    isEqual(
+      add(c, 5),
+      new DataFrame([
+        [7, 8],
+        [9, 10],
+        [11, 12],
+      ])
+    )
+  ).toBe(true)
+
+  expect(
+    isEqual(
+      add(5, d),
+      new DataFrame([
+        [25, 35],
+        [45, 55],
+        [65, 75],
+      ])
+    )
+  ).toBe(true)
+
+  expect(
+    isEqual(
+      add(c, d),
+      new DataFrame([
+        [22, 33],
+        [44, 55],
+        [66, 77],
+      ])
+    )
+  ).toBe(true)
+
+  expect(isDataFrame(add(c, d))).toBe(true)
+})
+
 test("throws an error when attempting to vectorize non-functions or to call a vectorized function with multiple arrays of differing shapes", () => {
   expect(() => {
     vectorize()
+  }).toThrow()
+
+  expect(() => {
+    const add = vectorize((a, b) => a + b)
+    add(new DataFrame(normal([100, 5])), new DataFrame(normal([20, 8])))
   }).toThrow()
 
   expect(() => {

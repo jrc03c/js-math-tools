@@ -592,6 +592,12 @@ test("tests joining new columns to a DataFrame", () => {
   ).toBe(true)
 })
 
+test("tests DataFrame dimensions", () => {
+  const x = new DataFrame(normal([100, 25]))
+  expect(x.length).toBe(100)
+  expect(x.width).toBe(25)
+})
+
 afterAll(() => {
   // clean up
   const fs = require("fs")

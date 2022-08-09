@@ -163,6 +163,11 @@ module.exports = function (DataFrame) {
       return shape(self.values)
     }
 
+    get length() {
+      const self = this
+      return self.shape[0]
+    }
+
     get isEmpty() {
       const self = this
       return self.values.filter(v => !isUndefined(v)).length === 0

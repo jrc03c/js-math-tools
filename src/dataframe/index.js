@@ -295,6 +295,16 @@ class DataFrame {
     return shape(self.values)
   }
 
+  get length() {
+    const self = this
+    return self.shape[0]
+  }
+
+  get width() {
+    const self = this
+    return self.shape[1]
+  }
+
   get rows() {
     const self = this
     return self.index
