@@ -206,6 +206,38 @@ The constructor for a `DataFrame` can optionally receive a value `x`, which can 
 - a 2-dimensional array
 - an object whose key-value pairs represent column names and column values, respectively
 
+### `DataFrame.values`
+
+A 2-dimensional array containing the values held by the DataFrame. Technically, `values` is a getter-setter pair that stores its data in a hidden `_values` property. While it's possible to set the `_values` property directly, this is strongly discouraged because it bypasses sanity checks on the data, like checking that new data is 2-dimensional, etc.
+
+### `DataFrame.columns`
+
+An array of column names. Technically, `columns` is a getter-setter pair that stores its data in a hidden `_columns` property. While it's possible to set the `_columns` property directly, this is strongly discouraged because it bypasses sanity checks on the data, like checking to make sure that the length of a new columns array is the same length as the rows in the `values` array, etc.
+
+### `DataFrame.index`
+
+An array of row names. Technically, `index` is a getter-setter pair that stores its data in a hidden `_index` property. While it's possible to set the `_index` property directly, this is strongly discouraged because it bypasses sanity checks on the data, like checking to make sure that the length of the new rows array is the same as the length of the `values` array, etc.
+
+### `DataFrame.rows`
+
+Identical to `DataFrame.index`.
+
+### `DataFrame.shape`
+
+A read-only array with 2 values representing the number of rows and number of columns, respectively, in the `values` array.
+
+### `DataFrame.length`
+
+A read-only value representing the number of rows in the `DataFrame`.
+
+### `DataFrame.width`
+
+A read-only value representing the number of columns in the `DataFrame`.
+
+### `DataFrame.isEmpty`
+
+A read-only boolean value that is `true` if the `DataFrame` contains no data or `false` otherwise.
+
 ### `DataFrame.append()`
 
 [WIP]
@@ -554,6 +586,32 @@ The constructor for a `Series` can optionally receive a value `x`, which can be 
 - another `Series`
 - a 1-dimensional array
 - an object whose lone key-value pair represents the name and values, respectively
+
+### `Series.values`
+
+A 1-dimensional array containing the values held by the `Series`. Technically, `values` is a getter-setter pair that stores its data in a hidden `_values` property. While it's possible to set the `_values` property directly, this is strongly discouraged because it bypasses sanity checks on the data, like checking that new data is 1-dimensional, etc.
+
+### `Series.index`
+
+An array of names for each value. If you like, you can think of them as "row" or "column" names, even though there technically aren't any rows or columns in a `Series`. If you `get` a single row or column from a `DataFrame`, then the returned value will be a `Series` whose `index` represents the column names or row names, respectively, of the originating `DataFrame`.
+
+Technically, `index` is a getter-setter pair that stores its data in a hidden `_index` property. While it's possible to set the `_index` property directly, this is strongly discouraged because it bypasses sanity checks on the data, like checking to make sure that the length of the new `index` array is the same as the length of the `values` array, etc.
+
+### `Series.name`
+
+The name of the `Series` object. If you `get` a single row or column out of a `DataFrame`, then the returned value will be a `Series` whose name represents the row name or column name, respectively, of the values in the originating `DataFrame`.
+
+### `Series.shape`
+
+A read-only array containing only a single value: the length of the `values` array.
+
+### `Series.length`
+
+A read-only value representing the length of the `values` array.
+
+### `Series.isEmpty`
+
+A read-only boolean value that is `true` if the `Series` contains no data or `false` otherwise.
 
 ### `Series.apply()`
 
