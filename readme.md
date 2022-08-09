@@ -208,49 +208,95 @@ The constructor for a `DataFrame` can optionally receive a value `x`, which can 
 
 ### `DataFrame.append()`
 
+[WIP]
+
 ### `DataFrame.apply()`
+
+[WIP]
 
 ### `DataFrame.assign()`
 
+[WIP]
+
 ### `DataFrame.copy()`
+
+[WIP]
 
 ### `DataFrame.dropMissing()`
 
+[WIP]
+
 ### `DataFrame.dropNaN()`
+
+[WIP]
 
 ### `DataFrame.drop()`
 
+[WIP]
+
 ### `DataFrame.filter()`
+
+[WIP]
 
 ### `DataFrame.fromCSVString()`
 
+[WIP]
+
 ### `DataFrame.fromCSV()`
+
+[WIP]
 
 ### `DataFrame.getDummies()`
 
+[WIP]
+
 ### `DataFrame.getSubsetByIndices()`
+
+[WIP]
 
 ### `DataFrame.getSubsetByNames()`
 
+[WIP]
+
 ### `DataFrame.get()`
+
+[WIP]
 
 ### `DataFrame.join()`
 
+[WIP]
+
 ### `DataFrame.print()`
+
+[WIP]
 
 ### `DataFrame.resetIndex()`
 
+[WIP]
+
 ### `DataFrame.shuffle()`
+
+[WIP]
 
 ### `DataFrame.sort()`
 
+[WIP]
+
 ### `DataFrame.toCSVString()`
+
+[WIP]
 
 ### `DataFrame.toCSV()`
 
+[WIP]
+
 ### `DataFrame.toJSONString()`
 
+[WIP]
+
 ### `DataFrame.toJSON()`
+
+[WIP]
 
 ### `DataFrame.toObject()`
 
@@ -511,25 +557,47 @@ The constructor for a `Series` can optionally receive a value `x`, which can be 
 
 ### `Series.apply()`
 
+[WIP]
+
 ### `Series.dropMissing()`
+
+[WIP]
 
 ### `Series.dropNaN()`
 
+[WIP]
+
 ### `Series.filter()`
+
+[WIP]
 
 ### `Series.getSubsetByIndices()`
 
+[WIP]
+
 ### `Series.getSubsetByNames()`
+
+[WIP]
 
 ### `Series.get()`
 
+[WIP]
+
 ### `Series.print()`
+
+[WIP]
 
 ### `Series.sortByIndex()`
 
+[WIP]
+
 ### `Series.sort()`
 
+[WIP]
+
 ### `Series.toObject()`
+
+[WIP]
 
 ## `set(x)`
 
