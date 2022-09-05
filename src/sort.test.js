@@ -1,93 +1,67 @@
+const { DataFrame, Series } = require("./dataframe")
 const isEqual = require("./is-equal.js")
 const normal = require("./normal.js")
-const range = require("./range.js")
-const shuffle = require("./shuffle.js")
+const reverse = require("./reverse.js")
 const sort = require("./sort.js")
+const zip = require("./zip.js")
 
-test("sorts a set of numbers", () => {
-  const x = shuffle(range(1, 7))
-  const yTrue = range(1, 7)
-  const yPred = sort(x)
-  expect(yPred).toStrictEqual(yTrue)
-})
+test("tests that arrays, Series, and DataFrames can be correctly sorted", () => {
+  const a = normal(100)
+  const bTrue = a.slice().sort((a, b) => a - b)
+  const bPred = sort(a)
+  expect(isEqual(bPred, bTrue)).toBe(true)
 
-test("sorts an array of objects", () => {
-  const x = [{ x: 5 }, { x: 3 }, { x: 10 }]
-  const yTrue = [{ x: 10 }, { x: 5 }, { x: 3 }]
+  const c = normal([2, 3, 4, 5])
+  const dTrue = c.slice().sort((a, b) => (a < b ? -1 : 1))
+  const dPred = sort(c)
+  expect(isEqual(dPred, dTrue)).toBe(true)
 
-  const yPred = sort(x, (a, b) => {
-    if (a.x < b.x) return 1
-    if (a.x > b.x) return -1
-    return 0
+  const e = normal(100)
+  const fTrue = reverse(sort(e))
+  const fPred = sort(e, (a, b) => b - a)
+  expect(isEqual(fPred, fTrue)).toBe(true)
+
+  const g = new Series({ hello: normal(100) })
+  const hTrue = g.copy()
+  const hTemp = sort(zip(hTrue.values, hTrue.index), (a, b) => a[0] - b[0])
+  hTrue.values = hTemp.map(v => v[0])
+  hTrue.index = hTemp.map(v => v[1])
+  const hPred = sort(g)
+  expect(isEqual(hPred, hTrue)).toBe(true)
+
+  const i = new DataFrame({ foo: normal(100), bar: normal(100) })
+  const jTrue = i.copy()
+
+  const jTemp = sort(
+    zip(jTrue.values, jTrue.index),
+    (a, b) => a[0][1] - b[0][1]
+  )
+
+  jTrue.values = jTemp.map(v => v[0])
+  jTrue.index = jTemp.map(v => v[1])
+  const jPred = sort(i, (a, b) => a.get("bar") - b.get("bar"))
+  expect(isEqual(jPred, jTrue)).toBe(true)
+
+  const wrongs = [
+    0,
+    1,
+    2.3,
+    -2.3,
+    Infinity,
+    -Infinity,
+    NaN,
+    "foo",
+    true,
+    false,
+    null,
+    undefined,
+    Symbol.for("Hello, world!"),
+    { hello: "world" },
+  ]
+
+  wrongs.forEach(a => {
+    wrongs.forEach(b => {
+      expect(() => sort(a, b)).toThrow()
+    })
   })
-
-  expect(isEqual(yPred, yTrue)).toBe(true)
-})
-
-test("sorts an array of numbers", () => {
-  const x = normal(10000)
-  const yPred = sort(x)
-
-  for (let i = 0; i < yPred.length - 1; i++) {
-    expect(yPred[i]).toBeLessThanOrEqual(yPred[i + 1])
-  }
-})
-
-test("sorts an array of letters", () => {
-  const x = ["b", "c", "a", "d", "f", "e"]
-  const yTrue = ["a", "b", "c", "d", "e", "f"]
-  const yPred = sort(x)
-  expect(yPred).toStrictEqual(yTrue)
-})
-
-test("sorts a weirdly-shaped, nested array", () => {
-  const x = []
-
-  for (let i = 0; i < 5; i++) {
-    x.push(range(0, i + 1))
-  }
-
-  const yPred = sort(x, (a, b) => b.length - a.length)
-
-  for (let i = 0; i < yPred.length - 1; i++) {
-    expect(yPred[i].length).toBeGreaterThanOrEqual(yPred[i + 1].length)
-  }
-})
-
-test("throws an error when attempting to sort non-arrays with non-functions", () => {
-  expect(() => {
-    sort()
-  }).toThrow()
-
-  expect(() => {
-    sort([2, 3, 4], "foo")
-  }).toThrow()
-
-  expect(() => {
-    sort("foo")
-  }).toThrow()
-
-  expect(() => {
-    sort(true)
-  }).toThrow()
-
-  expect(() => {
-    sort(false)
-  }).toThrow()
-
-  expect(() => {
-    sort(null)
-  }).toThrow()
-
-  expect(() => {
-    sort(undefined)
-  }).toThrow()
-
-  expect(() => {
-    sort(() => {})
-  }).toThrow()
-
-  expect(() => {
-    sort({})
-  }).toThrow()
 })

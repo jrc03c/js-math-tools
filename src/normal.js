@@ -1,7 +1,7 @@
-const isNumber = require("./is-number.js")
-const isUndefined = require("./is-undefined.js")
-const reshape = require("./reshape.js")
 const { random } = require("./random.js")
+const apply = require("./apply.js")
+const isUndefined = require("./is-undefined.js")
+const ndarray = require("./ndarray.js")
 
 function helper() {
   const u1 = random()
@@ -11,13 +11,7 @@ function helper() {
 
 function normal(shape) {
   if (isUndefined(shape)) return helper()
-
-  if (isNumber(shape)) shape = [shape]
-  const out = []
-  let n = 1
-  shape.forEach(v => (n *= v))
-  for (let i = 0; i < n; i++) out.push(helper())
-  return reshape(out, shape)
+  return apply(ndarray(shape), helper)
 }
 
 module.exports = normal

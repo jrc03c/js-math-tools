@@ -1,17 +1,20 @@
 const assert = require("./assert.js")
 const isArray = require("./is-array.js")
-const isUndefined = require("./is-undefined.js")
+const isDataFrame = require("./is-dataframe.js")
+const isSeries = require("./is-series.js")
 const ndarray = require("./ndarray.js")
 const reverse = require("./reverse.js")
 const shape = require("./shape.js")
 
 function transpose(arr) {
-  assert(
-    !isUndefined(arr),
-    "You must pass an array into the `transpose` function!"
-  )
+  if (isDataFrame(arr) || isSeries(arr)) {
+    return arr.transpose()
+  }
 
-  assert(isArray(arr), "You must pass an array into the `transpose` function!")
+  assert(
+    isArray(arr),
+    "The `transpose` function only works on arrays, Series, and DataFrames!"
+  )
 
   const theShape = shape(arr)
 

@@ -1,18 +1,33 @@
+const isArray = require("./is-array.js")
 const isNumber = require("./is-number.js")
+const isUndefined = require("./is-undefined.js")
+const max = require("./max.js")
+const min = require("./min.js")
 const vectorize = require("./vectorize.js")
 
-function remap(x, a, b, c, d) {
+const helper = vectorize(function (x, a, b, c, d) {
   try {
-    if (!isNumber(x)) return NaN
-    if (!isNumber(a)) return NaN
-    if (!isNumber(b)) return NaN
-    if (!isNumber(c)) return NaN
-    if (!isNumber(d)) return NaN
+    if (![x, a, b, c, d].every(v => isNumber(v))) {
+      return NaN
+    }
+
+    if (b - a === 0) return NaN
 
     return ((d - c) * (x - a)) / (b - a) + c
   } catch (e) {
     return NaN
   }
+})
+
+function remap(x, a, b, c, d) {
+  if (isArray(x) && isUndefined(c) && isUndefined(d)) {
+    c = a
+    d = b
+    a = min(x)
+    b = max(x)
+  }
+
+  return helper(x, a, b, c, d)
 }
 
-module.exports = vectorize(remap)
+module.exports = remap

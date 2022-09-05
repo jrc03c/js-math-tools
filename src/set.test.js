@@ -1,81 +1,50 @@
-const range = require("./range.js")
+const { DataFrame, Series } = require("./dataframe")
+const isEqual = require("./is-equal.js")
+const normal = require("./normal.js")
 const round = require("./round.js")
 const set = require("./set.js")
 const sort = require("./sort.js")
-const { random } = require("./random.js")
 
-test("", () => {
-  const x = [2, 2, 2, 2, 3, 3, 3, 3, 3, 4, 3, 4, 3, 2, 2, 3, 3, 3, 3, 4]
-  const yTrue = [2, 3, 4]
-  const yPred = sort(set(x))
-  expect(yPred).toStrictEqual(yTrue)
-})
+test("tests that sets of values can be correctly selected", () => {
+  expect(set([2, 2, 2, 3, 4])).toStrictEqual([2, 3, 4])
+  expect(sort(set([4, [3, 3, [2, 2, 2]]]))).toStrictEqual([2, 3, 4])
 
-test("", () => {
-  const x = round(random([10, 10, 10, 10]))
-  const yTrue = [0, 1]
-  const yPred = sort(set(x))
-  expect(yPred).toStrictEqual(yTrue)
-})
+  const a = set(round(normal(100)))
 
-test("", () => {
-  const x = range(10, 20, 0.25)
-  const yTrue = x.slice()
-  const yPred = set(x)
-  expect(yPred).toStrictEqual(yTrue)
-})
+  a.slice(0, -1).forEach((u, i) => {
+    a.slice(i + 1).forEach(v => {
+      expect(u).not.toBe(v)
+    })
+  })
 
-test("", () => {
-  const fn = () => {}
-  const obj = { hello: "world" }
+  const b = new Series({ hello: round(normal(100)) })
+  expect(isEqual(set(b), set(b.values))).toBe(true)
 
-  const x = [
+  const c = new DataFrame({ foo: normal(100), bar: normal(100) })
+  expect(isEqual(set(c), set(c.values))).toBe(true)
+
+  const others = [
+    0,
+    1,
+    2.3,
+    -2.3,
+    Infinity,
+    -Infinity,
+    NaN,
     "foo",
-    "bar",
-    "baz",
-    "foo",
-    "foo",
-    true,
     true,
     false,
-    true,
-    234,
-    234,
-    0,
-    obj,
-    obj,
-    obj,
-    obj,
-    null,
-    null,
-    null,
     null,
     undefined,
-    undefined,
-    fn,
-    fn,
-    fn,
-    fn,
-    fn,
+    Symbol.for("Hello, world!"),
+    x => x,
+    function (x) {
+      return x
+    },
+    { hello: "world" },
   ]
 
-  const yTrue = [
-    "foo",
-    "bar",
-    "baz",
-    true,
-    false,
-    234,
-    0,
-    obj,
-    null,
-    undefined,
-    fn,
-  ]
-
-  const yPred = set(x)
-
-  yTrue.forEach(item => {
-    expect(yPred.indexOf(item)).toBeGreaterThan(-1)
+  others.forEach(item => {
+    expect(() => set(item)).toThrow()
   })
 })

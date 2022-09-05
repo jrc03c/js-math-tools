@@ -1,35 +1,58 @@
+const { DataFrame, Series } = require("./dataframe")
 const factorial = require("./factorial.js")
+const isEqual = require("./is-equal.js")
+const normal = require("./normal.js")
+const round = require("./round.js")
 
-test("tests that the `factorial` function works as expected", () => {
-  const pairs = [
-    [-2, 1],
-    [0, 1],
-    [1, 1],
-    [2, 2],
-    [3, 6],
-    [4, 24],
-    [5, 120],
-  ]
+test("tests that factorial values can be computed correctly", () => {
+  expect(factorial(5)).toBe(5 * 4 * 3 * 2)
+  expect(factorial(0)).toBe(1)
+  expect(factorial(-100)).toBe(1)
 
-  pairs.forEach(pair => {
-    expect(factorial(pair[0])).toBe(pair[1])
+  const a = [1, 2, 3, 4, 5]
+  const bTrue = [1, 2, 6, 24, 120]
+  const bPred = factorial(a)
+  expect(isEqual(bPred, bTrue)).toBe(true)
+
+  const c = [2, [3, [4, [5]]]]
+  const dTrue = [2, [6, [24, [120]]]]
+  const dPred = factorial(c)
+  expect(isEqual(dPred, dTrue)).toBe(true)
+
+  const e = new Series({ hello: round(normal(100).map(v => v * 10)) })
+  const fTrue = e.copy().apply(v => factorial(v))
+  const fPred = factorial(e)
+  expect(isEqual(fPred, fTrue))
+
+  const g = new DataFrame({
+    foo: round(normal(100).map(v => v * 100)),
+    bar: round(normal(100).map(v => v * 100)),
   })
 
-  expect(factorial([2, 3, 4, 5])).toStrictEqual([2, 6, 24, 120])
+  const hTrue = g.copy().apply(col => col.apply(v => factorial(v)))
+  const hPred = factorial(g)
+  expect(isEqual(hPred, hTrue)).toBe(true)
 
-  const failures = [
+  const wrongs = [
+    2.3,
+    -2.3,
+    Infinity,
+    -Infinity,
+    NaN,
     "foo",
     true,
     false,
     null,
     undefined,
-    {},
-    () => {},
-    -1.5,
-    5.75,
+    Symbol.for("Hello, world!"),
+    x => x,
+    function (x) {
+      return x
+    },
+    { hello: "world" },
   ]
 
-  failures.forEach(f => {
-    expect(factorial(f)).toBeNaN()
+  wrongs.forEach(item => {
+    expect(factorial(item)).toBeNaN()
   })
 })

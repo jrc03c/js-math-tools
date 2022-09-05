@@ -1,19 +1,40 @@
+const { DataFrame, Series } = require("./dataframe")
 const isNumber = require("./is-number.js")
 
 test("checks to see if various things are numbers", () => {
-  expect(isNumber(3)).toBe(true)
-  expect(isNumber(-3.5)).toBe(true)
-  expect(isNumber(2573.290348209348)).toBe(true)
-  expect(isNumber(Infinity)).toBe(true)
-  expect(isNumber(Math.PI)).toBe(true)
+  const rights = [0, 1, 2.3, -2.3, Infinity, -Infinity, Math.PI]
 
-  expect(isNumber("35")).toBe(false)
-  expect(isNumber("foo")).toBe(false)
-  expect(isNumber([2, 3, 4])).toBe(false)
-  expect(isNumber({ x: 5 })).toBe(false)
-  expect(isNumber(() => {})).toBe(false)
-  expect(isNumber(null)).toBe(false)
-  expect(isNumber(undefined)).toBe(false)
-  expect(isNumber(true)).toBe(false)
-  expect(isNumber(false)).toBe(false)
+  rights.forEach(item => {
+    expect(isNumber(item)).toBe(true)
+  })
+
+  const selfReferencer = [2, 3, 4]
+  selfReferencer.push(selfReferencer)
+
+  const wrongs = [
+    NaN,
+    "foo",
+    true,
+    false,
+    null,
+    undefined,
+    Symbol.for("Hello, world!"),
+    [2, 3, 4],
+    [
+      [2, 3, 4],
+      [5, 6, 7],
+    ],
+    x => x,
+    function (x) {
+      return x
+    },
+    { hello: "world" },
+    selfReferencer,
+    new Series({ hello: [10, 20, 30, 40, 50] }),
+    new DataFrame({ foo: [1, 2, 4, 8, 16], bar: [1, 3, 9, 27, 81] }),
+  ]
+
+  wrongs.forEach(item => {
+    expect(isNumber(item)).toBe(false)
+  })
 })

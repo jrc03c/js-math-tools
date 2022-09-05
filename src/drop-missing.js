@@ -1,11 +1,17 @@
 const assert = require("./assert.js")
 const isArray = require("./is-array.js")
+const isDataFrame = require("./is-dataframe.js")
+const isSeries = require("./is-series.js")
 const isUndefined = require("./is-undefined.js")
 
 function dropMissing(x) {
+  if (isDataFrame(x) || isSeries(x)) {
+    return x.dropMissing(...Object.values(arguments).slice(1))
+  }
+
   assert(
     isArray(x),
-    "The value passed into the `dropMissing` function must be an array!"
+    "The `dropMissing` function only works on arrays, Series, and DataFrames!"
   )
 
   const out = []

@@ -1,54 +1,92 @@
+const { DataFrame, Series } = require("./dataframe")
 const chop = require("./chop.js")
+const flatten = require("./flatten.js")
+const isEqual = require("./is-equal.js")
+const range = require("./range.js")
+const reshape = require("./reshape.js")
+const shuffle = require("./shuffle.js")
 
-test("chops 1 to be 1", () => {
-  expect(chop(1)).toBe(1)
-})
+test("tests that values can be chopped correctly", () => {
+  const r = reshape(
+    shuffle(
+      range(-40, 40).map(i => Math.pow(10, i) * (Math.random() < 0.5 ? -1 : 1))
+    ),
+    [2, 4, 10]
+  )
 
-test("chops -1 to be -1", () => {
-  expect(chop(-1)).toBe(-1)
-})
+  const s = new Series({ hello: shuffle(flatten(r)) })
 
-test("chops 0 to be 0", () => {
-  expect(chop(0)).toBe(0)
-})
+  const d = new DataFrame({
+    foo: shuffle(flatten(r)),
+    bar: shuffle(flatten(r)),
+  })
 
-test("chops 1e-15 to be 0", () => {
-  expect(chop(1e-15)).toBe(0)
-})
+  const rights = [
+    [0, 0],
+    [1, 1],
+    [2.3, 2.3],
+    [-2.3, -2.3],
+    [Infinity, Infinity],
+    [-Infinity, -Infinity],
+    [
+      [2, 3, 4],
+      [2, 3, 4],
+    ],
+    [
+      [
+        [2, 3, 4],
+        [5, 6, 7],
+      ],
+      [
+        [2, 3, 4],
+        [5, 6, 7],
+      ],
+    ],
+    [
+      r,
+      reshape(
+        flatten(r).map(v => (Math.abs(v) < 1e-10 ? 0 : v)),
+        [2, 4, 10]
+      ),
+    ],
+    [s, s.copy().apply(v => (Math.abs(v) < 1e-10 ? 0 : v))],
+    [d, d.copy().apply(col => col.apply(v => (Math.abs(v) < 1e-10 ? 0 : v)))],
+  ]
 
-test("chops -1e-15 to be 0", () => {
-  expect(chop(-1e-15)).toBe(0)
-})
+  rights.forEach(pair => {
+    expect(isEqual(chop(pair[0]), pair[1])).toBe(true)
+  })
 
-test("chops an array of values", () => {
-  const x = [1e-20, 1e-15, 1e-5]
-  const yTrue = [0, 0, 1e-5]
-  const yPred = chop(x)
-  expect(yPred).toStrictEqual(yTrue)
-})
+  const wrongs = [
+    NaN,
+    "foo",
+    true,
+    false,
+    null,
+    undefined,
+    Symbol.for("Hello, world!"),
+    x => x,
+    function (x) {
+      return x
+    },
+    { hello: "world" },
+  ]
 
-test("chops an array of values with an array of thresholds", () => {
-  const x = [1, 1, 1]
-  const thresholds = [1e-1, 1, 1e1]
-  const yTrue = [1, 1, 0]
-  const yPred = chop(x, thresholds)
-  expect(yPred).toStrictEqual(yTrue)
-})
+  wrongs.forEach(v => {
+    expect(chop(v)).toBeNaN()
+  })
 
-test("returns NaN when attempting to chop non-numerical values", () => {
-  expect(chop("foo")).toBeNaN()
-})
+  expect(
+    isEqual(
+      chop(new Series(["foo", "bar", "baz"])),
+      new Series([NaN, NaN, NaN])
+    )
+  ).toBe(true)
 
-test("chops an array of values with an array of mixed types for thresholds", () => {
-  const x = [1, 1, 1]
-  const thresholds = [1e-10, 1e-20, "smol"]
-  const yTrue = [1, 1, NaN]
-  const yPred = chop(x, thresholds)
-  expect(yPred).toStrictEqual(yTrue)
-})
-
-test("throws an error when attempting to chop arrays of values using an array of thresholds of a different shape", () => {
-  expect(() => {
-    chop([2, 3, 4], [1e-5, 1e-10, 1e-15, 1e-20])
-  }).toThrow()
+  expect(
+    isEqual(
+      chop(new DataFrame({ foo: ["a", "b", "c"], bar: ["d", "e", "f"] })),
+      new DataFrame({ foo: [NaN, NaN, NaN], bar: [NaN, NaN, NaN] })
+    )
+  ).toBe(true)
 })

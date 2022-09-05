@@ -1,17 +1,50 @@
+const { DataFrame, Series } = require("./dataframe")
 const isObject = require("./is-object.js")
 
-test("checks to see if various things are objects", () => {
+test("tests that objects can be correctly identified", () => {
   class Foo {}
 
-  const rights = [{}, { hello: "world", items: [2, 3, 4] }, new Foo()]
+  const selfReferencer = { hello: "world" }
+  selfReferencer.self = selfReferencer
 
-  rights.forEach(right => {
-    expect(isObject(right)).toBe(true)
+  const rights = [
+    new Foo(),
+    { hello: "world" },
+    selfReferencer,
+    new Series({ hello: [10, 20, 30, 40, 50] }),
+    new DataFrame({ foo: [1, 2, 4, 8, 16], bar: [1, 3, 9, 27, 81] }),
+  ]
+
+  rights.forEach(item => {
+    expect(isObject(item)).toBe(true)
   })
 
-  const wrongs = [234, "foo", true, false, null, undefined, () => {}, [2, 3, 4]]
+  const wrongs = [
+    0,
+    1,
+    2.3,
+    -2.3,
+    Infinity,
+    -Infinity,
+    NaN,
+    "foo",
+    true,
+    false,
+    null,
+    undefined,
+    Symbol.for("Hello, world!"),
+    [2, 3, 4],
+    [
+      [2, 3, 4],
+      [5, 6, 7],
+    ],
+    x => x,
+    function (x) {
+      return x
+    },
+  ]
 
-  wrongs.forEach(wrong => {
-    expect(isObject(wrong)).toBe(false)
+  wrongs.forEach(item => {
+    expect(isObject(item)).toBe(false)
   })
 })

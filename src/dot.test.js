@@ -1,83 +1,97 @@
+const { DataFrame, Series } = require("./dataframe")
 const dot = require("./dot.js")
+const isEqual = require("./is-equal.js")
 const normal = require("./normal.js")
 
-test("gets the dot product of two vectors", () => {
+test("tests that the dot products of vectors and matrices can be computed correctly", () => {
   const a = [2, 3, 4]
   const b = [5, 6, 7]
-  const yTrue = 56
-  const yPred = dot(a, b)
-  expect(yPred).toBe(yTrue)
-})
+  expect(dot(a, b)).toBe(2 * 5 + 3 * 6 + 4 * 7)
 
-test("gets the dot product of two matrices", () => {
-  const a = [
-    [2, 3],
-    [4, 5],
-    [6, 7],
+  const c = [2, 3, 4]
+
+  const d = [
+    [5, 6],
+    [7, 8],
+    [9, 10],
   ]
-  const b = [
-    [8, 9, 10],
-    [11, 12, 13],
+
+  expect(
+    isEqual(dot(c, d), [2 * 5 + 3 * 7 + 4 * 9, 2 * 6 + 3 * 8 + 4 * 10])
+  ).toBe(true)
+
+  const e = [
+    [2, 3, 4],
+    [5, 6, 7],
   ]
-  const yTrue = [
-    [49, 54, 59],
-    [87, 96, 105],
-    [125, 138, 151],
+
+  const f = [8, 9, 10]
+
+  expect(
+    isEqual(dot(e, f), [2 * 8 + 3 * 9 + 4 * 10, 5 * 8 + 6 * 9 + 7 * 10])
+  ).toBe(true)
+
+  const g = [
+    [2, 3, 4],
+    [5, 6, 7],
   ]
-  const yPred = dot(a, b)
-  expect(yPred).toStrictEqual(yTrue)
-})
 
-test("gets the dot product of a vector and a matrix", () => {
-  const a = [4, 3, 2, 1]
-  const b = [
-    [12, 11],
-    [10, 9],
-    [8, 7],
-    [6, 5],
+  const h = [
+    [8, 9],
+    [10, 11],
+    [12, 13],
   ]
-  const yTrue = [100, 90]
-  const yPred = dot(a, b)
-  expect(yPred).toStrictEqual(yTrue)
-})
 
-test("gets the dot product of a matrix and a vector", () => {
-  const a = [
-    [1, 2, 3, 4, 5],
-    [6, 7, 8, 9, 10],
+  const iTrue = [
+    [2 * 8 + 3 * 10 + 4 * 12, 2 * 9 + 3 * 11 + 4 * 13],
+    [5 * 8 + 6 * 10 + 7 * 12, 5 * 9 + 6 * 11 + 7 * 13],
   ]
-  const b = [11, 12, 13, 14, 15]
-  const yTrue = [205, 530]
-  const yPred = dot(a, b)
-  expect(yPred).toStrictEqual(yTrue)
-})
 
-test("throw an error when `dot` is called without arguments", () => {
-  expect(() => {
-    dot()
-  }).toThrow()
-})
+  const iPred = dot(g, h)
+  expect(isEqual(iPred, iTrue)).toBe(true)
 
-test("throw an error when `dot` is called with non-numerical / non-array values", () => {
-  expect(() => {
-    dot(2, 3)
-  }).toThrow()
+  const j = new Series({ foo: normal(100) })
+  const k = new Series({ bar: normal(100) })
+  const lTrue = dot(j.values, k.values)
+  const lPred = dot(j, k)
+  expect(isEqual(lPred, lTrue)).toBe(true)
 
-  expect(() => {
-    dot(true, false)
-  }).toThrow()
+  const m = new Series({ hello: normal(100) })
+  const n = new DataFrame({ foo: normal(100), bar: normal(100) })
+  const oTrue = new Series(dot(m.values, n.values))
+  oTrue.name = m.name
+  oTrue.index = n.columns.slice()
+  const oPred = dot(m, n)
+  expect(isEqual(oPred, oTrue)).toBe(true)
 
-  expect(() => {
-    dot("foo", "bar")
-  }).toThrow()
+  const p = new DataFrame(normal([5, 100]))
+  p.columns = p.columns.map((v, i) => "p" + i)
+  p.index = p.index.map((v, i) => "p_row" + i)
+  const q = new Series({ hello: normal(100) })
+  const rTrue = new Series(dot(p.values, q.values))
+  rTrue.name = q.name
+  rTrue.index = p.index.slice()
+  const rPred = dot(p, q)
+  expect(isEqual(rTrue, rPred)).toBe(true)
 
-  expect(() => {
-    dot(normal([2, 3, 4]))
-  }).toThrow()
-})
+  const wrongs = [
+    [0, 1],
+    [2.3, -2.3],
+    [Infinity, -Infinity],
+    [NaN, "foo"],
+    [true, false],
+    [null, undefined],
+    [Symbol.for("Hello, world!"), x => x],
+    [
+      function (x) {
+        return x
+      },
+      { hello: "world" },
+    ],
+    [normal([100, 25]), normal([100, 25])],
+  ]
 
-test("throw an error when attempting to get the dot product of matrices with mis-aligned axes", () => {
-  expect(() => {
-    dot(normal([2, 3]), normal([2, 3]))
-  }).toThrow()
+  wrongs.forEach(pair => {
+    expect(() => dot(pair[0], pair[1])).toThrow()
+  })
 })

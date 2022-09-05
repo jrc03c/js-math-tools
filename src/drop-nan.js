@@ -1,11 +1,17 @@
 const assert = require("./assert.js")
 const isArray = require("./is-array.js")
+const isDataFrame = require("./is-dataframe.js")
 const isNumber = require("./is-number.js")
+const isSeries = require("./is-series.js")
 
 function dropNaN(x) {
+  if (isDataFrame(x) || isSeries(x)) {
+    return x.dropNaN(...Object.values(arguments).slice(1))
+  }
+
   assert(
     isArray(x),
-    "The value passed into the `dropNaN` function must be an array!"
+    "The `dropNaN` function only works on arrays, Series, and DataFrames!"
   )
 
   const out = []

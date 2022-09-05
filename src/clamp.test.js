@@ -1,32 +1,81 @@
+const { DataFrame, Series } = require("./dataframe")
 const clamp = require("./clamp.js")
+const isEqual = require("./is-equal.js")
+const normal = require("./normal.js")
 
-test("clamps 5 to be between 1 and 10", () => {
-  expect(clamp(5, 1, 10)).toBe(5)
-})
+test("tests that values can be clamped correctly", () => {
+  const s = new Series({ hello: normal(100) })
+  const d = new DataFrame({ foo: normal(100), bar: normal(100) })
 
-test("clamps -100 to be between 1 and 10", () => {
-  expect(clamp(-100, 1, 10)).toBe(1)
-})
+  const rights = [
+    [0, 0],
+    [1, 1],
+    [2.3, 1],
+    [-2.3, 0],
+    [Infinity, 1],
+    [-Infinity, 0],
+    [
+      [2, 3, 4],
+      [1, 1, 1],
+    ],
+    [
+      [
+        [2, -3, 4],
+        [-5, 6, -7],
+      ],
+      [
+        [1, 0, 1],
+        [0, 1, 0],
+      ],
+    ],
+    [s, s.copy().apply(v => (v > 1 ? 1 : v < 0 ? 0 : v))],
+    [d, d.copy().apply(col => col.apply(v => (v > 1 ? 1 : v < 0 ? 0 : v)))],
+  ]
 
-test("clamps 100 to be between 1 and 10", () => {
-  expect(clamp(100, 1, 10)).toBe(10)
-})
+  rights.forEach(pair => {
+    expect(isEqual(clamp(pair[0], 0, 1), pair[1])).toBe(true)
+  })
 
-test("clamps an array of values", () => {
-  expect(clamp([0, 100, 1000], 5, 500)).toStrictEqual([5, 100, 500])
-})
+  const wrongs = [
+    NaN,
+    "foo",
+    true,
+    false,
+    null,
+    undefined,
+    Symbol.for("Hello, world!"),
+    x => x,
+    function (x) {
+      return x
+    },
+    { hello: "world" },
+  ]
 
-test("clamps an array of values to arrays of ranges", () => {
-  const x = [1, 10, 100]
-  const a = [5, 6, 7]
-  const b = [50, 60, 70]
-  const yPred = clamp(x, a, b)
-  const yTrue = [5, 10, 70]
-  expect(yPred).toStrictEqual(yTrue)
-})
+  wrongs.forEach(v => {
+    expect(clamp(v, 0, 1)).toBeNaN()
+  })
 
-test("returns NaN when attempting to clamp non-numerical values", () => {
-  expect(clamp("foo", 1, 10)).toBeNaN()
-  expect(clamp(1, "foo", 10)).toBeNaN()
-  expect(clamp(1, 10, "foo")).toBeNaN()
+  expect(
+    isEqual(
+      clamp(new Series(["a", "b", "c"]), 0, 1),
+      new Series([NaN, NaN, NaN])
+    )
+  ).toBe(true)
+
+  expect(
+    isEqual(
+      clamp(
+        new DataFrame([
+          ["a", "d"],
+          ["b", "e"],
+          ["c", "f"],
+        ])
+      ),
+      new DataFrame([
+        [NaN, NaN],
+        [NaN, NaN],
+        [NaN, NaN],
+      ])
+    )
+  ).toBe(true)
 })

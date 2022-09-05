@@ -5,7 +5,6 @@ const isDataFrame = require("./is-dataframe.js")
 const isEqual = require("./is-equal.js")
 const isFunction = require("./is-function.js")
 const isSeries = require("./is-series.js")
-const isUndefined = require("./is-undefined.js")
 const max = require("./max.js")
 const range = require("./range.js")
 const shape = require("./shape.js")
@@ -16,17 +15,14 @@ function isArraySeriesOrDataFrame(x) {
 
 function vectorize(fn) {
   assert(
-    !isUndefined(fn),
-    "You must pass a function into the `vectorize` function!"
-  )
-
-  assert(
     isFunction(fn),
     "You must pass a function into the `vectorize` function!"
   )
 
-  return function temp() {
+  return function helper() {
     let hasSeries, hasDataFrames
+    const series = []
+    const dataframes = []
 
     const childArrays = Object.keys(arguments)
       .filter(key => {
@@ -36,9 +32,11 @@ function vectorize(fn) {
           return true
         } else if (isSeries(arg)) {
           hasSeries = true
+          series.push(arg)
           return true
         } else if (isDataFrame(arg)) {
           hasDataFrames = true
+          dataframes.push(arg)
           return true
         } else {
           return false
@@ -78,12 +76,22 @@ function vectorize(fn) {
           }
         })
 
-        return temp(...args)
+        return helper(...args)
       })
 
       if (hasDataFrames) {
         try {
-          return new DataFrame(out)
+          if (
+            dataframes.length === 1 &&
+            isEqual(shape(dataframes[0]), shape(out))
+          ) {
+            const temp = new DataFrame(out)
+            temp.index = dataframes[0].index.slice()
+            temp.columns = dataframes[0].columns.slice()
+            return temp
+          } else {
+            return new DataFrame(out)
+          }
         } catch (e) {
           return out
         }
@@ -91,7 +99,14 @@ function vectorize(fn) {
 
       if (hasSeries) {
         try {
-          return new Series(out)
+          if (series.length === 1 && series[0].length === out.length) {
+            const temp = new Series(out)
+            temp.name = series[0].name
+            temp.index = series[0].index.slice()
+            return temp
+          } else {
+            return new Series(out)
+          }
         } catch (e) {
           return out
         }

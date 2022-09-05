@@ -1,46 +1,86 @@
+const { DataFrame, Series } = require("./dataframe")
 const { random } = require("./random.js")
 const dropNaN = require("./drop-nan.js")
 const isEqual = require("./is-equal.js")
-const isJagged = require("./is-jagged.js")
+const isNumber = require("./is-number.js")
 const normal = require("./normal.js")
-const reshape = require("./reshape.js")
 
-test("drops NaN values from an array with no NaN values", () => {
-  const a = [1, 2, 3, 4, 5]
-  const aTemp = dropNaN(a)
-  expect(aTemp).toStrictEqual(a)
-})
+test("tests that missing values can be dropped correctly", () => {
+  const a = normal(100)
+  expect(isEqual(dropNaN(a), a)).toBe(true)
 
-test("drops NaN values from an array with some NaN values", () => {
-  const a = [1, 2, "foo", true, 5]
-  const aTemp = dropNaN(a)
-  expect(aTemp).toStrictEqual([1, 2, 5])
-})
+  const b = []
+  const cTrue = []
 
-test("drops NaN values from an array with only NaN values", () => {
-  const a = ["foo", true, () => {}, {}, null]
-  const aTemp = dropNaN(a)
-  expect(aTemp.length).toBe(0)
-})
+  for (let i = 0; i < 100; i++) {
+    const v = normal()
 
-test("drops NaN values from nested arrays", () => {
-  let x = normal(100)
-
-  for (let i = 0; i < 0.1 * x.length; i++) {
-    x[parseInt(random() * x.length)] = null
+    if (random() < 0.1) {
+      b.push("foo")
+    } else {
+      b.push(v)
+      cTrue.push(v)
+    }
   }
 
-  x = reshape(x, [2, 5, 2, 5])
-  const y = dropNaN(x)
-  expect(isEqual(x, y)).toBe(false)
-  expect(isJagged(x)).toBe(false)
-  expect(isJagged(y)).toBe(true)
-})
+  const cPred = dropNaN(b)
+  expect(isEqual(cPred, cTrue)).toBe(true)
 
-test("throws errors when attempting to drop NaN values from non-arrays", () => {
-  const wrongs = [234, "foo", true, false, null, undefined, () => {}, {}]
+  const d = [
+    [2, 3, 4],
+    [5, 6, true, 8],
+    [9, false, 11, x => 2 * x, { hello: "world" }],
+  ]
 
-  wrongs.forEach(x => {
-    expect(() => dropNaN(x)).toThrow()
+  const eTrue = [
+    [2, 3, 4],
+    [5, 6, 8],
+    [9, 11],
+  ]
+
+  const ePred = dropNaN(d)
+  expect(isEqual(ePred, eTrue)).toBe(true)
+
+  const f = new Series(normal(100).map(v => (random() < 0.5 ? "null" : v)))
+  const gTrue = new Series(f.values.filter(v => isNumber(v)))
+  const gPred = dropNaN(f)
+  gTrue._index = gPred._index
+  expect(isEqual(gPred, gTrue)).toBe(true)
+
+  const g = new DataFrame(
+    normal([10, 10]).map(row => row.map(v => (random() < 0.05 ? false : v)))
+  )
+
+  const hTrue = new DataFrame(
+    g.values.filter(row => row.every(v => isNumber(v)))
+  )
+
+  const hPred = dropNaN(g)
+  hTrue._index = hPred._index
+  expect(isEqual(hPred, hTrue)).toBe(true)
+
+  const wrongs = [
+    0,
+    1,
+    2.3,
+    -2.3,
+    Infinity,
+    -Infinity,
+    NaN,
+    "foo",
+    true,
+    false,
+    null,
+    undefined,
+    Symbol.for("Hello, world!"),
+    x => x,
+    function (x) {
+      return x
+    },
+    { hello: "world" },
+  ]
+
+  wrongs.forEach(item => {
+    expect(() => dropNaN(item)).toThrow()
   })
 })

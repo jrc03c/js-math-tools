@@ -1,3 +1,4 @@
+const { DataFrame, Series } = require("./dataframe")
 const factorial = require("./factorial.js")
 const isEqual = require("./is-equal.js")
 const permutations = require("./permutations.js")
@@ -125,14 +126,39 @@ test("tests that permutations can be correctly computed", () => {
   )
 
   expect(isEqual(gPred, gTrue)).toBe(true)
+
+  const h = new Series({ hello: [1, 2, 3, 4, 5] })
+  expect(isEqual(permutations(h, 2), permutations(h.values, 2))).toBe(true)
+
+  const i = new DataFrame({ foo: [1, 2, 3, 4, 5], bar: [6, 7, 8, 9, 10] })
+  expect(isEqual(permutations(i, 2), permutations(i.values, 2))).toBe(true)
 })
 
 test("tests that errors are thrown when trying to get permutations from non-arrays", () => {
-  const failures = [true, false, null, undefined, 234, "foo", () => {}, {}]
+  const wrongs = [
+    0,
+    1,
+    2.3,
+    -2.3,
+    Infinity,
+    -Infinity,
+    NaN,
+    "foo",
+    true,
+    false,
+    null,
+    undefined,
+    Symbol.for("Hello, world!"),
+    x => x,
+    function (x) {
+      return x
+    },
+    { hello: "world" },
+  ]
 
-  failures.forEach(f => {
-    expect(() => {
-      permutations(f)
-    }).toThrow()
+  wrongs.forEach(a => {
+    wrongs.forEach(b => {
+      expect(() => permutations(a, b)).toThrow()
+    })
   })
 })

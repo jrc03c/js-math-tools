@@ -1,26 +1,34 @@
 const assert = require("./assert.js")
+const copy = require("./copy.js")
 const isArray = require("./is-array.js")
-const isUndefined = require("./is-undefined.js")
+const isDataFrame = require("./is-dataframe.js")
+const isSeries = require("./is-series.js")
 
 function flatten(arr) {
+  if (isDataFrame(arr) || isSeries(arr)) {
+    return flatten(arr.values)
+  }
+
   assert(
-    !isUndefined(arr),
-    "You must pass one array into the `flatten` function!"
+    isArray(arr),
+    "The `flatten` function only works on arrays, Series, and DataFrames!"
   )
 
-  assert(isArray(arr), "The `flatten` function only works on arrays!")
+  function helper(arr) {
+    let out = []
 
-  let out = []
+    copy(arr).forEach(child => {
+      if (isArray(child)) {
+        out = out.concat(helper(child))
+      } else {
+        out.push(child)
+      }
+    })
 
-  arr.forEach(function (value) {
-    if (isArray(value)) {
-      out = out.concat(flatten(value))
-    } else {
-      out.push(value)
-    }
-  })
+    return out
+  }
 
-  return out
+  return helper(arr)
 }
 
 module.exports = flatten

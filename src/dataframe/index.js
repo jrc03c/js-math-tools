@@ -15,7 +15,6 @@ const dfGet = require("./df-get.js")
 const dfGetDummies = require("./df-get-dummies.js")
 const dfGetSubsetByIndices = require("./df-get-subset-by-indices.js")
 const dfGetSubsetByNames = require("./df-get-subset-by-names.js")
-const dfJoin = require("./df-join.js")
 const dfPrint = require("./df-print.js")
 const dfResetIndex = require("./df-reset-index.js")
 const dfShuffle = require("./df-shuffle.js")
@@ -27,6 +26,7 @@ const dfToJSONString = require("./df-to-json-string.js")
 const dfToObject = require("./df-to-object.js")
 const flatten = require("../flatten.js")
 const isArray = require("../is-array.js")
+const isObject = require("../is-object.js")
 const isUndefined = require("../is-undefined.js")
 const leftPad = require("../helpers/left-pad.js")
 const ndarray = require("../ndarray.js")
@@ -252,7 +252,7 @@ class DataFrame {
     })
 
     assert(
-      isUndefined(data) || data instanceof Object,
+      isUndefined(data) || isObject(data) || isArray(data),
       "The `data` passed into the constructor of a DataFrame must be either (1) an object where the key-value pairs are (respectively) column names and 1-dimensional arrays of values, or (2) a 2-dimensional array of values."
     )
 
@@ -330,6 +330,19 @@ class DataFrame {
 
   get(rows, cols) {
     const self = this
+
+    if (arguments.length === 0) {
+      return self
+    }
+
+    if (arguments.length === 1) {
+      try {
+        return self.get(null, rows)
+      } catch (e) {
+        return self.get(rows, null)
+      }
+    }
+
     return dfGet(self, rows, cols)
   }
 
@@ -341,16 +354,6 @@ class DataFrame {
   getSubsetByIndices(rowIndices, colIndices) {
     const self = this
     return dfGetSubsetByIndices(self, rowIndices, colIndices)
-  }
-
-  loc(rows, cols) {
-    const self = this
-    return self.getSubsetByNames(rows, cols)
-  }
-
-  iloc(rowIndices, colIndices) {
-    const self = this
-    return self.getSubsetByIndices(rowIndices, colIndices)
   }
 
   getDummies(columns) {
@@ -366,8 +369,8 @@ class DataFrame {
   transpose() {
     const self = this
     const out = new DataFrame(transpose(self.values))
-    out.columns = self.index
-    out.index = self.columns
+    out.columns = self.index.slice()
+    out.index = self.columns.slice()
     return out
   }
 
@@ -394,11 +397,6 @@ class DataFrame {
   apply(fn, axis) {
     const self = this
     return dfApply(DataFrame, Series, self, fn, axis)
-  }
-
-  map(fn, axis) {
-    const self = this
-    return self.apply(fn, axis)
   }
 
   dropMissing(axis, condition, threshold) {
@@ -436,19 +434,19 @@ class DataFrame {
     return dfToCSVString(self, shouldIncludeIndex)
   }
 
-  toCSV(filename, shouldIncludeIndex) {
+  saveAsCSV(filename, shouldIncludeIndex) {
     const self = this
     return dfToCSV(self, filename, shouldIncludeIndex)
-  }
-
-  toJSON(filename, axis) {
-    const self = this
-    return dfToJSON(self, filename, axis)
   }
 
   toJSONString(axis) {
     const self = this
     return dfToJSONString(self, axis)
+  }
+
+  saveAsJSON(filename, axis) {
+    const self = this
+    return dfToJSON(self, filename, axis)
   }
 
   print() {
@@ -476,14 +474,24 @@ class DataFrame {
     return dfShuffle(self, axis)
   }
 
-  append(data) {
+  append(x, axis) {
     const self = this
-    return dfAppend(DataFrame, Series, self, data)
+    return dfAppend(self, x, axis)
   }
 
-  join(data) {
+  concat(x, axis) {
     const self = this
-    return dfJoin(DataFrame, Series, self, data)
+    return self.append(x, axis)
+  }
+
+  join(x, axis) {
+    const self = this
+    return self.append(x, axis)
+  }
+
+  toString() {
+    const self = this
+    return JSON.stringify(self)
   }
 }
 

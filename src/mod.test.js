@@ -1,34 +1,68 @@
+const { DataFrame, Series } = require("./dataframe")
+const flatten = require("./flatten.js")
+const isEqual = require("./is-equal.js")
 const mod = require("./mod.js")
 const normal = require("./normal.js")
+const reshape = require("./reshape.js")
 
 test("tests that the modulo function works as expected", () => {
-  expect(mod(0, 3)).toBe(0)
-  expect(mod(1, 3)).toBe(1)
-  expect(mod(2, 3)).toBe(2)
-  expect(mod(3, 3)).toBe(0)
-  expect(mod(4, 3)).toBe(1)
+  expect(mod(5, 2)).toBe(1)
   expect(mod(5, 3)).toBe(2)
-  expect(mod(6, 3)).toBe(0)
 
-  const a = [2, 4, 6, 8]
-  const b = [2, 2, 3, 3]
-  expect(mod(a, b)).toStrictEqual([0, 0, 0, 2])
-  expect(mod(a, 5)).toStrictEqual([2, 4, 1, 3])
-  expect(mod(5, b)).toStrictEqual([1, 1, 2, 2])
+  const a = normal(100)
+  const b = 0.1
 
-  expect(() => mod(normal([2, 3, 4, 5]), normal([2, 3, 4, 5]))).not.toThrow()
-  expect(() => mod(normal([2, 3]), normal([4, 5]))).toThrow()
+  expect(
+    isEqual(
+      mod(a, b),
+      a.map(v => v % b)
+    )
+  ).toBe(true)
+
+  expect(
+    isEqual(
+      mod(b, a),
+      a.map(v => b % v)
+    )
+  ).toBe(true)
+
+  const c = normal([2, 3, 4, 5])
+  const d = normal([2, 3, 4, 5])
+  const cFlat = flatten(c)
+  const dFlat = flatten(d)
+  const eFlat = cFlat.map((v, i) => v % dFlat[i])
+  const eTrue = reshape(eFlat, [2, 3, 4, 5])
+  const ePred = mod(c, d)
+  expect(isEqual(ePred, eTrue)).toBe(true)
+
+  const f = new Series({ hello: normal(100) })
+  const g = new Series({ goodbye: normal(100) })
+  expect(isEqual(mod(f, g), new Series(mod(f.values, g.values)))).toBe(true)
+
+  const h = new DataFrame(normal([10, 10]))
+  const i = new DataFrame(normal([10, 10]))
+  expect(isEqual(mod(h, i), new DataFrame(mod(h.values, i.values)))).toBe(true)
 
   const wrongs = [
-    [234, "foo"],
-    ["foo", 234],
-    ["foo", "bar"],
-    [true, false],
-    [null, undefined],
-    [() => {}, {}],
+    Infinity,
+    -Infinity,
+    NaN,
+    "foo",
+    true,
+    false,
+    null,
+    undefined,
+    Symbol.for("Hello, world!"),
+    x => x,
+    function (x) {
+      return x
+    },
+    { hello: "world" },
   ]
 
-  wrongs.forEach(pair => {
-    expect(isNaN(mod(pair[0], pair[1]))).toBe(true)
+  wrongs.forEach(a => {
+    wrongs.forEach(b => {
+      expect(mod(a, b)).toBeNaN()
+    })
   })
 })

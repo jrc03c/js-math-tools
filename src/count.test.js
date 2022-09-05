@@ -1,55 +1,61 @@
+const { DataFrame, Series } = require("./dataframe")
 const count = require("./count.js")
-const sort = require("./sort.js")
+const flatten = require("./flatten.js")
+const isEqual = require("./is-equal.js")
+const range = require("./range.js")
+const round = require("./round.js")
+const normal = require("./normal.js")
+const set = require("./set.js")
 
-test("gets count of items one at a time", () => {
-  const x = [2, 3, 4, 2, 3, 4, 2, 3, 2, 3, 2]
-  expect(count(x, 2)).toBe(5)
-  expect(count(x, 3)).toBe(4)
-  expect(count(x, 4)).toBe(2)
-  expect(count(x, 5)).toBe(0)
-})
+test("tests that items in an array can be counted correctly", () => {
+  const a = round(normal(1000))
 
-test("gets counts of an array of items", () => {
-  const x = [2, 3, 4, 2, 3, 4, 2, 3, 2, 3, 2]
-
-  const counts = sort(count(x, [2, 3]), (a, b) => {
-    return a.item - b.item
+  set(a).forEach(v => {
+    expect(count(a, v)).toBe(a.filter(x => x === v).length)
   })
 
-  expect(counts).toStrictEqual([
-    { item: 2, count: 5 },
-    { item: 3, count: 4 },
-  ])
-})
+  const b = new Series(round(normal(1000)))
+  const c = new DataFrame(round(normal([100, 10])))
 
-test("gets counts of items of mixed types", () => {
-  const x = [
+  set(b).forEach(v => {
+    expect(count(b, v)).toBe(
+      flatten(b.values).filter(x => isEqual(x, v)).length
+    )
+  })
+
+  set(c).forEach(v => {
+    expect(count(c, v)).toBe(
+      flatten(c.values).filter(x => isEqual(x, v)).length
+    )
+  })
+
+  const types = [
+    0,
+    1,
+    2.3,
+    -2.3,
+    Infinity,
+    -Infinity,
+    NaN,
     "foo",
-    "foo",
     true,
-    true,
-    true,
-    true,
-    true,
-    "foo",
-    "baz",
-    { hello: "world" },
-    { hello: "world" },
-    { foo: "bar" },
-    { foo: "bar" },
-    { foo: "bar" },
-    { foo: "bar" },
+    false,
+    null,
+    undefined,
+    Symbol.for("Hello, world!"),
+    x => x,
+    function (x) {
+      return x
+    },
   ]
 
-  const counts = sort(count(x), (a, b) => {
-    return b.count - a.count
-  })
+  const temp = range(0, 1000).map(
+    () => types[parseInt(Math.random() * types.length)]
+  )
 
-  expect(counts).toStrictEqual([
-    { item: true, count: 5 },
-    { item: { foo: "bar" }, count: 4 },
-    { item: "foo", count: 3 },
-    { item: { hello: "world" }, count: 2 },
-    { item: "baz", count: 1 },
-  ])
+  const tempCounts = count(temp)
+
+  tempCounts.forEach(c => {
+    expect(c.count).toBe(temp.filter(v => isEqual(v, c.item)).length)
+  })
 })

@@ -8,7 +8,6 @@ const range = require("../range.js")
 const set = require("../set.js")
 const sort = require("../sort.js")
 const sum = require("../sum.js")
-const transpose = require("../transpose.js")
 const zeros = require("../zeros.js")
 
 test("tests DataFrame emptiness", () => {
@@ -31,19 +30,9 @@ test("tests DataFrame selectors", () => {
   const b = normal(100)
   const c = normal(100)
   const df = new DataFrame({ a, b, c })
-
   expect(a).toStrictEqual(df.get(null, "a").values)
-  expect(a).toStrictEqual(df.loc(null, "a").values)
-  expect(a).toStrictEqual(df.iloc(null, 0).values)
-
   expect(b).toStrictEqual(df.get(null, "b").values)
-  expect(b).toStrictEqual(df.loc(null, "b").values)
-  expect(b).toStrictEqual(df.iloc(null, 1).values)
-
   expect(c).toStrictEqual(df.get(null, "c").values)
-  expect(c).toStrictEqual(df.loc(null, "c").values)
-  expect(c).toStrictEqual(df.iloc(null, 2).values)
-
   expect(df.values).toStrictEqual(df.T.T.values)
   expect(df.get(null, ["b", "c"]) instanceof DataFrame).toBe(true)
   expect(df.get(null, "a") instanceof Series).toBe(true)
@@ -55,12 +44,11 @@ test("tests DataFrame assignment", () => {
   const c = normal(100)
   let df = new DataFrame({ a, b, c })
 
-  const e = new Series(normal(100))
-  e.name = "e"
+  const e = new Series({ e: normal(100) })
   e.index = df.index.slice()
   df = df.assign(e)
 
-  expect(e.values).toStrictEqual(df.get(null, "e").values)
+  expect(isEqual(df.get(null, "e").values, e.values)).toBe(true)
 })
 
 test("tests DataFrame selectors (for missing columns)", () => {
@@ -271,14 +259,11 @@ test("tests DataFrame filtering", () => {
   })
 
   // test row filtering (that returns a dataframe)
-  const f1 = x.filter(row => {
-    return row.values.every(v => v % 2 === 0)
-  })
-
+  const f1 = x.filter(row => row.values.every(v => v % 2 === 0))
   expect(f1.shape).toStrictEqual([2, 3])
   expect(sort(f1.columns)).toStrictEqual(["bar", "baz", "foo"])
   expect(sort(f1.index)).toStrictEqual(["row0", "row2"])
-  expect(sort(flatten(f1.values))).toStrictEqual([0, 0, 2, 4, 10, 1000])
+  expect(isEqual(sort(flatten(f1.values)), [0, 0, 2, 4, 10, 1000])).toBe(true)
 
   // test row filtering (that returns a series)
   const f2 = x.filter(row => {
@@ -288,7 +273,7 @@ test("tests DataFrame filtering", () => {
   expect(f2 instanceof Series).toBe(true)
   expect(f2.name).toBe("row1")
   expect(sort(f2.index)).toStrictEqual(["bar", "baz", "foo"])
-  expect(sort(f2.values)).toStrictEqual([0, 3, 100])
+  expect(isEqual(sort(f2.values), [0, 3, 100])).toBe(true)
 
   // test column filtering (that returns a dataframe)
   const f3 = x.filter(col => sum(col.values) < 1000, 1)
@@ -337,7 +322,7 @@ test("tests DataFrame reading & writing to and from disk", async () => {
   const hasHeaderRow = true
 
   // v1
-  x.toCSV(filename, shouldIncludeIndex)
+  x.saveAsCSV(filename, shouldIncludeIndex)
 
   yPred = await DataFrame.fromCSV(
     filename,
@@ -355,7 +340,7 @@ test("tests DataFrame reading & writing to and from disk", async () => {
   // v2
   shouldIncludeIndex = false
 
-  x.toCSV(filename, shouldIncludeIndex)
+  x.saveAsCSV(filename, shouldIncludeIndex)
 
   yPred = await DataFrame.fromCSV(
     filename,
@@ -431,166 +416,166 @@ test("tests DataFrame one-hot encoding", () => {
   ).toBe(true)
 })
 
-test("tests appending new rows to a DataFrame", () => {
-  const x = new DataFrame({ a: [2, 3, 4], b: [5, 6, 7], c: [8, 9, 0] })
+test("tests appending a single vector to a DataFrame", () => {
+  const a = new DataFrame({ foo: [2, 3, 4], bar: [5, 6, 7] })
+  const b = [10, 20, 30, 40]
+  const c = a.append(b)
+  const d = a.append(b, 1)
 
-  // try appending a vector
-  const yTrue1 = new DataFrame({
-    a: [2, 3, 4, "foo"],
-    b: [5, 6, 7, "bar"],
-    c: [8, 9, 0, "baz"],
-  })
-
-  const yPred1 = x.append(["foo", "bar", "baz"])
+  expect(c.shape).toStrictEqual([4, 4])
 
   expect(
-    isEqual(
-      yTrue1.get(null, sort(x.columns)),
-      yPred1.get(null, sort(x.columns))
-    )
+    isEqual(c.values, [
+      [2, 5, undefined, undefined],
+      [3, 6, undefined, undefined],
+      [4, 7, undefined, undefined],
+      [10, 20, 30, 40],
+    ])
   ).toBe(true)
 
-  // try appending a matrix
-  const yTrue2 = new DataFrame({
-    a: [2, 3, 4, "foo", true],
-    b: [5, 6, 7, "bar", false],
-    c: [8, 9, 0, "baz", null],
-  })
+  expect(c.columns).toStrictEqual(["foo", "bar", "col2", "col3"])
+  expect(c.index).toStrictEqual(["row0", "row1", "row2", "row3"])
 
-  const yPred2 = x.append([
-    ["foo", "bar", "baz"],
-    [true, false, null],
-  ])
+  expect(d.shape).toStrictEqual([4, 3])
 
-  expect(isEqual(yPred2, yTrue2)).toBe(true)
+  expect(
+    isEqual(d.values, [
+      [2, 5, 10],
+      [3, 6, 20],
+      [4, 7, 30],
+      [undefined, undefined, 40],
+    ])
+  ).toBe(true)
 
-  // try appending a Series
-  const series1 = new Series(["x", "y", "z"])
-  series1.index = ["b", "c", "a"]
-
-  const yTrue3 = new DataFrame({
-    a: [2, 3, 4, "z"],
-    b: [5, 6, 7, "x"],
-    c: [8, 9, 0, "y"],
-  })
-
-  const yPred3 = x.append(series1)
-
-  expect(isEqual(yPred3, yTrue3)).toBe(true)
-
-  // try appending a DataFrame
-  let df1 = new DataFrame([
-    ["hello", "world", "my"],
-    ["name", "is", "Josh"],
-  ])
-
-  df1.columns = x.columns
-  df1 = df1.get(null, ["c", "a", "b"])
-
-  const yTrue4 = new DataFrame({
-    a: [2, 3, 4, "hello", "name"],
-    b: [5, 6, 7, "world", "is"],
-    c: [8, 9, 0, "my", "Josh"],
-  })
-
-  const yPred4 = x.append(df1)
-
-  expect(isEqual(yPred4, yTrue4)).toBe(true)
+  expect(d.columns).toStrictEqual(["foo", "bar", "col2"])
+  expect(d.index).toStrictEqual(["row0", "row1", "row2", "row3"])
 })
 
-test("tests joining new columns to a DataFrame", () => {
-  const x = new DataFrame({
-    a: [2, 3, 4],
-    b: [5, 6, 7],
-    c: [8, 9, 10],
-    d: [11, 12, 13],
-  })
+test("tests appending a matrix to a DataFrame", () => {
+  const a = new DataFrame({ foo: [2, 3, 4], bar: [5, 6, 7] })
 
-  // try joining a vector
-  const yTrue1 = new DataFrame({
-    a: [2, 3, 4],
-    b: [5, 6, 7],
-    c: [8, 9, 10],
-    d: [11, 12, 13],
-    col4: ["foo", "bar", "baz"],
-  })
+  const b = [
+    [10, 20, 30, 40],
+    [50, 60, 70, 80],
+  ]
 
-  const yPred1 = x.join(["foo", "bar", "baz"])
+  const c = a.append(b)
+  const d = a.append(b, 1)
+
+  expect(c.shape).toStrictEqual([5, 4])
 
   expect(
-    isEqual(
-      yPred1.get(null, sort(yTrue1.columns)),
-      yTrue1.get(null, sort(yTrue1.columns))
-    )
-  ).toBe(true)
-
-  // try joining a matrix
-  const yTrue2 = new DataFrame({
-    a: [2, 3, 4],
-    b: [5, 6, 7],
-    c: [8, 9, 10],
-    d: [11, 12, 13],
-    col4: ["foo", "bar", "baz"],
-    col5: [true, false, null],
-  })
-
-  const yPred2 = x.join(
-    transpose([
-      ["foo", "bar", "baz"],
-      [true, false, null],
+    isEqual(c.values, [
+      [2, 5, undefined, undefined],
+      [3, 6, undefined, undefined],
+      [4, 7, undefined, undefined],
+      [10, 20, 30, 40],
+      [50, 60, 70, 80],
     ])
-  )
-
-  expect(
-    isEqual(
-      yPred2.get(null, sort(yTrue2.columns)),
-      yTrue2.get(null, sort(yTrue2.columns))
-    )
   ).toBe(true)
 
-  // try joining a Series
-  const series1 = new Series(["baz", "foo", "bar"])
-  series1.name = "blah"
-  series1.index = ["row2", "row0", "row1"]
+  expect(c.columns).toStrictEqual(["foo", "bar", "col2", "col3"])
+  expect(c.index).toStrictEqual(["row0", "row1", "row2", "row3", "row4"])
 
-  const yTrue3 = new DataFrame({
-    a: [2, 3, 4],
-    b: [5, 6, 7],
-    c: [8, 9, 10],
-    d: [11, 12, 13],
-    blah: ["foo", "bar", "baz"],
-  })
-
-  const yPred3 = x.join(series1)
+  expect(d.shape).toStrictEqual([3, 6])
 
   expect(
-    isEqual(
-      yPred3.get(null, sort(yTrue3.columns)),
-      yTrue3.get(null, sort(yTrue3.columns))
-    )
+    isEqual(d.values, [
+      [2, 5, 10, 20, 30, 40],
+      [3, 6, 50, 60, 70, 80],
+      [4, 7, undefined, undefined, undefined, undefined],
+    ])
   ).toBe(true)
 
-  // try joining a DataFrame
-  let df1 = new DataFrame({ e: [1000, 1001, 1002], f: [1003, 1004, 1005] })
-  df1 = df1.get([2, 1, 0], null)
+  expect(d.columns).toStrictEqual([
+    "foo",
+    "bar",
+    "col2",
+    "col3",
+    "col4",
+    "col5",
+  ])
 
-  const yTrue4 = new DataFrame({
-    a: [2, 3, 4],
-    b: [5, 6, 7],
-    c: [8, 9, 10],
-    d: [11, 12, 13],
-    e: [1000, 1001, 1002],
-    f: [1003, 1004, 1005],
-  })
+  expect(d.index).toStrictEqual(["row0", "row1", "row2"])
+})
 
-  const yPred4 = x.join(df1)
+test("tests appending a Series to a DataFrame", () => {
+  const a = new DataFrame({ foo: [2, 3, 4], bar: [5, 6, 7] })
+  const b = new Series([10, 20, 30, 40])
+  b.name = "bee"
+
+  const c = a.append(b)
+  const d = a.append(b, 1)
+
+  expect(c.shape).toStrictEqual([4, 4])
 
   expect(
-    isEqual(
-      yPred4.get(null, sort(yTrue4.columns)),
-      yTrue4.get(null, sort(yTrue4.columns))
-    )
+    isEqual(c.values, [
+      [2, 5, undefined, undefined],
+      [3, 6, undefined, undefined],
+      [4, 7, undefined, undefined],
+      [10, 20, 30, 40],
+    ])
   ).toBe(true)
+
+  expect(c.columns).toStrictEqual(["foo", "bar", "col2", "col3"])
+  expect(c.index).toStrictEqual(["row0", "row1", "row2", "bee"])
+
+  expect(d.shape).toStrictEqual([4, 3])
+
+  expect(
+    isEqual(d.values, [
+      [2, 5, 10],
+      [3, 6, 20],
+      [4, 7, 30],
+      [undefined, undefined, 40],
+    ])
+  ).toBe(true)
+
+  expect(d.columns).toStrictEqual(["foo", "bar", "bee"])
+  expect(d.index).toStrictEqual(["row0", "row1", "row2", "row3"])
+})
+
+test("tests appending a DataFrame to a DataFrame", () => {
+  const a = new DataFrame({ foo: [2, 3, 4], bar: [5, 6, 7] })
+
+  const b = new DataFrame([
+    [10, 20, 30, 40],
+    [50, 60, 70, 80],
+  ])
+
+  b.columns[1] = "bar"
+  b.index[0] = "beeRow0"
+
+  const c = a.append(b)
+  const d = a.append(b, 1)
+
+  expect(c.shape).toStrictEqual([5, 5])
+
+  expect(
+    isEqual(c.values, [
+      [2, 5, undefined, undefined, undefined],
+      [3, 6, undefined, undefined, undefined],
+      [4, 7, undefined, undefined, undefined],
+      [undefined, 20, 10, 30, 40],
+      [undefined, 60, 50, 70, 80],
+    ])
+  ).toBe(true)
+
+  expect(c.columns).toStrictEqual(["foo", "bar", "col0", "col2", "col3"])
+
+  expect(d.shape).toStrictEqual([4, 6])
+
+  expect(
+    isEqual(d.values, [
+      [2, 5, undefined, undefined, undefined, undefined],
+      [3, 6, 50, 60, 70, 80],
+      [4, 7, undefined, undefined, undefined, undefined],
+      [undefined, undefined, 10, 20, 30, 40],
+    ])
+  ).toBe(true)
+
+  expect(d.index).toStrictEqual(["row0", "row1", "row2", "beeRow0"])
 })
 
 test("tests DataFrame dimensions", () => {

@@ -1,23 +1,47 @@
+const { DataFrame, Series } = require("./dataframe")
+const apply = require("./apply.js")
+const isEqual = require("./is-equal.js")
+const normal = require("./normal.js")
 const round = require("./round.js")
-const set = require("./set.js")
-const sort = require("./sort.js")
-const { random } = require("./random.js")
 
-test("rounds some values", () => {
-  expect(round(5.95)).toBe(6)
-  expect(round(5.05)).toBe(5)
-  expect(round(-3.25)).toBe(-3)
-  expect(round(-3.75)).toBe(-4)
-  expect(round([1.25, 2.5, 3.75])).toStrictEqual([1, 3, 4])
-  expect(sort(set(round(random(500))))).toStrictEqual([0, 1])
-})
+test("tests that values can be rounded correctly", () => {
+  expect(round(2.3)).toBe(2)
+  expect(round(2.7)).toBe(3)
+  expect(round(-2.3)).toBe(-2)
+  expect(round(-2.7)).toBe(-3)
 
-test("returns NaN when attempting to round non-numerical values", () => {
-  expect(round()).toBeNaN()
-  expect(round("foo")).toBeNaN()
-  expect(round(true)).toBeNaN()
-  expect(round(() => {})).toBeNaN()
-  expect(round({})).toBeNaN()
-  expect(round(null)).toBeNaN()
-  expect(round(undefined)).toBeNaN()
+  const a = normal(100)
+  expect(isEqual(round(a), apply(a, round))).toBe(true)
+
+  const b = normal([2, 3, 4, 5])
+  expect(isEqual(round(b), apply(b, round))).toBe(true)
+
+  const c = new Series({ hello: normal(100) })
+  const dTrue = c.copy().apply(round)
+  const dPred = round(c)
+  expect(isEqual(dPred, dTrue)).toBe(true)
+
+  const e = new DataFrame({ foo: normal(100), bar: normal(100) })
+  const fTrue = e.copy().apply(col => col.apply(round))
+  const fPred = round(e)
+  expect(isEqual(fPred, fTrue)).toBe(true)
+
+  const wrongs = [
+    NaN,
+    "foo",
+    true,
+    false,
+    null,
+    undefined,
+    Symbol.for("Hello, world!"),
+    x => x,
+    function (x) {
+      return x
+    },
+    { hello: "world" },
+  ]
+
+  wrongs.forEach(item => {
+    expect(round(item)).toBeNaN()
+  })
 })

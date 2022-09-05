@@ -1,72 +1,54 @@
-const flatten = require("./flatten.js")
+const { DataFrame, Series } = require("./dataframe")
 const normal = require("./normal.js")
-const range = require("./range.js")
 const reshape = require("./reshape.js")
 const shape = require("./shape.js")
 
-test("reshapes a vector", () => {
-  const x = range(0, 100)
-  const yPred = reshape(x, [20, 5])
-  expect(yPred[0]).toStrictEqual([0, 1, 2, 3, 4])
-})
+test("tests that arrays can be reshaped correctly", () => {
+  expect(shape(reshape(normal(100), [2, 5, 10]))).toStrictEqual([2, 5, 10])
 
-test("reshapes a matrix", () => {
-  const x = [
-    [1, 2, 3],
-    [4, 5, 6],
-    [7, 8, 9],
-    [10, 11, 12],
+  expect(shape(reshape(normal([2, 3, 4, 5]), [5, 4, 3, 2]))).toStrictEqual([
+    5, 4, 3, 2,
+  ])
+
+  expect(shape(reshape(normal([2, 3, 4, 5]), 2 * 3 * 4 * 5))).toStrictEqual([
+    2 * 3 * 4 * 5,
+  ])
+
+  const wrongs = [
+    0,
+    1,
+    2.3,
+    -2.3,
+    Infinity,
+    -Infinity,
+    NaN,
+    "foo",
+    true,
+    false,
+    null,
+    undefined,
+    Symbol.for("Hello, world!"),
+    [2, 3, 4],
+    [
+      [2, 3, 4],
+      [5, 6, 7],
+    ],
+    x => x,
+    function (x) {
+      return x
+    },
+    { hello: "world" },
+    new Series({ hello: [10, 20, 30, 40, 50] }),
+    new DataFrame({ foo: [1, 2, 4, 8, 16], bar: [1, 3, 9, 27, 81] }),
   ]
 
-  const yTrue = [
-    [1, 2, 3, 4, 5, 6],
-    [7, 8, 9, 10, 11, 12],
-  ]
+  const x = normal(100)
 
-  const yPred = reshape(x, shape(yTrue))
-  expect(yPred).toStrictEqual(yTrue)
-  expect(shape(yPred)).toStrictEqual(shape(yTrue))
-})
+  wrongs.forEach(item => {
+    expect(() => reshape(x, item)).toThrow()
+  })
 
-test("reshapes a tensor", () => {
-  const x = normal([2, 3, 4, 5])
-  const yPred = reshape(x, [5, 12, 2])
-  expect(shape(yPred)).toStrictEqual([5, 12, 2])
-  expect(flatten(yPred)).toStrictEqual(flatten(x))
-})
-
-test("reshapes a tensor using a single whole number", () => {
-  const x = normal([5, 4, 3, 2])
-  const yPred = reshape(x, 5 * 4 * 3 * 2)
-  expect(yPred).toStrictEqual(flatten(x))
-})
-
-test("throws an error when attempting to reshape non-tensors with non-shapes", () => {
-  expect(() => {
-    reshape()
-  }).toThrow()
-
-  expect(() => {
-    reshape("foo")
-  }).toThrow()
-
-  expect(() => {
-    reshape([2, 3, 4], "foo")
-  }).toThrow()
-
-  expect(() => {
-    reshape(true, false)
-  }).toThrow()
-
-  expect(() => {
-    reshape(null, undefined)
-  }).toThrow()
-
-  expect(() => {
-    reshape({}, () => {})
-  }).toThrow()
-
-  expect(() => {
-    reshape(range(0, 100), [-5, -20])
-  }).toThrow()
+  wrongs.forEach(item => {
+    expect(() => reshape(item, [2, 3, 4])).toThrow()
+  })
 })

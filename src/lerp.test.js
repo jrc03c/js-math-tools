@@ -1,64 +1,88 @@
+const { DataFrame, Series } = require("./dataframe")
+const { random } = require("./random.js")
+const flatten = require("./flatten.js")
+const isEqual = require("./is-equal.js")
 const lerp = require("./lerp.js")
 const normal = require("./normal.js")
+const reshape = require("./reshape.js")
 
-test("lerps from one number to another", () => {
-  const a = 0
-  const b = 1
-  const f = 1
-  const c = lerp(a, b, f)
-  expect(c).toBe(1)
-})
+test("tests that linear interpolations can be computed correctly", () => {
+  expect(lerp(2, 3, 0.5)).toBe(2.5)
+  expect(lerp(-6, -10, 0.5)).toBe(-8)
 
-test("lerps from one number to another", () => {
-  const a = -1
-  const b = 1
-  const f = 0.5
-  const c = lerp(a, b, f)
-  expect(c).toBe(0)
-})
+  const a = normal(100)
+  const b = 5
+  const c = 0.25
+  const d = normal(100)
+  const e = random(100)
 
-test("lerps from one number to another", () => {
-  const a = -100
-  const b = 100
-  const f = 0.75
-  const c = lerp(a, b, f)
-  expect(c).toBe(50)
-})
+  expect(
+    isEqual(
+      lerp(a, b, c),
+      a.map(v => lerp(v, b, c))
+    )
+  ).toBe(true)
 
-test("lerps from one array of values to another using an array of fractions", () => {
-  const a = [1, 2, 3]
-  const b = [2, 3, 4]
-  const f = [0.5, 0.75, 0.9]
-  const cTrue = [1.5, 2.75, 3.9]
-  const cPred = lerp(a, b, f)
-  expect(cPred).toStrictEqual(cTrue)
-})
+  expect(
+    isEqual(
+      lerp(b, a, c),
+      a.map(v => lerp(b, v, c))
+    )
+  ).toBe(true)
 
-test("lerps from one tensor of values to another using a tensor of fractions", () => {
-  const a = normal([5, 5, 5, 5])
-  const b = normal([5, 5, 5, 5])
-  const f = normal([5, 5, 5, 5])
+  expect(
+    isEqual(
+      lerp(a, d, e),
+      a.map((v, i) => lerp(v, d[i], e[i]))
+    )
+  ).toBe(true)
 
-  expect(() => {
-    lerp(a, b, f)
-  }).not.toThrow()
-})
+  const f = new Series(normal(100))
+  const g = new Series(normal(100))
+  const h = new Series(normal(100))
 
-test("returns NaN when attempting to lerp using non-numerical values", () => {
-  expect(lerp(3, 4, "foo")).toBeNaN()
-  expect(lerp({}, {}, {})).toBeNaN()
+  expect(
+    isEqual(lerp(f, g, h), new Series(lerp(f.values, g.values, h.values)))
+  ).toBe(true)
 
-  let foo
-  expect(lerp(foo, foo, foo)).toBeNaN()
+  const i = new DataFrame(normal([10, 10]))
+  const j = new DataFrame(normal([10, 10]))
+  const k = new DataFrame(normal([10, 10]))
 
-  const fn = () => {}
-  expect(lerp(fn, fn, fn)).toBeNaN()
+  expect(
+    isEqual(lerp(i, j, k), new DataFrame(lerp(i.values, j.values, k.values)))
+  ).toBe(true)
 
-  expect(lerp(1, 2)).toBeNaN()
-})
+  const l = normal([2, 3, 4, 5])
+  const m = normal([2, 3, 4, 5])
+  const n = normal([2, 3, 4, 5])
 
-test("throws an error when attempting to lerp using arrays of different sizes", () => {
-  expect(() => {
-    lerp([1], [2, 3], 0.75)
-  }).toThrow()
+  expect(
+    isEqual(
+      lerp(l, m, n),
+      reshape(lerp(flatten(l), flatten(m), flatten(n)), [2, 3, 4, 5])
+    )
+  ).toBe(true)
+
+  const wrongs = [
+    NaN,
+    "foo",
+    true,
+    false,
+    null,
+    undefined,
+    Symbol.for("Hello, world!"),
+    x => x,
+    function (x) {
+      return x
+    },
+    { hello: "world" },
+  ]
+
+  for (let i = 0; i < 100; i++) {
+    const a = wrongs[parseInt(random() * wrongs.length)]
+    const b = wrongs[parseInt(random() * wrongs.length)]
+    const c = wrongs[parseInt(random() * wrongs.length)]
+    expect(lerp(a, b, c)).toBeNaN()
+  }
 })

@@ -1,32 +1,38 @@
 const assert = require("./assert.js")
 const flatten = require("./flatten.js")
 const isArray = require("./is-array.js")
+const isDataFrame = require("./is-dataframe.js")
 const isEqual = require("./is-equal.js")
-const isUndefined = require("./is-undefined.js")
+const isFunction = require("./is-function.js")
+const isSeries = require("./is-series.js")
 const set = require("./set.js")
 
-function count(arr, items) {
-  assert(
-    !isUndefined(arr),
-    "You must pass an array and some items to count into the `count` function!"
-  )
+function count(arr, matcher) {
+  if (isDataFrame(arr) || isSeries(arr)) {
+    return count(arr.values, matcher)
+  }
 
   assert(
     isArray(arr),
-    "You must pass an array and some items to count into the `count` function!"
+    "The first argument to the `count` function must be an array, Series, or DataFrame!"
   )
 
-  // NOTE: This currently flattens the array that's passed in, which means that it's not possible to count occurrences of arrays within arrays! I'm not sure whether this is desirable behavior or not, so I'm just making a note of it for now. It's not trivial to count occurrences of identical objects, so maybe this function should refuse to operate on objects!
-  const temp = flatten(arr)
-  items = isUndefined(items) ? set(arr) : items
+  // NOTE: This currently flattens the array that's passed in, which means that it's not possible to count occurrences of arrays within arrays! I'm not sure whether this is desirable behavior or not, so I'm just making a note of it for now.
+  if (isFunction(matcher)) {
+    return flatten(arr).filter(item => matcher(item)).length
+  } else if (isArray(matcher)) {
+    const temp = flatten(arr)
 
-  if (isArray(items)) {
-    return flatten(items).map(function (item1) {
-      const c = temp.filter(item2 => isEqual(item1, item2)).length
-      return { item: item1, count: c }
+    return set(matcher).map(item => {
+      return {
+        item,
+        count: temp.filter(v => isEqual(v, item)).length,
+      }
     })
+  } else if (arguments.length > 1) {
+    return flatten(arr).filter(other => isEqual(other, matcher)).length
   } else {
-    return temp.filter(other => other === items).length
+    return count(arr, flatten(arr))
   }
 }
 

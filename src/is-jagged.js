@@ -1,7 +1,17 @@
+const assert = require("./assert.js")
 const isArray = require("./is-array.js")
+const isDataFrame = require("./is-dataframe.js")
+const isSeries = require("./is-series.js")
 
 function isJagged(x) {
-  if (!isArray(x)) return false
+  if (isDataFrame(x) || isSeries(x)) {
+    return isJagged(x.values)
+  }
+
+  assert(
+    isArray(x),
+    "The `isJagged` function only works on arrays, Series, and DataFrames!"
+  )
 
   let childArrayCount = 0
   let firstChildArrayLength = null

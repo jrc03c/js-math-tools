@@ -1,22 +1,62 @@
+const { DataFrame, Series } = require("./dataframe")
 const assert = require("./assert.js")
 const flatten = require("./flatten.js")
 const isArray = require("./is-array.js")
+const isDataFrame = require("./is-dataframe.js")
 const isNumber = require("./is-number.js")
-const isUndefined = require("./is-undefined.js")
+const isSeries = require("./is-series.js")
 const scale = require("./scale.js")
 const shape = require("./shape.js")
 const sum = require("./sum.js")
 const transpose = require("./transpose.js")
 
 function dot(a, b) {
-  assert(
-    !isUndefined(a) && !isUndefined(b),
-    "You must pass two arrays of numbers into the `dot` function!"
-  )
+  if (isDataFrame(a)) {
+    const temp = dot(a.values, b)
+
+    if (shape(temp).length === 1) {
+      const out = new Series(temp)
+      out.name = isSeries(b) ? b.name : out.name
+      out.index = a.index.slice()
+      return out
+    } else {
+      const out = new DataFrame(temp)
+      out.index = a.index.slice()
+
+      if (isDataFrame(b)) {
+        out.columns = b.columns.slice()
+      }
+
+      return out
+    }
+  }
+
+  if (isDataFrame(b)) {
+    const temp = dot(a, b.values)
+
+    if (shape(temp).length === 1) {
+      const out = new Series(temp)
+      out.name = isSeries(a) ? a.name : out.name
+      out.index = b.columns.slice()
+      return out
+    } else {
+      const out = new DataFrame(temp)
+      out.columns = b.columns.slice()
+      return out
+    }
+  }
+
+  if (isSeries(a)) {
+    return dot(a.values, b)
+  }
+
+  if (isSeries(b)) {
+    return dot(a, b.values)
+  }
 
   assert(
     isArray(a) && isArray(b),
-    "You must pass two arrays of numbers into the `dot` function!"
+    "The `dot` function only works on arrays, Series, and DataFrames!"
   )
 
   flatten(a)

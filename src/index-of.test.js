@@ -1,101 +1,61 @@
+const { DataFrame, Series } = require("./dataframe")
 const indexOf = require("./index-of.js")
+const isEqual = require("./is-equal.js")
+const normal = require("./normal.js")
 const range = require("./range.js")
 const reshape = require("./reshape.js")
 
-test("tests that items can be found in nested arrays using values", () => {
-  const a = [2, 3, 4]
-  expect(indexOf(a, 4)).toStrictEqual([2])
+test("tests that the indices of items can be found correctly", () => {
+  expect(indexOf([2, 3, 4], 3)).toStrictEqual([1])
+  expect(indexOf([2, 3, 4], v => v % 4 === 0)).toStrictEqual([2])
 
-  const b = reshape(range(0, 24), [2, 3, 4])
-  expect(indexOf(b, b[1][2][0])).toStrictEqual([1, 2, 0])
-})
+  const a = reshape(range(0, 100), [10, 10])
+  const bTrue = [3, 7]
+  const bPred = indexOf(a, 37)
+  expect(isEqual(bPred, bTrue)).toBe(true)
 
-test("tests that items can be found in nested arrays using functions", () => {
-  const a = [2, 3, 4]
-  expect(indexOf(a, v => v > 3)).toStrictEqual([2])
+  const c = normal([2, 3, 4, 5])
+  expect(indexOf(c, v => v < 0).length).toBe(4)
 
-  const b = reshape(range(0, 24), [2, 3, 4])
-  expect(indexOf(b, v => v === b[1][2][0])).toStrictEqual([1, 2, 0])
-})
+  const d = new Series({ hello: normal(100) })
+  expect(typeof indexOf(d, v => v < 0)[0]).toBe("string")
 
-test("tests that arrays and non-arrays can both be found in nested arrays", () => {
-  const x = ["foobar", [1, 2, 3, 4, 5], "hello", ["a", "b", "c"]]
+  const e = new DataFrame({ foo: [2, 3, 4, 5, 6], bar: [7, 8, 9, 10, 11] })
 
-  expect(indexOf(x, v => v.length > 5)).toStrictEqual([0])
-  expect(indexOf(x, v => v.length === 5)).toStrictEqual([1])
+  const fTrue = ["row3", "bar"]
+  const fPred = indexOf(e, 10)
+  expect(isEqual(fPred, fTrue)).toBe(true)
 
-  expect(
-    indexOf(x, v => typeof v === "string" && v.length === 5)
-  ).toStrictEqual([2])
-})
+  const g = { a: { b: { c: { d: "hello" } } } }
+  const hTrue = ["a", "b", "c", "d"]
+  const hPred = indexOf(g, "hello")
+  expect(isEqual(hPred, hTrue)).toBe(true)
 
-test("tests that items can be found in objects using values", () => {
-  class Person {
-    constructor(name, age) {
-      const self = this
-      self.name = name
-      self.age = age
-      self.friends = []
-    }
-  }
+  const selfReferencer = [2, 3, 4]
+  selfReferencer.push(selfReferencer)
+  expect(indexOf(selfReferencer, 4)).toStrictEqual([2])
 
-  const alice = new Person("Alice", 23)
-  const bob = new Person("Bob", 45)
-  const clarissa = new Person("Clarissa", 67)
-  alice.friends.push(bob)
-  alice.friends.push(clarissa)
+  const wrongs = [
+    0,
+    1,
+    2.3,
+    -2.3,
+    Infinity,
+    -Infinity,
+    NaN,
+    "foo",
+    true,
+    false,
+    null,
+    undefined,
+    Symbol.for("Hello, world!"),
+    x => x,
+    function (x) {
+      return x
+    },
+  ]
 
-  expect(indexOf(alice, clarissa.age)).toStrictEqual(["friends", 1, "age"])
-  expect(indexOf(alice, bob.name)).toStrictEqual(["friends", 0, "name"])
-})
-
-test("tests that items can be found in objects using functions", () => {
-  class Person {
-    constructor(name, age) {
-      const self = this
-      self.name = name
-      self.age = age
-      self.friends = []
-    }
-  }
-
-  const alice = new Person("Alice", 23)
-  const bob = new Person("Bob", 45)
-  const clarissa = new Person("Clarissa", 67)
-  alice.friends.push(bob)
-  alice.friends.push(clarissa)
-
-  const allNames = [alice.name, bob.name, clarissa.name]
-
-  expect(
-    indexOf(alice, v => typeof v === "number" && v > bob.age)
-  ).toStrictEqual(["friends", 1, "age"])
-
-  expect(
-    indexOf(
-      alice,
-      v => allNames.indexOf(v) > -1 && v !== alice.name && v !== clarissa.name
-    )
-  ).toStrictEqual(["friends", 0, "name"])
-})
-
-test("tests that the function isn't tripped up by faulty functions", () => {
-  function errorFn() {
-    throw new Error("Oh, no!")
-  }
-
-  expect(() => {
-    errorFn()
-  }).toThrow()
-
-  expect(() => {
-    indexOf([2, 3, 4], errorFn)
-  }).not.toThrow()
-})
-
-test("tests that the function isn't tripped up by circular references", () => {
-  const x = { foo: "bar" }
-  x.self = x
-
-  expect(indexOf(x, "bar")).toStrictEqual(["foo"])
+  wrongs.forEach(item => {
+    expect(() => indexOf(item, () => true)).toThrow()
+  })
 })

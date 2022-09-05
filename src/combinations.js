@@ -1,10 +1,19 @@
 const assert = require("./assert.js")
 const flatten = require("./flatten.js")
 const isArray = require("./is-array.js")
+const isDataFrame = require("./is-dataframe.js")
 const isNumber = require("./is-number.js")
+const isSeries = require("./is-series.js")
 
 function combinations(arr, r) {
-  assert(isArray(arr), "The `combinations` function only works on arrays!")
+  if (isDataFrame(arr) || isSeries(arr)) {
+    return combinations(arr.values, r)
+  }
+
+  assert(
+    isArray(arr),
+    "The `combinations` function only works on arrays, Series, and DataFrames!"
+  )
   assert(isNumber(r), "`r` must be a whole number!")
   arr = flatten(arr)
 

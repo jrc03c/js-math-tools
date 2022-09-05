@@ -1,87 +1,61 @@
+const { DataFrame, Series } = require("./dataframe")
+const isEqual = require("./is-equal.js")
 const normal = require("./normal.js")
+const reverse = require("./reverse.js")
+const shape = require("./shape.js")
 const transpose = require("./transpose.js")
 
-test("transposes a vector", () => {
-  const x = [2, 3, 4]
-  const yTrue = [4, 3, 2]
-  const yPred = transpose(x)
-  expect(yPred).toStrictEqual(yTrue)
-})
+test("tests that vectors and matrices can be transposed correctly", () => {
+  const a = normal(100)
+  const bTrue = reverse(a)
+  const bPred = transpose(a)
+  expect(isEqual(bPred, bTrue)).toBe(true)
 
-test("transposes a matrix of numbers", () => {
-  const x = [
-    [2, 3, 4],
-    [5, 6, 7],
-    [8, 9, 10],
+  const c = normal([100, 50])
+  expect(isEqual(shape(transpose(c)), [50, 100])).toBe(true)
+  expect(isEqual(transpose(transpose(c)), c)).toBe(true)
+
+  const d = new Series({ hello: normal(100) })
+  const eTrue = d.copy()
+  eTrue.values = reverse(eTrue.values)
+  eTrue.index = reverse(eTrue.index)
+  const ePred = transpose(d)
+  expect(isEqual(ePred, eTrue)).toBe(true)
+
+  const f = new DataFrame({ foo: normal(100), bar: normal(100) })
+  const gTrue = f.copy()
+  const gTrueColumns = gTrue.index.slice()
+  const gTrueIndex = gTrue.columns.slice()
+  const gTrueValues = transpose(gTrue.values)
+  gTrue._columns = gTrueColumns
+  gTrue._index = gTrueIndex
+  gTrue._values = gTrueValues
+  const gPred = transpose(f)
+  expect(isEqual(gPred, gTrue)).toBe(true)
+
+  const wrongs = [
+    0,
+    1,
+    2.3,
+    -2.3,
+    Infinity,
+    -Infinity,
+    NaN,
+    "foo",
+    true,
+    false,
+    null,
+    undefined,
+    Symbol.for("Hello, world!"),
+    x => x,
+    function (x) {
+      return x
+    },
+    { hello: "world" },
+    [2, [3, [4, [5]]]],
   ]
 
-  const yTrue = [
-    [2, 5, 8],
-    [3, 6, 9],
-    [4, 7, 10],
-  ]
-
-  const yPred = transpose(x)
-  expect(yPred).toStrictEqual(yTrue)
-})
-
-test("transposes a matrix of letters", () => {
-  const x = [
-    ["a", "b", "c", "d"],
-    ["e", "f", "g", "h"],
-  ]
-
-  const yTrue = [
-    ["a", "e"],
-    ["b", "f"],
-    ["c", "g"],
-    ["d", "h"],
-  ]
-
-  const yPred = transpose(x)
-  expect(yPred).toStrictEqual(yTrue)
-})
-
-test("throws an error when attempting to transpose non-vectors and non-matrices", () => {
-  expect(() => {
-    transpose()
-  }).toThrow()
-
-  expect(() => {
-    transpose(normal([5, 5, 5, 5]))
-  }).toThrow()
-
-  expect(() => {
-    transpose(123)
-  }).toThrow()
-
-  expect(() => {
-    transpose("foo")
-  }).toThrow()
-
-  expect(() => {
-    transpose(true)
-  }).toThrow()
-
-  expect(() => {
-    transpose(false)
-  }).toThrow()
-
-  expect(() => {
-    transpose(null)
-  }).toThrow()
-
-  expect(() => {
-    transpose(undefined)
-  }).toThrow()
-
-  expect(() => {
-    transpose(() => {})
-  }).toThrow()
-
-  expect(() => {
-    transpose({})
-  }).toThrow()
-
-  expect(transpose([])).toStrictEqual([])
+  wrongs.forEach(item => {
+    expect(() => transpose(item)).toThrow()
+  })
 })

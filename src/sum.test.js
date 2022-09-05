@@ -1,33 +1,59 @@
-const range = require("./range.js")
+const { DataFrame, Series } = require("./dataframe")
+const flatten = require("./flatten.js")
+const isEqual = require("./is-equal.js")
+const normal = require("./normal.js")
 const sum = require("./sum.js")
 
-test("sums [2, 3, 4] to get 9", () => {
-  const x = [2, 3, 4]
-  const yTrue = 9
-  const yPred = sum(x)
-  expect(yPred).toBe(yTrue)
-})
+test("tests that the sums of values can be computed correctly", () => {
+  expect(sum([2, 3, 4])).toBe(9)
+  expect(sum([2, [3, [4]]])).toBe(9)
 
-test("sums the range from -100 to 100 to get 0", () => {
-  const x = range(-100, 101)
-  const yTrue = 0
-  const yPred = sum(x)
-  expect(yPred).toBe(yTrue)
-})
+  const a = normal(100)
 
-test("returns NaN when `sum` is called with no arguments", () => {
-  expect(sum()).toBeNaN()
-})
+  expect(
+    isEqual(
+      sum(a),
+      a.reduce((a, b) => a + b, 0)
+    )
+  ).toBe(true)
 
-test("returns 0 when `sum` is called on an empty array", () => {
-  expect(sum([])).toBe(0)
-})
+  const b = normal([2, 3, 4, 5])
 
-test("returns NaN when `sum` is called on non-numerical values", () => {
-  expect(sum(["foo", "bar", "baz"])).toBeNaN()
-  expect(sum("foo")).toBeNaN()
-})
+  expect(
+    isEqual(
+      sum(b),
+      flatten(b).reduce((a, b) => a + b, 0)
+    )
+  ).toBe(true)
 
-test("sums [2, 3, 'four'] to be 5", () => {
-  expect(sum([2, 3, "four"])).toBeNaN()
+  const c = new Series({ hello: normal(100) })
+  expect(isEqual(sum(c), sum(c.values))).toBe(true)
+
+  const d = new DataFrame({ foo: normal(100), bar: normal(100) })
+  expect(isEqual(sum(d), sum(d.values))).toBe(true)
+
+  const wrongs = [
+    0,
+    1,
+    2.3,
+    -2.3,
+    Infinity,
+    -Infinity,
+    NaN,
+    "foo",
+    true,
+    false,
+    null,
+    undefined,
+    Symbol.for("Hello, world!"),
+    x => x,
+    function (x) {
+      return x
+    },
+    { hello: "world" },
+  ]
+
+  wrongs.forEach(item => {
+    expect(() => sum(item)).toThrow()
+  })
 })

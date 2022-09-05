@@ -1,11 +1,20 @@
 const assert = require("./assert.js")
 const flatten = require("./flatten.js")
 const isArray = require("./is-array.js")
+const isDataFrame = require("./is-dataframe.js")
 const isNumber = require("./is-number.js")
+const isSeries = require("./is-series.js")
 const isUndefined = require("./is-undefined.js")
 
 function permutations(arr, r) {
-  assert(isArray(arr), "The `permutations` function only works on arrays!")
+  if (isDataFrame(arr) || isSeries(arr)) {
+    return permutations(arr.values, r)
+  }
+
+  assert(
+    isArray(arr),
+    "The `permutations` function only works on arrays, Series, and DataFrames!"
+  )
   if (isUndefined(r)) r = arr.length
   assert(isNumber(r), "`r` must be a whole number!")
   arr = flatten(arr)

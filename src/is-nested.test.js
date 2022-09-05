@@ -1,18 +1,36 @@
+const { DataFrame, Series } = require("./dataframe")
 const isNested = require("./is-nested.js")
 const normal = require("./normal.js")
 
 test("tests that nested arrays can be identified correctly", () => {
-  expect(isNested([])).toBe(false)
-  expect(isNested([2, 3, 4])).toBe(false)
-  expect(isNested(normal(1000))).toBe(false)
-
-  expect(isNested([[]])).toBe(true)
-  expect(isNested([2, [3, 4, [5, 6, 7]]])).toBe(true)
+  expect(isNested(normal(100))).toBe(false)
+  expect(isNested(normal([10, 10]))).toBe(true)
   expect(isNested(normal([2, 3, 4, 5]))).toBe(true)
+  expect(isNested(new Series(normal(100)))).toBe(false)
+  expect(isNested(new DataFrame(normal([10, 10])))).toBe(true)
 
-  const others = [234, "foo", true, false, null, undefined, () => {}, {}]
+  const wrongs = [
+    0,
+    1,
+    2.3,
+    -2.3,
+    Infinity,
+    -Infinity,
+    NaN,
+    "foo",
+    true,
+    false,
+    null,
+    undefined,
+    Symbol.for("Hello, world!"),
+    x => x,
+    function (x) {
+      return x
+    },
+    { hello: "world" },
+  ]
 
-  others.forEach(x => {
-    expect(isNested(x)).toBe(false)
+  wrongs.forEach(item => {
+    expect(() => isNested(item)).toThrow()
   })
 })

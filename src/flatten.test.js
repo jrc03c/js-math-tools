@@ -1,53 +1,51 @@
+const { DataFrame, Series } = require("./dataframe")
 const flatten = require("./flatten.js")
+const isEqual = require("./is-equal.js")
 const normal = require("./normal.js")
-const shape = require("./shape.js")
+const reshape = require("./reshape.js")
 
-test("flattens an already-flattened array", () => {
-  const x = [2, 3, 4]
-  const yTrue = [2, 3, 4]
-  const yPred = flatten(x)
-  expect(yPred).toStrictEqual(yTrue)
-})
+test("tests that items can be flattened correctly", () => {
+  const a = normal(100)
+  expect(isEqual(flatten(a), a)).toBe(true)
 
-test("flattens a matrix", () => {
-  const x = [
-    [2, 3, 4],
-    [5, 6, 7],
+  const cTrue = normal(100)
+  const b = reshape(cTrue, [4, 5, 5])
+  const cPred = flatten(b)
+  expect(isEqual(cPred, cTrue)).toBe(true)
+  expect(b.length).toBe(4)
+  expect(b[0].length).toBe(5)
+  expect(b[0][0].length).toBe(5)
+  expect(cPred.length).toBe(100)
+  expect(cPred.every(v => typeof v === "number")).toBe(true)
+
+  const e = new Series(normal(100))
+  expect(isEqual(flatten(e), flatten(e.values))).toBe(true)
+
+  const f = new DataFrame(normal([100, 5]))
+  expect(isEqual(flatten(f), flatten(f.values))).toBe(true)
+
+  const wrongs = [
+    0,
+    1,
+    2.3,
+    -2.3,
+    Infinity,
+    -Infinity,
+    NaN,
+    "foo",
+    true,
+    false,
+    null,
+    undefined,
+    Symbol.for("Hello, world!"),
+    x => x,
+    function (x) {
+      return x
+    },
+    { hello: "world" },
   ]
-  const yTrue = [2, 3, 4, 5, 6, 7]
-  const yPred = flatten(x)
-  expect(yPred).toStrictEqual(yTrue)
-})
 
-test("flattens a tensor", () => {
-  const x = normal([2, 3, 4, 5])
-  const yPred = flatten(x)
-  expect(yPred.length).toBe(120)
-  expect(shape(yPred).length).toBe(1)
-})
-
-test("throws an error when attempting to flatten non-arrays", () => {
-  expect(() => {
-    flatten()
-  }).toThrow()
-
-  expect(() => {
-    flatten("foo")
-  }).toThrow()
-
-  expect(() => {
-    flatten(123)
-  }).toThrow()
-
-  expect(() => {
-    flatten(true)
-  }).toThrow()
-
-  expect(() => {
-    flatten({})
-  }).toThrow()
-
-  expect(() => {
-    flatten(() => {})
-  }).toThrow()
+  wrongs.forEach(item => {
+    expect(() => flatten(item)).toThrow()
+  })
 })

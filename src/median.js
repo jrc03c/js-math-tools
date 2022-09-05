@@ -1,24 +1,30 @@
-const dropNaN = require("./drop-nan.js")
+const assert = require("./assert.js")
 const flatten = require("./flatten.js")
+const isArray = require("./is-array.js")
+const isDataFrame = require("./is-dataframe.js")
+const isSeries = require("./is-series.js")
 const sort = require("./sort.js")
 
 function median(arr) {
+  if (isDataFrame(arr) || isSeries(arr)) {
+    return median(arr.values)
+  }
+
+  assert(
+    isArray(arr),
+    "The `median` function only works on arrays, Series, and DataFrames!"
+  )
+
   try {
-    const flattenedArr = flatten(arr)
-    let temp = dropNaN(flattenedArr)
-    if (temp.length === 0) return NaN
-    if (temp.length < flattenedArr.length) return NaN
-    temp = sort(temp)
+    const temp = sort(flatten(arr))
 
-    let out
-
-    if (temp.length % 2 === 0) {
-      out = (temp[temp.length / 2 - 1] + temp[temp.length / 2]) / 2
+    if (temp.length === 0) {
+      return NaN
+    } else if (temp.length % 2 === 0) {
+      return (temp[temp.length / 2 - 1] + temp[temp.length / 2]) / 2
     } else {
-      out = temp[Math.floor(temp.length / 2)]
+      return temp[parseInt(temp.length / 2)]
     }
-
-    return out
   } catch (e) {
     return NaN
   }

@@ -1,34 +1,44 @@
 const { DataFrame, Series } = require("./dataframe")
 const isDataFrame = require("./is-dataframe.js")
 const normal = require("./normal.js")
+class SubDataFrame extends DataFrame {}
 
-test("tests that dataframes can be correctly identified", () => {
-  const rights = [
-    new DataFrame(),
-    new DataFrame({ foo: [2, 3, 4], bar: [5, 6, 7] }),
-    new DataFrame(normal([100, 5])),
-  ]
+test("tests that dataframes can be identified correctly", () => {
+  expect(isDataFrame(new DataFrame(normal([10, 10])))).toBe(true)
+  expect(isDataFrame(new SubDataFrame(normal([10, 10])))).toBe(true)
 
-  rights.forEach(df => {
-    expect(isDataFrame(df)).toBe(true)
-  })
+  const selfReferencer = [2, 3, 4]
+  selfReferencer.push(selfReferencer)
 
   const wrongs = [
-    234,
+    0,
+    1,
+    2.3,
+    -2.3,
+    Infinity,
+    -Infinity,
+    NaN,
     "foo",
     true,
     false,
     null,
     undefined,
-    [],
-    normal([2, 3, 4, 5]),
-    new Series(),
-    new Series(normal(100)),
-    () => {},
-    {},
+    Symbol.for("Hello, world!"),
+    [2, 3, 4],
+    [
+      [2, 3, 4],
+      [5, 6, 7],
+    ],
+    x => x,
+    function (x) {
+      return x
+    },
+    { hello: "world" },
+    selfReferencer,
+    new Series({ hello: [10, 20, 30, 40, 50] }),
   ]
 
-  wrongs.forEach(x => {
-    expect(isDataFrame(x)).toBe(false)
+  wrongs.forEach(item => {
+    expect(isDataFrame(item)).toBe(false)
   })
 })

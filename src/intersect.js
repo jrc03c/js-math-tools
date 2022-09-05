@@ -1,24 +1,35 @@
+const assert = require("./assert.js")
 const flatten = require("./flatten.js")
 const isArray = require("./is-array.js")
-const union = require("./union.js")
+const isDataFrame = require("./is-dataframe.js")
+const isEqual = require("./is-equal.js")
+const isSeries = require("./is-series.js")
+const isUndefined = require("./is-undefined.js")
 
-function intersect() {
-  const arrays = Object.values(arguments).map(v => {
-    if (isArray(v)) return flatten(v)
-    return [v]
-  })
+function intersect(a, b) {
+  if (isDataFrame(a) || isSeries(a)) {
+    return intersect(a.values, b)
+  }
 
+  if (isDataFrame(b) || isSeries(b)) {
+    return intersect(a, b.values)
+  }
+
+  assert(
+    isArray(a) && isArray(b),
+    "The `intersect` function only works on arrays, Series, and DataFrames!"
+  )
+
+  const aTemp = flatten(a)
+  const bTemp = flatten(b)
   const out = []
-  const allValues = union(arrays)
 
-  allValues.forEach(value => {
-    for (let i = 0; i < arrays.length; i++) {
-      if (arrays[i].indexOf(value) < 0) {
-        return
-      }
+  aTemp.forEach(item => {
+    const equivalent = bTemp.find(other => isEqual(other, item))
+
+    if (!isUndefined(equivalent)) {
+      out.push(item)
     }
-
-    out.push(value)
   })
 
   return out

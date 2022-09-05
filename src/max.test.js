@@ -1,25 +1,43 @@
+const { DataFrame, Series } = require("./dataframe")
+const flatten = require("./flatten.js")
 const max = require("./max.js")
-const { random } = require("./random.js")
+const normal = require("./normal.js")
 
-test("gets the max of arrays of values of mixed types", () => {
-  expect(max([2, 3, 4])).toBe(4)
-  expect(max([-10, -5, -20])).toBe(-5)
-  expect(max(random([10, 10, 10, 10]))).toBeLessThanOrEqual(1)
-  expect(max(random([10, 10, 10, 10]))).toBeGreaterThanOrEqual(0)
-  expect(max([2, 3, "four"])).toBeNaN()
-  expect(max([null, undefined, 3])).toBeNaN()
-  expect(max([true, false])).toBeNaN()
-  expect(max([-Infinity, Infinity, 0])).toBe(Infinity)
-})
+test("tests that the maximum value in arrays, series, and dataframes can be found correctly", () => {
+  const a = normal(100)
+  expect(max(a)).toBe(Math.max(...a))
 
-test("returns NaN when attempting to get the max of non-arrays", () => {
-  expect(max()).toBeNaN()
-  expect(max("foo")).toBeNaN()
-  expect(max(null)).toBeNaN()
-  expect(max(undefined)).toBeNaN()
-  expect(max(() => {})).toBeNaN()
-  expect(max({})).toBeNaN()
-  expect(max([])).toBeNaN()
-  expect(max(true)).toBeNaN()
-  expect(max(false)).toBeNaN()
+  const b = normal([2, 3, 4, 5])
+  expect(max(b)).toBe(Math.max(...flatten(b)))
+
+  const c = new Series({ hello: normal(100) })
+  expect(max(c)).toBe(max(c.values))
+
+  const d = new DataFrame({ foo: normal(100), bar: normal(100) })
+  expect(max(d)).toBe(max(d.values))
+
+  const wrongs = [
+    0,
+    1,
+    2.3,
+    -2.3,
+    Infinity,
+    -Infinity,
+    NaN,
+    "foo",
+    true,
+    false,
+    null,
+    undefined,
+    Symbol.for("Hello, world!"),
+    x => x,
+    function (x) {
+      return x
+    },
+    { hello: "world" },
+  ]
+
+  wrongs.forEach(item => {
+    expect(() => max(item)).toThrow()
+  })
 })

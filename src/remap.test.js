@@ -1,60 +1,98 @@
+const { DataFrame, Series } = require("./dataframe")
+const flatten = require("./flatten.js")
+const isEqual = require("./is-equal.js")
+const max = require("./max.js")
+const min = require("./min.js")
 const normal = require("./normal.js")
+const range = require("./range.js")
 const remap = require("./remap.js")
+const reshape = require("./reshape.js")
 
-test("remaps a single value from one range to another", () => {
-  const x = 1
-  const a = 0
-  const b = 2
-  const c = 0
-  const d = 10
-  const yTrue = 5
-  const yPred = remap(x, a, b, c, d)
-  expect(yPred).toBe(yTrue)
-})
+test("tests that values can be remapped correctly from one range to another", () => {
+  expect(remap(5, 0, 10, 0, 100)).toBe(50)
+  expect(remap(2.5, -10, 10, 64, 104)).toBe(89)
+  expect(remap(1, 0, 10, 10, 0)).toBe(9)
 
-test("remaps a single value from one range to another", () => {
-  const x = 2
-  const a = 1
-  const b = 3
-  const c = 100
-  const d = 500
-  const yTrue = 300
-  const yPred = remap(x, a, b, c, d)
-  expect(yPred).toBe(yTrue)
-})
+  const a = normal(100)
+  const b = normal()
+  const c = normal()
+  const d = normal()
+  const e = normal()
 
-test("remaps an array of values from one range to another", () => {
-  const x = [1, 2, 3]
-  const a = 0
-  const b = 4
-  const c = 100
-  const d = 500
-  const yTrue = [200, 300, 400]
-  const yPred = remap(x, a, b, c, d)
-  expect(yPred).toStrictEqual(yTrue)
-})
+  expect(
+    isEqual(
+      remap(a, b, c, d, e),
+      a.map(v => remap(v, b, c, d, e))
+    )
+  ).toBe(true)
 
-test("remaps using a bunch of arrays", () => {
-  const x = normal([5, 5, 5])
-  const a = normal([5, 5, 5])
-  const b = normal([5, 5, 5])
-  const c = normal([5, 5, 5])
-  const d = normal([5, 5, 5])
+  expect(remap(1, 1, 1, 1, 1)).toBeNaN()
 
-  expect(() => {
-    remap(x, a, b, c, d)
-  }).not.toThrow()
-})
+  const f = normal([2, 3, 4, 5])
+  const g = normal([2, 3, 4, 5])
+  const h = normal([2, 3, 4, 5])
+  const i = normal([2, 3, 4, 5])
+  const j = normal([2, 3, 4, 5])
 
-test("returns NaN when attempting to remap using non-numerical values", () => {
-  expect(remap()).toBeNaN()
-  expect(remap(1, 2, 3, 4, "five")).toBeNaN()
-  expect(remap("one", 2, 3, 4, 5)).toBeNaN()
-  expect(remap(true, false, () => {}, {}, null)).toBeNaN()
-})
+  expect(
+    isEqual(
+      remap(f, g, h, i, j),
+      reshape(remap(...[f, g, h, i, j].map(flatten)), [2, 3, 4, 5])
+    )
+  )
 
-test("throws an error when attempting to remap using arrays of different shapes", () => {
-  expect(() => {
-    remap([1, 2], [3, 4, 5], 6, 7, 8)
-  }).toThrow()
+  const series = range(0, 5).map(() => new Series(normal(100)))
+
+  expect(
+    isEqual(remap(...series), new Series(remap(...series.map(s => s.values))))
+  ).toBe(true)
+
+  const dataframes = range(0, 5).map(() => new DataFrame(normal([10, 10])))
+
+  expect(
+    isEqual(
+      remap(...dataframes),
+      new DataFrame(remap(...dataframes.map(v => v.values)))
+    )
+  )
+
+  const k = normal([2, 3, 4, 5])
+  const kMin = min(k)
+  const kMax = max(k)
+
+  const lTrue = reshape(
+    flatten(k).map(v => remap(v, kMin, kMax, 50, 100)),
+    [2, 3, 4, 5]
+  )
+
+  const lPred = remap(k, 50, 100)
+  expect(isEqual(lPred, lTrue)).toBe(true)
+
+  const m = normal([2, 3, 4, 5])
+  const n = remap(m, 0, 1)
+  expect(min(n)).toBeGreaterThanOrEqual(0)
+  expect(max(n)).toBeLessThanOrEqual(1)
+
+  const wrongs = [
+    NaN,
+    "foo",
+    true,
+    false,
+    null,
+    undefined,
+    Symbol.for("Hello, world!"),
+    x => x,
+    function (x) {
+      return x
+    },
+    { hello: "world" },
+  ]
+
+  for (let i = 0; i < 100; i++) {
+    const vals = range(0, 5).map(
+      () => wrongs[parseInt(Math.random() * wrongs.length)]
+    )
+
+    expect(remap(...vals)).toBeNaN()
+  }
 })

@@ -4,7 +4,7 @@ function seriesDropMissing(series) {
   const out = series.copy()
   const outIndex = []
 
-  out.values = out.values.filter((v, i) => {
+  out._values = out.values.filter((v, i) => {
     if (isUndefined(v)) {
       return false
     } else {
@@ -13,7 +13,7 @@ function seriesDropMissing(series) {
     }
   })
 
-  out.index = outIndex
+  out._index = outIndex
   return out
 }
 

@@ -1,50 +1,47 @@
-const abs = require("./abs.js")
+const { DataFrame, Series } = require("./dataframe")
 const add = require("./add.js")
 const correl = require("./correl.js")
 const normal = require("./normal.js")
 const scale = require("./scale.js")
 
-test("gets the correlation of completely unrelated vectors", () => {
-  const x = normal([10000])
-  const y = normal([10000])
-  const r = correl(x, y)
-  expect(abs(r)).toBeLessThan(0.05)
-})
+test("tests that correlations can be computed correctly", () => {
+  const a = normal(1000)
+  const b = add(a, scale(0.0001, normal(1000)))
+  expect(correl(a, a)).toBeCloseTo(1)
+  expect(correl(a, b)).toBeGreaterThan(0.99)
 
-test("gets the correlation of positively correlated vectors", () => {
-  const x = normal([10000])
-  const y = add(x, scale(0.01, normal([10000])))
-  const r = correl(x, y)
-  expect(r).toBeGreaterThan(0.95)
-})
+  const c = add(a, scale(0.1, normal(1000)))
+  expect(correl(a, c)).toBeGreaterThan(0.75)
 
-test("gets the correlation of negatively correlated vectors", () => {
-  const x = normal([10000])
-  const y = add(scale(-1, x), scale(0.01, normal([10000])))
-  const r = correl(x, y)
-  expect(r).toBeLessThan(-0.95)
-})
+  const d = normal(1000)
+  expect(correl(a, d)).toBeGreaterThan(-0.25)
+  expect(correl(a, d)).toBeLessThan(0.25)
 
-test("returns NaN when `correl` is called without arguments", () => {
-  expect(correl()).toBeNaN()
-})
+  const e = new Series(a)
+  const f = new Series(b)
+  expect(correl(e, f)).toBeGreaterThan(0.99)
 
-test("returns NaN when `correl` is called on empty arrays", () => {
-  expect(correl([], [])).toBeNaN()
-})
+  expect(correl([2, 3, 4], ["five", "six", "seven"])).toBeNaN()
 
-test("returns NaN when `correl` is called on arrays containing only non-numerical values", () => {
-  expect(correl(["foo", "bar"], ["baz", "blah"])).toBeNaN()
-})
+  const wrongs = [
+    [0, 1],
+    [Infinity, NaN],
+    ["foo", true],
+    [false, null],
+    [undefined, Symbol.for("Hello, world!")],
+    [
+      x => x,
+      function (x) {
+        return x
+      },
+    ],
+    [{ hello: "world" }, { goodbye: "world" }],
+    [normal(100), normal(200)],
+    [new Series(normal(100)), new Series(normal(101))],
+    [new DataFrame(normal([100, 2])), new DataFrame(normal([100, 2]))],
+  ]
 
-test("gets the correlation of vectors that have missing values", () => {
-  const x = normal([10000])
-  const y = normal([10000])
-
-  for (let i = 0; i < 100; i++) {
-    x[parseInt(Math.random() * x.length)] = null
-    y[parseInt(Math.random() * y.length)] = null
-  }
-
-  expect(correl(x, y)).toBeNaN()
+  wrongs.forEach(pair => {
+    expect(() => correl(pair[0], pair[1])).toThrow()
+  })
 })

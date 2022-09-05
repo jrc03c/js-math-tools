@@ -1,16 +1,53 @@
+const { random } = require("../random.js")
 const assert = require("../assert.js")
 const flatten = require("../flatten.js")
 const isArray = require("../is-array.js")
 const isBoolean = require("../is-boolean.js")
+const isFunction = require("../is-function.js")
 const isNumber = require("../is-number.js")
 const isString = require("../is-string.js")
 const isUndefined = require("../is-undefined.js")
 const range = require("../range.js")
 const shape = require("../shape.js")
 const sort = require("../sort.js")
-const { random } = require("../random.js")
 
-function dfSort(df, cols, directions) {
+function dfSort(df, a, b) {
+  if (isFunction(a)) {
+    return dfSortByFunction(df, a, b)
+  } else {
+    return dfSortByColumns(df, a, b)
+  }
+}
+
+function dfSortByFunction(df, fn, axis) {
+  axis = isUndefined(axis) ? 0 : axis
+
+  assert(
+    isFunction(fn),
+    "When sorting a DataFrame using a function, the first argument to the `sort` method must be a function!"
+  )
+
+  assert(
+    isNumber(axis),
+    "When sorting a DataFrame using a function, the second argument to the `sort` method must be null, undefined, 0, or 1 to indicate the axis along which the data should be sorted! An axis of 0 means that the rows will be sorted relative to each other, whereas an axis of 1 means that the columns will be sorted relative to each other."
+  )
+
+  if (axis === 0) {
+    const index = sort(df.index, (a, b) => {
+      return fn(df.get(a, null), df.get(b, null))
+    })
+
+    return df.get(index, null)
+  } else {
+    const columns = sort(df.columns, (a, b) => {
+      return fn(df.get(null, a), df.get(null, b))
+    })
+
+    return df.get(null, columns)
+  }
+}
+
+function dfSortByColumns(df, cols, directions) {
   // temporarily assign index as column in dataframe
   let out = df.copy()
   const indexID = random().toString()

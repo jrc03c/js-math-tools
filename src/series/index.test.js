@@ -1,3 +1,4 @@
+const { DataFrame, Series } = require("../dataframe")
 const isEqual = require("../is-equal.js")
 const isUndefined = require("../is-undefined.js")
 const normal = require("../normal.js")
@@ -5,9 +6,9 @@ const range = require("../range.js")
 const scale = require("../scale.js")
 const set = require("../set.js")
 const sort = require("../sort.js")
-const { DataFrame, Series } = require("../dataframe")
 
 test("tests Series stuff", () => {
+  expect(new Series().isEmpty).toBe(true)
   const isSeries = s => s instanceof Series
 
   const x = normal(100)
@@ -16,8 +17,7 @@ test("tests Series stuff", () => {
   expect(isSeries(series)).toBe(true)
   expect(series.shape).toStrictEqual([100])
   expect(series.isEmpty).toBe(false)
-  expect(new Series().isEmpty).toBe(true)
-  expect(series.apply(v => v * 2).values).toStrictEqual(scale(x, 2))
+  expect(isEqual(series.apply(v => v * 2).values, scale(x, 2))).toBe(true)
 
   const clearedValues = set(series.clear().values)
   expect(clearedValues.length).toBe(1)
@@ -35,14 +35,11 @@ test("tests Series stuff", () => {
   expect(series === series2).toBe(false)
 
   const series3 = new Series([2, 3, null, 5])
-  expect(series3.dropMissing().values).toStrictEqual([2, 3, 5])
+  expect(isEqual(series3.dropMissing().values, [2, 3, 5])).toBe(true)
 
   const series4 = new Series([2, 5, 3, 4])
   expect(series4.sort().values).toStrictEqual([2, 3, 4, 5])
-  expect(series4.sort(true).values).toStrictEqual([2, 3, 4, 5])
-  expect(series4.sort("ascending").values).toStrictEqual([2, 3, 4, 5])
-  expect(series4.sort(false).values).toStrictEqual([5, 4, 3, 2])
-  expect(series4.sort("descending").values).toStrictEqual([5, 4, 3, 2])
+  expect(series4.sort((a, b) => b - a).values).toStrictEqual([5, 4, 3, 2])
 
   const series5 = new Series(["a", "b", "c", "b", "a"])
   series5.name = "foo"
@@ -79,6 +76,11 @@ test("tests Series stuff", () => {
   const series8 = new Series(normal(100))
   expect(series8.length).toBe(100)
   expect(series8.width).toBe(undefined)
+
+  const series9 = new Series(normal(100))
+  const series10 = series9.shuffle()
+  expect(isEqual(series9, series10)).toBe(false)
+  expect(isEqual(series9.sort(), series10.sort())).toBe(true)
 })
 
 test("throws an error when attempting to do unsavory things with Series", () => {

@@ -27,16 +27,16 @@ async function fromCSV(
   })()
 
   const raw = await (async () => {
-    // browser
-    try {
-      const response = await fetch(path)
-      return await response.text()
-    } catch (e) {}
-
     // node
     try {
       const fs = require("fs")
       return fs.readFileSync(path, encoding)
+    } catch (e) {}
+
+    // browser
+    try {
+      const response = await fetch(path)
+      return await response.text()
     } catch (e) {}
 
     throw new MathError(`The path "${path}" could not be loaded!`)

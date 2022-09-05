@@ -1,30 +1,61 @@
+const { DataFrame, Series } = require("./dataframe")
 const abs = require("./abs.js")
+const add = require("./add.js")
 const covariance = require("./covariance.js")
 const normal = require("./normal.js")
+const scale = require("./scale.js")
 
-test("gets covariance for two arrays, one of which has only one unique value, to be 0", () => {
-  const x = [2, 3, 4]
-  const y = [1, 1, 1]
-  expect(covariance(x, y)).toBe(0)
-})
+test("tests that covariances can be computed correctly", () => {
+  const a = [2, 3, 4]
+  const b = [1, 1, 1]
+  expect(covariance(a, b)).toBe(0)
 
-test("gets the covariance of two normally distributed arrays", () => {
-  const x = normal(10000)
-  const y = normal(10000)
-  expect(abs(covariance(x, y))).toBeLessThan(0.15)
-})
+  const c = normal(10000)
+  const d = normal(10000)
+  expect(abs(covariance(c, d))).toBeLessThan(0.15)
 
-test("gets the covariance of an array with itself", () => {
-  const x = normal(10000)
-  expect(covariance(x, x)).toBeGreaterThan(0.85)
-})
+  const e = normal(10000)
+  expect(covariance(e, e)).toBeGreaterThan(0.85)
 
-test("returns NaN when attempting to get the covariance of empty arrays", () => {
   expect(covariance([], [])).toBeNaN()
-})
 
-test("throws an error when attempting to get the covariance of arrays of different size", () => {
-  const x = normal(100)
-  const y = normal(200)
-  expect(covariance(x, y)).toBeNaN()
+  const h = normal(1000)
+  const i = add(h, scale(1e-10, normal(1000)))
+  expect(covariance(h, h)).toBeGreaterThan(0.85)
+  expect(covariance(h, i)).toBeGreaterThan(0.85)
+
+  const j = add(h, scale(0.1, normal(1000)))
+  expect(covariance(h, j)).toBeGreaterThan(0.75)
+
+  const k = normal(1000)
+  expect(covariance(h, k)).toBeGreaterThan(-0.25)
+  expect(covariance(h, k)).toBeLessThan(0.25)
+
+  const l = new Series(h)
+  const m = new Series(i)
+  expect(covariance(l, m)).toBeGreaterThan(0.85)
+
+  expect(covariance([2, 3, 4], ["five", "six", "seven"])).toBeNaN()
+
+  const wrongs = [
+    [0, 1],
+    [Infinity, NaN],
+    ["foo", true],
+    [false, null],
+    [undefined, Symbol.for("Hello, world!")],
+    [
+      x => x,
+      function (x) {
+        return x
+      },
+    ],
+    [{ hello: "world" }, { goodbye: "world" }],
+    [normal(100), normal(200)],
+    [new Series(normal(100)), new Series(normal(101))],
+    [new DataFrame(normal([100, 2])), new DataFrame(normal([100, 2]))],
+  ]
+
+  wrongs.forEach(pair => {
+    expect(() => covariance(pair[0], pair[1])).toThrow()
+  })
 })

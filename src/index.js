@@ -3,7 +3,6 @@ const { DataFrame, Series } = require("./dataframe")
 const out = {
   abs: require("./abs.js"),
   add: require("./add.js"),
-  append: require("./append.js"),
   apply: require("./apply.js"),
   arccos: require("./arccos.js"),
   arcsin: require("./arcsin.js"),
@@ -37,10 +36,8 @@ const out = {
   flatten: require("./flatten.js"),
   float: require("./float.js"),
   floor: require("./floor.js"),
-  getValueAt: require("./get-value-at.js"),
   identity: require("./identity.js"),
   indexOf: require("./index-of.js"),
-  indexesOf: require("./indexes-of.js"),
   int: require("./int.js"),
   intersect: require("./intersect.js"),
   inverse: require("./inverse.js"),
@@ -83,12 +80,10 @@ const out = {
   seed: require("./random.js").seed,
   Series,
   set: require("./set.js"),
-  setValueAt: require("./set-value-at.js"),
   shape: require("./shape.js"),
   shuffle: require("./shuffle.js"),
   sign: require("./sign.js"),
   sin: require("./sin.js"),
-  slice: require("./slice.js"),
   sort: require("./sort.js"),
   sqrt: require("./sqrt.js"),
   std: require("./std.js"),
@@ -103,8 +98,8 @@ const out = {
   union: require("./union.js"),
   variance: require("./variance.js"),
   vectorize: require("./vectorize.js"),
-  where: require("./where.js"),
   zeros: require("./zeros.js"),
+  zip: require("./zip.js"),
 
   dump: function () {
     Object.keys(out).forEach(key => {

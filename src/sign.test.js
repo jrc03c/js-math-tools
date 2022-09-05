@@ -1,32 +1,56 @@
-const add = require("./add.js")
+const { DataFrame, Series } = require("./dataframe")
+const apply = require("./apply.js")
+const isEqual = require("./is-equal.js")
 const normal = require("./normal.js")
-const ones = require("./ones.js")
-const scale = require("./scale.js")
-const set = require("./set.js")
 const sign = require("./sign.js")
-const sort = require("./sort.js")
-const { random } = require("./random.js")
 
-test("gets the sign of some numbers", () => {
-  const a = sort(set(sign(normal(10000))).concat(0))
-  expect(a).toStrictEqual([-1, 0, 1])
+test("tests that the sign of a number can be correctly identified", () => {
+  expect(sign(-234.567)).toBe(-1)
+  expect(sign(234.567)).toBe(1)
+  expect(sign(0)).toBe(0)
+  expect(sign(Infinity)).toBe(1)
+  expect(sign(-Infinity)).toBe(-1)
 
-  const b = sign(add(random([10, 10, 10, 10]), 100))
-  expect(b).toStrictEqual(ones([10, 10, 10, 10]))
+  const a = normal(100)
+  const bTrue = a.map(v => (v < 0 ? -1 : v > 0 ? 1 : 0))
+  const bPred = sign(a)
+  expect(isEqual(bPred, bTrue)).toBe(true)
 
-  const c = sign(add(random([10, 10, 10, 10]), -100))
-  expect(c).toStrictEqual(scale(ones([10, 10, 10, 10]), -1))
+  const c = normal([2, 3, 4, 5])
+  const dTrue = apply(c, v => (v < 0 ? -1 : v > 0 ? 1 : 0))
+  const dPred = sign(c)
+  expect(isEqual(dPred, dTrue)).toBe(true)
 
-  expect(sign([])).toStrictEqual([])
-})
+  const e = new Series({ hello: normal(100) })
+  const fTrue = e.copy().apply(v => (v < 0 ? -1 : v > 0 ? 1 : 0))
+  const fPred = sign(e)
+  expect(isEqual(fPred, fTrue)).toBe(true)
 
-test("returns NaN when attempting to get the sign of non-numerical values", () => {
-  expect(sign()).toBeNaN()
-  expect(sign("foo")).toBeNaN()
-  expect(sign(true)).toBeNaN()
-  expect(sign(false)).toBeNaN()
-  expect(sign(() => {})).toBeNaN()
-  expect(sign({})).toBeNaN()
-  expect(sign(null)).toBeNaN()
-  expect(sign(undefined)).toBeNaN()
+  const g = new DataFrame({ foo: normal(100), bar: normal(100) })
+
+  const hTrue = g
+    .copy()
+    .apply(col => col.apply(v => (v < 0 ? -1 : v > 0 ? 1 : 0)))
+
+  const hPred = sign(g)
+  expect(isEqual(hPred, hTrue)).toBe(true)
+
+  const wrongs = [
+    NaN,
+    "foo",
+    true,
+    false,
+    null,
+    undefined,
+    Symbol.for("Hello, world!"),
+    x => x,
+    function (x) {
+      return x
+    },
+    { hello: "world" },
+  ]
+
+  wrongs.forEach(item => {
+    expect(sign(item)).toBeNaN()
+  })
 })

@@ -1,6 +1,6 @@
 const assert = require("./assert.js")
-const flatten = require("./flatten.js")
 const isArray = require("./is-array.js")
+const isNested = require("./is-nested.js")
 const isNumber = require("./is-number.js")
 const isUndefined = require("./is-undefined.js")
 
@@ -10,25 +10,28 @@ const error =
 function ndarray(shape) {
   assert(!isUndefined(shape), error)
   if (!isArray(shape)) shape = [shape]
-  shape = flatten(shape)
-
+  assert(!isNested(shape), error)
   assert(shape.length > 0, error)
 
-  shape.forEach(x => {
-    assert(isNumber(x), error)
-    assert(parseInt(x) === x, error)
-    assert(x >= 0, error)
-  })
+  const s = shape[0]
+  assert(isNumber(s), error)
+  assert(parseInt(s) === s, error)
+  assert(s >= 0, error)
+
+  assert(
+    s !== Infinity,
+    "We can't create an array containing an infinite number of values!"
+  )
 
   if (shape.length === 1) {
     const out = []
-    for (let i = 0; i < shape[0]; i++) out.push(undefined)
+    for (let i = 0; i < s; i++) out.push(undefined)
     return out
   } else {
     const out = []
 
-    for (let i = 0; i < shape[0]; i++) {
-      out.push(ndarray(shape.slice(1), true))
+    for (let i = 0; i < s; i++) {
+      out.push(ndarray(shape.slice(1)))
     }
 
     return out

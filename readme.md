@@ -44,7 +44,7 @@ Returns the absolute value where `x` is a number or an arbitrarily nested array 
 
 ## `add(a, b)`
 
-Returns the sum where `a` and `b` are numbers or arbitrarily nested arrays of numbers. Note that `a` and `b` don't both have to be the same type; `a` could be a number while `b` could be an arbitrarily nested array of numbers, or vice versa.
+Returns the sum where `a` and `b` are numbers or arbitrarily nested arrays of numbers. Note that `a` and `b` don't both have to be the same type; `a` could be a number while `b` could be an arbitrarily nested array of numbers, or vice versa. See the note below `sum` to read about the differences between `add` and `sum`.
 
 ## `append(a, b, axis=0)`
 
@@ -238,99 +238,281 @@ A read-only value representing the number of columns in the `DataFrame`.
 
 A read-only boolean value that is `true` if the `DataFrame` contains no data or `false` otherwise.
 
-### `DataFrame.append()`
+### `DataFrame.T`
 
-[WIP]
+Identical to `DataFrame.transpose` except that `T` is a getter.
 
-### `DataFrame.apply()`
+### `DataFrame.append(x, axis=0)`
 
-[WIP]
+Returns a copy of the original `DataFrame` with `x` appended to it. Vectors, matrices, `Series`, and `DataFrame` values can all be passed as `x`. Possible `axis` values are 0 and 1, where 0 indicates that the row(s) of `x` should be stacked beneath the rows of the original `DataFrame`, and 1 indicates that the row(s) of `x` should be placed to the right of the rows of the original `DataFrame`. For example:
 
-### `DataFrame.assign()`
+```js
+const x = new DataFrame({ foo: [2, 3, 4], bar: [5, 6, 7] })
+x.print()
+// ┌─────────┬─────┬─────┐
+// │ (index) │ foo │ bar │
+// ├─────────┼─────┼─────┤
+// │  row0   │  2  │  5  │
+// │  row1   │  3  │  6  │
+// │  row2   │  4  │  7  │
+// └─────────┴─────┴─────┘
+// Shape: [ 3, 2 ]
 
-[WIP]
+// append a vector with axis = 0
+x.append(["a", "b", "c"], 0).print()
+// ┌─────────┬─────┬─────┬───────────┐
+// │ (index) │ foo │ bar │   col2    │
+// ├─────────┼─────┼─────┼───────────┤
+// │  row0   │  2  │  5  │ undefined │
+// │  row1   │  3  │  6  │ undefined │
+// │  row2   │  4  │  7  │ undefined │
+// │  row3   │ 'a' │ 'b' │    'c'    │
+// └─────────┴─────┴─────┴───────────┘
+// Shape: [ 4, 3 ]
+
+// append a vector with axis = 1
+x.append(["a", "b", "c"], 1).print()
+// ┌─────────┬─────┬─────┬──────┐
+// │ (index) │ foo │ bar │ col2 │
+// ├─────────┼─────┼─────┼──────┤
+// │  row0   │  2  │  5  │ 'a'  │
+// │  row1   │  3  │  6  │ 'b'  │
+// │  row2   │  4  │  7  │ 'c'  │
+// └─────────┴─────┴─────┴──────┘
+// Shape: [ 3, 3 ]
+```
+
+So, when a vector is appended, it gets treated as a row if the `axis` is 0 or as a column if the `axis` is 1.
+
+Working with matrices is slightly different:
+
+```js
+const x = new DataFrame({ foo: [2, 3, 4], bar: [5, 6, 7] })
+x.print()
+// ┌─────────┬─────┬─────┐
+// │ (index) │ foo │ bar │
+// ├─────────┼─────┼─────┤
+// │  row0   │  2  │  5  │
+// │  row1   │  3  │  6  │
+// │  row2   │  4  │  7  │
+// └─────────┴─────┴─────┘
+// Shape: [ 3, 2 ]
+
+// append a matrix with axis = 0
+x.append([
+  ["a", "b", "c"],
+  ["d", "e", "f"],
+]).print()
+// ┌─────────┬─────┬─────┬───────────┐
+// │ (index) │ foo │ bar │   col2    │
+// ├─────────┼─────┼─────┼───────────┤
+// │  row0   │  2  │  5  │ undefined │
+// │  row1   │  3  │  6  │ undefined │
+// │  row2   │  4  │  7  │ undefined │
+// │  row3   │ 'a' │ 'b' │    'c'    │
+// │  row4   │ 'd' │ 'e' │    'f'    │
+// └─────────┴─────┴─────┴───────────┘
+// Shape: [ 5, 3 ]
+
+// append a matrix with axis = 1
+x.append(
+  [
+    ["a", "b", "c"],
+    ["d", "e", "f"],
+  ],
+  1
+).print()
+// ┌─────────┬─────┬─────┬───────────┬───────────┬───────────┐
+// │ (index) │ foo │ bar │   col2    │   col3    │   col4    │
+// ├─────────┼─────┼─────┼───────────┼───────────┼───────────┤
+// │  row0   │  2  │  5  │    'a'    │    'b'    │    'c'    │
+// │  row1   │  3  │  6  │    'd'    │    'e'    │    'f'    │
+// │  row2   │  4  │  7  │ undefined │ undefined │ undefined │
+// └─────────┴─────┴─────┴───────────┴───────────┴───────────┘
+// Shape: [ 3, 5 ]
+```
+
+So, when appending vectors, the vector either gets treated as a row or transposed and treated as a column; but that transposition does _not_ occur with matrices: matrices either get stacked directly below or directly to the right, and in neither case are they transposed.
+
+Finally, when appending `Series` or `DataFrame` objects, the method will try to place values in the correct column (if `axis` is 0) or row (if `axis` is 1) before tacking on new columns or rows. For example:
+
+```js
+const x = new DataFrame({ foo: [2, 3, 4], bar: [5, 6, 7] })
+x.print()
+// ┌─────────┬─────┬─────┐
+// │ (index) │ foo │ bar │
+// ├─────────┼─────┼─────┤
+// │  row0   │  2  │  5  │
+// │  row1   │  3  │  6  │
+// │  row2   │  4  │  7  │
+// └─────────┴─────┴─────┘
+// Shape: [ 3, 2 ]
+
+const y = new DataFrame({ bar: [10, 20, 30, 40], baz: [50, 60, 70, 80] })
+y.print()
+// ┌─────────┬─────┬─────┐
+// │ (index) │ bar │ baz │
+// ├─────────┼─────┼─────┤
+// │  row0   │ 10  │ 50  │
+// │  row1   │ 20  │ 60  │
+// │  row2   │ 30  │ 70  │
+// │  row3   │ 40  │ 80  │
+// └─────────┴─────┴─────┘
+// Shape: [ 4, 2 ]
+
+// note that `x` and `y` both have a "bar" column; so the values in "bar" in
+// `x` will be inserted below the "bar" values in the original `DataFrame`
+x.append(y).print()
+// ┌─────────┬───────────┬─────┬───────────┐
+// │ (index) │    foo    │ bar │    baz    │
+// ├─────────┼───────────┼─────┼───────────┤
+// │  row0   │     2     │  5  │ undefined │
+// │  row1   │     3     │  6  │ undefined │
+// │  row2   │     4     │  7  │ undefined │
+// │  row3   │ undefined │ 10  │    50     │
+// │  row4   │ undefined │ 20  │    60     │
+// │  row5   │ undefined │ 30  │    70     │
+// │  row6   │ undefined │ 40  │    80     │
+// └─────────┴───────────┴─────┴───────────┘
+// Shape: [ 7, 3 ]
+```
+
+The same sort of thing happens when the `axis` is 1, except that in that case, the _rows_ of the `DataFrame` objects are matched up as one is appended to the other.
+
+### `DataFrame.apply(fn, axis=0)`
+
+Returns a copy of the original `DataFrame` in which `fn` has been applied to each column `Series` (if `axis` is 0) or row `Series` (if `axis` is 1).
+
+### `DataFrame.assign(name, values)` or `DataFrame.assign(obj)`
+
+Returns a copy of the original `DataFrame` to which new values have been assigned in new columns. In the first form, a column `name` and a corresponding list of `values` are passed into the method, and the returned `DataFrame` will contain the original data plus the new column. In the second form, the object passed as `obj` should contain key-value pairs representing column names and their corresponding values. The second form, therefore, is more convenient when assigning multiple columns at once.
+
+### `DataFrame.clear()`
+
+Returns a copy of the original `DataFrame` in which all of the values have been replaced with `undefined`.
 
 ### `DataFrame.copy()`
 
-[WIP]
+Returns a copy of the original `DataFrame`.
 
-### `DataFrame.dropMissing()`
+### `DataFrame.dropColumns(columns)`
 
-[WIP]
+Returns a copy of the original `DataFrame` from which the given columns have been dropped. A whole number, a string, or an array of whole numbers or strings can be passed as `columns`.
 
-### `DataFrame.dropNaN()`
+### `DataFrame.dropRows(rows)`
 
-[WIP]
+Returns a copy of the original `DataFrame` from which the given rows have been dropped. A whole number, a string, or an array of whole numbers or strings can be passed as `rows`.
 
-### `DataFrame.drop()`
+### `DataFrame.dropMissing(axis=0, condition="any", threshold=0)`
 
-[WIP]
+Returns a copy of the original `DataFrame` from which rows or columns containing missing values (i.e., undefined or null values) have been dropped if `condition` is met or the `threshold` is exceeded. The `condition` isn't a boolean as you might expect; instead, it's a string from `["any", "all", "none"]`. If the `condition` is "any", then _any_ missing values in a row or column will cause that row or column to be dropped. If the condition is "all", then a row or column will be dropped only if _all_ of its values are missing. In the above two cases, the `threshold` value isn't considered. But if the `threshold` is set to a value greater than 0, then `condition` will automatically be set to "none", and then a row or column will be dropped only of the number of missing values it contains exceeds the `threshold`. If `axis` is 0, then rows are dropped; and if `axis` is 1, then columns are dropped.
 
-### `DataFrame.filter()`
+### `DataFrame.dropNaN(axis=0, condition="any", threshold=0)`
 
-[WIP]
+Returns a copy of the original `DataFrame` from which rows or columns containing NaN values have been dropped if `condition` is met or the `threshold` is exceeded. The `condition` isn't a boolean as you might expect; instead, it's a string from `["any", "all", "none"]`. If the `condition` is "any", then _any_ missing values in a row or column will cause that row or column to be dropped. If the condition is "all", then a row or column will be dropped only if _all_ of its values are missing. In the above two cases, the `threshold` value isn't considered. But if the `threshold` is set to a value greater than 0, then `condition` will automatically be set to "none", and then a row or column will be dropped only of the number of missing values it contains exceeds the `threshold`. If `axis` is 0, then rows are dropped; and if `axis` is 1, then columns are dropped.
 
-### `DataFrame.fromCSVString()`
+### `DataFrame.drop(rows, columns)`
 
-[WIP]
+Returns of a copy of the original `DataFrame` from which the given `rows` and `columns` have been dropped. If you don't want to drop any rows, then pass `null` as that argument; and the same applies for columns. The `rows` and `columns` values can be whole numbers, strings, or arrays of whole numbers or strings.
 
-### `DataFrame.fromCSV()`
+### `DataFrame.filter(fn, axis=0)`
 
-[WIP]
+Returns a copy of the original `DataFrame` with rows or columns filtered out by `fn`. If `axis` is 0, then row `Series` objects will be passed into `fn`; and if `axis` is 1, then column `Series` objects will be passed into `fn`. If `fn` returns `false` for any input, then that input will be filtered out.
 
-### `DataFrame.getDummies()`
+### `DataFrame.fromCSVString(string)` [static]
 
-[WIP]
+Parses a CSV string and returns a `DataFrame`.
 
-### `DataFrame.getSubsetByIndices()`
+### `DataFrame.fromCSV(file)` [static]
 
-[WIP]
+Fetches and parses a CSV file, and then returns a `DataFrame`. Do note that this function isn't very robust; in fact, I often use [`papaparse`](https://www.papaparse.com/) to do the heavy lifting of parsing since it's much better at handling edge cases. This function is provided for convenience, but probably ought not to be used unless the given CSV file is very simple (e.g., containing only numbers).
 
-### `DataFrame.getSubsetByNames()`
+### `DataFrame.getDummies(columns)`
 
-[WIP]
+Returns a `DataFrame` containing one-hot encodings of the given `columns` in the original `DataFrame`. Note that in most applications of one-hot encodings, if a column contains _n_ unique values, then (_n_ - 1) columns will be returned. But this implementation returns _n_ columns just in case you have other uses for it. But dropping the extra column is easy with the `drop` method.
 
-### `DataFrame.get()`
+### `DataFrame.getSubsetByIndices(rowIndices, colIndices)`
 
-[WIP]
+Returns a copy of the original `DataFrame` only containing the rows and columns specified by `rowIndices` and `colIndices`, where those values are one of null, whole numbers, or arrays of whole numbers. This method is mostly used internally, though you can use it if you want; the easier way is just to use the `get` method.
 
-### `DataFrame.join()`
+### `DataFrame.getSubsetByNames(rowNames, colNames)`
 
-[WIP]
+Returns a copy of the original `DataFrame` only containing the rows and columns specified by `rowNames` and `colNames`, where those values are one of null, strings, or arrays of strings. This method is mostly used internally, though you can use it if you want; the easier way is just to use the `get` method.
+
+### `DataFrame.get(rows, columns)`
+
+Returns a copy of the original `DataFrame` only containing the rows and columns specified by `rows` and `columns`, where those values are one of null, whole numbers, strings, or arrays of whole numbers or strings.
+
+### `DataFrame.join(x, axis=0)`
+
+Same as `DataFrame.append`.
+
+### `DataFrame.onHotEncode(columns)`
+
+Identical to `DataFrame.getDummies`.
 
 ### `DataFrame.print()`
 
-[WIP]
+Prints the `DataFrame` to the console in a pretty way and then returns the `DataFrame`.
 
 ### `DataFrame.resetIndex()`
 
-[WIP]
+Returns a copy of the original `DataFrame` in which the list of row names have been reverted to their original values, like "row0", "row1", etc.
 
-### `DataFrame.shuffle()`
+### `DataFrame.shuffle(axis=0)`
 
-[WIP]
+Returns a copy of the original `DataFrame` in which the rows (if `axis` is 0) or columns (if `axis` is 1) have been put in a random order.
 
-### `DataFrame.sort()`
+### `DataFrame.sort(columns, directions)`
 
-[WIP]
+Returns a copy of the original `DataFrame` sorted by the given `columns`. For `columns`, a whole number, string, or array of whole numbers or strings can be given. By default, all of the columns will be sorted in ascending order; but to override this behavior, pass a boolean value, array of boolean values, or array of "ascending" / "descending" string values as `directions`.
 
 ### `DataFrame.toCSVString()`
 
-[WIP]
+Returns a stringified copy of the original `DataFrame` in CSV format.
 
-### `DataFrame.toCSV()`
+### `DataFrame.toCSV(path, shouldIncludeIndex=true)`
 
-[WIP]
+Writes the `DataFrame` to disk at `path` in CSV format. By default, the saved data will include the list of row names. To disable this, pass `false` as `shouldIncludeIndex`.
 
 ### `DataFrame.toJSONString()`
 
-[WIP]
+Returns a stringified copy of the original `DataFrame` in JSON format. By default, the JSON object will have a structure like this:
 
-### `DataFrame.toJSON()`
+```json
+{
+  "row0": {
+    "col0": 5,
+    "col1": 7,
+    "col2": 9,
+    ...
+  },
 
-[WIP]
+  "row1": {
+    ...
+  },
 
-### `DataFrame.toObject()`
+  "row2": {
+    ...
+  },
+
+  ...
+}
+```
+
+However, the nesting can be reversed (putting the column names at the shallowest level and the row names at the next level) by setting `axis` to 1.
+
+### `DataFrame.toJSON(path, axis=0)`
+
+Writes the `DataFrame` to disk at `path` in JSON format. See the `DataFrame.toJSONString` method for more info about the structure of the object written to disk and the meaning of the `axis` value.
+
+### `DataFrame.toObject(axis=0)`
+
+Returns an object in the format described above in the `DataFrame.toJSONString` method. See that method for more info about the structure of the returned object and the meaning of the `axis` value.
+
+### `DataFrame.transpose()`
+
+Returns a copy of the original `DataFrame` in which the values (and row names and column names) have been flipped across the main diagonal (from top left to bottom right).
 
 ## `diff(a, b)`
 
@@ -396,10 +578,6 @@ Returns `x` converted to a floating point number.
 
 Given a number `x`, returns either the next lowest integer (if `x` has a fractional component) or `x` itself (if `x` is already an integer). Note that `x` can also be an arbitrarily nested array of numbers.
 
-## `getValueAt(x, index)`
-
-Returns the value at `index` in `x`. Note that `x` can be an arbitrarily nested array _or_ an object; but `index` must be a single value (like a whole number or string) or a 1-dimensional array of whole numbers or strings.
-
 ## `identity(n)`
 
 Returns an identity matrix of size `n` ✕ `n`.
@@ -407,10 +585,6 @@ Returns an identity matrix of size `n` ✕ `n`.
 ## `indexOf(x, fn)`
 
 Returns the index of the first value that causes the `fn` function to evaluate to true when evaluated on every item in `x`. Note that `x` can be an arbitrarily nested array _or_ an object.
-
-## `indexesOf(x, fn)`
-
-Returns all indices of all values that cause the `fn` function to evaluate to true when evaluated on every item in `x`. Note that `x` can be an arbitrarily nested array _or_ an object.
 
 ## `int(x)`
 
@@ -513,9 +687,9 @@ Returns the minimum value in an arbitrarily nested array of numbers `x`.
 
 Returns the mode(s) of an arbitrarily nested array of numbers `x`. If there are multiple modes, then an array will be returned; otherwise, a single number will be returned.
 
-## `multiply(a, b)`
+## `multiply(a, b, c, ...)`
 
-Returns the product of where `a` and `b` are numbers or arbitrarily nested arrays of numbers.
+Returns the product of where `a`, `b`, `c`, and so on, where those values are are numbers or arbitrarily nested arrays of numbers. See the note under `product` for a description of how `multiply` and `scale` differ from `product`.
 
 ## `ndarray(shape)`
 
@@ -535,7 +709,7 @@ Given an arbitrarily nested array `x`, returns all possible permutations of `r` 
 
 ## `product(x)`
 
-Returns the product of all of the values in arbitrarily nested array `x`.
+Returns the product of all of the values in arbitrarily nested array `x`. Note that `product` differs slightly in functionality from `multiply` and `scale` in that `product` _only_ accepts arrays. Just as you might want to get the `sum` of values in an array, so you might also want to get the `product` of values in an array. If you want to multiply values by each other (whether those values are numbers, arrays, `Series` instances, or `DataFrame` instances), you'll want to use the `multiply` or `scale` functions.
 
 ## `pow(a, b)`
 
@@ -569,7 +743,7 @@ Returns a reversed copy of array `x`. Only reverses at the shallowest level.
 
 Returns the next lowest or highest integer when `x` is a number or an arbitrarily nested array of numbers.
 
-## `scale(a, b)`
+## `scale(a, b, c, ...)`
 
 Identical to `multiply`.
 
@@ -613,61 +787,95 @@ A read-only value representing the length of the `values` array.
 
 A read-only boolean value that is `true` if the `Series` contains no data or `false` otherwise.
 
-### `Series.apply()`
+### `Series.append(x)`
 
-[WIP]
+Returns a copy of the original `Series` with `x` appended to it. A single value, an array of values, or another `Series` can be passed as `x`.
+
+### `Series.apply(fn)`
+
+Returns a copy of the original `Series` with `fn` applied to every value.
+
+### `Series.concat(x)`
+
+Same as `Series.append`.
 
 ### `Series.dropMissing()`
 
-[WIP]
+Returns a copy of the original `Series` without null or undefined values.
 
 ### `Series.dropNaN()`
 
-[WIP]
+Returns a copy of the original `Series` without NaN values.
 
-### `Series.filter()`
+### `Series.filter(fn)`
 
-[WIP]
+Returns a copy of the original `Series` with only those values that return `true` when passed into function `fn`.
 
-### `Series.getSubsetByIndices()`
+### `Series.getSubsetByIndices(indices)`
 
-[WIP]
+Returns a copy of the original `Series` containing only the values indicated by `indices`. A single whole number or an array of whole numbers can be passed as `indices`. This method is mostly used internally, though you can use it if you want; the easier way is just to use the `get` method.
 
-### `Series.getSubsetByNames()`
+### `Series.getSubsetByNames(names)`
 
-[WIP]
+Returns a copy of the original `Series` containing only the values indicated by `names`. A single string or an array of strings can be passed as `indices`. This method is mostly used internally, though you can use it if you want; the easier way is just to use the `get` method.
 
-### `Series.get()`
+### `Series.get(selectors)`
 
-[WIP]
+Returns a copy of the original `Series` containing only the values indicated by `selectors`. A single whole number, a single string, or an array of whole numbers or strings can be passed as `selectors`.
 
 ### `Series.print()`
 
-[WIP]
+Prints the `Series` to the console in a pretty way, and then returns the `Series`.
 
 ### `Series.sortByIndex()`
 
-[WIP]
+Returns a copy of the original `Series` sorted by its index values.
 
-### `Series.sort()`
+### `Series.sort(ascending=true)`
 
-[WIP]
+Returns a copy of the original `Series` sorted by its values.
 
 ### `Series.toObject()`
 
-[WIP]
+Returns an object with this form:
+
+```js
+{
+  [Series.name]: {
+    [Series.index[0]]: Series.values[0],
+    [Series.index[1]]: Series.values[1],
+    ...
+  }
+}
+```
 
 ## `set(x)`
 
 Returns the unique values in arbitrarily nested array `x`.
 
-## `setValueAt(x, index, value)`
-
-Sets `value` at location `index` in arbitrarily nested array `x`. If `x` is 1-dimensional, then `index` can be a single whole number; otherwise, it needs to be an array of whole numbers.
-
 ## `shape(x)`
 
-Returns the shape of arbitrarily nested array `x`.
+Returns the shape of arbitrarily nested array `x`. If `x` is smooth, then the returned shape will be a 1-dimensional array; but if `x` is jagged, then the returned shape will be an array with a mix of numbers and sub-arrays. For example:
+
+```js
+const smooth = [
+  [2, 3, 4],
+  [5, 6, 7],
+]
+
+console.log(shape(smooth))
+// [ 2, 3 ]
+
+const jagged = [2, [3, 4], 5]
+console.log(shape(jagged))
+// [ 3, [ undefined, 2, undefined ] ]
+```
+
+In the case of `smooth` above, the returned shape represents the number of rows and columns respectively; i.e., there are 2 rows and 3 columns. But instead of thinking of this shape as `[2 rows, 3 columns]`, we could also think of it as `[outer array length is 2, inner array length is 3]`. This way of thinking about it will hopefully clarify what's going on in the case of `jagged`.
+
+In the case of `jagged`, the first part of the shape, 3, represents the length of the outer array. You can also think of it as having 3 "rows", but that might be a little confusing since we can see that not all of the items are actually rows; so thinking of 3 as the length of the outer array makes the most sense here, I think. If it helps, you can think of `jagged` as looking like this: `[?, ?, ?]`. Now, to get the second part of the shape, we need to figure out how long each inner array in `jagged` is. Well, the first item in `jagged` is 2, which isn't an array, and thus has a length of `undefined`; but the second item is `[3, 4]`, which is an array with length of 2; and the third item is 5, which isn't an array, and thus has a length of `undefined`.
+
+If all of the items in `jagged` were arrays with length 2, then its shape would be `[3, 2]`. But because the inner "array" lengths don't all match up, a single number won't capture enough information about what `jagged` looks like on the inside; so instead we place an array in the second slot of the shape to indicate that each item has a different length.
 
 ## `shuffle(x)`
 
@@ -742,7 +950,7 @@ Returns the difference where `a` and `b` are numbers or arbitrarily nested array
 
 ## `sum(x)`
 
-Returns the sum of all values in arbitrarily nested array `x`.
+Returns the sum of all values in arbitrarily nested array `x`. The difference between `add` and `sum` is that `sum` _only_ accepts arrays. In other words, use `add` when you want to add up multiple distinct values passed as arguments (where those arguments can be numbers, arrays, `Series` instances, or `DataFrame` instances); and use `sum` when you want to add up all of the values in a single array.
 
 ## `tan(x)`
 
@@ -807,13 +1015,28 @@ console.log(add([2, 3, 4], 5))
 
 At the moment, though, the function is pretty naive about the _shapes_ of the arrays; e.g., it'll throw an error in the `add` function if both arguments are arrays of differing shapes.
 
-## `where(x, fn)`
-
-Returns an array of indices in `x` for which the function `fn` evaluates to true when evaluated on every item in `x`.
-
 ## `zeros(shape)`
 
 Returns an _n_-dimensional array of 0s where `shape` is an array of whole numbers.
+
+## `zip(a, b, c, ...)`
+
+Returns a new array or new `DataFrame` in which the values of the given arrays (`a`, `b`, `c`, etc.) are stacked side-by-side. For example:
+
+```js
+const a = [2, 3, 4]
+const b = [5, 6, 7, 8]
+const c = zip(a, b)
+console.log(c)
+// [
+//   [ 2, 5 ],
+//   [ 3, 6 ],
+//   [ 4, 7 ],
+//   [ undefined, 8 ]
+// ]
+```
+
+If any of the items passed into the function are `Series` objects, then the returned value will be a `DataFrame`; otherwise, the returned value will be an array.
 
 # Notes
 
@@ -850,3 +1073,11 @@ random(5)
 ```
 
 Do be aware, though, that there's no such thing in this library as having multiple PRNGs at the same time, each with different seeds. Instead, all of the randomization functions share the same seeding because they all share the same core `random` function.
+
+# To do
+
+- Add a method that makes it easy to merge `DataFrames` along a certain key. For example, it'd be nice to be able to merge multiple datasets that have a unique ID column with values that match across the sets.
+- Add a simplex noise function.
+- Convert to TS?
+- Organize the files a little better? Right now, they're just in a big heap. It might be better, though, to classify them as randomization functions, statistics functions, etc.
+- Work out a more coherent theory of when to return false / NaN / undefined / null values versus when to throw errors.

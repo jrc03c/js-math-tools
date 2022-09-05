@@ -1,12 +1,23 @@
 const assert = require("./assert.js")
+const flatten = require("./flatten.js")
 const isArray = require("./is-array.js")
+const isDataFrame = require("./is-dataframe.js")
 const isFunction = require("./is-function.js")
 const isObject = require("./is-object.js")
+const isSeries = require("./is-series.js")
 
 function findAll(x, fn) {
+  if (isDataFrame(x)) {
+    return findAll(flatten(x.values), fn)
+  }
+
+  if (isSeries(x)) {
+    return findAll(x.values, fn)
+  }
+
   assert(
     isObject(x) || isArray(x),
-    "You must pass (1) an object or array and (2) a function or value into the `findAll` function!"
+    "You must pass (1) an object, array, Series, or DataFrame and (2) a function or value into the `findAll` function!"
   )
 
   if (!isFunction(fn)) {

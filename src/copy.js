@@ -1,8 +1,14 @@
 const indexOf = require("./index-of.js")
 const isArray = require("./is-array.js")
+const isDataFrame = require("./is-dataframe.js")
+const isSeries = require("./is-series.js")
 
 function copy(x) {
   function helper(x, checked, currentPath) {
+    if (isDataFrame(x) || isSeries(x)) {
+      return x.copy()
+    }
+
     checked = checked || []
     currentPath = currentPath || ""
 

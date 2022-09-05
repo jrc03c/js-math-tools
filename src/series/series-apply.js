@@ -8,7 +8,7 @@ function seriesApply(series, fn) {
   )
 
   const out = series.copy()
-  out.values = out.values.map((v, i) => fn(v, out.index[i]))
+  out._values = out._values.map((v, i) => fn(v, i))
   return out
 }
 

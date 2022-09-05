@@ -1,48 +1,45 @@
+const { DataFrame, Series } = require("./dataframe")
 const intersect = require("./intersect.js")
+const isEqual = require("./is-equal.js")
 const range = require("./range.js")
 const reshape = require("./reshape.js")
+const shuffle = require("./shuffle.js")
 const sort = require("./sort.js")
 
-test("gets the intersection of manually-defined arrays", () => {
-  const a = [2, 3, 4, 5]
-  const b = [3, 4, 5, 6]
-  const c = [4, 5, 6, 7]
-  const yTrue = [4, 5]
-  const yPred = intersect(a, b, c)
-  expect(yPred).toStrictEqual(yTrue)
-})
+test("tests that the intersections of sets can be computed correctly", () => {
+  const a = [2, 3, 4]
+  const b = [3, 4, 5]
+  expect(isEqual(intersect(a, b), [3, 4])).toBe(true)
 
-test("gets the intersection of randomly-defined tensors", () => {
-  const a = reshape(range(0, 120), [40, 3])
-  const b = reshape(range(60, 180), [3, 4, 10])
-  const c = reshape(range(80, 200), [6, 2, 5, 2])
-  const yTrue = range(80, 120)
-  const yPred = sort(intersect(a, b, c))
-  expect(yPred).toStrictEqual(yTrue)
-})
+  const c = [2, [3, [4, [5, [6]]]]]
+  const d = [[[[2, 3, 4]]], [8, 9, 10]]
+  expect(isEqual(intersect(c, d), [2, 3, 4])).toBe(true)
 
-test("does *not* throw an error when attempting to the intersection of non-arrays", () => {
-  expect(() => {
-    intersect()
-  }).not.toThrow()
+  const e = new Series({ foo: [2, 3, 4, 5, 6] })
+  const f = new Series([4, 5, 6])
+  expect(isEqual(intersect(e, f), [4, 5, 6])).toBe(true)
 
-  expect(() => {
-    intersect([1, 2, 3], "foo")
-  }).not.toThrow()
+  const g = new DataFrame(reshape(shuffle(range(0, 100)), [10, 10]))
+  const h = reshape(shuffle(range(-5, 95)), [2, 5, 5, 2])
+  expect(isEqual(sort(intersect(g, h)), range(0, 95))).toBe(true)
 
-  expect(() => {
-    intersect("foo", [1, 2, 3])
-  }).not.toThrow()
+  const wrongs = [
+    [0, 1],
+    [2.3, -2.3],
+    [Infinity, -Infinity],
+    [NaN, "foo"],
+    [true, false],
+    [null, undefined],
+    [Symbol.for("Hello, world!"), x => x],
+    [
+      function (x) {
+        return x
+      },
+      { hello: "world" },
+    ],
+  ]
 
-  expect(() => {
-    intersect(true, false)
-  }).not.toThrow()
-
-  expect(() => {
-    intersect(undefined, null)
-  }).not.toThrow()
-
-  expect(() => {
-    intersect(() => {}, {}, "blah")
-  }).not.toThrow()
+  wrongs.forEach(pair => {
+    expect(() => intersect(pair[0], pair[1])).toThrow()
+  })
 })

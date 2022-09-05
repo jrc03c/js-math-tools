@@ -1,11 +1,13 @@
+const { DataFrame, Series } = require("./dataframe")
 const isEqual = require("./is-equal.js")
-const isUndefined = require("./is-undefined.js")
 const normal = require("./normal.js")
 const shape = require("./shape.js")
 
-test("gets the shape of some non-jagged arrays", () => {
+test("gets the shape of some non-jagged arrays, Series, and DataFrames", () => {
   expect(shape(normal(500))).toStrictEqual([500])
   expect(shape(normal([2, 3, 4]))).toStrictEqual([2, 3, 4])
+  expect(shape(new Series(normal(100)))).toStrictEqual([100])
+  expect(shape(new DataFrame(normal([10, 10])))).toStrictEqual([10, 10])
 })
 
 test("gets the shape of some jagged arrays", () => {
@@ -21,10 +23,29 @@ test("gets the shape of some jagged arrays", () => {
   expect(isEqual(yPred2, yTrue2)).toBe(true)
 })
 
-test("returns an undefined shape for non-arrays", () => {
-  const others = [234, "foo", true, false, null, undefined, () => {}, {}]
+test("throws errors for non-arrays", () => {
+  const wrongs = [
+    0,
+    1,
+    2.3,
+    -2.3,
+    Infinity,
+    -Infinity,
+    NaN,
+    "foo",
+    true,
+    false,
+    null,
+    undefined,
+    Symbol.for("Hello, world!"),
+    x => x,
+    function (x) {
+      return x
+    },
+    { hello: "world" },
+  ]
 
-  others.forEach(x => {
-    expect(isUndefined(shape(x))).toBe(true)
+  wrongs.forEach(item => {
+    expect(() => shape(item)).toThrow()
   })
 })

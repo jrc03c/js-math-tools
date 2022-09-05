@@ -1,32 +1,46 @@
+const { DataFrame, Series } = require("./dataframe")
 const apply = require("./apply.js")
-const distance = require("./distance.js")
 const exp = require("./exp.js")
+const isEqual = require("./is-equal.js")
 const normal = require("./normal.js")
-const product = require("./product.js")
-const shape = require("./shape.js")
 
-test("", () => {
-  const x = normal([2, 3, 4, 5])
-  const y = apply(x, v => Math.pow(Math.E, v))
+test("tests that values to the power of E can be computed correctly", () => {
+  const a = normal(100)
+  const b = normal([10, 10])
+  const c = new Series({ hello: normal(100) })
+  const d = new DataFrame({ foo: normal(100), bar: normal(100) })
+  const e = normal([5, 5, 5, 5])
 
   const rights = [
-    [0, 1],
-    [-1, 1 / Math.E],
-    [2, Math.E * Math.E],
-    [
-      [2, 3, 4],
-      [Math.pow(Math.E, 2), Math.pow(Math.E, 3), Math.pow(Math.E, 4)],
-    ],
-    [x, y],
+    [5, Math.exp(5)],
+    [-234.567, Math.exp(-234.567)],
+    [a, a.map(v => Math.exp(v))],
+    [b, b.map(row => row.map(v => Math.exp(v)))],
+    [c, c.copy().apply(v => Math.exp(v))],
+    [d, d.copy().apply(col => col.apply(v => Math.exp(v)))],
+    [e, apply(e, Math.exp)],
+    [Infinity, Infinity],
+    [-Infinity, 0],
   ]
 
   rights.forEach(pair => {
-    expect(
-      distance(exp([pair[0]]), [pair[1]]) / product(shape([pair[0]]))
-    ).toBeLessThan(1e-5)
+    expect(isEqual(exp(pair[0]), pair[1])).toBe(true)
   })
 
-  const wrongs = ["foo", true, false, null, undefined, {}, () => {}]
+  const wrongs = [
+    NaN,
+    "foo",
+    true,
+    false,
+    null,
+    undefined,
+    Symbol.for("Hello, world!"),
+    x => x,
+    function (x) {
+      return x
+    },
+    { hello: "world" },
+  ]
 
   wrongs.forEach(item => {
     expect(exp(item)).toBeNaN()

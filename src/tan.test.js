@@ -1,22 +1,53 @@
-const chop = require("./chop.js")
+const { DataFrame, Series } = require("./dataframe")
+const isEqual = require("./is-equal.js")
+const normal = require("./normal.js")
 const tan = require("./tan.js")
 
-test("gets tangent of common angles", () => {
-  expect(chop(tan(0))).toBe(0)
-  expect(chop(tan(Math.PI / 4) - 1)).toBe(0)
-  expect(tan(Math.PI / 2)).toBeGreaterThan(100000)
-  expect(chop(tan((3 * Math.PI) / 4) + 1)).toBe(0)
-  expect(chop(tan(Math.PI))).toBe(0)
-})
+test("tests that tangents can be computed correctly", () => {
+  const r = normal([50, 50])
+  const s = new Series({ hello: normal(100) })
+  const d = new DataFrame({ foo: normal(100), bar: normal(100) })
 
-test("returns NaN when attempting to take the tangent of non-numerical values", () => {
-  expect(tan()).toBeNaN()
-  expect(tan("foo")).toBeNaN()
-  expect(tan(true)).toBeNaN()
-  expect(tan(false)).toBeNaN()
-  expect(tan(null)).toBeNaN()
-  expect(tan(undefined)).toBeNaN()
-  expect(tan(() => {})).toBeNaN()
-  expect(tan({})).toBeNaN()
-  expect(tan([])).toStrictEqual([])
+  const rights = [
+    [-1, Math.tan(-1)],
+    [-0.5, Math.tan(-0.5)],
+    [0, Math.tan(0)],
+    [0.5, Math.tan(0.5)],
+    [1, Math.tan(1)],
+    [r, r.map(row => row.map(v => Math.tan(v)))],
+    [s, s.copy().apply(v => Math.tan(v))],
+    [d, d.copy().apply(col => col.apply(v => Math.tan(v)))],
+  ]
+
+  rights.forEach(pair => {
+    expect(isEqual(tan(pair[0]), pair[1])).toBe(true)
+  })
+
+  const wrongs = [
+    [Infinity, NaN],
+    [-Infinity, NaN],
+    [NaN, NaN],
+    ["foo", NaN],
+    [true, NaN],
+    [false, NaN],
+    [null, NaN],
+    [undefined, NaN],
+    [Symbol.for("Hello, world!"), NaN],
+    [x => x, NaN],
+    [
+      [2, "3", 4],
+      [Math.tan(2), NaN, Math.tan(4)],
+    ],
+    [
+      function (x) {
+        return x
+      },
+      NaN,
+    ],
+    [{ hello: "world" }, NaN],
+  ]
+
+  wrongs.forEach(pair => {
+    expect(isEqual(tan(pair[0]), pair[1])).toBe(true)
+  })
 })

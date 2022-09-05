@@ -1,65 +1,52 @@
+const { DataFrame, Series } = require("./dataframe")
 const abs = require("./abs.js")
 const mean = require("./mean.js")
 const normal = require("./normal.js")
 const seed = require("./random.js").seed
 const std = require("./std.js")
 
-test("generates a vector of normally-distributed random numbers", () => {
-  const x = normal([10000])
-  const m = mean(x)
-  const s = std(x)
+test("tests that normally-distributed random numbers can be generated correctly", () => {
+  expect(typeof normal()).toBe("number")
+  expect(normal(5) instanceof Array).toBe(true)
 
-  expect(abs(m)).toBeLessThan(0.05)
-  expect(abs(s - 1)).toBeLessThan(0.05)
-})
-
-test("generates a tensor of normally-distributed random numbers", () => {
-  const x = normal([10, 10, 10, 10])
-  const m = mean(x)
-  const s = std(x)
-
-  expect(abs(m)).toBeLessThan(0.05)
-  expect(abs(s - 1)).toBeLessThan(0.05)
-})
-
-test("generates the same normally-distributed random numbers using the same seed", () => {
-  seed(230498230498)
   const a = normal(10000)
-  seed(230498230498)
-  const b = normal(10000)
-  expect(a).toStrictEqual(b)
-})
+  expect(abs(mean(a))).toBeLessThan(0.05)
+  expect(abs(std(a) - 1)).toBeLessThan(0.05)
 
-test("throws an error when attempting to get normally-distributed random numbers with non-whole-number arguments", () => {
-  expect(() => {
-    normal(-1)
-  }).toThrow()
+  const b = normal([10, 10, 10, 10])
+  expect(abs(mean(b))).toBeLessThan(0.05)
+  expect(abs(std(b) - 1)).toBeLessThan(0.05)
 
-  expect(() => {
-    normal([-2, -3, -4])
-  }).toThrow()
+  seed(1234567)
+  const c = normal(100)
+  seed(1234567)
+  const d = normal(100)
+  expect(c).toStrictEqual(d)
 
-  expect(() => {
-    normal({})
-  }).toThrow()
+  const wrongs = [
+    2.3,
+    -2.3,
+    Infinity,
+    -Infinity,
+    NaN,
+    "foo",
+    true,
+    false,
+    Symbol.for("Hello, world!"),
+    [
+      [2, 3, 4],
+      [5, 6, 7],
+    ],
+    x => x,
+    function (x) {
+      return x
+    },
+    { hello: "world" },
+    new Series({ hello: [10, 20, 30, 40, 50] }),
+    new DataFrame({ foo: [1, 2, 4, 8, 16], bar: [1, 3, 9, 27, 81] }),
+  ]
 
-  expect(() => {
-    normal(true)
-  }).toThrow()
-
-  expect(() => {
-    normal(false)
-  }).toThrow()
-
-  expect(() => {
-    normal(null)
-  }).not.toThrow()
-
-  expect(() => {
-    normal(undefined)
-  }).not.toThrow()
-
-  expect(() => {
-    normal(() => {})
-  }).toThrow()
+  wrongs.forEach(item => {
+    expect(() => normal(item)).toThrow()
+  })
 })

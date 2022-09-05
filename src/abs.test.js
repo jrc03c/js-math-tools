@@ -1,45 +1,62 @@
+const { DataFrame, Series } = require("./dataframe")
 const abs = require("./abs.js")
+const isEqual = require("./is-equal.js")
+const normal = require("./normal.js")
 
-test("takes absolute value of 3 to be 3", () => {
-  expect(abs(3)).toBe(3)
-})
+test("tests that absolute values can be computed correctly", () => {
+  const x = normal(100)
+  const y = normal(100)
+  const z = normal(100)
 
-test("takes absolute value of -3 to be 3", () => {
-  expect(abs(-3)).toBe(3)
-})
+  const xPos = x.map(v => Math.abs(v))
+  const yPos = y.map(v => Math.abs(v))
+  const zPos = z.map(v => Math.abs(v))
 
-test("takes absolute value of 0 to be 0", () => {
-  expect(abs(0)).toBe(0)
-})
+  const rights = [
+    [0, 0],
+    [1, 1],
+    [2.3, 2.3],
+    [-2.3, 2.3],
+    [Infinity, Infinity],
+    [-Infinity, Infinity],
+    [
+      [2, -3, 4],
+      [2, 3, 4],
+    ],
+    [
+      [
+        [-2, 3, -4],
+        [5, -6, 7],
+      ],
+      [
+        [2, 3, 4],
+        [5, 6, 7],
+      ],
+    ],
+    [new Series({ stuff: x }), new Series({ stuff: xPos })],
+    [new DataFrame({ x, y, z }), new DataFrame({ x: xPos, y: yPos, z: zPos })],
+  ]
 
-test("takes absolute value of 3.5 to be 3.5", () => {
-  expect(abs(3.5)).toBe(3.5)
-})
+  rights.forEach(pair => {
+    expect(isEqual(abs(pair[0]), pair[1]))
+  })
 
-test("takes absolute value of -3.5 to be 3.5", () => {
-  expect(abs(-3.5)).toBe(3.5)
-})
+  const wrongs = [
+    NaN,
+    "foo",
+    true,
+    false,
+    null,
+    undefined,
+    Symbol.for("Hello, world!"),
+    x => x,
+    function (x) {
+      return x
+    },
+    { hello: "world" },
+  ]
 
-test("takes absolute value of [2, -3, 4, -5] to be [2, 3, 4, 5]", () => {
-  expect(abs([2, -3, 4, -5])).toStrictEqual([2, 3, 4, 5])
-})
-
-test("takes absolute value of 'foo' to be NaN", () => {
-  expect(abs("foo")).toBeNaN()
-})
-
-test("takes absolute value of `true` to be NaN", () => {
-  expect(abs(true)).toBeNaN()
-})
-
-test("takes absolute value of `false` to be NaN", () => {
-  expect(abs(false)).toBeNaN()
-})
-
-test("takes absolute value of `() => {}` to be NaN", () => {
-  expect(abs(() => {})).toBeNaN()
-})
-
-test("takes absolute value of `{}` to be NaN", () => {
-  expect(abs({})).toBeNaN()
+  wrongs.forEach(v => {
+    expect(abs(v)).toBeNaN()
+  })
 })

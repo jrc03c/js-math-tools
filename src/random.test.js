@@ -1,64 +1,49 @@
+const { DataFrame, Series } = require("./dataframe")
+const { random, seed } = require("./random.js")
 const abs = require("./abs.js")
 const mean = require("./mean.js")
 const std = require("./std.js")
-const { random, seed } = require("./random.js")
 
-test("generates a vector of random numbers", () => {
-  const x = random([10000])
-  const m = mean(x)
-  const s = std(x)
+test("tests that random numbers can be generated correctly", () => {
+  expect(typeof random()).toBe("number")
+  expect(random(5) instanceof Array).toBe(true)
 
-  expect(abs(m - 0.5)).toBeLessThan(0.05)
-  expect(abs(s - 0.25)).toBeLessThan(0.05)
-})
-
-test("generates a tensor of random numbers", () => {
-  const x = random([10, 10, 10, 10])
-  const m = mean(x)
-  const s = std(x)
-
-  expect(abs(m - 0.5)).toBeLessThan(0.05)
-  expect(abs(s - 0.25)).toBeLessThan(0.05)
-})
-
-test("generates the same random numbers using the same seed", () => {
-  seed(230498230498)
   const a = random(10000)
-  seed(230498230498)
-  const b = random(10000)
-  expect(a).toStrictEqual(b)
-})
+  expect(abs(mean(a) - 0.5)).toBeLessThan(0.05)
+  expect(abs(std(a) - 0.25)).toBeLessThan(0.05)
 
-test("throws an error when attempting to get random numbers with non-whole-number arguments", () => {
-  expect(() => {
-    random(-1)
-  }).toThrow()
+  const b = random([10, 10, 10, 10])
+  expect(abs(mean(b) - 0.5)).toBeLessThan(0.05)
+  expect(abs(std(b) - 0.28869)).toBeLessThan(0.05)
 
-  expect(() => {
-    random([-2, -3, -4])
-  }).toThrow()
+  seed(1234567)
+  const c = random(100)
+  seed(1234567)
+  const d = random(100)
+  expect(c).toStrictEqual(d)
 
-  expect(() => {
-    random({})
-  }).toThrow()
+  const wrongs = [
+    2.3,
+    -2.3,
+    NaN,
+    "foo",
+    true,
+    false,
+    Symbol.for("Hello, world!"),
+    [
+      [2, 3, 4],
+      [5, 6, 7],
+    ],
+    x => x,
+    function (x) {
+      return x
+    },
+    { hello: "world" },
+    new Series({ hello: [10, 20, 30, 40, 50] }),
+    new DataFrame({ foo: [1, 2, 4, 8, 16], bar: [1, 3, 9, 27, 81] }),
+  ]
 
-  expect(() => {
-    random(true)
-  }).toThrow()
-
-  expect(() => {
-    random(false)
-  }).toThrow()
-
-  expect(() => {
-    random(null)
-  }).not.toThrow()
-
-  expect(() => {
-    random(undefined)
-  }).not.toThrow()
-
-  expect(() => {
-    random(() => {})
-  }).toThrow()
+  wrongs.forEach(item => {
+    expect(() => random(item)).toThrow()
+  })
 })

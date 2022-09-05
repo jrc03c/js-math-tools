@@ -1,98 +1,86 @@
+const { DataFrame, Series } = require("./dataframe")
 const find = require("./find.js")
-const range = require("./range.js")
-const reshape = require("./reshape.js")
+const flatten = require("./flatten.js")
+const isEqual = require("./is-equal.js")
+const normal = require("./normal.js")
 
-test("tests that items can be found in nested arrays using values", () => {
-  const a = [2, 3, 4]
-  expect(find(a, 4)).toBe(4)
+function makeKey(n) {
+  const alpha = "1234567890abcdef"
+  let out = ""
+  while (out.length < n) out += alpha[parseInt(Math.random() * alpha.length)]
+  return out
+}
 
-  const b = reshape(range(0, 24), [2, 3, 4])
-  expect(find(b, 13)).toBe(13)
-})
+test("tests that items matching a certain function can be found", () => {
+  const a = [1, 2, 3, 4, 5, 6]
+  const bTrue = 2
+  const bPred = find(a, v => v % 2 === 0)
+  expect(isEqual(bPred, bTrue)).toBe(true)
 
-test("tests that items can be found in nested arrays using functions", () => {
-  const a = [2, 3, 4]
-  expect(find(a, v => v > 3)).toBe(4)
+  const c = normal(100)
+  const dTrue = c.find(v => v > 0)
+  const dPred = find(c, v => v > 0)
+  expect(isEqual(dPred, dTrue)).toBe(true)
 
-  const b = reshape(range(0, 24), [2, 3, 4])
-  expect(find(b, v => v > 12 && v < 14)).toBe(13)
-})
+  const e = normal([5, 5, 5, 5])
+  const fTrue = flatten(e).find(v => v < 0)
+  const fPred = find(e, v => v < 0)
+  expect(isEqual(fPred, fTrue)).toBe(true)
 
-test("tests that arrays and non-arrays can both be found in nested arrays", () => {
-  const x = ["foobar", [1, 2, 3, 4, 5], "hello", ["a", "b", "c"]]
+  const g = new Series({
+    hello: normal(100).map(v => (Math.random() < 0.5 ? makeKey(8) : v)),
+  })
 
-  expect(find(x, v => v.length > 5)).toBe("foobar")
-  expect(find(x, v => v.length === 5)).toStrictEqual([1, 2, 3, 4, 5])
-  expect(find(x, v => typeof v === "string" && v.length === 5)).toBe("hello")
-})
+  const hTrue = g.values.find(v => typeof v === "string")
+  const hPred = find(g, v => typeof v === "string")
+  expect(isEqual(hPred, hTrue)).toBe(true)
 
-test("tests that items can be found in objects using values", () => {
-  class Person {
-    constructor(name, age) {
-      const self = this
-      self.name = name
-      self.age = age
-      self.friends = []
-    }
-  }
+  const i = new DataFrame({
+    foo: normal(100).map(v => (Math.random() < 0.5 ? { hello: "world" } : v)),
+    bar: normal(100),
+  })
 
-  const alice = new Person("Alice", 23)
-  const bob = new Person("Bob", 45)
-  const clarissa = new Person("Clarissa", 67)
-  alice.friends.push(bob)
-  alice.friends.push(clarissa)
+  const jTrue = i.get("foo").values.find(v => v instanceof Object)
+  const jPred = find(i, v => v instanceof Object)
+  expect(isEqual(jPred, jTrue)).toBe(true)
 
-  expect(find(alice, clarissa.age)).toBe(clarissa.age)
-  expect(find(alice, bob.name)).toBe(bob.name)
-})
+  const k = { a: { b: { c: [2, null, "foo"] } } }
+  const lTrue = 2
+  const lPred = find(k, v => typeof v === "number")
+  expect(isEqual(lPred, lTrue)).toBe(true)
 
-test("tests that items can be found in objects using functions", () => {
-  class Person {
-    constructor(name, age) {
-      const self = this
-      self.name = name
-      self.age = age
-      self.friends = []
-    }
-  }
+  const m = [[[2, 3, 4], 2, 3, 4], 2, 3, 4]
+  const nTrue = 3
+  const nPred = find(m, 3)
+  expect(isEqual(nPred, nTrue)).toBe(true)
 
-  const alice = new Person("Alice", 23)
-  const bob = new Person("Bob", 45)
-  const clarissa = new Person("Clarissa", 67)
-  alice.friends.push(bob)
-  alice.friends.push(clarissa)
+  const wrongs = [
+    0,
+    1,
+    2.3,
+    -2.3,
+    Infinity,
+    -Infinity,
+    NaN,
+    "foo",
+    true,
+    false,
+    null,
+    undefined,
+    Symbol.for("Hello, world!"),
+    x => x,
+    function (x) {
+      return x
+    },
+  ]
 
-  const allNames = [alice.name, bob.name, clarissa.name]
+  wrongs.forEach(item => {
+    expect(() => find(item, () => true)).toThrow()
+  })
 
-  expect(find(alice, v => typeof v === "number" && v > bob.age)).toBe(
-    clarissa.age
-  )
-
-  expect(
-    find(
-      alice,
-      v => allNames.indexOf(v) > -1 && v !== alice.name && v !== clarissa.name
-    )
-  ).toBe(bob.name)
-})
-
-test("tests that the function isn't tripped up by faulty functions", () => {
-  function errorFn() {
-    throw new Error("Oh, no!")
-  }
-
-  expect(() => {
-    errorFn()
-  }).toThrow()
-
-  expect(() => {
-    find([2, 3, 4], errorFn)
-  }).not.toThrow()
-})
-
-test("tests that the function isn't tripped up by circular references", () => {
-  const x = { foo: "bar" }
-  x.self = x
-
-  expect(find(x, "bar")).toBe("bar")
+  wrongs.forEach(item1 => {
+    wrongs.forEach(item2 => {
+      expect(() => find(item1, item2)).toThrow()
+    })
+  })
 })

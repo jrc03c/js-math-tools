@@ -1,15 +1,18 @@
+const { random } = require("./random.js")
 const assert = require("./assert.js")
 const isArray = require("./is-array.js")
-const isUndefined = require("./is-undefined.js")
-const { random } = require("./random.js")
+const isDataFrame = require("./is-dataframe.js")
+const isSeries = require("./is-series.js")
 
 function shuffle(arr) {
-  assert(
-    !isUndefined(arr),
-    "You must pass an array into the `shuffle` function!"
-  )
+  if (isDataFrame(arr) || isSeries(arr)) {
+    return arr.shuffle(...Object.values(arguments).slice(1))
+  }
 
-  assert(isArray(arr), "You must pass an array into the `shuffle` function!")
+  assert(
+    isArray(arr),
+    "The `shuffle` function only works on arrays, Series, and DataFrames!"
+  )
 
   const out = []
   const temp = arr.slice()

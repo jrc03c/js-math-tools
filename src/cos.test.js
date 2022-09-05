@@ -1,31 +1,53 @@
-const chop = require("./chop.js")
+const { DataFrame, Series } = require("./dataframe")
 const cos = require("./cos.js")
-const max = require("./max.js")
-const min = require("./min.js")
+const isEqual = require("./is-equal.js")
 const normal = require("./normal.js")
 
-test("gets the cosine of an array of values", () => {
-  const x = normal([10000]).map(v => v * 100)
-  const y = cos(x)
-  expect(min(y)).toBeGreaterThanOrEqual(-1)
-  expect(max(y)).toBeLessThanOrEqual(1)
-})
+test("tests that cosines can be computed correctly", () => {
+  const r = normal([50, 50])
+  const s = new Series({ hello: normal(100) })
+  const d = new DataFrame({ foo: normal(100), bar: normal(100) })
 
-test("gets cosine of common angles", () => {
-  expect(cos(0)).toBe(1)
-  expect(chop(cos(Math.PI / 2))).toBe(0)
-  expect(cos(Math.PI)).toBe(-1)
-  expect(chop(cos((3 * Math.PI) / 2))).toBe(0)
-})
+  const rights = [
+    [-1, Math.cos(-1)],
+    [-0.5, Math.cos(-0.5)],
+    [0, Math.cos(0)],
+    [0.5, Math.cos(0.5)],
+    [1, Math.cos(1)],
+    [r, r.map(row => row.map(v => Math.cos(v)))],
+    [s, s.copy().apply(v => Math.cos(v))],
+    [d, d.copy().apply(col => col.apply(v => Math.cos(v)))],
+  ]
 
-test("returns NaN when attempting to take the cosine of non-numerical values", () => {
-  expect(cos()).toBeNaN()
-  expect(cos("foo")).toBeNaN()
-  expect(cos(true)).toBeNaN()
-  expect(cos(false)).toBeNaN()
-  expect(cos(null)).toBeNaN()
-  expect(cos(undefined)).toBeNaN()
-  expect(cos(() => {})).toBeNaN()
-  expect(cos({})).toBeNaN()
-  expect(cos([])).toStrictEqual([])
+  rights.forEach(pair => {
+    expect(isEqual(cos(pair[0]), pair[1])).toBe(true)
+  })
+
+  const wrongs = [
+    [Infinity, NaN],
+    [-Infinity, NaN],
+    [NaN, NaN],
+    ["foo", NaN],
+    [true, NaN],
+    [false, NaN],
+    [null, NaN],
+    [undefined, NaN],
+    [Symbol.for("Hello, world!"), NaN],
+    [x => x, NaN],
+    [
+      [2, "3", 4],
+      [Math.cos(2), NaN, Math.cos(4)],
+    ],
+    [
+      function (x) {
+        return x
+      },
+      NaN,
+    ],
+    [{ hello: "world" }, NaN],
+  ]
+
+  wrongs.forEach(pair => {
+    expect(isEqual(cos(pair[0]), pair[1])).toBe(true)
+  })
 })

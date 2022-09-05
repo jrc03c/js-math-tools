@@ -1,49 +1,34 @@
 const assert = require("../assert.js")
-const isBoolean = require("../is-boolean.js")
-const isString = require("../is-string.js")
+const isFunction = require("../is-function.js")
 const isUndefined = require("../is-undefined.js")
 const sort = require("../sort.js")
 const transpose = require("../transpose.js")
 
-function seriesSort(Series, series, direction) {
+function seriesSort(Series, series, fn) {
+  fn = fn || ((a, b) => (a < b ? -1 : 1))
+
   assert(
-    isBoolean(direction) || isString(direction) || isUndefined(direction),
-    "The `sort` method can take an optional parameter that's either a string representing a direction ('ascending' or 'descending') or a boolean representing whether or not the direction is ascending (true or false)."
+    isUndefined(fn) || isFunction(fn),
+    "You must pass undefined, null, or a comparison function as the second argument to the `sort` method!"
   )
 
-  let isAscending = true
+  const pairs = transpose([series.values, series.index])
 
-  if (isUndefined(direction)) {
-    isAscending = true
-  }
+  const temp = sort(pairs, (aPair, bPair) => {
+    return fn(aPair[0], bPair[0])
+  })
 
-  if (isString(direction)) {
-    direction = direction.trim().toLowerCase()
+  const newValues = []
+  const newIndex = []
 
-    assert(
-      direction === "ascending" || direction === "descending",
-      "The `sort` method can take an optional parameter that's either a string representing a direction ('ascending' or 'descending') or a boolean representing whether or not the direction is ascending (true or false)."
-    )
+  temp.forEach(pair => {
+    newValues.push(pair[0])
+    newIndex.push(pair[1])
+  })
 
-    isAscending = direction === "ascending"
-  }
-
-  if (isBoolean(direction)) {
-    isAscending = direction
-  }
-
-  let temp = transpose([series.values, series.index])
-
-  temp = transpose(
-    sort(temp, (a, b) => {
-      if (a[0] === b[0]) return 0
-      if (a[0] < b[0]) return isAscending ? -1 : 1
-      if (a[0] > b[0]) return isAscending ? 1 : -1
-    })
-  )
-
-  const out = new Series(temp[0])
-  out.index = temp[1]
+  const out = new Series()
+  out._values = newValues
+  out._index = newIndex
   out.name = series.name
   return out
 }

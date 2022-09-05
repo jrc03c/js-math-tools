@@ -3,12 +3,14 @@ const vectorize = require("./vectorize.js")
 
 function multiply() {
   try {
-    let out = 1
-    const x = Object.values(arguments)
+    const values = Object.values(arguments)
+    if (values.length === 0) return NaN
 
-    for (let i = 0; i < x.length; i++) {
-      if (!isNumber(x[i])) return NaN
-      out *= x[i]
+    let out = 1
+
+    for (let i = 0; i < values.length; i++) {
+      if (!isNumber(values[i])) return NaN
+      out *= values[i]
     }
 
     return out

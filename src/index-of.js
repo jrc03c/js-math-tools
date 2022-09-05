@@ -1,12 +1,54 @@
 const assert = require("./assert.js")
 const isArray = require("./is-array.js")
+const isDataFrame = require("./is-dataframe.js")
 const isFunction = require("./is-function.js")
+const isNumber = require("./is-number.js")
 const isObject = require("./is-object.js")
+const isSeries = require("./is-series.js")
 
 function indexOf(x, fn) {
+  if (isDataFrame(x)) {
+    const index = indexOf(x.values, fn)
+
+    if (
+      index.length > 0 &&
+      isNumber(index[0]) &&
+      index[0] >= 0 &&
+      index[0] < x.index.length
+    ) {
+      index[0] = x.index[index[0]]
+    }
+
+    if (
+      index.length > 1 &&
+      isNumber(index[1]) &&
+      index[1] >= 0 &&
+      index[1] < x.columns.length
+    ) {
+      index[1] = x.columns[index[1]]
+    }
+
+    return index
+  }
+
+  if (isSeries(x)) {
+    const index = indexOf(x.values, fn)
+
+    if (
+      index.length > 0 &&
+      isNumber(index[0]) &&
+      index[0] >= 0 &&
+      index[0] < x.index.length
+    ) {
+      index[0] = x.index[index[0]]
+    }
+
+    return index
+  }
+
   assert(
     isObject(x) || isArray(x),
-    "You must pass (1) an object or array and (2) a function or value into the `indexOf` function!"
+    "You must pass (1) an object, array, Series, or DataFrame and (2) a function or value into the `indexOf` function!"
   )
 
   if (!isFunction(fn)) {

@@ -1,74 +1,86 @@
+const { DataFrame, Series } = require("./dataframe")
 const { random } = require("./random.js")
 const dropMissingPairwise = require("./drop-missing-pairwise.js")
 const isEqual = require("./is-equal.js")
+const isJagged = require("./is-jagged.js")
 const normal = require("./normal.js")
-const range = require("./range.js")
-const reshape = require("./reshape.js")
-const shape = require("./shape.js")
 
-test("drops missing values pairwise from arrays that don't actually have missing values", () => {
-  const a = [1, 2, 3, 4]
-  const b = [5, 6, 7, 8]
-  const [aTemp, bTemp] = dropMissingPairwise(a, b)
-  expect(aTemp).toStrictEqual(a)
-  expect(bTemp).toStrictEqual(b)
-})
+test("tests that missing values can be correctly dropped pairwise", () => {
+  const a = [2, 3, 4]
+  const b = [5, 6, 7]
+  expect(isEqual(dropMissingPairwise(a, b), [a, b])).toBe(true)
 
-test("drops missing values pairwise from arrays that have missing values", () => {
-  const a = [1, 2, null, 4]
-  const b = [undefined, 6, 7, 8]
-  const [aTemp, bTemp] = dropMissingPairwise(a, b)
-  expect(aTemp).toStrictEqual([2, 4])
-  expect(bTemp).toStrictEqual([6, 8])
-})
+  const c = [2, 3, null, null, 6]
+  const d = [null, 8, 9, 10, 11]
 
-test("drops missing values pairwise from arrays that contain only missing values", () => {
-  const a = range(0, 5).map(() => null)
-  const b = range(0, 5).map(() => undefined)
-  const [aTemp, bTemp] = dropMissingPairwise(a, b)
-  expect(aTemp.length).toBe(0)
-  expect(bTemp.length).toBe(0)
-})
+  expect(
+    isEqual(dropMissingPairwise(c, d), [
+      [3, 6],
+      [8, 11],
+    ])
+  ).toBe(true)
 
-test("drops missing values pairwise from nested arrays", () => {
-  let a = normal(100)
-  let b = normal(100)
+  const e = [[[2, 3, null, 5]]]
+  const f = [[[null, 7, 8, 9]]]
 
-  for (let i = 0; i < 0.1 * a.length; i++) {
-    a[parseInt(random() * a.length)] = null
-    b[parseInt(random() * b.length)] = undefined
-  }
+  expect(isEqual(dropMissingPairwise(e, f), [[[[3, 5]]], [[[7, 9]]]])).toBe(
+    true
+  )
 
-  a = reshape(a, [10, 2, 5])
-  b = reshape(b, [10, 2, 5])
-  const [aPred, bPred] = dropMissingPairwise(a, b)
-  expect(isEqual(shape(aPred), shape(bPred))).toBe(true)
-})
+  const g = new Series(normal(100))
+  g.values[parseInt(random() * g.values.length)] = null
+  const h = new Series(normal(100))
+  h.values[parseInt(random() * h.values.length)] = null
+  const iTrue = dropMissingPairwise(g.values, h.values)
+  const iPred = dropMissingPairwise(g, h)
+  expect(isEqual(iPred, iTrue)).toBe(true)
 
-test("throws an error when attempting to drop missing values pairwise from arrays with different shapes", () => {
-  const a = [1, 2, 3]
-  const b = [4, 5, 6, 7, 8, 9, 10]
-  expect(() => dropMissingPairwise(a, b)).toThrow()
-})
+  const j = new DataFrame(normal([100, 5]))
 
-test("throws an error when attempting to drop missing values pairwise on non-arrays", () => {
-  expect(() => {
-    dropMissingPairwise()
-  }).toThrow()
+  j.values[parseInt(random() * j.shape[0])][parseInt(random() * j.shape[1])] =
+    null
 
-  expect(() => {
-    dropMissingPairwise("foo", "bar")
-  }).toThrow()
+  const k = new DataFrame(normal([100, 5]))
 
-  expect(() => {
-    dropMissingPairwise(3, 4)
-  }).toThrow()
+  k.values[parseInt(random() * k.shape[0])][parseInt(random() * k.shape[1])] =
+    null
 
-  expect(() => {
-    dropMissingPairwise({}, [])
-  }).toThrow()
+  const lTrue = dropMissingPairwise(j.values, k.values)
+  const lPred = dropMissingPairwise(j, k)
+  expect(isEqual(lPred, lTrue)).toBe(true)
 
-  expect(() => {
-    dropMissingPairwise(() => {}, true)
-  }).toThrow()
+  const m = normal([2, 3, 4, 5])
+  m[0][1][2][3] = null
+  const n = normal([2, 3, 4, 5])
+  n[1][2][3][4] = null
+
+  expect(isJagged(dropMissingPairwise(m, n))).toBe(true)
+
+  const wrongs = [
+    [0, 1],
+    [2.3, -2.3],
+    [Infinity, -Infinity],
+    [NaN, "foo"],
+    [true, false],
+    [null, undefined],
+    [Symbol.for("Hello, world!"), [2, 3, 4]],
+    [
+      [
+        [2, 3, 4],
+        [5, 6, 7],
+      ],
+      x => x,
+    ],
+    [
+      function (x) {
+        return x
+      },
+      { hello: "world" },
+    ],
+    [normal([2, 3, 4, 5]), normal([5, 4, 3, 2])],
+  ]
+
+  wrongs.forEach(pair => {
+    expect(() => dropMissingPairwise(pair[0], pair[1])).toThrow()
+  })
 })

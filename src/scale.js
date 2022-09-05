@@ -1,7 +1,7 @@
 const multiply = require("./multiply.js")
 
-function scale(a, b) {
-  return multiply(a, b)
+function scale() {
+  return multiply(...arguments)
 }
 
 module.exports = scale

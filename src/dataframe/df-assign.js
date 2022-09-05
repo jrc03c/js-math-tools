@@ -1,125 +1,53 @@
-const MathError = require("../math-error.js")
 const assert = require("../assert.js")
-const copy = require("../copy.js")
 const isArray = require("../is-array.js")
+const isJagged = require("../is-jagged.js")
 const isObject = require("../is-object.js")
 const isString = require("../is-string.js")
 const isUndefined = require("../is-undefined.js")
+const MathError = require("../math-error.js")
 const shape = require("../shape.js")
-const sort = require("../sort.js")
 
 function dfAssign(DataFrame, Series, df, p1, p2) {
-  // options:
-  // assign(object)
-  // assign(string, array or series)
-
+  const isDataFrame = x => x instanceof DataFrame
   const isSeries = x => x instanceof Series
 
-  const obj = (() => {
-    const out = {}
+  if (!isUndefined(p2)) {
+    assert(
+      isString(p1),
+      "If passing two arguments into the `assign` method, then the first argument must be a string name!"
+    )
 
-    // one argument
-    if (isUndefined(p2)) {
-      if (isSeries(p1)) {
-        const temp = df.index.map(rowName => p1.get(rowName))
+    assert(
+      isArray(p2) && !isJagged(p2) && shape(p2).length === 1,
+      "If passing two arguments into the `assign` method, then the second argument must be a 1-dimensional array!"
+    )
 
-        assert(
-          temp.length === df.index.length,
-          "Each column of values to be assigned must have the same length as the number of rows in the target DataFrame!"
-        )
-
-        out[p1.name] = temp
-      } else if (isObject(p1)) {
-        Object.keys(p1).forEach(key => {
-          const values = p1[key]
-
-          if (isSeries(values)) {
-            const temp = df.index.map(rowName => values.get(rowName))
-
-            assert(
-              temp.length === df.index.length,
-              "Each column of values to be assigned must have the same length as the number of rows in the target DataFrame!"
-            )
-
-            out[key] = temp
-          } else if (isArray(values)) {
-            assert(
-              shape(values).length === 1,
-              "When using a single argument for the `assign` method, the argument must be either (1) a Series, or (2) an object consisting of key-value pairs where each key is a string representing a column name and each value is a one-dimensional array or Series!"
-            )
-
-            assert(
-              values.length === df.index.length,
-              "Each column of values to be assigned must have the same length as the number of rows in the target DataFrame!"
-            )
-
-            out[key] = values
-          } else {
-            throw new MathError(
-              "When using a single argument for the `assign` method, the argument must be either (1) a Series, or (2) an object consisting of key-value pairs where each key is a string representing a column name and each value is a one-dimensional array or Series!"
-            )
-          }
-        })
-      } else {
-        throw new MathError(
-          "When using a single argument for the `assign` method, the argument must be either (1) a Series, or (2) an object consisting of key-value pairs where each key is a string representing a column name and each value is a one-dimensional array or Series!"
-        )
-      }
-    }
-
-    // two arguments
-    else {
-      assert(
-        isString(p1),
-        "When using two arguments for the `assign` method, the first argument must be a string representing a column name, and the second argument must be a one-dimensional array or Series!"
+    const out = df.append(p2, 1)
+    out.columns[out.columns.length - 1] = p1
+    return out
+  } else {
+    if (isDataFrame(p1)) {
+      return df.append(p1, 1)
+    } else if (isSeries(p1)) {
+      return df.append(p1, 1)
+    } else if (isObject(p1)) {
+      const maxColumnLength = Math.max(
+        ...Object.keys(p1).map(key => p1[key].length)
       )
 
-      if (isSeries(p2)) {
-        const temp = df.index.map(rowName => p2.get(rowName))
+      Object.keys(p1).forEach(key => {
+        while (p1[key].length < maxColumnLength) {
+          p1[key].push(undefined)
+        }
+      })
 
-        assert(
-          temp.length === df.index.length,
-          "The one-dimensional array or Series to be assigned must have the same length as the number of rows in the target DataFrame!"
-        )
-
-        out[p1] = temp
-      } else if (isArray(p2)) {
-        assert(
-          shape(p2).length === 1,
-          "When using two arguments for the `assign` method, the first argument must be a string representing a column name, and the second argument must be a one-dimensional array or Series!"
-        )
-
-        assert(
-          p2.length === df.index.length,
-          "The one-dimensional array or Series to be assigned must have the same length as the number of rows in the target DataFrame!"
-        )
-
-        out[p1] = p2
-      } else {
-        throw new MathError(
-          "When using two arguments for the `assign` method, the first argument must be a string representing a column name, and the second argument must be a one-dimensional array or Series!"
-        )
-      }
+      return df.append(new DataFrame(p1), 1)
+    } else {
+      throw new MathError(
+        "You must pass a DataFrame, Series, or object into the `assign` method!"
+      )
     }
-
-    return out
-  })()
-
-  const columns = df.columns
-  const index = df.index
-  const values = copy(df.values)
-  const newColumnNames = sort(Object.keys(obj))
-
-  values.forEach((row, i) => {
-    newColumnNames.forEach(colName => {
-      row.push(obj[colName][i])
-    })
-  })
-
-  const out = new DataFrame(values)
-  out.columns = columns.concat(newColumnNames)
-  out.index = index
-  return out
+  }
 }
 
 module.exports = dfAssign

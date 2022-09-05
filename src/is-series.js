@@ -1,7 +1,11 @@
-const { Series } = require("./dataframe")
-
 function isSeries(x) {
-  return x instanceof Series
+  try {
+    return (
+      !!x._symbol && x._symbol === Symbol.for("@jrc03c/js-math-tools/series")
+    )
+  } catch (e) {
+    return false
+  }
 }
 
 module.exports = isSeries

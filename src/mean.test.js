@@ -1,24 +1,44 @@
-const abs = require("./abs.js")
+const { DataFrame, Series } = require("./dataframe")
+const flatten = require("./flatten.js")
 const mean = require("./mean.js")
 const normal = require("./normal.js")
-const { random } = require("./random.js")
 
-test("gets the mean of arrays", () => {
+test("tests that the mean of arrays, series, and dataframes can be computed correctly", () => {
   expect(mean([2, 3, 4])).toBe(3)
-  expect(abs(mean(normal(10000)))).toBeLessThan(0.05)
-  expect(abs(mean(random(10000)) - 0.5)).toBeLessThan(0.05)
-  expect(abs(mean(normal([10, 10, 10, 10])))).toBeLessThan(0.05)
-})
+  expect(mean([2, 3, 4, 5])).toBe(3.5)
+  expect(mean([2, [3, [4, [5]]]])).toBe(3.5)
 
-test("returns NaN when attempting to get the mean of non-numerical values", () => {
-  expect(mean()).toBeNaN()
-  expect(mean([])).toBeNaN()
-  expect(mean(123)).toBeNaN()
-  expect(mean([1, 2, "three"])).toBeNaN()
-  expect(mean("foo")).toBeNaN()
-  expect(mean(true)).toBeNaN()
-  expect(mean({})).toBeNaN()
-  expect(mean(() => {})).toBeNaN()
-  expect(mean(null)).toBeNaN()
-  expect(mean(undefined)).toBeNaN()
+  const a = normal([2, 3, 4, 5])
+  expect(mean(a)).toBe(mean(flatten(a)))
+
+  const b = new Series({ hello: normal(100) })
+  expect(mean(b)).toBe(mean(b.values))
+
+  const c = new DataFrame({ foo: normal(100), bar: normal(100) })
+  expect(mean(c)).toBe(mean(flatten(c)))
+
+  const wrongs = [
+    0,
+    1,
+    2.3,
+    -2.3,
+    Infinity,
+    -Infinity,
+    NaN,
+    "foo",
+    true,
+    false,
+    null,
+    undefined,
+    Symbol.for("Hello, world!"),
+    x => x,
+    function (x) {
+      return x
+    },
+    { hello: "world" },
+  ]
+
+  wrongs.forEach(item => {
+    expect(() => mean(item)).toThrow()
+  })
 })

@@ -1,22 +1,75 @@
+const { DataFrame, Series } = require("./dataframe")
 const argmin = require("./argmin.js")
+const normal = require("./normal.js")
 const range = require("./range.js")
 const shuffle = require("./shuffle.js")
 
-test("gets the argmin of a linear range of values", () => {
-  const x = shuffle(range(0, 100))
-  const indexTrue = x.indexOf(0)
-  const indexPred = argmin(x)
-  expect(indexPred).toStrictEqual(indexTrue)
-})
+test("gets the argmin of various kinds of containers", () => {
+  const a = shuffle(range(0, 100))
+  expect(argmin(a)).toStrictEqual(a.indexOf(0))
 
-test("gets the argmin of a predefined array of values", () => {
-  const x = [
-    [2, 3, 4],
-    [0, 1, 2],
-    [-5, 10, 20],
+  const b = normal([50, 50])
+  let minRow = 0
+  let minCol = 0
+  let min = Infinity
+
+  b.forEach((row, i) => {
+    row.forEach((v, j) => {
+      if (v < min) {
+        min = v
+        minRow = i
+        minCol = j
+      }
+    })
+  })
+
+  expect(argmin(b)).toStrictEqual([minRow, minCol])
+
+  const c = new Series(normal(100))
+
+  expect(argmin(c)).toStrictEqual([
+    c.index[c.values.indexOf(Math.min(...c.values))],
+  ])
+
+  const d = new DataFrame(normal([50, 50]))
+  minRow = 0
+  minCol = 0
+  min = Infinity
+
+  d.values.forEach((row, i) => {
+    row.forEach((v, j) => {
+      if (v < min) {
+        min = v
+        minRow = i
+        minCol = j
+      }
+    })
+  })
+
+  expect(argmin(d)).toStrictEqual([d.index[minRow], d.columns[minCol]])
+
+  const wrongs = [
+    0,
+    1,
+    2.3,
+    -2.3,
+    Infinity,
+    -Infinity,
+    NaN,
+    "foo",
+    true,
+    false,
+    null,
+    undefined,
+    Symbol.for("Hello, world!"),
+    x => x,
+    function (x) {
+      return x
+    },
+    { hello: "world" },
   ]
 
-  const indexTrue = [2, 0]
-  const indexPred = argmin(x)
-  expect(indexPred).toStrictEqual(indexTrue)
+  wrongs.forEach(v => {
+    expect(() => argmin(v)).toThrow()
+  })
 })

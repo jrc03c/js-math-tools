@@ -1,25 +1,23 @@
 const add = require("./add.js")
-const append = require("./append.js")
 const assert = require("./assert.js")
 const dot = require("./dot.js")
 const flatten = require("./flatten.js")
 const isArray = require("./is-array.js")
+const isDataFrame = require("./is-dataframe.js")
 const isNumber = require("./is-number.js")
-const isUndefined = require("./is-undefined.js")
-const range = require("./range.js")
 const scale = require("./scale.js")
 const shape = require("./shape.js")
-const slice = require("./slice.js")
 
 function inverse(x) {
-  assert(
-    !isUndefined(x),
-    "You must pass a square 2D array into the `inverse` function!"
-  )
+  if (isDataFrame(x)) {
+    const out = x.copy()
+    out.values = inverse(out.values)
+    return out
+  }
 
   assert(
     isArray(x),
-    "You must pass a square 2D array into the `inverse` function!"
+    "The `inverse` function only works on square 2-dimensional arrays or DataFrames!"
   )
 
   flatten(x).forEach(v =>
@@ -73,13 +71,13 @@ function inverse(x) {
 
     for (let divider = 1; divider < xShape[0] - 1; divider++) {
       try {
-        const A = slice(x, [range(0, divider), range(0, divider)])
-        const B = slice(x, [range(0, divider), range(divider, xShape[0])])
-        const C = slice(x, [range(divider, xShape[0]), range(0, divider)])
-        const D = slice(x, [
-          range(divider, xShape[0]),
-          range(divider, xShape[0]),
-        ])
+        const A = x.slice(0, divider).map(row => row.slice(0, divider))
+        const B = x.slice(0, divider).map(row => row.slice(divider, xShape[0]))
+        const C = x.slice(divider, xShape[0]).map(row => row.slice(0, divider))
+
+        const D = x
+          .slice(divider, xShape[0])
+          .map(row => row.slice(divider, xShape[0]))
 
         const AInv = inverse(A)
         const CompInv = inverse(add(D, times(-1, times(times(C, AInv), B))))
@@ -88,15 +86,14 @@ function inverse(x) {
           AInv,
           times(times(times(times(AInv, B), CompInv), C), AInv)
         )
+
         const topRight = times(-1, times(times(AInv, B), CompInv))
         const bottomLeft = times(-1, times(times(CompInv, C), AInv))
         const bottomRight = CompInv
 
-        const out = append(
-          append(topLeft, topRight, 1),
-          append(bottomLeft, bottomRight, 1),
-          0
-        )
+        const out = topLeft
+          .map((row, i) => row.concat(topRight[i]))
+          .concat(bottomLeft.map((row, i) => row.concat(bottomRight[i])))
 
         return out
       } catch (e) {}

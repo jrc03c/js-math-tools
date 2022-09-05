@@ -1,63 +1,46 @@
-const distance = require("./distance.js")
+const { DataFrame, Series } = require("./dataframe")
+const { random } = require("./random.js")
+const apply = require("./apply.js")
+const isEqual = require("./is-equal.js")
 const log = require("./log.js")
-const normal = require("./normal.js")
-const range = require("./range.js")
 
-test("takes the log of E using base E to get 1", () => {
-  const x = Math.E
-  const base = Math.E
-  const yTrue = 1
-  const yPred = log(x, base)
-  expect(yPred).toBe(yTrue)
-})
+test("tests that the log of various values can be computed correctly", () => {
+  const a = random(100).map(v => v * 100 + 1)
+  const bTrue = a.map(v => Math.log(v))
+  const bPred = log(a)
+  expect(isEqual(bPred, bTrue)).toBe(true)
 
-test("takes the log of 10 with base 10 to get 1", () => {
-  const x = 10
-  const base = 10
-  const yTrue = 1
-  const yPred = log(x, base)
-  expect(yPred).toBe(yTrue)
-})
+  const c = random([2, 3, 4, 5])
+  const dTrue = apply(c, v => Math.log(v))
+  const dPred = log(c)
+  expect(isEqual(dPred, dTrue)).toBe(true)
 
-test("takes the log of 100 with base 10 to get 2", () => {
-  const x = 100
-  const base = 10
-  const yTrue = 2
-  const yPred = log(x, base)
-  expect(yPred).toBe(yTrue)
-})
+  const e = new Series({ hello: random(100) })
+  const fTrue = e.copy().apply(v => Math.log(v))
+  const fPred = log(e)
+  expect(isEqual(fPred, fTrue)).toBe(true)
 
-test("takes the log of an array of values using a common base", () => {
-  const x = [100, 1000, 10000]
-  const base = 10
-  const yTrue = [2, 3, 4]
-  const yPred = log(x, base)
-  expect(distance(yPred, yTrue)).toBeLessThan(1e-5)
-})
+  const g = new DataFrame({ foo: random(100), bar: random(100) })
+  const hTrue = g.copy().apply(col => col.apply(v => Math.log(v)))
+  const hPred = log(g)
+  expect(isEqual(hPred, hTrue)).toBe(true)
 
-test("takes the log of a value using an array of bases", () => {
-  const x = 64
-  const base = [2, 4, 8]
-  const yTrue = [6, 3, 2]
-  const yPred = log(x, base)
-  expect(distance(yPred, yTrue)).toBeLessThan(1e-5)
-})
+  const wrongs = [
+    NaN,
+    "foo",
+    true,
+    false,
+    null,
+    undefined,
+    Symbol.for("Hello, world!"),
+    x => x,
+    function (x) {
+      return x
+    },
+    { hello: "world" },
+  ]
 
-test("returns NaN when taking the log of non-numerical values", () => {
-  expect(log()).toBeNaN()
-  expect(log(-5)).toBeNaN()
-  expect(log("foo", 10)).toBeNaN()
-  expect(log(10, "foo")).toBeNaN()
-  expect(log(true, false)).toBeNaN()
-  expect(log(() => {})).toBeNaN()
-  expect(log({})).toBeNaN()
-  expect(log([])).toStrictEqual([])
-})
-
-test("throws an error when attempting to take the log of arrays of different shapes", () => {
-  expect(() => {
-    const x = range(0, 100)
-    const base = normal(200)
-    log(x, base)
-  }).toThrow()
+  wrongs.forEach(item => {
+    expect(log(item)).toBeNaN()
+  })
 })

@@ -1,7 +1,10 @@
 const assert = require("./assert.js")
 const copy = require("./copy.js")
+const isArray = require("./is-array.js")
 const isNumber = require("./is-number.js")
 const isUndefined = require("./is-undefined.js")
+const ndarray = require("./ndarray.js")
+const product = require("./product.js")
 const reshape = require("./reshape.js")
 
 // This is an implementation of the xoroshiro256++ algorithm:
@@ -70,13 +73,8 @@ function next() {
 
 function random(shape) {
   if (isUndefined(shape)) return next()
-
-  if (isNumber(shape)) shape = [shape]
-  const out = []
-  let n = 1
-  shape.forEach(v => (n *= v))
-  for (let i = 0; i < n; i++) out.push(next())
-  return reshape(out, shape)
+  if (!isArray(shape)) shape = [shape]
+  return reshape(ndarray(product(shape)).map(next), shape)
 }
 
 module.exports = { random, seed }

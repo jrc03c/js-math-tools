@@ -1,21 +1,55 @@
 const assert = require("./assert.js")
 const flatten = require("./flatten.js")
 const isArray = require("./is-array.js")
+const isDataFrame = require("./is-dataframe.js")
+const isFunction = require("./is-function.js")
+const isSeries = require("./is-series.js")
 const isUndefined = require("./is-undefined.js")
 
+function makeKey(n) {
+  const alpha = "abcdefg1234567890"
+  let out = ""
+  while (out.length < n) out += alpha[parseInt(Math.random() * alpha.length)]
+  return out
+}
+
+const NULL_KEY = makeKey(256)
+const UNDEFINED_KEY = makeKey(256)
+const INFINITY_KEY = makeKey(256)
+const MINUS_INFINITY_KEY = makeKey(256)
+const SYMBOL_KEY = makeKey(256)
+
 function set(arr) {
-  assert(!isUndefined(arr), "You must pass an array into the `set` function!")
-  assert(isArray(arr), "You must pass an array into the `set` function!")
+  if (isDataFrame(arr) || isSeries(arr)) {
+    return set(arr.values)
+  }
+
+  assert(
+    isArray(arr),
+    "The `set` function only works on arrays, Series, and DataFrames!"
+  )
 
   const out = []
   const temp = {}
 
   flatten(arr).forEach(item => {
     const key =
-      typeof item === "undefined"
-        ? "undefined"
-        : typeof item === "function"
+      typeof item === "object" && item === null
+        ? NULL_KEY
+        : isUndefined(item)
+        ? UNDEFINED_KEY
+        : isFunction(item)
         ? item.toString()
+        : typeof item === "symbol"
+        ? item.toString() + " - " + SYMBOL_KEY
+        : item === Infinity
+        ? INFINITY_KEY
+        : item === -Infinity
+        ? MINUS_INFINITY_KEY
+        : isDataFrame(item)
+        ? item.toJSONString()
+        : isSeries(item)
+        ? JSON.stringify(item.toObject())
         : JSON.stringify(item)
 
     if (!temp[key]) out.push(item)

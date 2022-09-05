@@ -1,36 +1,51 @@
-const add = require("./add.js")
+const { DataFrame, Series } = require("./dataframe")
+const flatten = require("./flatten.js")
 const mode = require("./mode.js")
 const normal = require("./normal.js")
 const round = require("./round.js")
-const scale = require("./scale.js")
-const shuffle = require("./shuffle.js")
+const set = require("./set.js")
+const sort = require("./sort.js")
 
-test("", () => {
-  expect(mode([2, 3, 3, 3, 2, 4])).toBe(3)
-  expect(mode(["foo", "foo", "foo", "foo", "bar"])).toBe("foo")
-  expect(mode([2, 2, 2, "foo", "foo", "foo"])).toStrictEqual([2, "foo"])
-  expect(mode([1, 2, "three"])).toStrictEqual([1, 2, "three"])
+test("tests that the mode of an array, series, or dataframe can be found correctly", () => {
+  expect(mode([2, 2, 2, 3, 4])).toBe(2)
+  expect(mode([2, 3, 3, 3, 4])).toBe(3)
+  expect(mode([2, 3, 4, 4, 4])).toBe(4)
+  expect(mode([2, 2, 3, 3])).toStrictEqual([2, 3])
 
-  const x = round(scale(add(normal(1000), 100), 100))
-  const m = mode(x)
+  const a = round(normal([2, 3, 4, 5]))
+  expect(mode(a)).toStrictEqual(mode(flatten(a)))
 
-  for (let i = 0; i < 10; i++) {
-    if (typeof m === "number") {
-      expect(mode(shuffle(x))).toBe(m)
-    } else {
-      expect(mode(shuffle(x))).toStrictEqual(m)
-    }
-  }
-})
+  const b = set(normal(100))
+  expect(sort(mode(b))).toStrictEqual(sort(b))
 
-test("returns NaN when attempting to get the mode of non-numerical values", () => {
-  expect(mode()).toBeNaN()
-  expect(mode([])).toBeNaN()
-  expect(mode(123)).toBeNaN()
-  expect(mode("foo")).toBeNaN()
-  expect(mode(true)).toBeNaN()
-  expect(mode({})).toBeNaN()
-  expect(mode(() => {})).toBeNaN()
-  expect(mode(null)).toBeNaN()
-  expect(mode(undefined)).toBeNaN()
+  const c = new Series({ hello: round(normal(100)) })
+  expect(mode(c)).toStrictEqual(mode(c.values))
+
+  const d = new DataFrame({ foo: round(normal(100)), bar: round(normal(100)) })
+  expect(mode(d)).toStrictEqual(mode(d.values))
+
+  const wrongs = [
+    0,
+    1,
+    2.3,
+    -2.3,
+    Infinity,
+    -Infinity,
+    NaN,
+    "foo",
+    true,
+    false,
+    null,
+    undefined,
+    Symbol.for("Hello, world!"),
+    x => x,
+    function (x) {
+      return x
+    },
+    { hello: "world" },
+  ]
+
+  wrongs.forEach(item => {
+    expect(() => mode(item)).toThrow()
+  })
 })

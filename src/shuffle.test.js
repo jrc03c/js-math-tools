@@ -1,66 +1,60 @@
+const { DataFrame, Series } = require("./dataframe")
+const isEqual = require("./is-equal.js")
 const normal = require("./normal.js")
 const seed = require("./random.js").seed
 const shuffle = require("./shuffle.js")
+const sort = require("./sort.js")
 
-test("shuffles a vector", () => {
-  const a = normal(10000)
+test("tests that arrays, Series, and DataFrames can be correctly shuffled", () => {
+  const a = normal(100)
   const b = shuffle(a)
-  expect(a).not.toStrictEqual(b)
-})
+  expect(isEqual(a, b)).toBe(false)
+  expect(a.length).toBe(b.length)
+  expect(isEqual(sort(a), sort(b))).toBe(true)
 
-test("shuffles a vector twice with the same seed to produce the same results", () => {
-  const c = normal(10000)
-  seed(20394230948)
-  const c1 = shuffle(c)
-  seed(20394230948)
-  const c2 = shuffle(c)
-  expect(c1).toStrictEqual(c2)
-})
+  const c = normal(100)
+  seed(1234567)
+  const d = shuffle(c)
+  seed(1234567)
+  const e = shuffle(c)
+  expect(isEqual(d, e)).toBe(true)
 
-test("shuffles a tensor and an empty array without failing", () => {
-  expect(() => {
-    shuffle(normal([2, 3, 4, 5]))
-  }).not.toThrow()
+  const f = new Series({ hello: normal(100) })
+  const g = shuffle(f)
+  expect(isEqual(f, g)).toBe(false)
+  expect(f.name).toBe(g.name)
+  expect(isEqual(sort(f.values), sort(g.values))).toBe(true)
+  expect(isEqual(sort(f.index), sort(g.index))).toBe(true)
 
-  expect(() => {
-    shuffle([])
-  }).not.toThrow()
-})
+  const h = new DataFrame({ foo: normal(100), bar: normal(100) })
+  const i = shuffle(h)
+  expect(isEqual(h, i)).toBe(false)
+  expect(isEqual(h.columns, i.columns)).toBe(true)
+  expect(isEqual(sort(h.values), sort(i.values))).toBe(true)
+  expect(isEqual(sort(h.index), sort(i.index))).toBe(true)
 
-test("throws an error when attempting to shuffle non-arrays", () => {
-  expect(() => {
-    shuffle()
-  }).toThrow()
+  const wrongs = [
+    0,
+    1,
+    2.3,
+    -2.3,
+    Infinity,
+    -Infinity,
+    NaN,
+    "foo",
+    true,
+    false,
+    null,
+    undefined,
+    Symbol.for("Hello, world!"),
+    x => x,
+    function (x) {
+      return x
+    },
+    { hello: "world" },
+  ]
 
-  expect(() => {
-    shuffle("foo")
-  }).toThrow()
-
-  expect(() => {
-    shuffle(true)
-  }).toThrow()
-
-  expect(() => {
-    shuffle(false)
-  }).toThrow()
-
-  expect(() => {
-    shuffle(() => {})
-  }).toThrow()
-
-  expect(() => {
-    shuffle({})
-  }).toThrow()
-
-  expect(() => {
-    shuffle(null)
-  }).toThrow()
-
-  expect(() => {
-    shuffle(undefined)
-  }).toThrow()
-
-  expect(() => {
-    shuffle(234)
-  }).toThrow()
+  wrongs.forEach(item => {
+    expect(() => shuffle(item)).toThrow()
+  })
 })
