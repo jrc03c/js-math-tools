@@ -1081,3 +1081,4 @@ Do be aware, though, that there's no such thing in this library as having multip
 - Convert to TS?
 - Organize the files a little better? Right now, they're just in a big heap. It might be better, though, to classify them as randomization functions, statistics functions, etc.
 - Work out a more coherent theory of when to return false / NaN / undefined / null values versus when to throw errors.
+- Keep documentation up-to-date!
