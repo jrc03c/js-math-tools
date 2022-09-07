@@ -38,6 +38,10 @@ add(3, 4) // 7
 
 # API
 
+| :warning: WARNING                                                     |
+| :-------------------------------------------------------------------- |
+| The API documentation is not up-to-date! I'll get to it soon, though! |
+
 ## `abs(x)`
 
 Returns the absolute value where `x` is a number or an arbitrarily nested array of numbers.
