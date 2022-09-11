@@ -29,6 +29,11 @@ test("tests that items in an array can be counted correctly", () => {
     )
   })
 
+  expect(isEqual(count(b), count(b.values))).toBe(true)
+  expect(isEqual(count(b, 2), count(b.values, 2)))
+  expect(isEqual(count(c), count(c.values))).toBe(true)
+  expect(isEqual(count(c, 2), count(c.values, 2))).toBe(true)
+
   const types = [
     0,
     1,

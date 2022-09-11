@@ -9,7 +9,11 @@ const set = require("./set.js")
 
 function count(arr, matcher) {
   if (isDataFrame(arr) || isSeries(arr)) {
-    return count(arr.values, matcher)
+    if (arguments.length > 1) {
+      return count(arr.values, matcher)
+    } else {
+      return count(arr.values, arr.values)
+    }
   }
 
   assert(
@@ -32,7 +36,7 @@ function count(arr, matcher) {
   } else if (arguments.length > 1) {
     return flatten(arr).filter(other => isEqual(other, matcher)).length
   } else {
-    return count(arr, flatten(arr))
+    return count(arr, arr)
   }
 }
 
