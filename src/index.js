@@ -102,13 +102,24 @@ const out = {
   zip: require("./zip.js"),
 
   dump: function () {
+    const public = global || window
+
+    if (!public) {
+      throw new out.MathError(
+        "Cannot dump functions into global scope because neither `global` nor `window` exist in the current context!"
+      )
+    }
+
     Object.keys(out).forEach(key => {
       try {
-        global[key] = out[key]
+        Object.defineProperty(public, key, {
+          configurable: false,
+          enumerable: true,
+          writable: false,
+          value: out[key],
+        })
       } catch (e) {
-        try {
-          window[key] = out[key]
-        } catch (e) {}
+        public[key] = out[key]
       }
     })
   },
