@@ -38,51 +38,19 @@ add(3, 4) // 7
 
 # API
 
-| :warning: WARNING                                                     |
-| :-------------------------------------------------------------------- |
-| The API documentation is not up-to-date! I'll get to it soon, though! |
-
 ## `abs(x)`
 
-Returns the absolute value where `x` is a number or an arbitrarily nested array of numbers.
+Returns the absolute value(s) of `x`.
 
-## `add(a, b)`
+## `add(a, b, c, ...)`
 
-Returns the sum where `a` and `b` are numbers or arbitrarily nested arrays of numbers. Note that `a` and `b` don't both have to be the same type; `a` could be a number while `b` could be an arbitrarily nested array of numbers, or vice versa. See the note below `sum` to read about the differences between `add` and `sum`.
-
-## `append(a, b, axis=0)`
-
-Returns the concatenation of vectors or matrices `a` and `b`. In the case of vectors, the resulting vector will just be the simple concatenation of the two input vectors. But in the case of matrices, the result depends on the `axis`. If the `axis` is 0, then the rows of `a` will be stacked "on top of" the rows of `b`; whereas if `axis` is 1, then each corresponding row of `a` and `b` will be joined side-by-side, as in the case of vectors. For example:
-
-```js
-const a = [
-  [1, 2, 3],
-  [4, 5, 6],
-]
-
-const b = [
-  [100, 200, 300],
-  [400, 500, 600],
-]
-
-console.log(append(a, b, 0))
-// [
-//   [1, 2, 3],
-//   [4, 5, 6],
-//   [100, 200, 300],
-//   [400, 500, 600],
-// ]
-
-console.log(append(a, b, 1))
-// [
-//   [1, 2, 3, 100, 200, 300],
-//   [4, 5, 6, 400, 500, 600]
-// ]
-```
+Returns the sum of the given values. See the note below `sum` to read about the differences between `add` and `sum`.
 
 ## `apply(x, fn)`
 
-Applies the function `fn` to each item in the arbitrarily nested array `x`. Note that this is a subtly different functionality than [`Array.prototype.map`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map). When a function is passed into an array's `map` method, that function is applied to every item at the shallowest level of the array. So, for example, if the array is 2-dimensional, then the `map` method would apply a function to each child array in the parent array. But the `apply` function doesn't quite work that way; instead, it applies a function on each item in an arbitrarily nested array, regardless of depth. In that sense, the function passed into the `apply` function will never be given an array as an argument; it can be passed any other data type, but _not_ an array.
+Applies the function `fn` to `x`.
+
+Note that (when `x` is an array, `Series`, or `DataFrame`) this function uses slightly different behavior than [`Array.prototype.map`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map). When a function is passed into an array's `map` method, that function is applied to every item at the shallowest level of the array. So, for example, if the array is 2-dimensional, then the `map` method would apply a function to each child array in the parent array. But the `apply` function doesn't quite work that way; instead, it applies a function on each item in an arbitrarily nested array, regardless of depth. In that sense, the function passed into the `apply` function will never be given an array as an argument; it can be passed any other data type, but _not_ an array.
 
 For example, when using an array's `map` method, we can get information about each child array, like its length.
 
@@ -93,7 +61,7 @@ console.log(lengths)
 // [1, 2, 3]
 ```
 
-But this can't possibly work when using `apply` because child arrays will never be passed into the given function. If we try to run the same thing again using the `apply` function, we'll get results that are perhaps unexpected:
+But this won't work when using `apply` because child arrays will never be passed into the given function. If we try to run the same thing again using the `apply` function, we'll get results that are perhaps unexpected:
 
 ```js
 const x = [[100], [200, 300], [400, 500, 600]]
@@ -121,19 +89,19 @@ console.log(y)
 
 ## `arccos(x)`
 
-Returns the inverse cosine where `x` is a number or an arbitrarily nested array of numbers.
+Returns the inverse cosine(s) `x`.
 
 ## `arcsin(x)`
 
-Returns the inverse sine where `x` is a number or an arbitrarily nested array of numbers.
+Returns the inverse sine(s) of `x`.
 
 ## `arctan(x)`
 
-Returns the inverse tangent where `x` is a number or an arbitrarily nested array of numbers.
+Returns the inverse tangent(s) of `x`.
 
 ## `argmax(x)`
 
-Returns the index of the maximum value in the arbitrarily nested array `x`. If `x` is 1-dimensional, then a whole number will be returned. If, however, `x` is arbitrarily nested, then the returned value will be an array of whole numbers representing indices at each dimension. For example:
+Returns the index of the maximum value in `x`. If `x` is 1-dimensional, then a whole number will be returned. If, however, `x` is an arbitrarily nested array, then the returned value will be an array of whole numbers representing indices at each dimension. For example:
 
 ```js
 const a = [1, 5, 3]
@@ -156,49 +124,51 @@ console.log(argmax(c))
 // i.e., row 1, sub-row 2, sub-sub-row 3, item 3
 ```
 
+If `x` is a `Series`, then the returned value will be a string from the object's index (i.e., something akin to a "row" name, though a `Series` doesn't actually have rows). If `x` is a `DataFrame`, then the returned value will be an array of the form `[rowName, colName]`. To obtain numerical indices in either of these cases, just pass `x.values` into the `argmax` function rather than `x` itself.
+
 ## `argmin(x)`
 
-Returns the index of the minimum value in the arbitrarily nested array `x`. If `x` is 1-dimensional, then a whole number will be returned. If, however, `x` is arbitrarily nested, then the returned value will be an array of whole numbers representing indices at each dimension. See `argmax` for examples of the returned values.
+Returns the index of the minimum value in `x`. See `argmax` for examples and more information about the returned values.
 
 ## `assert(condition, message)`
 
-Does nothing if `condition` is true; otherwise, it throws an error with the given `message` string.
+Does nothing if `condition` is true; otherwise, it throws an error with the (optional) given `message` string.
 
 ## `ceil(x)`
 
-Given a number `x`, returns either the next highest integer (if `x` has a fractional component) or `x` itself (if `x` is already an integer). Note that `x` can also be an arbitrarily nested array of numbers.
+Returns the ceiling(s) of `x`.
 
 ## `chop(x, threshold=1e-10)`
 
-Returns 0 if the absolute value of `x` is less than the `threshold`; otherwise, it returns `x`. Both `x` and `threshold` can be either numbers or arbitrarily nested arrays of numbers.
+Returns 0(s) if the absolute value(s) of `x` is less than the `threshold`; otherwise, it returns `x`.
 
 ## `clamp(x, min, max)`
 
-Returns `min` if `x` is less than `min`; returns `max` if `x` is greater than `max`; otherwise, returns `x`. All of `x`, `min`, and `max` can be numbers or arbitrarily nested arrays of numbers.
+Returns `min` if `x` is less than `min`; returns `max` if `x` is greater than `max`; otherwise, returns `x`.
 
 ## `combinations(x, r)`
 
-Given an arbitrarily nested array `x`, returns all possible combinations of `r` items from `x`. Note that any nesting of `x` will be ignored — i.e., `x` will be "flattened" into a 1-dimensional array before getting the combinations — so it won't be possible with this function to get combinations of arrays.
+Returns all possible combinations of `r` items from `x`. Note that any nesting of `x` will be ignored — i.e., `x` will be "flattened" into a 1-dimensional array before getting the combinations — so it won't be possible with this function to get combinations of _arrays_.
 
 ## `copy(x)`
 
-Returns a copy of `x`. The only exception occurs if `x` is an instance of a custom class. In such a case, a plain JavaScript `Object` will be returned, though bearing the same members as `x` but not an instance of the same class. Also, this function handles circular references by replacing them with strings like `"<reference to '/some/path/down/into/the/object'>"`.
+Returns a copy of `x`. The only exception is if `x` is an instance of a custom class. In such a case, a plain JavaScript `Object` will be returned, though bearing the same members as `x` but not an instance of the same class. Also, this function handles circular references by replacing them with strings like `"<reference to '/some/path/down/into/the/object'>"`. If you need a copy of `x` using a custom class, use [`structuredClone`](https://developer.mozilla.org/en-US/docs/Web/API/structuredClone).
 
 ## `correl(a, b)`
 
-Returns the correlation of `a` and `b`, which are 1-dimensional arrays of numbers.
+Returns the correlation of `a` and `b`, which are 1-dimensional arrays or `Series` instances.
 
 ## `cos(x)`
 
-Returns the cosine where `x` is a number or an arbitrarily nested array of numbers.
+Returns the cosine(s) of `x`.
 
-## `count(x, items)`
+## `count(x, matcher)`
 
-Given an arbitrarily nested array `x`, returns an array of objects, each of which has the members "item" and "count" to indicate how many times a given item appeared in `x`. Using `items` is optional; but if used, it can be any kind of value or an array of values. Do note, though, that it's not currently possible to count appearances of child arrays in `x`; only other types can be counted. That's because `x` is "flattened" into a 1-dimensional array before the counting begins.
+Returns the number(s) of times that certain values appear in `x`. If `matcher` is a single value (like a number), then the returned value will be a single number (indicating the number of times that `matcher` appears in `x`). If `matcher` is an array, then an array of the same size will be returned containing objects with `item` and `count` properties. If `matcher` is a function, then a single number will be returned based on how many times the function returned `true` when presented with each value in `x`. Finally, if `matcher` is undefined, then all of the items in `x` will be counted and returned as an array of objects with `item` and `count` properties.
 
 ## `covariance(a, b)`
 
-Returns the covariance between two 1-dimensional arrays, `a` and `b`.
+Returns the covariance between `a` and `b`, which are 1-dimensional arrays or `Series` instances.
 
 ## `DataFrame(x)`
 
@@ -248,7 +218,7 @@ Identical to `DataFrame.transpose` except that `T` is a getter.
 
 ### `DataFrame.append(x, axis=0)`
 
-Returns a copy of the original `DataFrame` with `x` appended to it. Vectors, matrices, `Series`, and `DataFrame` values can all be passed as `x`. Possible `axis` values are 0 and 1, where 0 indicates that the row(s) of `x` should be stacked beneath the rows of the original `DataFrame`, and 1 indicates that the row(s) of `x` should be placed to the right of the rows of the original `DataFrame`. For example:
+Returns a copy of the original `DataFrame` with `x` appended to it. Possible `axis` values are 0 and 1, where 0 indicates that the row(s) of `x` should be stacked beneath the rows of the original `DataFrame`, and 1 indicates that the row(s) of `x` should be placed to the right of the rows of the original `DataFrame`. For example:
 
 ```js
 const x = new DataFrame({ foo: [2, 3, 4], bar: [5, 6, 7] })
@@ -286,9 +256,9 @@ x.append(["a", "b", "c"], 1).print()
 // Shape: [ 3, 3 ]
 ```
 
-So, when a vector is appended, it gets treated as a row if the `axis` is 0 or as a column if the `axis` is 1.
+So, if `x` is a vector, then it gets treated as a row if the `axis` is 0 or as a column if the `axis` is 1.
 
-Working with matrices is slightly different:
+But working with matrices is slightly different:
 
 ```js
 const x = new DataFrame({ foo: [2, 3, 4], bar: [5, 6, 7] })
@@ -393,7 +363,7 @@ Returns a copy of the original `DataFrame` to which new values have been assigne
 
 ### `DataFrame.clear()`
 
-Returns a copy of the original `DataFrame` in which all of the values have been replaced with `undefined`.
+Returns a copy of the original `DataFrame` in which all of the values have been replaced with `undefined` (but the shape is still the same).
 
 ### `DataFrame.copy()`
 
@@ -467,17 +437,17 @@ Returns a copy of the original `DataFrame` in which the list of row names have b
 
 Returns a copy of the original `DataFrame` in which the rows (if `axis` is 0) or columns (if `axis` is 1) have been put in a random order.
 
-### `DataFrame.sort(columns, directions)`
+### `DataFrame.sort(columns, directions)` or `DataFrame.sort(fn, directions)`
 
-Returns a copy of the original `DataFrame` sorted by the given `columns`. For `columns`, a whole number, string, or array of whole numbers or strings can be given. By default, all of the columns will be sorted in ascending order; but to override this behavior, pass a boolean value, array of boolean values, or array of "ascending" / "descending" string values as `directions`.
+Returns a copy of the original `DataFrame` sorted by the given `columns` or `fn`. The `columns` argument can be a whole number, string, or array of whole numbers or strings can be given. The `fn` argument can be a comparison function that will compare `Series` against each other. By default, all of the columns will be sorted in ascending order; but to override this behavior, pass a boolean value, array of boolean values, or array of "ascending" / "descending" string values as `directions`.
 
 ### `DataFrame.toCSVString()`
 
 Returns a stringified copy of the original `DataFrame` in CSV format.
 
-### `DataFrame.toCSV(path, shouldIncludeIndex=true)`
+### `DataFrame.saveAsCSV(path, shouldIncludeIndex=true)`
 
-Writes the `DataFrame` to disk at `path` in CSV format. By default, the saved data will include the list of row names. To disable this, pass `false` as `shouldIncludeIndex`.
+Writes the `DataFrame` to disk at `path` in CSV format. By default, the saved data will include the list of row names. To disable this, pass `false` as `shouldIncludeIndex`. In a browser, only a filename need be passed as `path` since the file will just be downloaded in whatever way the browser usually downloads files. In Node, however, a filesystem path (relative or absolute) must be passed as `path`.
 
 ### `DataFrame.toJSONString()`
 
@@ -506,9 +476,9 @@ Returns a stringified copy of the original `DataFrame` in JSON format. By defaul
 
 However, the nesting can be reversed (putting the column names at the shallowest level and the row names at the next level) by setting `axis` to 1.
 
-### `DataFrame.toJSON(path, axis=0)`
+### `DataFrame.saveAsJSON(path, axis=0)`
 
-Writes the `DataFrame` to disk at `path` in JSON format. See the `DataFrame.toJSONString` method for more info about the structure of the object written to disk and the meaning of the `axis` value.
+Writes the `DataFrame` to disk at `path` in JSON format. See the `DataFrame.toJSONString` method for more info about the structure of the object written to disk and the meaning of the `axis` value. In a browser, only a filename need be passed as `path` since the file will just be downloaded in whatever way the browser usually downloads files. In Node, however, a filesystem path (relative or absolute) must be passed as `path`.
 
 ### `DataFrame.toObject(axis=0)`
 
@@ -520,35 +490,54 @@ Returns a copy of the original `DataFrame` in which the values (and row names an
 
 ## `diff(a, b)`
 
-Returns the difference between `set(a)` and `set(b)`; i.e., the set of values that are included in `a` and _not_ included in `b`. Note that `a` and `b` can be arbitrarily nested arrays containing any types of values.
+Returns the difference between `set(a)` and `set(b)`; i.e., the set of values that are included in `a` and _not_ included in `b`. Note that the order of the arguments matters. If `a` and `b` aren't identical, then `diff(a, b)` won't necessarily produce the same results as `diff(b, a)`. For example:
+
+```js
+const a = [2, 3, 4]
+const b = [4, 5, 6]
+
+console.log(diff(a, b))
+// [2, 3]
+
+console.log(diff(b, a))
+// [5, 6]
+```
 
 ## `distance(a, b)`
 
-Returns the 2-norm (i.e., the Euclidean distance) between arbitrarily nested arrays `a` and `b`. And though `a` and `b` can have any shape, they must have the _same_ shape as each other.
+Returns the 2-norm (i.e., the Euclidean distance) between `a` and `b`. And though `a` and `b` can have any shape, they must have the _same_ shape as each other (unless either is an individual numbers). For example:
+
+```js
+console.log(distance([3, 4], 0))
+// 5
+
+console.log(distance([3, 4], [5, 6, 7]))
+// error!
+```
 
 ## `divide(a, b)`
 
-Returns the result of `a` divided by `b`. Both `a` and `b` can be numbers or arbitrarily nested arrays of numbers.
+Returns the result of `a` divided by `b`.
 
 ## `dot(a, b)`
 
-Returns the dot product of vectors or matrices `a` and `b`.
+Returns the dot product of `a` and `b`, which can be 1- or 2-dimensional arrays, `Series` instances, or `DataFrame` instances.
 
 ## `dropMissing(x)`
 
-Returns a copy of arbitrarily nested array `x` without any undefined or null values. Note that dropping values from nested arrays may result in jagged arrays.
+Returns a copy of `x` without any undefined or null values. Note that dropping values from nested arrays and `DataFrame` instances may result in jagged arrays.
 
 ## `dropMissingPairwise(a, b)`
 
-Returns copies of arbitrarily nested arrays `a` and `b` without any undefined or null values. Note that `a` and `b` must have the same shape. Also note that dropping values from nested arrays may result in jagged arrays.
+Returns copies of `a` and `b` without any undefined or null values. Note that `a` and `b` must have the same shape. Also note that dropping values from nested arrays and `DataFrame` instances may result in jagged arrays.
 
 ## `dropNaN(x)`
 
-Returns a copy of arbitrarily nested array `x` without any non-numerical values. Note that dropping values from nested arrays may result in jagged arrays.
+Returns a copy of `x` without any non-numerical values. Note that dropping values from nested arrays and `DataFrame` instances may result in jagged arrays.
 
 ## `dropNaNPairwise(a, b)`
 
-Returns copies of arbitrarily nested arrays `a` and `b` without any non-numerical values. Note that `a` and `b` must have the same shape. Also note that dropping values from nested arrays may result in jagged arrays.
+Returns copies of arbitrarily nested arrays `a` and `b` without any non-numerical values. Note that `a` and `b` must have the same shape. Also note that dropping values from nested arrays and `DataFrame` instances may result in jagged arrays.
 
 ## `dropUndefined(x)`
 
@@ -556,31 +545,31 @@ Identical to `dropMissing`.
 
 ## `exp(x)`
 
-Returns _e_ to the power of `x` where `x` is a number or an arbitrarily nested array of numbers.
+Returns _e_ to the power(s) of `x`.
 
 ## `factorial(x)`
 
-Returns the factorial where `x` is an integer or an arbitrarily nested array of integers.
+Returns the factorial(s) of `x`.
 
 ## `find(x, fn)`
 
-Returns the first value that causes the `fn` function to evaluate to true when evaluated on every item in `x`. Note that `x` can be an arbitrarily nested array _or_ an object.
+Returns the first value that causes the `fn` function to evaluate to true when evaluated on every item in `x`. Note that `x` can be an arbitrarily nested array (or `Series` or `DataFrame`) _or_ an object. All of those types are searched to any depth.
 
 ## `findAll(x, fn)`
 
-Returns all of the values that cause the `fn` function to evaluate to true when evaluated on every item in `x`. Note that `x` can be an arbitrarily nested array _or_ an object.
+Returns all of the values that cause the `fn` function to evaluate to true when evaluated on every item in `x`. Note that `x` can be an arbitrarily nested array (or `Series` or `DataFrame`) _or_ an object. All of those types are searched to any depth.
 
 ## `flatten(x)`
 
-Returns a 1-dimensional copy of arbitrarily nested array `x`.
+Returns a 1-dimensional copy of `x`.
 
 ## `float(x)`
 
-Returns `x` converted to a floating point number.
+Returns `x` converted to floating point number(s).
 
 ## `floor(x)`
 
-Given a number `x`, returns either the next lowest integer (if `x` has a fractional component) or `x` itself (if `x` is already an integer). Note that `x` can also be an arbitrarily nested array of numbers.
+Returns the floor(s) of `x`.
 
 ## `identity(n)`
 
@@ -588,19 +577,19 @@ Returns an identity matrix of size `n` ✕ `n`.
 
 ## `indexOf(x, fn)`
 
-Returns the index of the first value that causes the `fn` function to evaluate to true when evaluated on every item in `x`. Note that `x` can be an arbitrarily nested array _or_ an object.
+Returns the index of the first value that causes the `fn` function to evaluate to true when evaluated on every item in `x`. Note that `x` can be an arbitrarily nested array (or `Series` or `DataFrame`) _or_ an object. All of those types are searched to any depth. If `x` is an object, then the returned index represents the path down through the keys and values of the object to the relevant value. Also note that _keys_ of objects are not evaluated; only an object's _values_ are evaluated.
 
 ## `int(x)`
 
-Returns `x` converted to an integer.
+Returns `x` converted to integer(s).
 
-## `intersect(a, b)`
+## `intersect(a, b, c, ...)`
 
-Returns the intersection of `set(a)` and `set(b)`; i.e., the set of values that are in _both_ `a` and `b`. Note that `a` and `b` can be arbitrarily nested arrays containing any types of values.
+Returns the intersection of the given arrays, `Series` instances, or `DataFrame` instances; i.e., the set of values that are in _all_ of the given items.
 
 ## `inverse(x)`
 
-Returns the inverse of a square matrix `x`.
+Returns the inverse of a square matrix or `DataFrame` `x`.
 
 ## `isArray(x)`
 
@@ -625,7 +614,7 @@ console.log(isEqual(a, b))
 // true
 ```
 
-In the above example, `a` and `b` are not literally the same object in memory, but they are nevertheless functionally equivalent; i.e., they have all the same properties.
+In the above example, `a` and `b` are not literally the same object in memory, but they are nevertheless functionally equivalent; i.e., they have all the same properties, methods, values, etc. Note that there may be some ways in which this function can be tricked, especially as regards non-enumerable properties. But generally speaking, if an object has the same enumerable properties, methods, values, etc., then `isEqual` will return `true`.
 
 ## `isFunction(x)`
 
@@ -661,11 +650,11 @@ Returns `true` if `x` is undefined or null; otherwise, returns `false`. Note tha
 
 ## `lerp(a, b, f)`
 
-Returns the linear interpolation from `a` to `b` at fraction `f`. All of the arguments can be numbers or arbitrarily nested arrays of numbers, though `f` is typically in the range [0, 1].
+Returns the linear interpolation from `a` to `b` at fraction `f`.
 
 ## `log(x)`
 
-Returns the natural log where `x` is a number or an arbitrarily nested array of numbers.
+Returns the natural log(s) of `x`.
 
 ## `MathError(message)`
 
@@ -673,23 +662,23 @@ This class only exists because (1) I wanted to make it clear when errors where c
 
 ## `max(x)`
 
-Returns the maximum value in an arbitrarily nested array of numbers `x`.
+Returns the maximum value in `x`.
 
 ## `mean(x)`
 
-Returns the average value in an arbitrarily nested array of numbers `x`.
+Returns the average value in `x`.
 
 ## `median(x)`
 
-Returns the median value in an arbitrarily nested array of numbers `x`.
+Returns the median value in `x`.
 
 ## `min(x)`
 
-Returns the minimum value in an arbitrarily nested array of numbers `x`.
+Returns the minimum value in `x`.
 
 ## `mode(x)`
 
-Returns the mode(s) of an arbitrarily nested array of numbers `x`. If there are multiple modes, then an array will be returned; otherwise, a single number will be returned.
+Returns the mode(s) of `x`. Note that an array will always be returned since there can be potentially be multiple modes in `x`.
 
 ## `multiply(a, b, c, ...)`
 
