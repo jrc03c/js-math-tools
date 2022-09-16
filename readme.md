@@ -170,6 +170,8 @@ Returns the number(s) of times that certain values appear in `x`. If `matcher` i
 
 Returns the covariance between `a` and `b`, which are 1-dimensional arrays or `Series` instances.
 
+<hr />
+
 ## `DataFrame(x)`
 
 The `DataFrame` class is similar to pandas' [`DataFrame`](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html). They at least represent the same kind of data (2-dimensional arrays with row and column names), though they probably differ in many of their members.
@@ -488,6 +490,8 @@ Returns an object in the format described above in the `DataFrame.toJSONString` 
 
 Returns a copy of the original `DataFrame` in which the values (and row names and column names) have been flipped across the main diagonal (from top left to bottom right).
 
+<hr />
+
 ## `diff(a, b)`
 
 Returns the difference between `set(a)` and `set(b)`; i.e., the set of values that are included in `a` and _not_ included in `b`. Note that the order of the arguments matters. If `a` and `b` aren't identical, then `diff(a, b)` won't necessarily produce the same results as `diff(b, a)`. For example:
@@ -744,6 +748,8 @@ Identical to `multiply`.
 
 Seeds the PRNG with `n`, an integer.
 
+<hr />
+
 ## `Series(x)`
 
 The `Series` class is similar to pandas' [`Series`](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html). They at least represent the same kind of data (named 1-dimensional arrays), though they probably differ in many of their members.
@@ -842,6 +848,8 @@ Returns an object with this form:
 }
 ```
 
+<hr />
+
 ## `set(x)`
 
 Returns the (unsorted) unique values in `x`.
@@ -936,7 +944,7 @@ Returns the variance of the values in `x`.
 
 ## `vectorize(fn)`
 
-Returns a function that operates on individual values or arbitrarily nested arrays of values. It's a little like numpy's [`vectorize`](https://numpy.org/doc/stable/reference/generated/numpy.vectorize.html) function except that numpy probably has a bunch of fancy optimizations that make vectorized operations very fast. In this library, though, no optimizations are applied; this function merely makes it easier for individual functions to operate on arrays of data.
+Returns a function that operates on individual values, arrays, `Series` instances, or `DataFrame` instances. It's a little like numpy's [`vectorize`](https://numpy.org/doc/stable/reference/generated/numpy.vectorize.html) function except that numpy probably has a bunch of fancy optimizations that make vectorized operations very fast. In this library, though, no optimizations are applied; this function merely makes it easier for individual functions to operate on multiple types of data containers.
 
 For example, the `Math.sin` function only accepts a single value. But by using the `vectorize` function, we can create a function that accepts either single values or arrays of values:
 
@@ -968,6 +976,8 @@ console.log(add([2, 3, 4], 5))
 ```
 
 At the moment, though, the function is pretty naive about the _shapes_ of the arrays; e.g., it'll throw an error in the `add` function if both arguments are arrays of differing shapes.
+
+Finally, a vectorized function can also accept `Series` and `DataFrame` instances. When this happens, the function will try to return an object of the same type, if possible. For example, using the `add` function above to add a `Series` and a single number will result in a new `Series` with the same name and index as the original. But if two `Series` instances are passed into `add`, then a new `Series` will be returned that bears a default name and default index (since there's no obvious way to choose which `Series` name or index to prefer).
 
 ## `zeros(shape)`
 
