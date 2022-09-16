@@ -43,20 +43,26 @@ test("gets the distance between two vectors", () => {
   expect(distance(-3, 3)).toBe(6)
   expect(distance(-Infinity, Infinity)).toBe(Infinity)
 
+  expect(distance(normal([2, 3, 4], normal([4, 3, 2])))).toBeNaN()
+
   const wrongs = [
-    [NaN, "foo"],
-    [true, false],
-    [null, undefined],
-    [Symbol.for("Hello, world!"), x => x],
-    [
-      function (x) {
-        return x
-      },
-      { hello: "world" },
-    ],
+    NaN,
+    "foo",
+    true,
+    false,
+    null,
+    undefined,
+    Symbol.for("Hello, world!"),
+    x => x,
+    function (x) {
+      return x
+    },
+    { hello: "world" },
   ]
 
-  wrongs.forEach(pair => {
-    expect(distance(pair[0], pair[1])).toBeNaN()
+  wrongs.forEach(a => {
+    wrongs.forEach(b => {
+      expect(distance(a, b)).toBeNaN()
+    })
   })
 })
