@@ -682,7 +682,7 @@ Returns the mode(s) of `x`. Note that an array will always be returned since the
 
 ## `multiply(a, b, c, ...)`
 
-Returns the product of where `a`, `b`, `c`, and so on, where those values are are numbers or arbitrarily nested arrays of numbers. See the note under `product` for a description of how `multiply` and `scale` differ from `product`.
+Returns the product of the given values. See the note under `product` for a description of how `multiply` and `scale` differ from `product`.
 
 ## `ndarray(shape)`
 
@@ -702,11 +702,11 @@ Given an arbitrarily nested array `x`, returns all possible permutations of `r` 
 
 ## `product(x)`
 
-Returns the product of all of the values in arbitrarily nested array `x`. Note that `product` differs slightly in functionality from `multiply` and `scale` in that `product` _only_ accepts arrays. Just as you might want to get the `sum` of values in an array, so you might also want to get the `product` of values in an array. If you want to multiply values by each other (whether those values are numbers, arrays, `Series` instances, or `DataFrame` instances), you'll want to use the `multiply` or `scale` functions.
+Returns the product of all of the values in arbitrarily nested array `x`. Note that `product` differs slightly in functionality from `multiply` and `scale` in that `product` _only_ accepts arrays, `Series` instances, and `DataFrame` instances. Just as you might want to get the `sum` of values in an array, so you might also want to get the `product` of values in an array. If you want to multiply values by each other (whether those values are numbers, arrays, `Series` instances, or `DataFrame` instances), you'll want to use the `multiply` or `scale` functions.
 
 ## `pow(a, b)`
 
-Returns `a` to the power of `b` where `a` and `b` are numbers or arbitrarily nested arrays of numbers.
+Returns `a` to the power(s) of `b`.
 
 ## `print(x)`
 
@@ -726,15 +726,15 @@ Returns `x` remapped from the range [`a`, `b`] to the range [`c`, `d`]. For exam
 
 ## `reshape(x, shape)`
 
-Returns arbitrarily nested array `x` reshaped into shape `shape`.
+Returns `x` reshaped into shape `shape`.
 
 ## `reverse(x)`
 
-Returns a reversed copy of array `x`. Only reverses at the shallowest level.
+Returns a reversed copy of `x`. Only reverses at the shallowest level.
 
 ## `round(x)`
 
-Returns the next lowest or highest integer when `x` is a number or an arbitrarily nested array of numbers.
+Returns the next lowest or highest integer(s) when `x`.
 
 ## `scale(a, b, c, ...)`
 
@@ -824,9 +824,9 @@ Prints the `Series` to the console in a pretty way, and then returns the `Series
 
 Returns a copy of the original `Series` sorted by its index values.
 
-### `Series.sort(ascending=true)`
+### `Series.sort(fn, ascending=true)`
 
-Returns a copy of the original `Series` sorted by its values.
+Returns a sorted copy of the original `Series`. If `fn` is undefined, then the returned copy will be sorted by its values; otherwise, the copy will be sorted by `fn`.
 
 ### `Series.toObject()`
 
@@ -844,11 +844,11 @@ Returns an object with this form:
 
 ## `set(x)`
 
-Returns the unique values in arbitrarily nested array `x`.
+Returns the (unsorted) unique values in `x`.
 
 ## `shape(x)`
 
-Returns the shape of arbitrarily nested array `x`. If `x` is smooth, then the returned shape will be a 1-dimensional array; but if `x` is jagged, then the returned shape will be an array with a mix of numbers and sub-arrays. For example:
+Returns the shape of `x`. If `x` is "smooth" (i.e., non-jagged), then the returned shape will be a 1-dimensional array; but if `x` is jagged, then the returned shape will be an array with a mix of numbers and sub-arrays. For example:
 
 ```js
 const smooth = [
@@ -872,66 +872,27 @@ If all of the items in `jagged` were arrays with length 2, then its shape would 
 
 ## `shuffle(x)`
 
-Returns a shuffled copy of arbitrarily nested array `x`. Note that only the shallowest level of `x` is shuffled.
+Returns a shuffled copy of `x`. Note that only the shallowest level of `x` is shuffled.
 
 ## `sign(x)`
 
-Returns -1, 0, or 1 if `x` is less than 0, equal to 0 or greater than 0, respectively. Note that `x` can be a number or an arbitrarily nested array of numbers.
+Returns -1(s), 0(s), or 1(s) if `x` is less than 0, equal to 0 or greater than 0, respectively.
 
 ## `sin(s)`
 
-Returns the sine where `x` is a number or an arbitrarily nested array of numbers.
-
-## `slice(x, indices)`
-
-Returns a subset of arbitrarily nested array `x` identified by `indices`. Note that `indices` is an array that can contain three types of values:
-
-- null / undefined
-- a single whole number
-- an array of whole numbers
-
-Each value in `indices` represents item numbers along that dimension of `x`. For example, if `x` is a matrix, then `indices` would need to contain exactly two of the above value types: one for picking out rows, and one for picking out columns.
-
-```js
-const x = reshape(range(0, 100), [10, 10])
-console.log(x)
-// [
-//   [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ],
-//   [ 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 ],
-//   [ 20, 21, 22, 23, 24, 25, 26, 27, 28, 29 ],
-//   [ 30, 31, 32, 33, 34, 35, 36, 37, 38, 39 ],
-//   [ 40, 41, 42, 43, 44, 45, 46, 47, 48, 49 ],
-//   [ 50, 51, 52, 53, 54, 55, 56, 57, 58, 59 ],
-//   [ 60, 61, 62, 63, 64, 65, 66, 67, 68, 69 ],
-//   [ 70, 71, 72, 73, 74, 75, 76, 77, 78, 79 ],
-//   [ 80, 81, 82, 83, 84, 85, 86, 87, 88, 89 ],
-//   [ 90, 91, 92, 93, 94, 95, 96, 97, 98, 99 ]
-// ]
-
-const rows = range(5, 10)
-const cols = range(4, 7)
-const subset = slice(x, [rows, cols])
-console.log(subset)
-// [
-//   [ 54, 55, 56 ],
-//   [ 64, 65, 66 ],
-//   [ 74, 75, 76 ],
-//   [ 84, 85, 86 ],
-//   [ 94, 95, 96 ]
-// ]
-```
+Returns the sine(s) of `x`.
 
 ## `sort(x, fn)`
 
-Sorts arbitrarily nested array `x` by function `fn`. This function is identical to [`Array.prototype.sort`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort) except that it does _not_ sort `x` in-place; instead it returns a sorted copy of `x`.
+Sorts `x` by function `fn`. This function is identical to [`Array.prototype.sort`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort) except that it does _not_ sort `x` in-place; instead it returns a sorted copy of `x`.
 
 ## `sqrt(x)`
 
-Returns the square root where `x` is a number or an arbitrarily nested array of numbers.
+Returns the square root(s) of `x`.
 
 ## `std(x)`
 
-Returns the standard deviation where `x` is an arbitrarily nested array of numbers.
+Returns the standard deviation of the values in `x`.
 
 ## `stdev(x)`
 
@@ -939,15 +900,15 @@ Identical to `std`.
 
 ## `subtract(a, b)`
 
-Returns the difference where `a` and `b` are numbers or arbitrarily nested arrays of numbers. Note that `a` and `b` don't both have to be the same type; `a` could be a number while `b` could be an arbitrarily nested array of numbers, or vice versa.
+Returns the difference of `a` and `b`.
 
 ## `sum(x)`
 
-Returns the sum of all values in arbitrarily nested array `x`. The difference between `add` and `sum` is that `sum` _only_ accepts arrays. In other words, use `add` when you want to add up multiple distinct values passed as arguments (where those arguments can be numbers, arrays, `Series` instances, or `DataFrame` instances); and use `sum` when you want to add up all of the values in a single array.
+Returns the sum of all values in `x`. The difference between `add` and `sum` is that `sum` _only_ accepts arrays. In other words, use `add` when you want to add up multiple distinct values passed as arguments (where those arguments can be numbers, arrays, `Series` instances, or `DataFrame` instances); and use `sum` when you want to add up all of the values in a single array.
 
 ## `tan(x)`
 
-Returns the tangent where `x` is a number or an arbitrarily nested array of numbers.
+Returns the tangent(s) of `x`.
 
 ## `time(fn)`
 
@@ -963,15 +924,15 @@ Returns a `Promise` that resolves to the time in milliseconds that it takes for 
 
 ## `transpose(x)`
 
-Returns the transpose of a vector or matrix `x`.
+Returns the transpose of a 1- or 2-dimensional array (or `Series` or `DataFrame`) `x`.
 
-## `union(a, b)`
+## `union(a, b, c, ...)`
 
-Returns the union of the set of values in `a` and the set of values in `b`.
+Returns the union of the sets of values in the given items.
 
 ## `variance(x)`
 
-Returns the variance of the values in arbitrarily nested array `x`.
+Returns the variance of the values in `x`.
 
 ## `vectorize(fn)`
 
@@ -1014,7 +975,7 @@ Returns an _n_-dimensional array of 0s where `shape` is an array of whole number
 
 ## `zip(a, b, c, ...)`
 
-Returns a new array or new `DataFrame` in which the values of the given arrays (`a`, `b`, `c`, etc.) are stacked side-by-side. For example:
+Returns a new array or new `DataFrame` in which the shallowest values of the given arrays (`a`, `b`, `c`, etc.) are stacked side-by-side. For example:
 
 ```js
 const a = [2, 3, 4]
@@ -1028,8 +989,6 @@ console.log(c)
 //   [ undefined, 8 ]
 // ]
 ```
-
-If any of the items passed into the function are `Series` objects, then the returned value will be a `DataFrame`; otherwise, the returned value will be an array.
 
 # Notes
 
