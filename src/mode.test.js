@@ -7,9 +7,9 @@ const set = require("./set.js")
 const sort = require("./sort.js")
 
 test("tests that the mode of an array, series, or dataframe can be found correctly", () => {
-  expect(mode([2, 2, 2, 3, 4])).toBe(2)
-  expect(mode([2, 3, 3, 3, 4])).toBe(3)
-  expect(mode([2, 3, 4, 4, 4])).toBe(4)
+  expect(mode([2, 2, 2, 3, 4])[0]).toBe(2)
+  expect(mode([2, 3, 3, 3, 4])[0]).toBe(3)
+  expect(mode([2, 3, 4, 4, 4])[0]).toBe(4)
   expect(mode([2, 2, 3, 3])).toStrictEqual([2, 3])
 
   const a = round(normal([2, 3, 4, 5]))

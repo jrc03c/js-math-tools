@@ -37,7 +37,6 @@ function mode(arr) {
       sortedTempSet.filter(item => counts[item] === counts[mostCountedItem])
     )
 
-    if (out.length === 1) return out[0]
     return out
   } catch (e) {
     return NaN
