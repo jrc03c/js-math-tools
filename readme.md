@@ -4,17 +4,25 @@
 
 # Installation
 
+For client-side use, attach the `dist/js-math-tools.js` file to your web page.
+
+Using a CDN:
+
+```html
+<script src="https://unpkg.com/@jrc03c/js-math-tools/dist/js-math-tools.js"></script>
+```
+
+Or installing via NPM:
+
 ```bash
 npm install --save https://github.com/jrc03c/js-math-tools
 ```
 
-For client-side use, attach the `dist/js-math-tools.js` file to your web page:
-
 ```html
-<script src="path/to/js-math-tools.js"></script>
+<script src="node_modules/@jrc03c/js-math-tools/dist/js-math-tools.js"></script>
 ```
 
-For use in Node:
+To use in Node, install via NPM, and then import it:
 
 ```js
 const tools = require("js-math-tools")
