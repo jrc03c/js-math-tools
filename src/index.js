@@ -102,7 +102,7 @@ const out = {
   zip: require("./zip.js"),
 
   dump: function () {
-    const public = global || window
+    const public = typeof global !== "undefined" ? global : window
 
     if (!public) {
       throw new out.MathError(
