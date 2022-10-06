@@ -1,6 +1,6 @@
 {
   "name": "@jrc03c/js-math-tools",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "some math tools for JS",
   "main": "src/index.js",
   "scripts": {
