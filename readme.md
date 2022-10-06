@@ -1044,6 +1044,10 @@ random(5)
 
 Do be aware, though, that there's no such thing in this library as having multiple PRNGs at the same time, each with different seeds. Instead, all of the randomization functions share the same seeding because they all share the same core `random` function.
 
+# Troubleshooting
+
+Note that in certain build setups, errors may be thrown when you try to import this library. The error message is usually: "Big integer literals are not available in the configured target environment". To be really honest, I have only the haziest of ideas about what this means or why it happens, but [this](https://github.com/sveltejs/kit/issues/859#issuecomment-1184696144) solution works for (e.g.) Vite and perhaps Svelte — though I haven't tried the latter. If you're not using Vite or Svelte, perhaps that solution will guide you in the right direction for whatever build setup you have. If you _do_ find solutions for other build setups, please let me know and I'll add them to this section.
+
 # To do
 
 - Add a method that makes it easy to merge `DataFrames` along a certain key. For example, it'd be nice to be able to merge multiple datasets that have a unique ID column with values that match across the sets.
