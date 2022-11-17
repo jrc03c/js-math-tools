@@ -2,10 +2,11 @@
   "name": "@jrc03c/js-math-tools",
   "version": "0.0.4",
   "description": "some math tools for JS",
-  "main": "src/index.js",
+  "source": "src/index.ts",
+  "main": "dist/js-math-tools.js",
   "scripts": {
-    "build": "esbuild src/index.js --bundle --outfile=dist/js-math-tools.js --minify",
-    "watch": "esbuild src/index.js --bundle --outfile=dist/js-math-tools.js --minify --watch",
+    "build": "parcel build",
+    "watch": "parcel watch",
     "test": "./test.sh"
   },
   "repository": {
@@ -24,9 +25,13 @@
   "license": "ISC",
   "devDependencies": {
     "@jrc03c/freeze": "github:jrc03c/freeze",
+    "@typescript-eslint/eslint-plugin": "^5.43.0",
+    "@typescript-eslint/parser": "^5.43.0",
     "esbuild": "^0.14.21",
     "eslint": "^8.21.0",
     "jest": "^29.0.3",
-    "madge": "^5.0.1"
+    "madge": "^5.0.1",
+    "parcel": "^2.8.0",
+    "typescript": "^4.9.3"
   }
 }

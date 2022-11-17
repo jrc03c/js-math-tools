@@ -1,24 +1,16 @@
 module.exports = {
   env: {
     browser: true,
-    commonjs: true,
     es2021: true,
-    jest: true,
     node: true,
   },
-  extends: "eslint:recommended",
+  extends: ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
+  overrides: [],
+  parser: "@typescript-eslint/parser",
   parserOptions: {
     ecmaVersion: "latest",
+    sourceType: "module",
   },
-  rules: {
-    "no-empty": ["error", { allowEmptyCatch: true }],
-
-    "prefer-const": [
-      "error",
-      {
-        destructuring: "any",
-        ignoreReadBeforeAssign: false,
-      },
-    ],
-  },
+  plugins: ["@typescript-eslint"],
+  rules: {},
 }
