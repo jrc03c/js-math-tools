@@ -1,134 +1,230 @@
-const { DataFrame, Series } = require("./dataframe")
+import { DataFrame, Series } from "./dataframe"
+
+import abs from "./abs"
+import add from "./add"
+import apply from "./apply"
+import arccos from "./arccos"
+import arcsin from "./arcsin"
+import arctan from "./arctan"
+import argmax from "./argmax"
+import argmin from "./argmin"
+import assert from "./assert"
+import ceil from "./ceil"
+import chop from "./chop"
+import clamp from "./clamp"
+import combinations from "./combinations"
+import copy from "./copy"
+import correl from "./correl"
+import cos from "./cos"
+import count from "./count"
+import covariance from "./covariance"
+import diff from "./diff"
+import distance from "./distance"
+import divide from "./divide"
+import dot from "./dot"
+import dropMissing from "./dropMissing"
+import dropMissingPairwise from "./dropMissingPairwise"
+import dropNaN from "./dropNaN"
+import dropNaNPairwise from "./dropNaNPairwise"
+import dropUndefined from "./dropUndefined"
+import exp from "./exp"
+import factorial from "./factorial"
+import find from "./find"
+import findAll from "./findAll"
+import flatten from "./flatten"
+import float from "./float"
+import floor from "./floor"
+import identity from "./identity"
+import indexOf from "./indexOf"
+import int from "./int"
+import intersect from "./intersect"
+import inverse from "./inverse"
+import isArray from "./isArray"
+import isBoolean from "./isBoolean"
+import isDataFrame from "./isDataFrame"
+import isEqual from "./isEqual"
+import isFunction from "./isFunction"
+import isJagged from "./isJagged"
+import isNested from "./isNested"
+import isNumber from "./isNumber"
+import isObject from "./isObject"
+import isSeries from "./isSeries"
+import isString from "./isString"
+import isUndefined from "./isUndefined"
+import lerp from "./lerp"
+import log from "./log"
+import MathError from "./MathError"
+import max from "./max"
+import mean from "./mean"
+import median from "./median"
+import min from "./min"
+import mod from "./mod"
+import mode from "./mode"
+import multiply from "./multiply"
+import ndarray from "./ndarray"
+import normal from "./normal"
+import ones from "./ones"
+import permutations from "./permutations"
+import pow from "./pow"
+import print from "./print"
+import product from "./product"
+import random from "./random"
+import range from "./range"
+import remap from "./remap"
+import reshape from "./reshape"
+import reverse from "./reverse"
+import round from "./round"
+import scale from "./scale"
+import seed from "./seed"
+import set from "./set"
+import shape from "./shape"
+import shuffle from "./shuffle"
+import sign from "./sign"
+import sin from "./sin"
+import sort from "./sort"
+import sqrt from "./sqrt"
+import std from "./std"
+import stdev from "./stdev"
+import subtract from "./subtract"
+import sum from "./sum"
+import tan from "./tan"
+import time from "./time"
+import timeSync from "./timeSync"
+import timeAsync from "./timeAsync"
+import transpose from "./transpose"
+import union from "./union"
+import variance from "./variance"
+import vectorize from "./vectorize"
+import zeros from "./zeros"
+import zip from "./zip"
 
 const out = {
-  abs: require("./abs.js"),
-  add: require("./add.js"),
-  apply: require("./apply.js"),
-  arccos: require("./arccos.js"),
-  arcsin: require("./arcsin.js"),
-  arctan: require("./arctan.js"),
-  argmax: require("./argmax.js"),
-  argmin: require("./argmin.js"),
-  assert: require("./assert.js"),
-  ceil: require("./ceil.js"),
-  chop: require("./chop.js"),
-  clamp: require("./clamp.js"),
-  combinations: require("./combinations.js"),
-  copy: require("./copy.js"),
-  correl: require("./correl.js"),
-  cos: require("./cos.js"),
-  count: require("./count.js"),
-  covariance: require("./covariance.js"),
+  abs,
+  add,
+  apply,
+  arccos,
+  arcsin,
+  arctan,
+  argmax,
+  argmin,
+  assert,
+  ceil,
+  chop,
+  clamp,
+  combinations,
+  copy,
+  correl,
+  cos,
+  count,
+  covariance,
   DataFrame,
-  diff: require("./diff.js"),
-  distance: require("./distance.js"),
-  divide: require("./divide.js"),
-  dot: require("./dot.js"),
-  dropMissing: require("./drop-missing.js"),
-  dropMissingPairwise: require("./drop-missing-pairwise.js"),
-  dropNaN: require("./drop-nan.js"),
-  dropNaNPairwise: require("./drop-nan-pairwise.js"),
-  dropUndefined: require("./drop-undefined.js"),
-  exp: require("./exp.js"),
-  factorial: require("./factorial.js"),
-  find: require("./find.js"),
-  findAll: require("./find-all.js"),
-  flatten: require("./flatten.js"),
-  float: require("./float.js"),
-  floor: require("./floor.js"),
-  identity: require("./identity.js"),
-  indexOf: require("./index-of.js"),
-  int: require("./int.js"),
-  intersect: require("./intersect.js"),
-  inverse: require("./inverse.js"),
-  isArray: require("./is-array.js"),
-  isBoolean: require("./is-boolean.js"),
-  isDataFrame: require("./is-dataframe.js"),
-  isEqual: require("./is-equal.js"),
-  isFunction: require("./is-function.js"),
-  isJagged: require("./is-jagged.js"),
-  isNested: require("./is-nested.js"),
-  isNumber: require("./is-number.js"),
-  isObject: require("./is-object.js"),
-  isSeries: require("./is-series.js"),
-  isString: require("./is-string.js"),
-  isUndefined: require("./is-undefined.js"),
-  lerp: require("./lerp.js"),
-  log: require("./log.js"),
-  MathError: require("./math-error.js"),
-  max: require("./max.js"),
-  mean: require("./mean.js"),
-  median: require("./median.js"),
-  min: require("./min.js"),
-  mod: require("./mod.js"),
-  mode: require("./mode.js"),
-  multiply: require("./multiply.js"),
-  ndarray: require("./ndarray.js"),
-  normal: require("./normal.js"),
-  ones: require("./ones.js"),
-  permutations: require("./permutations.js"),
-  pow: require("./pow.js"),
-  print: require("./print.js"),
-  product: require("./product.js"),
-  random: require("./random.js").random,
-  range: require("./range.js"),
-  remap: require("./remap.js"),
-  reshape: require("./reshape.js"),
-  reverse: require("./reverse.js"),
-  round: require("./round.js"),
-  scale: require("./scale.js"),
-  seed: require("./random.js").seed,
+  diff,
+  distance,
+  divide,
+  dot,
+  dropMissing,
+  dropMissingPairwise,
+  dropNaN,
+  dropNaNPairwise,
+  dropUndefined,
+  exp,
+  factorial,
+  find,
+  findAll,
+  flatten,
+  float,
+  floor,
+  identity,
+  indexOf,
+  int,
+  intersect,
+  inverse,
+  isArray,
+  isBoolean,
+  isDataFrame,
+  isEqual,
+  isFunction,
+  isJagged,
+  isNested,
+  isNumber,
+  isObject,
+  isSeries,
+  isString,
+  isUndefined,
+  lerp,
+  log,
+  MathError,
+  max,
+  mean,
+  median,
+  min,
+  mod,
+  mode,
+  multiply,
+  ndarray,
+  normal,
+  ones,
+  permutations,
+  pow,
+  print,
+  product,
+  random,
+  range,
+  remap,
+  reshape,
+  reverse,
+  round,
+  scale,
+  seed,
   Series,
-  set: require("./set.js"),
-  shape: require("./shape.js"),
-  shuffle: require("./shuffle.js"),
-  sign: require("./sign.js"),
-  sin: require("./sin.js"),
-  sort: require("./sort.js"),
-  sqrt: require("./sqrt.js"),
-  std: require("./std.js"),
-  stdev: require("./stdev.js"),
-  subtract: require("./subtract.js"),
-  sum: require("./sum.js"),
-  tan: require("./tan.js"),
-  time: require("./time.js").timeSync,
-  timeSync: require("./time.js").timeSync,
-  timeAsync: require("./time.js").timeAsync,
-  transpose: require("./transpose.js"),
-  union: require("./union.js"),
-  variance: require("./variance.js"),
-  vectorize: require("./vectorize.js"),
-  zeros: require("./zeros.js"),
-  zip: require("./zip.js"),
+  set,
+  shape,
+  shuffle,
+  sign,
+  sin,
+  sort,
+  sqrt,
+  std,
+  stdev,
+  subtract,
+  sum,
+  tan,
+  time,
+  timeSync,
+  timeAsync,
+  transpose,
+  union,
+  variance,
+  vectorize,
+  zeros,
+  zip,
 
-  dump: function () {
+  dump() {
     const pub = typeof global !== "undefined" ? global : window
 
     if (!pub) {
-      throw new out.MathError(
+      throw new MathError(
         "Cannot dump functions into global scope because neither `global` nor `window` exist in the current context!"
       )
     }
 
-    Object.keys(out).forEach(key => {
+    Object.keys(this).forEach(key => {
       try {
         Object.defineProperty(pub, key, {
           configurable: false,
           enumerable: true,
           writable: false,
-          value: out[key],
+          value: this[key],
         })
       } catch (e) {
-        pub[key] = out[key]
+        pub[key] = this[key]
       }
     })
   },
 }
 
-if (typeof module !== "undefined") {
-  module.exports = out
-}
-
 if (typeof window !== "undefined") {
   window.JSMathTools = out
 }
+
+export default out
