@@ -1,6 +1,6 @@
-const isNumber = require("./is-number.js")
-const product = require("./product.js")
-const reshape = require("./reshape.js")
+const isNumber = require("./is-number")
+const product = require("./product")
+const reshape = require("./reshape")
 
 function zeros(shape) {
   if (isNumber(shape)) shape = [shape]

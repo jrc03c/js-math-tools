@@ -1,9 +1,9 @@
 const { DataFrame, Series } = require("./dataframe")
-const flatten = require("./flatten.js")
-const median = require("./median.js")
-const normal = require("./normal.js")
-const shuffle = require("./shuffle.js")
-const sort = require("./sort.js")
+const flatten = require("./flatten")
+const median = require("./median")
+const normal = require("./normal")
+const shuffle = require("./shuffle")
+const sort = require("./sort")
 
 test("tests that the median of arrays, series, and dataframes can be computed correctly", () => {
   expect(median([2, 3, 4])).toBe(3)

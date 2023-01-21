@@ -1,10 +1,10 @@
 const { DataFrame, Series } = require("./dataframe")
-const apply = require("./apply.js")
-const flatten = require("./flatten.js")
-const isEqual = require("./is-equal.js")
-const normal = require("./normal.js")
-const reshape = require("./reshape.js")
-const scale = require("./scale.js")
+const apply = require("./apply")
+const flatten = require("./flatten")
+const isEqual = require("./is-equal")
+const normal = require("./normal")
+const reshape = require("./reshape")
+const scale = require("./scale")
 
 test("tests that values can be multiplied correctly", () => {
   expect(scale(2, 3)).toBe(6)

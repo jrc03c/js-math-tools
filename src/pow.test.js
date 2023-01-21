@@ -1,9 +1,9 @@
 const { DataFrame, Series } = require("./dataframe")
-const flatten = require("./flatten.js")
-const isEqual = require("./is-equal.js")
-const normal = require("./normal.js")
-const pow = require("./pow.js")
-const reshape = require("./reshape.js")
+const flatten = require("./flatten")
+const isEqual = require("./is-equal")
+const normal = require("./normal")
+const pow = require("./pow")
+const reshape = require("./reshape")
 
 test("tests that values raised to powers can be computed correctly", () => {
   expect(pow(2, 3)).toBe(8)

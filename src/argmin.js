@@ -1,9 +1,9 @@
-const assert = require("./assert.js")
-const indexOf = require("./index-of.js")
-const isArray = require("./is-array.js")
-const isDataFrame = require("./is-dataframe.js")
-const isSeries = require("./is-series.js")
-const min = require("./min.js")
+const assert = require("./assert")
+const indexOf = require("./index-of")
+const isArray = require("./is-array")
+const isDataFrame = require("./is-dataframe")
+const isSeries = require("./is-series")
+const min = require("./min")
 
 function argmin(x) {
   if (isDataFrame(x)) {

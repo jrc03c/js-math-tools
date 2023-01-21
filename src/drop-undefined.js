@@ -1,4 +1,4 @@
-const dropMissing = require("./drop-missing.js")
+const dropMissing = require("./drop-missing")
 
 function dropUndefined(x) {
   return dropMissing(x)

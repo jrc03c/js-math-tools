@@ -1,5 +1,5 @@
-const MathError = require("../math-error.js")
-const dfToCSVString = require("./df-to-csv-string.js")
+const MathError = require("../math-error")
+const dfToCSVString = require("./df-to-csv-string")
 
 function toCSV(df, filename, shouldIncludeIndex) {
   const out = dfToCSVString(df, shouldIncludeIndex)

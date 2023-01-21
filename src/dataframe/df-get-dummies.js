@@ -1,8 +1,8 @@
-const assert = require("../assert.js")
-const isString = require("../is-string.js")
-const isUndefined = require("../is-undefined.js")
-const set = require("../set.js")
-const sort = require("../sort.js")
+const assert = require("../assert")
+const isString = require("../is-string")
+const isUndefined = require("../is-undefined")
+const set = require("../set")
+const sort = require("../sort")
 
 function camelify(text) {
   const temp = text.toLowerCase()

@@ -1,9 +1,9 @@
 const { DataFrame, Series } = require("./dataframe")
-const { random } = require("./random.js")
-const dropMissing = require("./drop-missing.js")
-const isEqual = require("./is-equal.js")
-const isUndefined = require("./is-undefined.js")
-const normal = require("./normal.js")
+const { random } = require("./random")
+const dropMissing = require("./drop-missing")
+const isEqual = require("./is-equal")
+const isUndefined = require("./is-undefined")
+const normal = require("./normal")
 
 test("tests that missing values can be dropped correctly", () => {
   const a = normal(100)

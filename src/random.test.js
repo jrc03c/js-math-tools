@@ -1,8 +1,8 @@
 const { DataFrame, Series } = require("./dataframe")
-const { random, seed } = require("./random.js")
-const abs = require("./abs.js")
-const mean = require("./mean.js")
-const std = require("./std.js")
+const { random, seed } = require("./random")
+const abs = require("./abs")
+const mean = require("./mean")
+const std = require("./std")
 
 test("tests that random numbers can be generated correctly", () => {
   expect(typeof random()).toBe("number")

@@ -1,5 +1,5 @@
-const apply = require("./apply.js")
-const ndarray = require("./ndarray.js")
+const apply = require("./apply")
+const ndarray = require("./ndarray")
 
 function ones(shape) {
   return apply(ndarray(shape), () => 1)

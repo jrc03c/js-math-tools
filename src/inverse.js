@@ -1,12 +1,12 @@
-const add = require("./add.js")
-const assert = require("./assert.js")
-const dot = require("./dot.js")
-const flatten = require("./flatten.js")
-const isArray = require("./is-array.js")
-const isDataFrame = require("./is-dataframe.js")
-const isNumber = require("./is-number.js")
-const scale = require("./scale.js")
-const shape = require("./shape.js")
+const add = require("./add")
+const assert = require("./assert")
+const dot = require("./dot")
+const flatten = require("./flatten")
+const isArray = require("./is-array")
+const isDataFrame = require("./is-dataframe")
+const isNumber = require("./is-number")
+const scale = require("./scale")
+const shape = require("./shape")
 
 function inverse(x) {
   if (isDataFrame(x)) {

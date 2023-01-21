@@ -1,10 +1,10 @@
 const { DataFrame, Series } = require("./dataframe")
-const chop = require("./chop.js")
-const flatten = require("./flatten.js")
-const isEqual = require("./is-equal.js")
-const range = require("./range.js")
-const reshape = require("./reshape.js")
-const shuffle = require("./shuffle.js")
+const chop = require("./chop")
+const flatten = require("./flatten")
+const isEqual = require("./is-equal")
+const range = require("./range")
+const reshape = require("./reshape")
+const shuffle = require("./shuffle")
 
 test("tests that values can be chopped correctly", () => {
   const r = reshape(

@@ -1,8 +1,8 @@
 const { DataFrame, Series } = require("./dataframe")
-const add = require("./add.js")
-const correl = require("./correl.js")
-const normal = require("./normal.js")
-const scale = require("./scale.js")
+const add = require("./add")
+const correl = require("./correl")
+const normal = require("./normal")
+const scale = require("./scale")
 
 test("tests that correlations can be computed correctly", () => {
   const a = normal(1000)

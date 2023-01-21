@@ -1,8 +1,8 @@
 const { DataFrame, Series } = require("./dataframe")
-const { random } = require("./random.js")
-const arcsin = require("./arcsin.js")
-const isEqual = require("./is-equal.js")
-const normal = require("./normal.js")
+const { random } = require("./random")
+const arcsin = require("./arcsin")
+const isEqual = require("./is-equal")
+const normal = require("./normal")
 
 test("tests that the inverse sine can be computed correctly", () => {
   const r = random([2, 3])

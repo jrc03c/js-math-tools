@@ -1,9 +1,9 @@
-const assert = require("./assert.js")
-const isArray = require("./is-array.js")
-const isDataFrame = require("./is-dataframe.js")
-const isEqual = require("./is-equal.js")
-const isSeries = require("./is-series.js")
-const set = require("./set.js")
+const assert = require("./assert")
+const isArray = require("./is-array")
+const isDataFrame = require("./is-dataframe")
+const isEqual = require("./is-equal")
+const isSeries = require("./is-series")
+const set = require("./set")
 
 function diff(a, b) {
   if (isDataFrame(a) || isSeries(a)) {

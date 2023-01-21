@@ -1,5 +1,5 @@
-const leftPad = require("../helpers/left-pad.js")
-const range = require("../range.js")
+const leftPad = require("../helpers/left-pad")
+const range = require("../range")
 
 function dfResetIndex(df, shouldSkipCopying) {
   const out = shouldSkipCopying ? df : df.copy()

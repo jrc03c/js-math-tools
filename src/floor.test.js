@@ -1,9 +1,9 @@
 const { DataFrame, Series } = require("./dataframe")
-const { random } = require("./random.js")
-const apply = require("./apply.js")
-const floor = require("./floor.js")
-const isEqual = require("./is-equal.js")
-const normal = require("./normal.js")
+const { random } = require("./random")
+const apply = require("./apply")
+const floor = require("./floor")
+const isEqual = require("./is-equal")
+const normal = require("./normal")
 
 test("tests that values can be correctly floored", () => {
   const a = random(100)

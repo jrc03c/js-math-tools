@@ -1,5 +1,5 @@
-const assert = require("../assert.js")
-const isUndefined = require("../is-undefined.js")
+const assert = require("../assert")
+const isUndefined = require("../is-undefined")
 
 function dfToObject(df, axis) {
   if (isUndefined(axis)) {

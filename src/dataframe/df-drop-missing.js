@@ -1,8 +1,8 @@
-const assert = require("../assert.js")
-const isString = require("../is-string.js")
-const isUndefined = require("../is-undefined.js")
-const isWholeNumber = require("../helpers/is-whole-number.js")
-const shape = require("../shape.js")
+const assert = require("../assert")
+const isString = require("../is-string")
+const isUndefined = require("../is-undefined")
+const isWholeNumber = require("../helpers/is-whole-number")
+const shape = require("../shape")
 
 function dfDropMissing(DataFrame, Series, df, axis, condition, threshold) {
   axis = axis || 0

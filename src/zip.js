@@ -1,10 +1,10 @@
-const assert = require("./assert.js")
-const isArray = require("./is-array.js")
-const isDataFrame = require("./is-dataframe.js")
-const isSeries = require("./is-series.js")
-const isUndefined = require("./is-undefined.js")
-const max = require("./max.js")
-const range = require("./range.js")
+const assert = require("./assert")
+const isArray = require("./is-array")
+const isDataFrame = require("./is-dataframe")
+const isSeries = require("./is-series")
+const isUndefined = require("./is-undefined")
+const max = require("./max")
+const range = require("./range")
 
 function zip() {
   const out = []

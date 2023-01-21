@@ -1,4 +1,4 @@
-const std = require("./std.js")
+const std = require("./std")
 
 function stdev(x) {
   return std(x)

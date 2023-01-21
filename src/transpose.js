@@ -1,10 +1,10 @@
-const assert = require("./assert.js")
-const isArray = require("./is-array.js")
-const isDataFrame = require("./is-dataframe.js")
-const isSeries = require("./is-series.js")
-const ndarray = require("./ndarray.js")
-const reverse = require("./reverse.js")
-const shape = require("./shape.js")
+const assert = require("./assert")
+const isArray = require("./is-array")
+const isDataFrame = require("./is-dataframe")
+const isSeries = require("./is-series")
+const ndarray = require("./ndarray")
+const reverse = require("./reverse")
+const shape = require("./shape")
 
 function transpose(arr) {
   if (isDataFrame(arr) || isSeries(arr)) {

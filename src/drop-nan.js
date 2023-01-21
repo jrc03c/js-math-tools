@@ -1,8 +1,8 @@
-const assert = require("./assert.js")
-const isArray = require("./is-array.js")
-const isDataFrame = require("./is-dataframe.js")
-const isNumber = require("./is-number.js")
-const isSeries = require("./is-series.js")
+const assert = require("./assert")
+const isArray = require("./is-array")
+const isDataFrame = require("./is-dataframe")
+const isNumber = require("./is-number")
+const isSeries = require("./is-series")
 
 function dropNaN(x) {
   if (isDataFrame(x) || isSeries(x)) {

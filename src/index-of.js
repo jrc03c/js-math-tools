@@ -1,10 +1,10 @@
-const assert = require("./assert.js")
-const isArray = require("./is-array.js")
-const isDataFrame = require("./is-dataframe.js")
-const isFunction = require("./is-function.js")
-const isNumber = require("./is-number.js")
-const isObject = require("./is-object.js")
-const isSeries = require("./is-series.js")
+const assert = require("./assert")
+const isArray = require("./is-array")
+const isDataFrame = require("./is-dataframe")
+const isFunction = require("./is-function")
+const isNumber = require("./is-number")
+const isObject = require("./is-object")
+const isSeries = require("./is-series")
 
 function indexOf(x, fn) {
   if (isDataFrame(x)) {

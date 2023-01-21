@@ -1,4 +1,4 @@
-const vectorize = require("./vectorize.js")
+const vectorize = require("./vectorize")
 
 function apply(x, fn) {
   try {

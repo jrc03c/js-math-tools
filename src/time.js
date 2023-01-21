@@ -1,5 +1,5 @@
-const assert = require("./assert.js")
-const isFunction = require("./is-function.js")
+const assert = require("./assert")
+const isFunction = require("./is-function")
 
 function timeSync(fn, args) {
   assert(isFunction(fn), "`fn` must be a function!")

@@ -1,10 +1,10 @@
-const assert = require("./assert.js")
-const flatten = require("./flatten.js")
-const isArray = require("./is-array.js")
-const isDataFrame = require("./is-dataframe.js")
-const isFunction = require("./is-function.js")
-const isObject = require("./is-object.js")
-const isSeries = require("./is-series.js")
+const assert = require("./assert")
+const flatten = require("./flatten")
+const isArray = require("./is-array")
+const isDataFrame = require("./is-dataframe")
+const isFunction = require("./is-function")
+const isObject = require("./is-object")
+const isSeries = require("./is-series")
 
 function find(x, fn) {
   if (isDataFrame(x)) {

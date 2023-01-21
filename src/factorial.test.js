@@ -1,8 +1,8 @@
 const { DataFrame, Series } = require("./dataframe")
-const factorial = require("./factorial.js")
-const isEqual = require("./is-equal.js")
-const normal = require("./normal.js")
-const round = require("./round.js")
+const factorial = require("./factorial")
+const isEqual = require("./is-equal")
+const normal = require("./normal")
+const round = require("./round")
 
 test("tests that factorial values can be computed correctly", () => {
   expect(factorial(5)).toBe(5 * 4 * 3 * 2)

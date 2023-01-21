@@ -1,5 +1,5 @@
-const assert = require("../assert.js")
-const isNumber = require("../is-number.js")
+const assert = require("../assert")
+const isNumber = require("../is-number")
 
 function leftPad(x, maxLength) {
   assert(isNumber(x), "The `leftPad` function only works on numbers!")

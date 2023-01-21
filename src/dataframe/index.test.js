@@ -1,14 +1,14 @@
 const { DataFrame, Series } = require(".")
 const filename = "delete-me.csv"
-const flatten = require("../flatten.js")
-const isEqual = require("../is-equal.js")
-const isUndefined = require("../is-undefined.js")
-const normal = require("../normal.js")
-const range = require("../range.js")
-const set = require("../set.js")
-const sort = require("../sort.js")
-const sum = require("../sum.js")
-const zeros = require("../zeros.js")
+const flatten = require("../flatten")
+const isEqual = require("../is-equal")
+const isUndefined = require("../is-undefined")
+const normal = require("../normal")
+const range = require("../range")
+const set = require("../set")
+const sort = require("../sort")
+const sum = require("../sum")
+const zeros = require("../zeros")
 
 test("tests DataFrame emptiness", () => {
   const xShape = [17, 32]

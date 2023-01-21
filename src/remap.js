@@ -1,9 +1,9 @@
-const isArray = require("./is-array.js")
-const isNumber = require("./is-number.js")
-const isUndefined = require("./is-undefined.js")
-const max = require("./max.js")
-const min = require("./min.js")
-const vectorize = require("./vectorize.js")
+const isArray = require("./is-array")
+const isNumber = require("./is-number")
+const isUndefined = require("./is-undefined")
+const max = require("./max")
+const min = require("./min")
+const vectorize = require("./vectorize")
 
 const helper = vectorize(function (x, a, b, c, d) {
   try {

@@ -1,7 +1,7 @@
 const { DataFrame, Series } = require("./dataframe")
-const clamp = require("./clamp.js")
-const isEqual = require("./is-equal.js")
-const normal = require("./normal.js")
+const clamp = require("./clamp")
+const isEqual = require("./is-equal")
+const normal = require("./normal")
 
 test("tests that values can be clamped correctly", () => {
   const s = new Series({ hello: normal(100) })

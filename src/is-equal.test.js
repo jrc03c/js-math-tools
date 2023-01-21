@@ -1,6 +1,6 @@
 const { DataFrame, Series } = require("./dataframe")
-const copy = require("./copy.js")
-const isEqual = require("./is-equal.js")
+const copy = require("./copy")
+const isEqual = require("./is-equal")
 
 test("tests equality of primitives", () => {
   const selfReferencer = [2, 3, 4]

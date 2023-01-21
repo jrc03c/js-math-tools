@@ -1,10 +1,10 @@
-const assert = require("./assert.js")
-const isArray = require("./is-array.js")
-const isDataFrame = require("./is-dataframe.js")
-const isEqual = require("./is-equal.js")
-const isNumber = require("./is-number.js")
-const isSeries = require("./is-series.js")
-const shape = require("./shape.js")
+const assert = require("./assert")
+const isArray = require("./is-array")
+const isDataFrame = require("./is-dataframe")
+const isEqual = require("./is-equal")
+const isNumber = require("./is-number")
+const isSeries = require("./is-series")
+const shape = require("./shape")
 
 function dropNaNPairwise(a, b) {
   if (isDataFrame(a) || isSeries(a)) {

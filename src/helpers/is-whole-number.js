@@ -1,4 +1,4 @@
-const isNumber = require("../is-number.js")
+const isNumber = require("../is-number")
 
 function isInteger(x) {
   return isNumber(x) && parseInt(x) === x

@@ -1,4 +1,4 @@
-const multiply = require("./multiply.js")
+const multiply = require("./multiply")
 
 function scale() {
   return multiply(...arguments)

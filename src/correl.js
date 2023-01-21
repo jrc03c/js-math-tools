@@ -1,9 +1,9 @@
-const assert = require("./assert.js")
-const covariance = require("./covariance.js")
-const isArray = require("./is-array.js")
-const isSeries = require("./is-series.js")
-const shape = require("./shape.js")
-const std = require("./std.js")
+const assert = require("./assert")
+const covariance = require("./covariance")
+const isArray = require("./is-array")
+const isSeries = require("./is-series")
+const shape = require("./shape")
+const std = require("./std")
 
 function correl(x, y) {
   if (isSeries(x)) {

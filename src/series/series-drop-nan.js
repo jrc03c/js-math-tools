@@ -1,4 +1,4 @@
-const isNumber = require("../is-number.js")
+const isNumber = require("../is-number")
 
 function seriesDropNaN(Series, series) {
   const index = []

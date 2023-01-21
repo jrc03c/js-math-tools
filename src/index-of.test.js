@@ -1,9 +1,9 @@
 const { DataFrame, Series } = require("./dataframe")
-const indexOf = require("./index-of.js")
-const isEqual = require("./is-equal.js")
-const normal = require("./normal.js")
-const range = require("./range.js")
-const reshape = require("./reshape.js")
+const indexOf = require("./index-of")
+const isEqual = require("./is-equal")
+const normal = require("./normal")
+const range = require("./range")
+const reshape = require("./reshape")
 
 test("tests that the indices of items can be found correctly", () => {
   expect(indexOf([2, 3, 4], 3)).toStrictEqual([1])

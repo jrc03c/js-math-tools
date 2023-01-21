@@ -1,8 +1,8 @@
-const { random } = require("./random.js")
-const assert = require("./assert.js")
-const isArray = require("./is-array.js")
-const isDataFrame = require("./is-dataframe.js")
-const isSeries = require("./is-series.js")
+const { random } = require("./random")
+const assert = require("./assert")
+const isArray = require("./is-array")
+const isDataFrame = require("./is-dataframe")
+const isSeries = require("./is-series")
 
 function shuffle(arr) {
   if (isDataFrame(arr) || isSeries(arr)) {

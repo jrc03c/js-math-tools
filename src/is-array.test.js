@@ -1,6 +1,6 @@
 const { DataFrame, Series } = require("./dataframe")
-const isArray = require("./is-array.js")
-const normal = require("./normal.js")
+const isArray = require("./is-array")
+const normal = require("./normal")
 class SubArray extends Array {}
 
 test("tests that arrays can be identified correctly", () => {

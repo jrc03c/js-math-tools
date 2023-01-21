@@ -1,7 +1,7 @@
-const { random } = require("./random.js")
-const apply = require("./apply.js")
-const isUndefined = require("./is-undefined.js")
-const ndarray = require("./ndarray.js")
+const { random } = require("./random")
+const apply = require("./apply")
+const isUndefined = require("./is-undefined")
+const ndarray = require("./ndarray")
 
 function helper() {
   const u1 = random()

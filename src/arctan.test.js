@@ -1,7 +1,7 @@
 const { DataFrame, Series } = require("./dataframe")
-const arctan = require("./arctan.js")
-const isEqual = require("./is-equal.js")
-const normal = require("./normal.js")
+const arctan = require("./arctan")
+const isEqual = require("./is-equal")
+const normal = require("./normal")
 
 test("tests that the inverse sine can be computed correctly", () => {
   const r = normal([2, 3])

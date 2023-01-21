@@ -1,11 +1,11 @@
-const assert = require("../assert.js")
-const isArray = require("../is-array.js")
-const isJagged = require("../is-jagged.js")
-const isObject = require("../is-object.js")
-const isString = require("../is-string.js")
-const isUndefined = require("../is-undefined.js")
-const MathError = require("../math-error.js")
-const shape = require("../shape.js")
+const assert = require("../assert")
+const isArray = require("../is-array")
+const isJagged = require("../is-jagged")
+const isObject = require("../is-object")
+const isString = require("../is-string")
+const isUndefined = require("../is-undefined")
+const MathError = require("../math-error")
+const shape = require("../shape")
 
 function dfAssign(DataFrame, Series, df, p1, p2) {
   const isDataFrame = x => x instanceof DataFrame

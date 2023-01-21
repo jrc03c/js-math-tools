@@ -1,9 +1,9 @@
-const assert = require("./assert.js")
-const isArray = require("./is-array.js")
-const isNumber = require("./is-number.js")
-const isSeries = require("./is-series.js")
-const mean = require("./mean.js")
-const shape = require("./shape.js")
+const assert = require("./assert")
+const isArray = require("./is-array")
+const isNumber = require("./is-number")
+const isSeries = require("./is-series")
+const mean = require("./mean")
+const shape = require("./shape")
 
 function covariance(x, y) {
   if (isSeries(x)) {

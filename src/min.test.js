@@ -1,7 +1,7 @@
 const { DataFrame, Series } = require("./dataframe")
-const flatten = require("./flatten.js")
-const min = require("./min.js")
-const normal = require("./normal.js")
+const flatten = require("./flatten")
+const min = require("./min")
+const normal = require("./normal")
 
 test("tests that the maximum value in arrays, series, and dataframes can be found correctly", () => {
   expect(min([2, 3, 4])).toBe(2)

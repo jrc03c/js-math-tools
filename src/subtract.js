@@ -1,5 +1,5 @@
-const add = require("./add.js")
-const scale = require("./scale.js")
+const add = require("./add")
+const scale = require("./scale")
 
 function subtract(a, b) {
   return add(a, scale(b, -1))

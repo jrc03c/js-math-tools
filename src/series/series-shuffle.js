@@ -1,4 +1,4 @@
-const shuffle = require("../shuffle.js")
+const shuffle = require("../shuffle")
 
 function seriesShuffle(series) {
   const out = series.copy()

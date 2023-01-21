@@ -1,5 +1,5 @@
-const sort = require("../sort.js")
-const transpose = require("../transpose.js")
+const sort = require("../sort")
+const transpose = require("../transpose")
 
 function seriesSortByIndex(Series, series) {
   let temp = transpose([series.values, series.index])

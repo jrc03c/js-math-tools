@@ -1,11 +1,11 @@
 const { DataFrame, Series } = require("./dataframe")
-const count = require("./count.js")
-const flatten = require("./flatten.js")
-const isEqual = require("./is-equal.js")
-const range = require("./range.js")
-const round = require("./round.js")
-const normal = require("./normal.js")
-const set = require("./set.js")
+const count = require("./count")
+const flatten = require("./flatten")
+const isEqual = require("./is-equal")
+const range = require("./range")
+const round = require("./round")
+const normal = require("./normal")
+const set = require("./set")
 
 test("tests that items in an array can be counted correctly", () => {
   const a = round(normal(1000))

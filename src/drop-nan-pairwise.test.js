@@ -1,9 +1,9 @@
 const { DataFrame, Series } = require("./dataframe")
-const { random } = require("./random.js")
-const dropNaNPairwise = require("./drop-nan-pairwise.js")
-const isEqual = require("./is-equal.js")
-const isJagged = require("./is-jagged.js")
-const normal = require("./normal.js")
+const { random } = require("./random")
+const dropNaNPairwise = require("./drop-nan-pairwise")
+const isEqual = require("./is-equal")
+const isJagged = require("./is-jagged")
+const normal = require("./normal")
 
 test("tests that NaN values can be correctly dropped pairwise", () => {
   const a = [2, 3, 4]

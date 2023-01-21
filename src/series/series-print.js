@@ -1,5 +1,5 @@
-const copy = require("../copy.js")
-const range = require("../range.js")
+const copy = require("../copy")
+const range = require("../range")
 
 function seriesPrint(series) {
   let temp = series.copy()

@@ -1,4 +1,4 @@
-const copy = require("../copy.js")
+const copy = require("../copy")
 
 function dfCopy(DataFrame, df) {
   if (df.isEmpty) return new DataFrame()

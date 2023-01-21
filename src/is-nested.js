@@ -1,7 +1,7 @@
-const assert = require("./assert.js")
-const isArray = require("./is-array.js")
-const isDataFrame = require("./is-dataframe.js")
-const isSeries = require("./is-series.js")
+const assert = require("./assert")
+const isArray = require("./is-array")
+const isDataFrame = require("./is-dataframe")
+const isSeries = require("./is-series")
 
 function isNested(x) {
   if (isDataFrame(x) || isSeries(x)) {

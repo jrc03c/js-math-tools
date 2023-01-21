@@ -1,9 +1,9 @@
-const assert = require("./assert.js")
-const isArray = require("./is-array.js")
-const isDataFrame = require("./is-dataframe.js")
-const isFunction = require("./is-function.js")
-const isSeries = require("./is-series.js")
-const isUndefined = require("./is-undefined.js")
+const assert = require("./assert")
+const isArray = require("./is-array")
+const isDataFrame = require("./is-dataframe")
+const isFunction = require("./is-function")
+const isSeries = require("./is-series")
+const isUndefined = require("./is-undefined")
 
 function alphaSort(a, b) {
   try {

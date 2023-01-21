@@ -1,5 +1,5 @@
-const isNumber = require("./is-number.js")
-const vectorize = require("./vectorize.js")
+const isNumber = require("./is-number")
+const vectorize = require("./vectorize")
 
 function sign(x) {
   try {

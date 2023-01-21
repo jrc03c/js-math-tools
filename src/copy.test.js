@@ -1,6 +1,6 @@
 const { DataFrame, Series } = require("./dataframe")
-const copy = require("./copy.js")
-const isEqual = require("./is-equal.js")
+const copy = require("./copy")
+const isEqual = require("./is-equal")
 const isTheSameObject = (a, b) => a === b
 
 function isACopy(a, b) {

@@ -1,9 +1,9 @@
 const { DataFrame, Series } = require("./dataframe")
-const abs = require("./abs.js")
-const add = require("./add.js")
-const covariance = require("./covariance.js")
-const normal = require("./normal.js")
-const scale = require("./scale.js")
+const abs = require("./abs")
+const add = require("./add")
+const covariance = require("./covariance")
+const normal = require("./normal")
+const scale = require("./scale")
 
 test("tests that covariances can be computed correctly", () => {
   const a = [2, 3, 4]

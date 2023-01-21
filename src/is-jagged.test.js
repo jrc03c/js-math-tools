@@ -1,6 +1,6 @@
 const { DataFrame, Series } = require("./dataframe")
-const isJagged = require("./is-jagged.js")
-const normal = require("./normal.js")
+const isJagged = require("./is-jagged")
+const normal = require("./normal")
 
 test("tests that jagged arrays can be identified correctly", () => {
   const a = normal(100)

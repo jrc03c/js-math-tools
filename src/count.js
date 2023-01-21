@@ -1,11 +1,11 @@
-const assert = require("./assert.js")
-const flatten = require("./flatten.js")
-const isArray = require("./is-array.js")
-const isDataFrame = require("./is-dataframe.js")
-const isEqual = require("./is-equal.js")
-const isFunction = require("./is-function.js")
-const isSeries = require("./is-series.js")
-const set = require("./set.js")
+const assert = require("./assert")
+const flatten = require("./flatten")
+const isArray = require("./is-array")
+const isDataFrame = require("./is-dataframe")
+const isEqual = require("./is-equal")
+const isFunction = require("./is-function")
+const isSeries = require("./is-series")
+const set = require("./set")
 
 function count(arr, matcher) {
   if (isDataFrame(arr) || isSeries(arr)) {

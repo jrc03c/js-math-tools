@@ -1,9 +1,9 @@
 const { DataFrame, Series } = require("./dataframe")
-const isEqual = require("./is-equal.js")
-const max = require("./max.js")
-const normal = require("./normal.js")
-const range = require("./range.js")
-const zip = require("./zip.js")
+const isEqual = require("./is-equal")
+const max = require("./max")
+const normal = require("./normal")
+const range = require("./range")
+const zip = require("./zip")
 
 test("tests that arrays and Series can be zipped correctly", () => {
   const a = normal(100)

@@ -1,8 +1,8 @@
 const { DataFrame, Series } = require("./dataframe")
-const add = require("./add.js")
-const isEqual = require("./is-equal.js")
-const normal = require("./normal.js")
-const print = require("./print.js")
+const add = require("./add")
+const isEqual = require("./is-equal")
+const normal = require("./normal")
+const print = require("./print")
 
 test("tests that values can be added together correctly", () => {
   const a = normal(100)

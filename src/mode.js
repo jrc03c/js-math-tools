@@ -1,11 +1,11 @@
-const assert = require("./assert.js")
-const count = require("./count.js")
-const flatten = require("./flatten.js")
-const isArray = require("./is-array.js")
-const isDataFrame = require("./is-dataframe.js")
-const isSeries = require("./is-series.js")
-const set = require("./set.js")
-const sort = require("./sort.js")
+const assert = require("./assert")
+const count = require("./count")
+const flatten = require("./flatten")
+const isArray = require("./is-array")
+const isDataFrame = require("./is-dataframe")
+const isSeries = require("./is-series")
+const set = require("./set")
+const sort = require("./sort")
 
 function mode(arr) {
   if (isDataFrame(arr) || isSeries(arr)) {

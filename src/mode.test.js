@@ -1,10 +1,10 @@
 const { DataFrame, Series } = require("./dataframe")
-const flatten = require("./flatten.js")
-const mode = require("./mode.js")
-const normal = require("./normal.js")
-const round = require("./round.js")
-const set = require("./set.js")
-const sort = require("./sort.js")
+const flatten = require("./flatten")
+const mode = require("./mode")
+const normal = require("./normal")
+const round = require("./round")
+const set = require("./set")
+const sort = require("./sort")
 
 test("tests that the mode of an array, series, or dataframe can be found correctly", () => {
   expect(mode([2, 2, 2, 3, 4])[0]).toBe(2)

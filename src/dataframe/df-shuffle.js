@@ -1,6 +1,6 @@
-const assert = require("../assert.js")
-const isUndefined = require("../is-undefined.js")
-const shuffle = require("../shuffle.js")
+const assert = require("../assert")
+const isUndefined = require("../is-undefined")
+const shuffle = require("../shuffle")
 
 function dfShuffle(df, axis) {
   if (isUndefined(axis)) axis = 0

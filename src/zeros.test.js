@@ -1,6 +1,6 @@
-const set = require("./set.js")
-const shape = require("./shape.js")
-const zeros = require("./zeros.js")
+const set = require("./set")
+const shape = require("./shape")
+const zeros = require("./zeros")
 
 test("gets a tensor of zeros", () => {
   const x = zeros([2, 3, 4, 5])

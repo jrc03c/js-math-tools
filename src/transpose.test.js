@@ -1,9 +1,9 @@
 const { DataFrame, Series } = require("./dataframe")
-const isEqual = require("./is-equal.js")
-const normal = require("./normal.js")
-const reverse = require("./reverse.js")
-const shape = require("./shape.js")
-const transpose = require("./transpose.js")
+const isEqual = require("./is-equal")
+const normal = require("./normal")
+const reverse = require("./reverse")
+const shape = require("./shape")
+const transpose = require("./transpose")
 
 test("tests that vectors and matrices can be transposed correctly", () => {
   const a = normal(100)

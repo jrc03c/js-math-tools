@@ -1,7 +1,7 @@
-const assert = require("./assert.js")
-const isNumber = require("./is-number.js")
-const isUndefined = require("./is-undefined.js")
-const reverse = require("./reverse.js")
+const assert = require("./assert")
+const isNumber = require("./is-number")
+const isUndefined = require("./is-undefined")
+const reverse = require("./reverse")
 
 function range(a, b, step = 1) {
   assert(

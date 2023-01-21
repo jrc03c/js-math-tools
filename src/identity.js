@@ -1,7 +1,7 @@
-const assert = require("./assert.js")
-const isNumber = require("./is-number.js")
-const isUndefined = require("./is-undefined.js")
-const zeros = require("./zeros.js")
+const assert = require("./assert")
+const isNumber = require("./is-number")
+const isUndefined = require("./is-undefined")
+const zeros = require("./zeros")
 
 function identity(size) {
   assert(

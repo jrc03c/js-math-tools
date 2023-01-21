@@ -1,6 +1,6 @@
-const isNumber = require("./is-number.js")
-const isUndefined = require("./is-undefined.js")
-const vectorize = require("./vectorize.js")
+const isNumber = require("./is-number")
+const isUndefined = require("./is-undefined")
+const vectorize = require("./vectorize")
 
 function log(x, base) {
   try {

@@ -1,8 +1,8 @@
-const assert = require("../assert.js")
-const isFunction = require("../is-function.js")
-const isUndefined = require("../is-undefined.js")
-const sort = require("../sort.js")
-const transpose = require("../transpose.js")
+const assert = require("../assert")
+const isFunction = require("../is-function")
+const isUndefined = require("../is-undefined")
+const sort = require("../sort")
+const transpose = require("../transpose")
 
 function seriesSort(Series, series, fn) {
   fn = fn || ((a, b) => (a < b ? -1 : 1))

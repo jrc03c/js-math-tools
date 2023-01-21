@@ -1,10 +1,10 @@
 const { DataFrame, Series } = require("./dataframe")
-const factorial = require("./factorial.js")
-const isEqual = require("./is-equal.js")
-const permutations = require("./permutations.js")
-const range = require("./range.js")
-const set = require("./set.js")
-const sort = require("./sort.js")
+const factorial = require("./factorial")
+const isEqual = require("./is-equal")
+const permutations = require("./permutations")
+const range = require("./range")
+const set = require("./set")
+const sort = require("./sort")
 
 function turnIntoStrings(arr) {
   return arr.map(item => JSON.stringify(item))

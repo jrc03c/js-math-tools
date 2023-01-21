@@ -1,8 +1,8 @@
 const { DataFrame, Series } = require("./dataframe")
-const argmin = require("./argmin.js")
-const normal = require("./normal.js")
-const range = require("./range.js")
-const shuffle = require("./shuffle.js")
+const argmin = require("./argmin")
+const normal = require("./normal")
+const range = require("./range")
+const shuffle = require("./shuffle")
 
 test("gets the argmin of various kinds of containers", () => {
   const a = shuffle(range(0, 100))

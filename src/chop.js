@@ -1,7 +1,7 @@
-const abs = require("./abs.js")
-const isNumber = require("./is-number.js")
-const isUndefined = require("./is-undefined.js")
-const vectorize = require("./vectorize.js")
+const abs = require("./abs")
+const isNumber = require("./is-number")
+const isUndefined = require("./is-undefined")
+const vectorize = require("./vectorize")
 
 function chop(x, threshold) {
   try {

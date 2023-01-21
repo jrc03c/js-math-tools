@@ -1,8 +1,8 @@
 const { DataFrame, Series } = require("./dataframe")
-const flatten = require("./flatten.js")
-const isEqual = require("./is-equal.js")
-const ndarray = require("./ndarray.js")
-const shape = require("./shape.js")
+const flatten = require("./flatten")
+const isEqual = require("./is-equal")
+const ndarray = require("./ndarray")
+const shape = require("./shape")
 
 test("tests that arrays of any (non-jagged) shape can be created successfully", () => {
   expect(

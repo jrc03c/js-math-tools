@@ -1,8 +1,8 @@
 const { DataFrame, Series } = require("./dataframe")
-const flatten = require("./flatten.js")
-const isEqual = require("./is-equal.js")
-const normal = require("./normal.js")
-const sum = require("./sum.js")
+const flatten = require("./flatten")
+const isEqual = require("./is-equal")
+const normal = require("./normal")
+const sum = require("./sum")
 
 test("tests that the sums of values can be computed correctly", () => {
   expect(sum([2, 3, 4])).toBe(9)

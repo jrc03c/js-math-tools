@@ -1,9 +1,9 @@
 const { DataFrame, Series } = require("./dataframe")
-const distance = require("./distance.js")
-const flatten = require("./flatten.js")
-const normal = require("./normal.js")
-const pow = require("./pow.js")
-const sqrt = require("./sqrt.js")
+const distance = require("./distance")
+const flatten = require("./flatten")
+const normal = require("./normal")
+const pow = require("./pow")
+const sqrt = require("./sqrt")
 
 test("gets the distance between two vectors", () => {
   const a = [3, 4]

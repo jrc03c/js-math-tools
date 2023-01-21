@@ -1,6 +1,6 @@
 const { DataFrame, Series } = require("./dataframe")
-const { random, seed } = require("./random.js")
-const isEqual = require("./is-equal.js")
+const { random, seed } = require("./random")
+const isEqual = require("./is-equal")
 
 test("tests that random numbers can be seeded correctly", () => {
   const a = random()

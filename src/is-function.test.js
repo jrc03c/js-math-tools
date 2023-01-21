@@ -1,5 +1,5 @@
 const { DataFrame, Series } = require("./dataframe")
-const isFunction = require("./is-function.js")
+const isFunction = require("./is-function")
 
 test("tests that functions can be identified correctly", () => {
   const rights = [

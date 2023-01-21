@@ -1,8 +1,8 @@
-const MathError = require("../math-error.js")
-const isBoolean = require("../is-boolean.js")
-const isObject = require("../is-object.js")
-const isString = require("../is-string.js")
-const isUndefined = require("../is-undefined.js")
+const MathError = require("../math-error")
+const isBoolean = require("../is-boolean")
+const isObject = require("../is-object")
+const isString = require("../is-string")
+const isUndefined = require("../is-undefined")
 
 function toCSVString(df, shouldIncludeIndex) {
   shouldIncludeIndex = (() => {

@@ -1,9 +1,9 @@
 const { DataFrame, Series } = require("./dataframe")
-const isDataFrame = require("./is-dataframe.js")
-const isEqual = require("./is-equal.js")
-const isSeries = require("./is-series.js")
-const normal = require("./normal.js")
-const vectorize = require("./vectorize.js")
+const isDataFrame = require("./is-dataframe")
+const isEqual = require("./is-equal")
+const isSeries = require("./is-series")
+const normal = require("./normal")
+const vectorize = require("./vectorize")
 
 test("tests function vectorization on single-argument functions", () => {
   const x = [2, 3, 4]

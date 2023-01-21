@@ -1,9 +1,9 @@
 const { DataFrame, Series } = require("./dataframe")
-const isEqual = require("./is-equal.js")
-const normal = require("./normal.js")
-const reverse = require("./reverse.js")
-const sort = require("./sort.js")
-const zip = require("./zip.js")
+const isEqual = require("./is-equal")
+const normal = require("./normal")
+const reverse = require("./reverse")
+const sort = require("./sort")
+const zip = require("./zip")
 
 test("tests that arrays, Series, and DataFrames can be correctly sorted", () => {
   const a = normal(100)

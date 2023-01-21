@@ -1,5 +1,5 @@
 const { DataFrame, Series } = require("./dataframe")
-const isUndefined = require("./is-undefined.js")
+const isUndefined = require("./is-undefined")
 
 test("checks to see if various things are undefined", () => {
   let x

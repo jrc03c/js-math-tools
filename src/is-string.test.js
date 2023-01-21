@@ -1,5 +1,5 @@
 const { DataFrame, Series } = require("./dataframe")
-const isString = require("./is-string.js")
+const isString = require("./is-string")
 
 test("checks to see if various things are strings", () => {
   expect(isString("hello")).toBe(true)

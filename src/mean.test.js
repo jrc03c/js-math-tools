@@ -1,7 +1,7 @@
 const { DataFrame, Series } = require("./dataframe")
-const flatten = require("./flatten.js")
-const mean = require("./mean.js")
-const normal = require("./normal.js")
+const flatten = require("./flatten")
+const mean = require("./mean")
+const normal = require("./normal")
 
 test("tests that the mean of arrays, series, and dataframes can be computed correctly", () => {
   expect(mean([2, 3, 4])).toBe(3)

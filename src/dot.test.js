@@ -1,7 +1,7 @@
 const { DataFrame, Series } = require("./dataframe")
-const dot = require("./dot.js")
-const isEqual = require("./is-equal.js")
-const normal = require("./normal.js")
+const dot = require("./dot")
+const isEqual = require("./is-equal")
+const normal = require("./normal")
 
 test("tests that the dot products of vectors and matrices can be computed correctly", () => {
   const a = [2, 3, 4]

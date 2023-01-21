@@ -1,4 +1,4 @@
-const copy = require("../copy.js")
+const copy = require("../copy")
 
 function seriesFilter(Series, series, fn) {
   let out = series.copy()

@@ -1,7 +1,7 @@
-const assert = require("../assert.js")
-const isArray = require("../is-array.js")
-const isFunction = require("../is-function.js")
-const isUndefined = require("../is-undefined.js")
+const assert = require("../assert")
+const isArray = require("../is-array")
+const isFunction = require("../is-function")
+const isUndefined = require("../is-undefined")
 
 function dfApply(DataFrame, Series, df, fn, axis) {
   axis = axis || 0

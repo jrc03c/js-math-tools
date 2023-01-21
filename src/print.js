@@ -1,9 +1,9 @@
 const { DataFrame, Series } = require("./dataframe")
-const isArray = require("./is-array.js")
-const isDataFrame = require("./is-dataframe.js")
-const isJagged = require("./is-jagged.js")
-const isSeries = require("./is-series.js")
-const shape = require("./shape.js")
+const isArray = require("./is-array")
+const isDataFrame = require("./is-dataframe")
+const isJagged = require("./is-jagged")
+const isSeries = require("./is-series")
+const shape = require("./shape")
 
 function print() {
   Object.keys(arguments).forEach(key => {

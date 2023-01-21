@@ -1,5 +1,5 @@
-const isString = require("../is-string.js")
-const range = require("../range.js")
+const isString = require("../is-string")
+const range = require("../range")
 
 function dfPrint(DataFrame, Series, df) {
   function truncate(s, maxLength) {

@@ -1,5 +1,5 @@
 const { DataFrame, Series } = require("./dataframe")
-const apply = require("./apply.js")
+const apply = require("./apply")
 
 test("tests that the `apply` function works correctly", () => {
   const x = [

@@ -1,5 +1,5 @@
 const { DataFrame, Series } = require("./dataframe")
-const isObject = require("./is-object.js")
+const isObject = require("./is-object")
 
 test("tests that objects can be correctly identified", () => {
   class Foo {}

@@ -1,8 +1,8 @@
-const assert = require("./assert.js")
-const isArray = require("./is-array.js")
-const isNested = require("./is-nested.js")
-const isNumber = require("./is-number.js")
-const isUndefined = require("./is-undefined.js")
+const assert = require("./assert")
+const isArray = require("./is-array")
+const isNested = require("./is-nested")
+const isNumber = require("./is-number")
+const isUndefined = require("./is-undefined")
 
 const error =
   "You must pass a natural number or a one-dimensional array of natural numbers into the `ndarray` function!"

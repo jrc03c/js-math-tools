@@ -1,11 +1,11 @@
 const { DataFrame, Series } = require("../dataframe")
-const isEqual = require("../is-equal.js")
-const isUndefined = require("../is-undefined.js")
-const normal = require("../normal.js")
-const range = require("../range.js")
-const scale = require("../scale.js")
-const set = require("../set.js")
-const sort = require("../sort.js")
+const isEqual = require("../is-equal")
+const isUndefined = require("../is-undefined")
+const normal = require("../normal")
+const range = require("../range")
+const scale = require("../scale")
+const set = require("../set")
+const sort = require("../sort")
 
 test("tests Series stuff", () => {
   expect(new Series().isEmpty).toBe(true)

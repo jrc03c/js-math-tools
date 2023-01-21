@@ -1,9 +1,9 @@
-const assert = require("./assert.js")
-const flatten = require("./flatten.js")
-const isArray = require("./is-array.js")
-const isDataFrame = require("./is-dataframe.js")
-const isNumber = require("./is-number.js")
-const isSeries = require("./is-series.js")
+const assert = require("./assert")
+const flatten = require("./flatten")
+const isArray = require("./is-array")
+const isDataFrame = require("./is-dataframe")
+const isNumber = require("./is-number")
+const isSeries = require("./is-series")
 
 function combinations(arr, r) {
   if (isDataFrame(arr) || isSeries(arr)) {

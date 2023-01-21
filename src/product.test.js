@@ -1,8 +1,8 @@
 const { DataFrame, Series } = require("./dataframe")
-const flatten = require("./flatten.js")
-const isEqual = require("./is-equal.js")
-const normal = require("./normal.js")
-const product = require("./product.js")
+const flatten = require("./flatten")
+const isEqual = require("./is-equal")
+const normal = require("./normal")
+const product = require("./product")
 
 test("tests that the products of values can be computed correctly", () => {
   expect(product([2, 3, 4])).toBe(24)

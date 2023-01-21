@@ -1,9 +1,9 @@
-const assert = require("./assert.js")
-const isArray = require("./is-array.js")
-const isDataFrame = require("./is-dataframe.js")
-const isSeries = require("./is-series.js")
-const sqrt = require("./sqrt.js")
-const variance = require("./variance.js")
+const assert = require("./assert")
+const isArray = require("./is-array")
+const isDataFrame = require("./is-dataframe")
+const isSeries = require("./is-series")
+const sqrt = require("./sqrt")
+const variance = require("./variance")
 
 function std(arr) {
   if (isDataFrame(arr) || isSeries(arr)) {

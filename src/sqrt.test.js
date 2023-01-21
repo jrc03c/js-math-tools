@@ -1,8 +1,8 @@
 const { DataFrame, Series } = require("./dataframe")
-const apply = require("./apply.js")
-const isEqual = require("./is-equal.js")
-const normal = require("./normal.js")
-const sqrt = require("./sqrt.js")
+const apply = require("./apply")
+const isEqual = require("./is-equal")
+const normal = require("./normal")
+const sqrt = require("./sqrt")
 
 test("tests that square roots can be correctly computed", () => {
   const a = normal(100)

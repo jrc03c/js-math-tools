@@ -1,7 +1,7 @@
 const { DataFrame, Series } = require("./dataframe")
-const isEqual = require("./is-equal.js")
-const normal = require("./normal.js")
-const sin = require("./sin.js")
+const isEqual = require("./is-equal")
+const normal = require("./normal")
+const sin = require("./sin")
 
 test("tests that sines can be computed correctly", () => {
   const r = normal([50, 50])

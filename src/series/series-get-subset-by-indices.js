@@ -1,9 +1,9 @@
-const assert = require("../assert.js")
-const isArray = require("../is-array.js")
-const isUndefined = require("../is-undefined.js")
-const isWholeNumber = require("../helpers/is-whole-number.js")
-const range = require("../range.js")
-const shape = require("../shape.js")
+const assert = require("../assert")
+const isArray = require("../is-array")
+const isUndefined = require("../is-undefined")
+const isWholeNumber = require("../helpers/is-whole-number")
+const range = require("../range")
+const shape = require("../shape")
 
 function seriesGetSubsetByIndices(series, indices) {
   const dataShape = series.shape

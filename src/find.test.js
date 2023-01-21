@@ -1,8 +1,9 @@
 const { DataFrame, Series } = require("./dataframe")
-const find = require("./find.js")
-const flatten = require("./flatten.js")
-const isEqual = require("./is-equal.js")
-const normal = require("./normal.js")
+const find = require("./find")
+const flatten = require("./flatten")
+const isEqual = require("./is-equal")
+const isObject = require("./is-object")
+const normal = require("./normal")
 
 function makeKey(n) {
   const alpha = "1234567890abcdef"
@@ -40,8 +41,8 @@ test("tests that items matching a certain function can be found", () => {
     bar: normal(100),
   })
 
-  const jTrue = i.get("foo").values.find(v => v instanceof Object)
-  const jPred = find(i, v => v instanceof Object)
+  const jTrue = i.get("foo").values.find(v => isObject(v))
+  const jPred = find(i, v => isObject(v))
   expect(isEqual(jPred, jTrue)).toBe(true)
 
   const k = { a: { b: { c: [2, null, "foo"] } } }

@@ -1,8 +1,8 @@
-const combinations = require("./combinations.js")
-const factorial = require("./factorial.js")
-const range = require("./range.js")
-const set = require("./set.js")
-const sort = require("./sort.js")
+const combinations = require("./combinations")
+const factorial = require("./factorial")
+const range = require("./range")
+const set = require("./set")
+const sort = require("./sort")
 
 function turnIntoStrings(arr) {
   return arr.map(item => JSON.stringify(item))

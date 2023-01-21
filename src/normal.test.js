@@ -1,9 +1,9 @@
 const { DataFrame, Series } = require("./dataframe")
-const abs = require("./abs.js")
-const mean = require("./mean.js")
-const normal = require("./normal.js")
-const seed = require("./random.js").seed
-const std = require("./std.js")
+const abs = require("./abs")
+const mean = require("./mean")
+const normal = require("./normal")
+const seed = require("./random").seed
+const std = require("./std")
 
 test("tests that normally-distributed random numbers can be generated correctly", () => {
   expect(typeof normal()).toBe("number")

@@ -1,4 +1,4 @@
-const isUndefined = require("../is-undefined.js")
+const isUndefined = require("../is-undefined")
 
 function seriesDropMissing(series) {
   const out = series.copy()

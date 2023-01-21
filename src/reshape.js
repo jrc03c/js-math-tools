@@ -1,11 +1,11 @@
-const assert = require("./assert.js")
-const flatten = require("./flatten.js")
-const isArray = require("./is-array.js")
-const isDataFrame = require("./is-dataframe.js")
-const isNumber = require("./is-number.js")
-const isSeries = require("./is-series.js")
-const product = require("./product.js")
-const shape = require("./shape.js")
+const assert = require("./assert")
+const flatten = require("./flatten")
+const isArray = require("./is-array")
+const isDataFrame = require("./is-dataframe")
+const isNumber = require("./is-number")
+const isSeries = require("./is-series")
+const product = require("./product")
+const shape = require("./shape")
 
 function reshape(x, newShape) {
   if (isDataFrame(x) || isSeries(x)) {

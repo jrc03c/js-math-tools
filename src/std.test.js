@@ -1,9 +1,9 @@
 const { DataFrame, Series } = require("./dataframe")
-const { random } = require("./random.js")
-const abs = require("./abs.js")
-const isEqual = require("./is-equal.js")
-const normal = require("./normal.js")
-const std = require("./std.js")
+const { random } = require("./random")
+const abs = require("./abs")
+const isEqual = require("./is-equal")
+const normal = require("./normal")
+const std = require("./std")
 
 test("tests that standard deviations can be correctly computed", () => {
   const a = normal(10000)
