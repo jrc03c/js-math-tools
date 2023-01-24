@@ -500,6 +500,57 @@ Returns a copy of the original `DataFrame` in which the values (and row names an
 
 <hr />
 
+## `decycle(x)`
+
+Returns a copy of `x` in which cyclic references are replaced with strings indicating the path through the object to the referenced value. In this context, the path `"/"` refers to the root object (`x`), and a path like `"/foo/bar"` refers to `x.foo.bar`.
+
+For example:
+
+```js
+const person = { name: "Josh" }
+person.self = person
+console.log(person)
+// <ref *1> { name: 'Josh', self: [Circular *1] }
+
+const { decycle } = require("@jrc03c/js-math-tools")
+console.log(decycle(person))
+// { name: 'Josh', self: '<reference to "/">' }
+```
+
+Here's an example of what the path might look like in a more deeply nested circular reference:
+
+```js
+const util = require("util")
+const x = { foo: { bar: { baz: { hello: "world" } } } }
+x.foo.bar.baz.parent = x.foo.bar
+
+console.log(util.inspect(x, { depth: Infinity, compact: false }))
+// {
+//   foo: {
+//     bar: <ref *1> {
+//       baz: {
+//         hello: 'world',
+//         parent: [Circular *1]
+//       }
+//     }
+//   }
+// }
+
+console.log(util.inspect(decycle(x), { depth: Infinity, compact: false }))
+// {
+//   foo: {
+//     bar: {
+//       baz: {
+//         hello: 'world',
+//         parent: '<reference to "/foo/bar">'
+//       }
+//     }
+//   }
+// }
+```
+
+<hr />
+
 ## `diff(a, b)`
 
 Returns the difference between `set(a)` and `set(b)`; i.e., the set of values that are included in `a` and _not_ included in `b`. Note that the order of the arguments matters. If `a` and `b` aren't identical, then `diff(a, b)` won't necessarily produce the same results as `diff(b, a)`. For example:
