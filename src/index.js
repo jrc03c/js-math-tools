@@ -39,6 +39,7 @@ const out = {
   floor: require("./floor"),
   identity: require("./identity"),
   indexOf: require("./index-of"),
+  inferType: require("./infer-type"),
   int: require("./int"),
   intersect: require("./intersect"),
   inverse: require("./inverse"),
