@@ -9,8 +9,6 @@ const dfDrop = require("./df-drop")
 const dfDropMissing = require("./df-drop-missing")
 const dfDropNaN = require("./df-drop-nan")
 const dfFilter = require("./df-filter")
-const dfFromCSV = require("./df-from-csv")
-const dfFromCSVString = require("./df-from-csv-string")
 const dfGet = require("./df-get")
 const dfGetDummies = require("./df-get-dummies")
 const dfGetSubsetByIndices = require("./df-get-subset-by-indices")
@@ -19,8 +17,6 @@ const dfPrint = require("./df-print")
 const dfResetIndex = require("./df-reset-index")
 const dfShuffle = require("./df-shuffle")
 const dfSort = require("./df-sort")
-const dfToCSV = require("./df-to-csv")
-const dfToCSVString = require("./df-to-csv-string")
 const dfToJSON = require("./df-to-json")
 const dfToJSONString = require("./df-to-json-string")
 const dfToObject = require("./df-to-object")
@@ -429,16 +425,6 @@ class DataFrame {
     return dfToObject(self, axis)
   }
 
-  toCSVString(shouldIncludeIndex) {
-    const self = this
-    return dfToCSVString(self, shouldIncludeIndex)
-  }
-
-  saveAsCSV(filename, shouldIncludeIndex) {
-    const self = this
-    return dfToCSV(self, filename, shouldIncludeIndex)
-  }
-
   toJSONString(axis) {
     const self = this
     return dfToJSONString(self, axis)
@@ -493,14 +479,6 @@ class DataFrame {
     const self = this
     return JSON.stringify(self)
   }
-}
-
-DataFrame.fromCSV = function () {
-  return dfFromCSV(DataFrame, ...arguments)
-}
-
-DataFrame.fromCSVString = function () {
-  return dfFromCSVString(DataFrame, ...arguments)
 }
 
 const Series = require("../series")(DataFrame)

@@ -190,6 +190,8 @@ The constructor for a `DataFrame` can optionally receive a value `x`, which can 
 - a 2-dimensional array
 - an object whose key-value pairs represent column names and column values, respectively
 
+> **NOTE:** Unlike the pandas `DataFrame` class, this `DataFrame` class doesn't have any methods for reading from or writing to CSV files. I recommend using [papaparse](https://www.papaparse.com/) if you need that functionality because it's very robust.
+
 ### `DataFrame.values`
 
 A 2-dimensional array containing the values held by the DataFrame. Technically, `values` is a getter-setter pair that stores its data in a hidden `_values` property. While it's possible to set the `_values` property directly, this is strongly discouraged because it bypasses sanity checks on the data, like checking that new data is 2-dimensional, etc.
@@ -403,14 +405,6 @@ Returns of a copy of the original `DataFrame` from which the given `rows` and `c
 
 Returns a copy of the original `DataFrame` with rows or columns filtered out by `fn`. If `axis` is 0, then row `Series` objects will be passed into `fn`; and if `axis` is 1, then column `Series` objects will be passed into `fn`. If `fn` returns `false` for any input, then that input will be filtered out.
 
-### `DataFrame.fromCSVString(string)` [static]
-
-Parses a CSV string and returns a `DataFrame`.
-
-### `DataFrame.fromCSV(file)` [static]
-
-Fetches and parses a CSV file, and then returns a `DataFrame`. Do note that this function isn't very robust; in fact, I often use [`papaparse`](https://www.papaparse.com/) to do the heavy lifting of parsing since it's much better at handling edge cases. This function is provided for convenience, but probably ought not to be used unless the given CSV file is very simple (e.g., containing only numbers).
-
 ### `DataFrame.getDummies(columns)`
 
 Returns a `DataFrame` containing one-hot encodings of the given `columns` in the original `DataFrame`. Note that in most applications of one-hot encodings, if a column contains _n_ unique values, then (_n_ - 1) columns will be returned. But this implementation returns _n_ columns just in case you have other uses for it. But dropping the extra column is easy with the `drop` method.
@@ -450,14 +444,6 @@ Returns a copy of the original `DataFrame` in which the rows (if `axis` is 0) or
 ### `DataFrame.sort(columns, directions)` or `DataFrame.sort(fn, directions)`
 
 Returns a copy of the original `DataFrame` sorted by the given `columns` or `fn`. The `columns` argument can be a whole number, string, or array of whole numbers or strings can be given. The `fn` argument can be a comparison function that will compare `Series` against each other. By default, all of the columns will be sorted in ascending order; but to override this behavior, pass a boolean value, array of boolean values, or array of "ascending" / "descending" string values as `directions`.
-
-### `DataFrame.toCSVString()`
-
-Returns a stringified copy of the original `DataFrame` in CSV format.
-
-### `DataFrame.saveAsCSV(path, shouldIncludeIndex=true)`
-
-Writes the `DataFrame` to disk at `path` in CSV format. By default, the saved data will include the list of row names. To disable this, pass `false` as `shouldIncludeIndex`. In a browser, only a filename need be passed as `path` since the file will just be downloaded in whatever way the browser usually downloads files. In Node, however, a filesystem path (relative or absolute) must be passed as `path`.
 
 ### `DataFrame.toJSONString()`
 

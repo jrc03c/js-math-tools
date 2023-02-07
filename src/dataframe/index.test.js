@@ -1,5 +1,4 @@
 const { DataFrame, Series } = require(".")
-const filename = "delete-me.csv"
 const flatten = require("../flatten")
 const isEqual = require("../is-equal")
 const isUndefined = require("../is-undefined")
@@ -294,68 +293,6 @@ test("tests DataFrame filtering", () => {
   expect(sort(f4.values)).toStrictEqual([0, 0, 0])
 })
 
-test("tests DataFrame reading & writing to and from disk", async () => {
-  function makeKey(n) {
-    const alpha = "abcdefghijklmnopqrstuvwxyz1234567890"
-    let out = ""
-    for (let i = 0; i < n; i++)
-      out += alpha[parseInt(Math.random() * alpha.length)]
-    return out
-  }
-
-  function pause(ms) {
-    return new Promise((resolve, reject) => {
-      try {
-        return setTimeout(resolve, ms)
-      } catch (e) {
-        return reject(e)
-      }
-    })
-  }
-
-  const x = new DataFrame(normal([1000, 25]))
-  x.columns = x.columns.map(() => makeKey(8))
-  x.index = x.index.map(() => makeKey(8))
-
-  let yPred
-  let shouldIncludeIndex = false
-  const hasHeaderRow = true
-
-  // v1
-  x.saveAsCSV(filename, shouldIncludeIndex)
-
-  yPred = await DataFrame.fromCSV(
-    filename,
-    null,
-    hasHeaderRow,
-    shouldIncludeIndex
-  )
-
-  expect(yPred.values).toStrictEqual(x.values)
-  expect(yPred.columns).toStrictEqual(x.columns)
-  expect(yPred.index).not.toStrictEqual(x.index)
-  expect(yPred === x).toBe(false)
-  await pause(1000)
-
-  // v2
-  shouldIncludeIndex = false
-
-  x.saveAsCSV(filename, shouldIncludeIndex)
-
-  yPred = await DataFrame.fromCSV(
-    filename,
-    null,
-    hasHeaderRow,
-    shouldIncludeIndex
-  )
-
-  expect(yPred.values).toStrictEqual(x.values)
-  expect(yPred.columns).toStrictEqual(x.columns)
-  expect(yPred.index).toStrictEqual(x.resetIndex().index)
-  expect(yPred === x).toBe(false)
-  await pause(1000)
-})
-
 test("tests DataFrame one-hot encoding", () => {
   const x = new DataFrame({
     favoriteIceCream: [
@@ -582,13 +519,4 @@ test("tests DataFrame dimensions", () => {
   const x = new DataFrame(normal([100, 25]))
   expect(x.length).toBe(100)
   expect(x.width).toBe(25)
-})
-
-afterAll(() => {
-  // clean up
-  const fs = require("fs")
-
-  if (fs.existsSync(filename)) {
-    fs.unlinkSync(filename)
-  }
 })
