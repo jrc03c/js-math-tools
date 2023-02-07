@@ -1,12 +1,13 @@
 {
   "name": "@jrc03c/js-math-tools",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "some math tools for JS",
   "main": "src/index.js",
   "scripts": {
     "build": "esbuild src/index.js --bundle --outfile=dist/js-math-tools.js --minify",
     "watch": "esbuild src/index.js --bundle --outfile=dist/js-math-tools.js --minify --watch",
-    "test": "./test.sh"
+    "test": "./test.sh",
+    "pub": "npm version patch --force && npm publish --access=public"
   },
   "repository": {
     "type": "git",
