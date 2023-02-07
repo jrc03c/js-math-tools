@@ -20,6 +20,7 @@ const out = {
   count: require("./count"),
   covariance: require("./covariance"),
   DataFrame,
+  dataTypes: require("./helpers/data-types"),
   decycle: require("./decycle"),
   diff: require("./diff"),
   distance: require("./distance"),
