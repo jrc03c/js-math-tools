@@ -24,11 +24,9 @@ function dfPrint(DataFrame, Series, df) {
   const halfMaxRows = parseInt(maxRows / 2)
 
   const maxColumns =
-    typeof window === "undefined"
-      ? typeof process === "undefined"
-        ? Math.floor(process.stdout.columns / 24) - 1
-        : 10
-      : 10
+    typeof process === "undefined"
+      ? 10
+      : Math.floor(process.stdout.columns / 24) - 1
 
   const halfMaxColumns = parseInt(maxColumns / 2)
 
