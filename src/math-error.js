@@ -1,7 +1,19 @@
+const isBrowser = new Function(`
+  try {
+    return this === window
+  } catch(e) {}
+
+  try {
+    return typeof importScripts !== "undefined"
+  } catch(e) {}
+
+  return false
+`)
+
 class MathError extends Error {
   constructor(message) {
     // browser
-    if (typeof window !== "undefined") {
+    if (isBrowser()) {
       super(message)
     }
 
