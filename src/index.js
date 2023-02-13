@@ -10,6 +10,7 @@ const out = {
   argmax: require("./argmax"),
   argmin: require("./argmin"),
   assert: require("./assert"),
+  cast: require("./cast"),
   ceil: require("./ceil"),
   chop: require("./chop"),
   clamp: require("./clamp"),
