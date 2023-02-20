@@ -1,4 +1,6 @@
 const isArray = require("./is-array")
+const isBoolean = require("./is-boolean")
+const isObject = require("./is-object")
 const isUndefined = require("./is-undefined")
 const nullValues = require("./helpers/null-values")
 
@@ -12,12 +14,20 @@ function cast(value, type) {
   }
 
   if (type === "number") {
+    if (isUndefined(value)) {
+      return NaN
+    }
+
     const out = parseFloat(value)
     if (isNaN(out)) return NaN
     return out
   }
 
   if (type === "boolean") {
+    if (isBoolean(value)) {
+      return value
+    }
+
     try {
       const vBool = (
         typeof value === "object"
@@ -44,12 +54,20 @@ function cast(value, type) {
   }
 
   if (type === "date") {
+    if (value instanceof Date) {
+      return value
+    }
+
     const out = new Date(value)
     if (out.toString() === "Invalid Date") return null
     return out
   }
 
   if (type === "object") {
+    if (isObject(value)) {
+      return value
+    }
+
     // note: don't return arrays!
     try {
       const out = JSON.parse(value)

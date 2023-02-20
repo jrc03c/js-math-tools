@@ -6,6 +6,8 @@ const normal = require("./normal")
 const range = require("./range")
 
 test("tests that both individual values and arrays can be cast", () => {
+  // types = ["boolean", "date", "null", "number", "object", "string"]
+
   const date = new Date()
 
   expect(cast("true", "boolean")).toBe(true)
@@ -182,4 +184,22 @@ test("tests that missing values are correctly cast as null or NaN", () => {
   const lTrue = ["234", JSON.stringify({ hello: "world" }), null, null]
   const lPred = cast(k, "string")
   expect(isEqual(lPred, lTrue)).toBe(true)
+})
+
+test("tests that values that are already in their target type are not changed", () => {
+  // types = ["boolean", "date", "null", "number", "object", "string"]
+  const date = new Date()
+
+  expect(cast(true, "boolean")).toBe(true)
+  expect(cast(false, "boolean")).toBe(false)
+  expect(isEqual(cast(date, "date"), date)).toBe(true)
+  expect(cast(null, "null")).toBe(null)
+  expect(cast(undefined, "null")).toBe(null)
+  expect(cast(234, "number")).toBe(234)
+
+  expect(isEqual(cast({ hello: "world" }, "object"), { hello: "world" })).toBe(
+    true
+  )
+
+  expect(cast("foobar", "string")).toBe("foobar")
 })
