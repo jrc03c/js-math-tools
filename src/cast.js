@@ -1,9 +1,10 @@
 const isArray = require("./is-array")
+const isUndefined = require("./is-undefined")
 const nullValues = require("./helpers/null-values")
 
 function cast(value, type) {
-  if (value === undefined) {
-    value = "undefined"
+  if (isArray(value)) {
+    return value.map(v => cast(v, type))
   }
 
   if (type === "null") {
@@ -18,18 +19,28 @@ function cast(value, type) {
 
   if (type === "boolean") {
     try {
-      const vBool = value.trim().toLowerCase()
+      const vBool = (
+        typeof value === "object"
+          ? value.toString() === "null"
+            ? "false"
+            : JSON.stringify(value)
+          : value.toString()
+      )
+        .trim()
+        .toLowerCase()
 
-      if (vBool === "true" || vBool === "yes") {
+      if (vBool === "true" || vBool === "yes" || vBool === "y") {
         return true
       }
 
-      if (vBool === "false" || vBool === "no") {
+      if (vBool === "false" || vBool === "no" || vBool === "n") {
         return false
       }
-    } catch (e) {}
 
-    return null
+      return null
+    } catch (e) {
+      return null
+    }
   }
 
   if (type === "date") {
@@ -42,21 +53,39 @@ function cast(value, type) {
     // note: don't return arrays!
     try {
       const out = JSON.parse(value)
-      if (isArray(out)) return null
-      return out
+
+      if (isArray(out)) {
+        return out.map(v => cast(v, type))
+      } else {
+        return out
+      }
     } catch (e) {
       return null
     }
   }
 
   if (type === "string") {
-    try {
-      if (nullValues.indexOf(value.trim().toLowerCase()) > -1) return null
-    } catch (e) {
+    if (isUndefined(value)) {
       return null
     }
 
-    return value
+    const valueString = (() => {
+      if (typeof value === "object") {
+        if (value === null) {
+          return "null"
+        } else {
+          return JSON.stringify(value)
+        }
+      } else {
+        return value.toString()
+      }
+    })()
+
+    if (nullValues.indexOf(valueString.trim().toLowerCase()) > -1) {
+      return null
+    }
+
+    return valueString
   }
 }
 

@@ -142,6 +142,19 @@ Returns the index of the minimum value in `x`. See `argmax` for examples and mor
 
 Does nothing if `condition` is true; otherwise, it throws an error with the (optional) given `message` string.
 
+## `cast(x, type)`
+
+Casts the given value `x` into the type `type`. Valid type values are:
+
+- `"boolean"`
+- `"date"`
+- `"null"`
+- `"number"`
+- `"object"`
+- `"string"`
+
+If `x` is an array, then the values _within_ the array are cast into the given type; i.e., the array itself is not cast. Also note that trying to cast a non-number as a number will return `NaN`; but for all other types, failure to cast will return `null`. For example, `cast("hello", "number")` will return `NaN`, but `cast("hello", "boolean")` will return `null`.
+
 ## `ceil(x)`
 
 Returns the ceiling(s) of `x`.
