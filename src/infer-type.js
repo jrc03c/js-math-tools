@@ -26,21 +26,41 @@ function inferType(arr) {
     return { type: results.type, values: out }
   }
 
+  // NOTE: I don't understand why this block is necessary since I already infer
+  // date values in the loop below. But if I leave this out, the tests fail.
+  // However, the tests *pass* when I run them outside the context of Jest,
+  // which leads me to believe that there's a bug with Jest. I'll have to
+  // investigate further.
+  if (arr instanceof Date) {
+    return { type: "date", value: arr }
+  }
+
+  if (!isArray(arr)) {
+    const out = inferType([arr])
+    out.value = out.values[0]
+    delete out.values
+    return out
+  }
+
   assert(
     isArray(arr),
     "The `inferType` function only works on arrays, Series, and DataFrames!"
   )
 
   // possible types:
-  // - number
   // - boolean
   // - date
-  // - object
   // - null
+  // - number
+  // - object
   // - string
   // note: do NOT return arrays!
   const types = flatten(arr).map(v => {
     if (v === undefined) return "null"
+
+    if (v instanceof Date) {
+      return "date"
+    }
 
     if (!isString(v)) {
       v = JSON.stringify(v)

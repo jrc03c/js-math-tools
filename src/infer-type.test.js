@@ -103,27 +103,45 @@ test("correctly infers a variety of data types from strings", () => {
   expect(isEqual(sPred, sTrue)).toBe(true)
 
   const wrongs = [
-    0,
-    1,
-    2.3,
-    -2.3,
-    Infinity,
-    -Infinity,
-    NaN,
-    "foo",
-    true,
-    false,
-    null,
-    undefined,
     Symbol.for("Hello, world!"),
     x => x,
     function (x) {
       return x
     },
-    { hello: "world" },
   ]
 
   wrongs.forEach(item => {
     expect(() => inferType(item)).toThrow()
   })
+})
+
+test("tests that values that are already in their target type are not changed", () => {
+  // types = ["boolean", "date", "null", "number", "object", "string"]
+  expect(isEqual(inferType(true), { type: "boolean", value: true })).toBe(true)
+
+  expect(isEqual(inferType(false), { type: "boolean", value: false })).toBe(
+    true
+  )
+
+  const d = new Date()
+  expect(isEqual(inferType(d), { type: "date", value: d })).toBe(true)
+
+  expect(isEqual(inferType(null), { type: "null", value: null })).toBe(true)
+
+  expect(isEqual(inferType(undefined), { type: "null", value: null })).toBe(
+    true
+  )
+
+  expect(isEqual(inferType(234), { type: "number", value: 234 })).toBe(true)
+
+  expect(
+    isEqual(inferType({ hello: "world" }), {
+      type: "object",
+      value: { hello: "world" },
+    })
+  ).toBe(true)
+
+  expect(
+    isEqual(inferType("foobar"), { type: "string", value: "foobar" })
+  ).toBe(true)
 })
