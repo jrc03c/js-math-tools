@@ -202,4 +202,8 @@ test("tests that values that are already in their target type are not changed", 
   )
 
   expect(cast("foobar", "string")).toBe("foobar")
+
+  // I'm adding a special test case here because null dates were getting
+  // converted to dates at the epoch start time.
+  expect(cast(null, "date")).toBe(null)
 })

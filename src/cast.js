@@ -58,6 +58,10 @@ function cast(value, type) {
       return value
     }
 
+    if (isUndefined(value)) {
+      return null
+    }
+
     const out = new Date(value)
     if (out.toString() === "Invalid Date") return null
     return out
