@@ -47,6 +47,7 @@ const out = {
   inverse: require("./inverse"),
   isArray: require("./is-array"),
   isBoolean: require("./is-boolean"),
+  isBrowser: require("./helpers/is-browser"),
   isDataFrame: require("./is-dataframe"),
   isEqual: require("./is-equal"),
   isFunction: require("./is-function"),

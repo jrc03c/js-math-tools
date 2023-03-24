@@ -707,6 +707,12 @@ Returns `true` if `x` is an array; otherwise, returns `false`.
 
 Returns `true` if `x` is a boolean value; otherwise, returns `false`.
 
+## `isBrowser()`
+
+Returns `true` if called in a browser environment (whether in the main thread or in a Web Worker) or `false` in a Node environment. It's definitely not foolproof and can probably easily be fooled by configuring certain built-in global variables. But as long as you're not modifying those variables (e.g. `window` in the browser), it should be fairly accurate.
+
+Also, this obviously isn't a math function, but I'm including it here because (1) it's a super useful utility function, and (2) I needed it for this library anyway, so why not add it to the public API?
+
 ## `isDataFrame(x)`
 
 Returns `true` if `x` is a `DataFrame`; otherwise, returns `false`.
