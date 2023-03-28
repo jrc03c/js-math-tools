@@ -25,6 +25,8 @@ function isEqual(a, b) {
     if (aType === "object") {
       if (a === null || b === null) {
         return a === null && b === null
+      } else if (a instanceof Date && b instanceof Date) {
+        return a.getTime() === b.getTime()
       } else {
         const aKeys = Object.keys(a)
         const bKeys = Object.keys(b)

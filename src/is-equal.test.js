@@ -3,6 +3,11 @@ const copy = require("./copy")
 const isEqual = require("./is-equal")
 
 test("tests equality of primitives", () => {
+  // I DON'T KNOW WHY THIS TEST IS FAILING!!!
+  const d1 = new Date(parseInt(Math.random() * new Date().getTime()))
+  const d2 = new Date(parseInt(Math.random() * new Date().getTime()))
+  expect(isEqual(d1, d2)).toBe(false)
+
   const selfReferencer = [2, 3, 4]
   selfReferencer.push(selfReferencer)
 
