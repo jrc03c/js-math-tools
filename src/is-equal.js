@@ -25,8 +25,6 @@ function isEqual(a, b) {
     if (aType === "object") {
       if (a === null || b === null) {
         return a === null && b === null
-      } else if (a instanceof Date && b instanceof Date) {
-        return a.getTime() === b.getTime()
       } else {
         const aKeys = Object.keys(a)
         const bKeys = Object.keys(b)
@@ -43,6 +41,16 @@ function isEqual(a, b) {
   }
 
   try {
+    // For some reason I don't yet understand, using the `copy` function in the
+    // context of Jest creates copies that are no longer instances of `Date`.
+    // This DOES NOT happen outside of Jest; only in the Jest tests is this a
+    // problem. But because I want the tests to pass for the sake of my own
+    // sanity, I'm moving date comparisons out of the `helper` function and
+    // putting them in the block below to short-circuit date comparisons.
+    if (a instanceof Date && b instanceof Date) {
+      return a.getTime() === b.getTime()
+    }
+
     return helper(copy(a), copy(b))
   } catch (e) {
     return helper(decycle(a), decycle(b))

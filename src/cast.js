@@ -1,10 +1,17 @@
 const isArray = require("./is-array")
 const isBoolean = require("./is-boolean")
+const isDataFrame = require("./is-dataframe")
+const isEqual = require("./is-equal")
+const isNumber = require("./is-number")
 const isObject = require("./is-object")
+const isSeries = require("./is-series")
 const isUndefined = require("./is-undefined")
-const nullValues = require("./helpers/null-values")
 
 function cast(value, type) {
+  if (isDataFrame(value) || isSeries(value)) {
+    return value.apply(item => cast(item, type))
+  }
+
   if (isArray(value)) {
     return value.map(v => cast(v, type))
   }
@@ -18,6 +25,16 @@ function cast(value, type) {
       return NaN
     }
 
+    const booleanValue = cast(value, "boolean")
+
+    if (isBoolean(booleanValue)) {
+      return booleanValue ? 1 : 0
+    }
+
+    if (value instanceof Date) {
+      return value.getTime()
+    }
+
     const out = parseFloat(value)
     if (isNaN(out)) return NaN
     return out
@@ -26,6 +43,18 @@ function cast(value, type) {
   if (type === "boolean") {
     if (isBoolean(value)) {
       return value
+    }
+
+    if (isNumber(value)) {
+      if (value === 0) {
+        return false
+      }
+
+      if (value === 1) {
+        return true
+      }
+
+      return null
     }
 
     try {
@@ -62,14 +91,30 @@ function cast(value, type) {
       return null
     }
 
-    const out = new Date(value)
-    if (out.toString() === "Invalid Date") return null
-    return out
+    const valueFloat = parseFloat(value)
+
+    if (!isNaN(valueFloat)) {
+      const out = new Date(value)
+      if (out.toString() === "Invalid Date") return null
+      return out
+    }
+
+    return null
   }
 
   if (type === "object") {
     if (isObject(value)) {
       return value
+    }
+
+    const booleanValue = cast(value, "boolean")
+
+    if (isBoolean(booleanValue)) {
+      return null
+    }
+
+    if (isNumber(value)) {
+      return null
     }
 
     // note: don't return arrays!
@@ -88,7 +133,15 @@ function cast(value, type) {
 
   if (type === "string") {
     if (isUndefined(value)) {
-      return null
+      if (isEqual(value, undefined)) {
+        return "undefined"
+      }
+
+      return "null"
+    }
+
+    if (value instanceof Date) {
+      return value.toJSON()
     }
 
     const valueString = (() => {
@@ -103,9 +156,9 @@ function cast(value, type) {
       }
     })()
 
-    if (nullValues.indexOf(valueString.trim().toLowerCase()) > -1) {
-      return null
-    }
+    // if (nullValues.indexOf(valueString.trim().toLowerCase()) > -1) {
+    //   return null
+    // }
 
     return valueString
   }

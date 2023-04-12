@@ -181,7 +181,7 @@ test("tests that missing values are correctly cast as null or NaN", () => {
 
   // strings
   const k = [234, { hello: "world" }, "", undefined]
-  const lTrue = ["234", JSON.stringify({ hello: "world" }), null, null]
+  const lTrue = ["234", JSON.stringify({ hello: "world" }), "", "undefined"]
   const lPred = cast(k, "string")
   expect(isEqual(lPred, lTrue)).toBe(true)
 })
@@ -206,4 +206,55 @@ test("tests that values that are already in their target type are not changed", 
   // I'm adding a special test case here because null dates were getting
   // converted to dates at the epoch start time.
   expect(cast(null, "date")).toBe(null)
+})
+
+test("tests that all types can be cast into all other types correctly", () => {
+  // types = ["boolean", "date", "null", "number", "object", "string"]
+  expect(isEqual(cast(true, "date"), null)).toBe(true)
+  expect(isEqual(cast(false, "date"), null)).toBe(true)
+  expect(isEqual(cast(true, "null"), null)).toBe(true)
+  expect(isEqual(cast(false, "null"), null)).toBe(true)
+  expect(isEqual(cast(true, "number"), 1)).toBe(true)
+  expect(isEqual(cast(false, "number"), 0)).toBe(true)
+  expect(isEqual(cast(true, "object"), null)).toBe(true)
+  expect(isEqual(cast(false, "object"), null)).toBe(true)
+  expect(isEqual(cast(true, "string"), "true")).toBe(true)
+  expect(isEqual(cast(false, "string"), "false")).toBe(true)
+
+  const now = new Date()
+  expect(isEqual(cast(now, "boolean"), null)).toBe(true)
+  expect(isEqual(cast(now, "null"), null)).toBe(true)
+  expect(isEqual(cast(now, "number"), now.getTime())).toBe(true)
+  expect(isEqual(cast(now, "object"), now)).toBe(true)
+  expect(isEqual(cast(now, "string"), now.toJSON())).toBe(true)
+
+  expect(isEqual(cast(null, "boolean"), null)).toBe(true)
+  expect(isEqual(cast(null, "date"), null)).toBe(true)
+  expect(isEqual(cast(null, "number"), NaN)).toBe(true)
+  expect(isEqual(cast(null, "object"), null)).toBe(true)
+  expect(isEqual(cast(null, "string"), "null")).toBe(true)
+
+  expect(isEqual(cast(234.567, "boolean"), null)).toBe(true)
+  expect(isEqual(cast(1, "boolean"), true)).toBe(true)
+  expect(isEqual(cast(0, "boolean"), false)).toBe(true)
+  expect(isEqual(cast(234.567, "date"), new Date(234))).toBe(true)
+  expect(isEqual(cast(234.567, "null"), null)).toBe(true)
+  expect(isEqual(cast(234.567, "object"), null)).toBe(true)
+  expect(isEqual(cast(234.567, "string"), "234.567")).toBe(true)
+
+  const obj = { name: "Alice", age: 23 }
+  expect(isEqual(cast(obj, "boolean"), null)).toBe(true)
+  expect(isEqual(cast(obj, "date"), null)).toBe(true)
+  expect(isEqual(cast(obj, "null"), null)).toBe(true)
+  expect(isEqual(cast(obj, "number"), NaN)).toBe(true)
+  expect(isEqual(cast(obj, "string"), JSON.stringify(obj))).toBe(true)
+
+  expect(isEqual(cast("Hello, world!", "boolean"), null)).toBe(true)
+  expect(isEqual(cast("YES", "boolean"), true)).toBe(true)
+  expect(isEqual(cast("no", "boolean"), false)).toBe(true)
+  expect(isEqual(cast("Hello, world!", "date"), null)).toBe(true)
+  expect(isEqual(cast("Hello, world!", "null"), null)).toBe(true)
+  expect(isEqual(cast("Hello, world!", "number"), NaN)).toBe(true)
+  expect(isEqual(cast("234.567", "number"), 234.567)).toBe(true)
+  expect(isEqual(cast("Hello, world!", "object"), null)).toBe(true)
 })
