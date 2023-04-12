@@ -113,8 +113,19 @@ function cast(value, type) {
       return null
     }
 
-    if (isNumber(value)) {
-      return null
+    try {
+      const numberValue = cast(value, "number")
+
+      if (isNumber(numberValue)) {
+        JSON.parse(value)
+        return null
+      }
+    } catch (e) {}
+
+    const dateValue = cast(value, "date")
+
+    if (dateValue) {
+      return dateValue
     }
 
     // note: don't return arrays!
