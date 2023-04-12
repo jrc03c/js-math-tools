@@ -255,6 +255,7 @@ test("tests that all types can be cast into all other types correctly", () => {
   expect(isEqual(cast("Hello, world!", "date"), null)).toBe(true)
   expect(isEqual(cast("Hello, world!", "null"), null)).toBe(true)
   expect(isEqual(cast("Hello, world!", "number"), NaN)).toBe(true)
+  expect(isEqual(cast(now.toJSON(), "number"), now.getTime())).toBe(true)
   expect(isEqual(cast("234.567", "number"), 234.567)).toBe(true)
   expect(isEqual(cast("234.567", "object"), null)).toBe(true)
   expect(isEqual(cast("Hello, world!", "object"), null)).toBe(true)

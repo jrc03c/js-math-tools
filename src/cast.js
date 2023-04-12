@@ -31,8 +31,14 @@ function cast(value, type) {
       return booleanValue ? 1 : 0
     }
 
-    if (value instanceof Date) {
-      return value.getTime()
+    try {
+      JSON.parse(value)
+    } catch (e) {
+      const dateValue = cast(value, "date")
+
+      if (dateValue instanceof Date) {
+        return dateValue.getTime()
+      }
     }
 
     const out = parseFloat(value)
