@@ -1,5 +1,5 @@
+const { copy } = require("./copy")
 const { DataFrame, Series } = require("./dataframe")
-const copy = require("./copy")
 const isEqual = require("./is-equal")
 const isTheSameObject = (a, b) => a === b
 
@@ -44,7 +44,7 @@ test("tests that values can be copied correctly", () => {
   })
 
   const complexes = [
-    [2, 3, 4],
+    [2, 3, 4, Symbol.for("bug")],
     [
       [2, 3, 4],
       [5, 6, 7],

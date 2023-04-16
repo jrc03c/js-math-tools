@@ -1,5 +1,5 @@
+const { copy } = require("../copy")
 const assert = require("../assert")
-const copy = require("../copy")
 const isArray = require("../is-array")
 const isString = require("../is-string")
 const isUndefined = require("../is-undefined")

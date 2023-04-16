@@ -1,5 +1,5 @@
+const { copy } = require("./copy")
 const { DataFrame, Series } = require("./dataframe")
-const copy = require("./copy")
 const isEqual = require("./is-equal")
 
 test("tests equality of primitives", () => {

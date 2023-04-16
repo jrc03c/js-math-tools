@@ -1,3 +1,4 @@
+const { copy, decycle } = require("./copy")
 const { DataFrame, Series } = require("./dataframe")
 
 const out = {
@@ -15,14 +16,14 @@ const out = {
   chop: require("./chop"),
   clamp: require("./clamp"),
   combinations: require("./combinations"),
-  copy: require("./copy"),
+  copy,
   correl: require("./correl"),
   cos: require("./cos"),
   count: require("./count"),
   covariance: require("./covariance"),
   DataFrame,
   dataTypes: require("./helpers/data-types"),
-  decycle: require("./decycle"),
+  decycle,
   diff: require("./diff"),
   distance: require("./distance"),
   divide: require("./divide"),

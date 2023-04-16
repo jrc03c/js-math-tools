@@ -1,5 +1,4 @@
-const copy = require("./copy")
-const decycle = require("./decycle")
+const { decycle } = require("./copy")
 
 function isEqual(a, b) {
   function helper(a, b) {
@@ -51,7 +50,7 @@ function isEqual(a, b) {
       return a.getTime() === b.getTime()
     }
 
-    return helper(copy(a), copy(b))
+    return helper(a, b)
   } catch (e) {
     return helper(decycle(a), decycle(b))
   }

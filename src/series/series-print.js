@@ -1,4 +1,4 @@
-const copy = require("../copy")
+const { copy } = require("../copy")
 const range = require("../range")
 
 function seriesPrint(series) {

@@ -1,5 +1,5 @@
 const { DataFrame, Series } = require("./dataframe")
-const decycle = require("./decycle")
+const { decycle } = require("./copy")
 const normal = require("./normal")
 
 test("tests that cyclic objects can be decycled correctly", () => {

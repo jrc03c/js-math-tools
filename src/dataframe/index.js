@@ -1,5 +1,5 @@
+const { copy } = require("../copy")
 const assert = require("../assert")
-const copy = require("../copy")
 const count = require("../count")
 const dfAppend = require("./df-append")
 const dfApply = require("./df-apply")
