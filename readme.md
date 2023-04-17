@@ -185,7 +185,7 @@ Returns the cosine(s) of `x`.
 
 ## `count(x, matcher)`
 
-Returns the number(s) of times that certain values appear in `x`. If `matcher` is a single value (like a number), then the returned value will be a single number (indicating the number of times that `matcher` appears in `x`). If `matcher` is an array, then an array of the same size will be returned containing objects with `item` and `count` properties. If `matcher` is a function, then a single number will be returned based on how many times the function returned `true` when presented with each value in `x`. Finally, if `matcher` is undefined, then all of the items in `x` will be counted and returned as an array of objects with `item` and `count` properties.
+Returns the number(s) of times that certain values appear in `x`. If `matcher` is a single value (like a number), then the returned value will be a single number (indicating the number of times that `matcher` appears in `x`). If `matcher` is an array, then an array of the same size will be returned containing objects with `value` and `count` properties. If `matcher` is a function, then a single number will be returned based on how many times the function returned `true` when presented with each value in `x`. Finally, if `matcher` is undefined, then all of the items in `x` will be counted and returned as an array of objects with `value` and `count` properties.
 
 ## `covariance(a, b)`
 
