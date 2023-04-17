@@ -23,14 +23,14 @@ function count(arr, matcher) {
 
   // NOTE: This currently flattens the array that's passed in, which means that it's not possible to count occurrences of arrays within arrays! I'm not sure whether this is desirable behavior or not, so I'm just making a note of it for now.
   if (isFunction(matcher)) {
-    return flatten(arr).filter(item => matcher(item)).length
+    return flatten(arr).filter(value => matcher(value)).length
   } else if (isArray(matcher)) {
     const temp = flatten(arr)
 
-    return set(matcher).map(item => {
+    return set(matcher).map(value => {
       return {
-        item,
-        count: temp.filter(v => isEqual(v, item)).length,
+        value,
+        count: temp.filter(v => isEqual(v, value)).length,
       }
     })
   } else if (arguments.length > 1) {

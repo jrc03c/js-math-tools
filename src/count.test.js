@@ -7,7 +7,7 @@ const round = require("./round")
 const normal = require("./normal")
 const set = require("./set")
 
-test("tests that items in an array can be counted correctly", () => {
+test("tests that values in an array can be counted correctly", () => {
   const a = round(normal(1000))
 
   set(a).forEach(v => {
@@ -61,6 +61,6 @@ test("tests that items in an array can be counted correctly", () => {
   const tempCounts = count(temp)
 
   tempCounts.forEach(c => {
-    expect(c.count).toBe(temp.filter(v => isEqual(v, c.item)).length)
+    expect(c.count).toBe(temp.filter(v => isEqual(v, c.value)).length)
   })
 })

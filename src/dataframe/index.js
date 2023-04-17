@@ -163,7 +163,7 @@ class DataFrame {
           const out = {}
 
           temp.forEach(obj => {
-            out[obj.item] = obj.count
+            out[obj.value] = obj.count
           })
 
           return out
@@ -229,7 +229,7 @@ class DataFrame {
           const out = {}
 
           temp.forEach(obj => {
-            out[obj.item] = obj.count
+            out[obj.value] = obj.count
           })
 
           return out

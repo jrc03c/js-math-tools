@@ -26,15 +26,15 @@ function mode(arr) {
     const counts = {}
     const tempSet = set(temp)
 
-    tempSet.forEach(item => {
-      counts[item] = count(temp, item)
+    tempSet.forEach(value => {
+      counts[value] = count(temp, value)
     })
 
     const sortedTempSet = sort(tempSet, (a, b) => counts[b] - counts[a])
-    const mostCountedItem = sortedTempSet[0]
+    const mostCountedValue = sortedTempSet[0]
 
     const out = sort(
-      sortedTempSet.filter(item => counts[item] === counts[mostCountedItem])
+      sortedTempSet.filter(value => counts[value] === counts[mostCountedValue])
     )
 
     return out

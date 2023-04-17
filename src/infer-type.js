@@ -107,7 +107,7 @@ function inferType(arr) {
   })
 
   const counts = count(types).sort((a, b) => b.count - a.count)
-  const primaryType = counts[0].item
+  const primaryType = counts[0].value
   return { type: primaryType, values: apply(arr, v => cast(v, primaryType)) }
 }
 
