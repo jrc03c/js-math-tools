@@ -637,9 +637,9 @@ Returns the floor(s) of `x`.
 
 Returns an identity matrix of size `n` ✕ `n`.
 
-## `indexOf(x, fn)`
+## `indexOf(x, matcher)`
 
-Returns the index of the first value that causes the `fn` function to evaluate to true when evaluated on every item in `x`. Note that `x` can be an arbitrarily nested array (or `Series` or `DataFrame`) _or_ an object. All of those types are searched to any depth. If `x` is an object, then the returned index represents the path down through the keys and values of the object to the relevant value. Also note that _keys_ of objects are not evaluated; only an object's _values_ are evaluated.
+Returns the index of the first value that matches the `matcher`, where `matcher` is either a function or any other value type. If `matcher` is a function, then `indexOf` returns the first value for which the `matcher` function returns `true` when evaluated on all values of `x`. If `matcher` is a value of any other type, then the `indexOf` function returns the index of the first value that is equal to `matcher` (where equality is tested using the `isEqual` function, meaning that even non-identical objects can be considered to be equal if all of their members are equal). Note that `x` can be an arbitrarily nested array (or `Series` or `DataFrame`) _or_ an object. All of those types are searched to any depth. If `x` is an object, then the returned index represents the path down through the keys and values of the object to the relevant value. Also note that _keys_ of objects are not evaluated; only an object's _values_ are evaluated.
 
 ## `inferType(x)`
 
