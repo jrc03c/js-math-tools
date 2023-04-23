@@ -105,6 +105,12 @@ function cast(value, type) {
       return out
     }
 
+    const valueDate = Date.parse(value)
+
+    if (!isNaN(valueDate)) {
+      return new Date(valueDate)
+    }
+
     return null
   }
 

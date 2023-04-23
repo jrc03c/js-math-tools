@@ -69,10 +69,17 @@ test("tests that the `cast` function correctly casts values into their specified
   const dTrue = []
 
   const c = range(0, 100).map(() => {
-    const date = new Date()
-    date.setTime(int(random() * 100000 - 50000))
+    const date = new Date(int(random() * new Date().getTime()))
     dTrue.push(date)
-    return random() < 0.5 ? date.toJSON() : date.toLocaleString()
+    const r = random()
+
+    if (r < 0.33) {
+      return date.toJSON()
+    } else if (r < 0.67) {
+      return date.toLocaleDateString()
+    } else {
+      return date.toString()
+    }
   })
 
   const dPred = cast(c, "date")

@@ -1,4 +1,5 @@
 const { DataFrame, Series } = require("./dataframe")
+const { random } = require("./random")
 const inferType = require("./infer-type")
 const isEqual = require("./is-equal")
 const normal = require("./normal")
@@ -31,7 +32,19 @@ test("correctly infers a variety of data types from strings", () => {
   const dPred = inferType(c)
   expect(isEqual(dPred, dTrue)).toBe(true)
 
-  const e = range(0, 10).map(() => new Date().toJSON())
+  const e = range(0, 10).map(() => {
+    const d = new Date()
+    const r = random()
+
+    if (r < 0.33) {
+      return d.toJSON()
+    } else if (r < 0.67) {
+      return d.toLocaleDateString()
+    } else {
+      return d.toString()
+    }
+  })
+
   const fTrue = { type: "date", values: e.map(v => new Date(v)) }
   const fPred = inferType(e)
   expect(isEqual(fPred, fTrue)).toBe(true)
