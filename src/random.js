@@ -22,9 +22,9 @@ function splitmix64(state, n) {
   function helper() {
     state += uint("0x9e3779b97f4a7c15")
     let z = copy(state)
-    z = (z ^ (z >> 30n)) * uint("0xbf58476d1ce4e5b9")
-    z = (z ^ (z >> 27n)) * uint("0x94d049bb133111eb")
-    return z ^ (z >> 31n)
+    z = (z ^ (z >> BigInt(30))) * uint("0xbf58476d1ce4e5b9")
+    z = (z ^ (z >> BigInt(27))) * uint("0x94d049bb133111eb")
+    return z ^ (z >> BigInt(31))
   }
 
   const out = []
@@ -39,7 +39,7 @@ function uint(x) {
 function rotl(x, k) {
   x = uint(x)
   k = BigInt(k)
-  return uint(uint(x << k) | uint(x >> uint(64n - k)))
+  return uint(uint(x << k) | uint(x >> uint(BigInt(64) - k)))
 }
 
 function seed(val) {
@@ -61,7 +61,7 @@ function seed(val) {
 
 function next() {
   const result = uint(rotl(s[0] + s[3], 23) + s[0])
-  const t = uint(s[1] << 17n)
+  const t = uint(s[1] << BigInt(17))
   s[2] = uint(s[2] ^ s[0])
   s[3] = uint(s[3] ^ s[1])
   s[1] = uint(s[1] ^ s[2])
