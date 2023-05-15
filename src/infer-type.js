@@ -11,26 +11,40 @@ const isSeries = require("./is-series")
 const isString = require("./is-string")
 const nullValues = require("./helpers/null-values")
 
+function checkIfInteger(results) {
+  if (results.type === "number") {
+    if (results.value) {
+      results.isInteger = parseInt(results.value) === results.value
+    } else {
+      results.isInteger = flatten(results.values).every(v =>
+        isNumber(v) ? parseInt(v) === v : true
+      )
+    }
+  }
+
+  return results
+}
+
 function inferType(arr) {
   if (isDataFrame(arr)) {
     const out = arr.copy()
     const results = inferType(arr.values)
     out.values = results.values
-    return { type: results.type, values: out }
+    return checkIfInteger({ type: results.type, values: out })
   }
 
   if (isSeries(arr)) {
     const out = arr.copy()
     const results = inferType(arr.values)
     out.values = results.values
-    return { type: results.type, values: out }
+    return checkIfInteger({ type: results.type, values: out })
   }
 
   if (!isArray(arr)) {
     const out = inferType([arr])
     out.value = out.values[0]
     delete out.values
-    return out
+    return checkIfInteger(out)
   }
 
   assert(
@@ -105,7 +119,11 @@ function inferType(arr) {
 
   const counts = count(types).sort((a, b) => b.count - a.count)
   const primaryType = counts[0].value
-  return { type: primaryType, values: apply(arr, v => cast(v, primaryType)) }
+
+  return checkIfInteger({
+    type: primaryType,
+    values: apply(arr, v => cast(v, primaryType)),
+  })
 }
 
 module.exports = inferType

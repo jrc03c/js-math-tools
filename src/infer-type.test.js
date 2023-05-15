@@ -18,9 +18,24 @@ function makeKey(n) {
 
 test("correctly infers a variety of data types from strings", () => {
   const a = ["2", "3", "4.567"]
-  const bTrue = { type: "number", values: a.map(v => parseFloat(v)) }
+
+  const bTrue = {
+    type: "number",
+    values: a.map(v => parseFloat(v)),
+    isInteger: false,
+  }
+
   const bPred = inferType(a)
   expect(isEqual(bPred, bTrue)).toBe(true)
+
+  const bTrue2 = {
+    type: "number",
+    values: a.map(v => parseInt(v)),
+    isInteger: true,
+  }
+
+  const bPred2 = inferType(a.map(v => v.split(".")[0]))
+  expect(isEqual(bPred2, bTrue2)).toBe(true)
 
   const c = ["true", "True", "TRUE", "false", "False", "FALSE", "yes", "no"]
 
@@ -66,7 +81,7 @@ test("correctly infers a variety of data types from strings", () => {
 
   const m = new Series({ hello: normal(100) })
   const n = m.apply(v => v.toString())
-  const oTrue = { type: "number", values: m }
+  const oTrue = { type: "number", values: m, isInteger: false }
   const oPred = inferType(n)
   expect(isEqual(oPred, oTrue)).toBe(true)
 
@@ -110,6 +125,7 @@ test("correctly infers a variety of data types from strings", () => {
   const sTrue = {
     type: "number",
     values: new DataFrame({ foo: [2, 3, 4], bar: [5, 6, NaN] }),
+    isInteger: true,
   }
 
   const sPred = inferType(r)
@@ -145,7 +161,9 @@ test("tests that values that are already in their target type are not changed", 
     true
   )
 
-  expect(isEqual(inferType(234), { type: "number", value: 234 })).toBe(true)
+  expect(
+    isEqual(inferType(234), { type: "number", value: 234, isInteger: true })
+  ).toBe(true)
 
   expect(
     isEqual(inferType({ hello: "world" }), {
