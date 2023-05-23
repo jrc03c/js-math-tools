@@ -13,7 +13,7 @@ const nullValues = require("./helpers/null-values")
 
 function checkIfInteger(results) {
   if (results.type === "number") {
-    if (results.value) {
+    if (typeof results.value !== "undefined") {
       results.isInteger = parseInt(results.value) === results.value
     } else {
       results.isInteger = flatten(results.values).every(v =>

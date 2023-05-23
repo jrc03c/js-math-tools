@@ -176,3 +176,10 @@ test("tests that values that are already in their target type are not changed", 
     isEqual(inferType("foobar"), { type: "string", value: "foobar" })
   ).toBe(true)
 })
+
+test("tests the special, weird case of inferType(0), which was previously throwing an error", () => {
+  const results = inferType(0)
+  expect(results.type).toBe("number")
+  expect(results.value).toBe(0)
+  expect(results.isInteger).toBe(true)
+})
