@@ -1,4 +1,5 @@
 const { decycle } = require("./copy")
+const isArray = require("./is-array")
 
 function isEqual(a, b) {
   function helper(a, b) {
@@ -25,6 +26,10 @@ function isEqual(a, b) {
       if (a === null || b === null) {
         return a === null && b === null
       } else {
+        if (isArray(a) !== isArray(b)) {
+          return false
+        }
+
         const aKeys = Object.keys(a)
         const bKeys = Object.keys(b)
         if (aKeys.length !== bKeys.length) return false

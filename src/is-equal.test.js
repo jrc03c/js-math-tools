@@ -50,4 +50,9 @@ test("tests equality of primitives", () => {
       expect(item !== clone).toBe(true)
     }
   })
+
+  // special cases
+  const a1 = ["a", "b", "c"]
+  const a2 = { 0: "a", 1: "b", 2: "c" }
+  expect(isEqual(a1, a2)).toBe(false)
 })
