@@ -50,6 +50,7 @@ const out = {
   isBoolean: require("./is-boolean"),
   isBrowser: require("./helpers/is-browser"),
   isDataFrame: require("./is-dataframe"),
+  isDate: require("./is-date"),
   isEqual: require("./is-equal"),
   isFunction: require("./is-function"),
   isJagged: require("./is-jagged"),
