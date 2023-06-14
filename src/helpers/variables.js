@@ -27,6 +27,7 @@ const variables = [
     return x
   },
   { hello: "world" },
+  new Date(),
   selfReferencer,
   new Series({ hello: [10, 20, 30, 40, 50] }),
   new DataFrame({ foo: [1, 2, 4, 8, 16], bar: [1, 3, 9, 27, 81] }),
