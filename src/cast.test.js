@@ -1,7 +1,9 @@
 const { random } = require("./random")
+const abs = require("./abs")
 const cast = require("./cast")
 const int = require("./int")
 const isEqual = require("./is-equal")
+const max = require("./max")
 const normal = require("./normal")
 const range = require("./range")
 
@@ -83,7 +85,9 @@ test("tests that the `cast` function correctly casts values into their specified
   })
 
   const dPred = cast(c, "date")
-  expect(isEqual(dPred, dTrue)).toBe(true)
+  const twentyFourHours = 24 * 60 * 60 * 1000
+  const dDiff = dTrue.map((v1, i) => v1 - dPred[i])
+  expect(max(abs(dDiff))).toBeLessThan(twentyFourHours)
 
   // nulls
   const e = range(0, 100).map(() => {

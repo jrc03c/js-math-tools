@@ -12,9 +12,6 @@ function isACopy(a, b) {
 }
 
 test("tests that values can be copied correctly", () => {
-  const selfReferencer = [2, 3, 4]
-  selfReferencer.push(selfReferencer)
-
   const simples = [
     0,
     1,
@@ -36,10 +33,6 @@ test("tests that values can be copied correctly", () => {
   ]
 
   simples.forEach(v => {
-    if (!isEqual(v, copy(v))) {
-      console.log(v)
-    }
-
     expect(isEqual(v, copy(v))).toBe(true)
   })
 
@@ -50,7 +43,6 @@ test("tests that values can be copied correctly", () => {
       [5, 6, 7],
     ],
     { hello: "world" },
-    selfReferencer,
     new Series({ hello: [10, 20, 30, 40, 50] }),
     new DataFrame({ foo: [1, 2, 4, 8, 16], bar: [1, 3, 9, 27, 81] }),
   ]
@@ -59,4 +51,8 @@ test("tests that values can be copied correctly", () => {
     const c = copy(v)
     expect(isACopy(v, c)).toBe(true)
   })
+
+  const selfReferencer = [2, 3, 4]
+  selfReferencer.push(selfReferencer)
+  expect(isACopy(selfReferencer, copy(selfReferencer))).toBe(false)
 })

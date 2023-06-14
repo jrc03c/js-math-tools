@@ -4,10 +4,7 @@ const isDataFrame = require("./is-dataframe")
 const isSeries = require("./is-series")
 
 function copy(x) {
-  try {
-    const out = structuredClone(x)
-    return out
-  } catch (e) {
+  function helper(x) {
     if (typeof x === "object") {
       if (x === null) {
         return null
@@ -29,6 +26,10 @@ function copy(x) {
         return out
       }
 
+      if (x instanceof Date) {
+        return new Date(x.getTime())
+      }
+
       x = decycle(x)
       const out = {}
 
@@ -41,6 +42,8 @@ function copy(x) {
       return x
     }
   }
+
+  return helper(decycle(x))
 }
 
 function decycle(x) {
@@ -88,7 +91,14 @@ function decycle(x) {
     }
   }
 
-  const orig = copy(x)
+  const orig = (() => {
+    try {
+      return structuredClone(x)
+    } catch (e) {
+      return x
+    }
+  })()
+
   let out = helper(orig)
 
   if (isDataFrame(x)) {

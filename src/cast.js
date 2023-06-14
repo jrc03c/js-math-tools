@@ -1,6 +1,7 @@
 const isArray = require("./is-array")
 const isBoolean = require("./is-boolean")
 const isDataFrame = require("./is-dataframe")
+const isDate = require("./is-date")
 const isEqual = require("./is-equal")
 const isNumber = require("./is-number")
 const isObject = require("./is-object")
@@ -36,7 +37,7 @@ function cast(value, type) {
     } catch (e) {
       const dateValue = cast(value, "date")
 
-      if (dateValue instanceof Date) {
+      if (isDate(dateValue)) {
         return dateValue.getTime()
       }
     }
@@ -89,7 +90,7 @@ function cast(value, type) {
   }
 
   if (type === "date") {
-    if (value instanceof Date) {
+    if (isDate(value)) {
       return value
     }
 
@@ -101,7 +102,7 @@ function cast(value, type) {
 
     if (!isNaN(valueFloat)) {
       const out = new Date(value)
-      if (out.toString() === "Invalid Date") return null
+      if (!isDate(out)) return null
       return out
     }
 

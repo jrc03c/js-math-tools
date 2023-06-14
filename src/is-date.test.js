@@ -12,6 +12,8 @@ test("tests that dates can be identified correctly", () => {
     expect(isDate(d)).toBe(true)
   })
 
+  expect(isDate(new Date("foobar!"))).toBe(false)
+
   const selfReferencer = [2, 3, 4]
   selfReferencer.push(selfReferencer)
 

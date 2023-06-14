@@ -6,6 +6,7 @@ const count = require("./count")
 const flatten = require("./flatten")
 const isArray = require("./is-array")
 const isDataFrame = require("./is-dataframe")
+const isDate = require("./is-date")
 const isNumber = require("./is-number")
 const isSeries = require("./is-series")
 const isString = require("./is-string")
@@ -65,9 +66,9 @@ function inferType(arr) {
 
     try {
       if (typeof v === "object") {
-        const temp = new Date(v.toString())
+        const temp = new Date(v.getTime())
 
-        if (temp instanceof Date && temp.toString() !== "Invalid Date") {
+        if (isDate(temp)) {
           return "date"
         }
       }
@@ -109,7 +110,7 @@ function inferType(arr) {
       // date
       const vDate = new Date(v)
 
-      if (vDate.toString() !== "Invalid Date") {
+      if (isDate(vDate)) {
         return "date"
       }
 

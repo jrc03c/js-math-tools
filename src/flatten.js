@@ -1,4 +1,3 @@
-const { copy } = require("./copy")
 const assert = require("./assert")
 const isArray = require("./is-array")
 const isDataFrame = require("./is-dataframe")
@@ -17,7 +16,7 @@ function flatten(arr) {
   function helper(arr) {
     let out = []
 
-    copy(arr).forEach(child => {
+    arr.forEach(child => {
       if (isArray(child)) {
         out = out.concat(helper(child))
       } else {

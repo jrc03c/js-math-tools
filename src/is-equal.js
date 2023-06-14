@@ -1,5 +1,6 @@
 const { decycle } = require("./copy")
 const isArray = require("./is-array")
+const isDate = require("./is-date")
 
 function isEqual(a, b) {
   function helper(a, b) {
@@ -26,6 +27,16 @@ function isEqual(a, b) {
       if (a === null || b === null) {
         return a === null && b === null
       } else {
+        // For some reason I don't yet understand, using the `copy` function in the
+        // context of Jest creates copies that are no longer instances of `Date`.
+        // This DOES NOT happen outside of Jest; only in the Jest tests is this a
+        // problem. But because I want the tests to pass for the sake of my own
+        // sanity, I'm moving date comparisons out of the `helper` function and
+        // putting them in the block below to short-circuit date comparisons.
+        if (isDate(a) && isDate(b)) {
+          return a.getTime() === b.getTime()
+        }
+
         if (isArray(a) !== isArray(b)) {
           return false
         }
@@ -45,16 +56,6 @@ function isEqual(a, b) {
   }
 
   try {
-    // For some reason I don't yet understand, using the `copy` function in the
-    // context of Jest creates copies that are no longer instances of `Date`.
-    // This DOES NOT happen outside of Jest; only in the Jest tests is this a
-    // problem. But because I want the tests to pass for the sake of my own
-    // sanity, I'm moving date comparisons out of the `helper` function and
-    // putting them in the block below to short-circuit date comparisons.
-    if (a instanceof Date && b instanceof Date) {
-      return a.getTime() === b.getTime()
-    }
-
     return helper(a, b)
   } catch (e) {
     return helper(decycle(a), decycle(b))

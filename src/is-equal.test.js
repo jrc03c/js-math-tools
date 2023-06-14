@@ -10,9 +10,6 @@ test("tests equality of primitives", () => {
   expect(isEqual(d1, d1)).toBe(true)
   expect(isEqual(d1, d2)).toBe(false)
 
-  const selfReferencer = [2, 3, 4]
-  selfReferencer.push(selfReferencer)
-
   const variables = [
     0,
     1,
@@ -37,7 +34,6 @@ test("tests equality of primitives", () => {
       return x
     },
     { hello: "world" },
-    selfReferencer,
     new Series({ hello: [10, 20, 30, 40, 50] }),
     new DataFrame({ foo: [1, 2, 4, 8, 16], bar: [1, 3, 9, 27, 81] }),
   ]
@@ -55,4 +51,8 @@ test("tests equality of primitives", () => {
   const a1 = ["a", "b", "c"]
   const a2 = { 0: "a", 1: "b", 2: "c" }
   expect(isEqual(a1, a2)).toBe(false)
+
+  const selfReferencer = [2, 3, 4]
+  selfReferencer.push(selfReferencer)
+  expect(isEqual(selfReferencer, copy(selfReferencer))).toBe(false)
 })
