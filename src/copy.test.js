@@ -1,11 +1,12 @@
 const { copy } = require("./copy")
 const { DataFrame, Series } = require("./dataframe")
+const arrayTypes = require("./helpers/array-types")
 const isEqual = require("./is-equal")
-const isTheSameObject = (a, b) => a === b
+const normal = require("./normal")
 
 function isACopy(a, b) {
   if (typeof a === "object" && typeof b === "object" && a !== null) {
-    return isEqual(a, b) && !isTheSameObject(a, b)
+    return isEqual(a, b) && a !== b
   } else {
     return isEqual(a, b)
   }
@@ -55,4 +56,25 @@ test("tests that values can be copied correctly", () => {
   const selfReferencer = [2, 3, 4]
   selfReferencer.push(selfReferencer)
   expect(isACopy(selfReferencer, copy(selfReferencer))).toBe(false)
+})
+
+test("tests that typed arrays are copied correctly", () => {
+  const buffer = new ArrayBuffer(32)
+
+  ;(() => {
+    const x = new Float64Array(buffer)
+
+    for (let i = 0; i < x.length; i++) {
+      x[i] = normal()
+    }
+  })()
+
+  expect(isACopy(buffer, copy(buffer))).toBe(true)
+
+  arrayTypes.forEach(T => {
+    if (T !== ArrayBuffer) {
+      const x = new T(buffer)
+      expect(isACopy(x, copy(x))).toBe(true)
+    }
+  })
 })

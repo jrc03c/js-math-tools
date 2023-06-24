@@ -11,6 +11,10 @@ function copy(x) {
       }
 
       if (isArray(x)) {
+        if (!(x instanceof Array)) {
+          return x.slice()
+        }
+
         return x.map(v => copy(v))
       }
 
@@ -78,6 +82,13 @@ function decycle(x) {
       checked.push(x)
 
       if (isArray(x)) {
+        if (
+          typeof x.constructor !== "undefined" &&
+          x.constructor.name !== "Array"
+        ) {
+          return x.slice()
+        }
+
         return x.map((v, i) => helper(v, checked, currentPath + "/" + i))
       } else {
         Object.keys(x).forEach(key => {

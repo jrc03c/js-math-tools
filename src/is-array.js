@@ -1,21 +1,5 @@
 const isUndefined = require("./is-undefined")
-
-const types = [
-  Array,
-  ArrayBuffer,
-  BigInt64Array,
-  BigUint64Array,
-  Float32Array,
-  Float64Array,
-  Int16Array,
-  Int32Array,
-  Int8Array,
-  Uint16Array,
-  Uint32Array,
-  Uint8Array,
-  Uint8ClampedArray,
-]
-
+const types = require("./helpers/array-types")
 const typeStrings = types.map(s => s.name)
 
 function isArray(obj) {
