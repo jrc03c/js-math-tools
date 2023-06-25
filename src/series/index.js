@@ -139,6 +139,8 @@ module.exports = function (DataFrame) {
           self.values = data
         } else if (data instanceof Object) {
           const keys = Object.keys(data)
+            .concat(Object.getOwnPropertySymbols(data))
+            .map(v => v.toString())
 
           assert(
             keys.length === 1,

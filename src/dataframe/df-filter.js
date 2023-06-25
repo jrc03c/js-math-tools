@@ -14,7 +14,9 @@ function arrayToObject(x) {
 }
 
 function undoArrayToObject(obj) {
-  return Object.keys(obj).sort((a, b) => obj[a] - obj[b])
+  return Object.keys(obj)
+    .concat(Object.getOwnPropertySymbols(obj))
+    .sort((a, b) => obj[a] - obj[b])
 }
 
 function dfFilter(DataFrame, Series, df, fn, axis) {

@@ -268,6 +268,9 @@ class DataFrame {
         self.values = data
       } else {
         self._columns = Object.keys(data)
+          .concat(Object.getOwnPropertySymbols(data))
+          .map(v => v.toString())
+
         const temp = []
 
         self._columns.forEach(col => {

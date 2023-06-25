@@ -41,8 +41,8 @@ function isEqual(a, b) {
           return false
         }
 
-        const aKeys = Object.keys(a)
-        const bKeys = Object.keys(b)
+        const aKeys = Object.keys(a).concat(Object.getOwnPropertySymbols(a))
+        const bKeys = Object.keys(b).concat(Object.getOwnPropertySymbols(b))
         if (aKeys.length !== bKeys.length) return false
 
         for (let i = 0; i < aKeys.length; i++) {

@@ -31,6 +31,11 @@ test("tests that the indices of items can be found correctly", () => {
   const hPred = indexOf(g, "hello")
   expect(isEqual(hPred, hTrue)).toBe(true)
 
+  const i = { baz: { bar: { foo: { [Symbol.for("hello")]: "world" } } } }
+  const jTrue = ["baz", "bar", "foo", Symbol.for("hello")]
+  const jPred = indexOf(i, "world")
+  expect(isEqual(jTrue, jPred)).toBe(true)
+
   const selfReferencer = [2, 3, 4]
   selfReferencer.push(selfReferencer)
   expect(indexOf(selfReferencer, 4)).toStrictEqual([2])

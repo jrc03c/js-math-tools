@@ -34,7 +34,7 @@ function find(x, fn) {
 
     if (isObject(x)) {
       checked.push(x)
-      const keys = Object.keys(x)
+      const keys = Object.keys(x).concat(Object.getOwnPropertySymbols(x))
 
       for (let i = 0; i < keys.length; i++) {
         const key = keys[i]

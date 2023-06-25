@@ -32,14 +32,18 @@ function dfAssign(DataFrame, Series, df, p1, p2) {
       return df.append(p1, 1)
     } else if (isObject(p1)) {
       const maxColumnLength = Math.max(
-        ...Object.keys(p1).map(key => p1[key].length)
+        ...Object.keys(p1)
+          .concat(Object.getOwnPropertySymbols(p1))
+          .map(key => p1[key].length)
       )
 
-      Object.keys(p1).forEach(key => {
-        while (p1[key].length < maxColumnLength) {
-          p1[key].push(undefined)
-        }
-      })
+      Object.keys(p1)
+        .concat(Object.getOwnPropertySymbols(p1))
+        .forEach(key => {
+          while (p1[key].length < maxColumnLength) {
+            p1[key].push(undefined)
+          }
+        })
 
       return df.append(new DataFrame(p1), 1)
     } else {

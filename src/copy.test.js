@@ -78,3 +78,9 @@ test("tests that typed arrays are copied correctly", () => {
     }
   })
 })
+
+test("tests that symbols-as-keys are copied as well", () => {
+  const xTrue = { [Symbol.for("hello")]: "world" }
+  const xPred = copy(xTrue)
+  expect(isEqual(xPred, xTrue))
+})

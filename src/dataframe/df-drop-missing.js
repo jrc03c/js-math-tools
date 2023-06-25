@@ -86,7 +86,10 @@ function dfDropMissing(DataFrame, Series, df, axis, condition, threshold) {
       }
     })
 
-    if (Object.keys(temp).length === 0) {
+    if (
+      Object.keys(temp).length + Object.getOwnPropertySymbols(temp).length ===
+      0
+    ) {
       return new DataFrame()
     }
 

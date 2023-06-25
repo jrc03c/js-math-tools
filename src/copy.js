@@ -37,9 +37,11 @@ function copy(x) {
       x = decycle(x)
       const out = {}
 
-      Object.keys(x).forEach(key => {
-        out[key] = copy(x[key])
-      })
+      Object.keys(x)
+        .concat(Object.getOwnPropertySymbols(x))
+        .forEach(key => {
+          out[key] = copy(x[key])
+        })
 
       return out
     } else {
@@ -91,9 +93,11 @@ function decycle(x) {
 
         return x.map((v, i) => helper(v, checked, currentPath + "/" + i))
       } else {
-        Object.keys(x).forEach(key => {
-          x[key] = helper(x[key], checked, currentPath + "/" + key)
-        })
+        Object.keys(x)
+          .concat(Object.getOwnPropertySymbols(x))
+          .forEach(key => {
+            x[key] = helper(x[key], checked, currentPath + "/" + key)
+          })
 
         return x
       }

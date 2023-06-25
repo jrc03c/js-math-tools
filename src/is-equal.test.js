@@ -55,4 +55,10 @@ test("tests equality of primitives", () => {
   const selfReferencer = [2, 3, 4]
   selfReferencer.push(selfReferencer)
   expect(isEqual(selfReferencer, copy(selfReferencer))).toBe(false)
+
+  const b1 = { [Symbol.for("@foo")]: "bar" }
+  const b2 = { [Symbol.for("@foo")]: "bar" }
+  const b3 = {}
+  expect(isEqual(b1, b2)).toBe(true)
+  expect(isEqual(b2, b3)).toBe(false)
 })

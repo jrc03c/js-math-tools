@@ -55,6 +55,19 @@ test("tests that items matching a certain function can be found", () => {
   const nPred = find(m, 3)
   expect(isEqual(nPred, nTrue)).toBe(true)
 
+  const o = { a: { b: { c: { [Symbol.for("hello")]: "world" } } } }
+  const pTrue = "world"
+
+  const pPred = find(o, v => {
+    try {
+      return v.startsWith("w")
+    } catch (e) {
+      return false
+    }
+  })
+
+  expect(isEqual(pPred, pTrue)).toBe(true)
+
   const wrongs = [
     0,
     1,

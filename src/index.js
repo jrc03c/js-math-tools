@@ -109,24 +109,33 @@ const out = {
   zip: require("./zip"),
 
   dump: function () {
-    const pub = typeof global !== "undefined" ? global : window
+    const context =
+      typeof globalThis !== "undefined"
+        ? globalThis
+        : typeof global !== "undefined"
+        ? global
+        : typeof window !== "undefined"
+        ? window
+        : typeof self !== "undefined"
+        ? self
+        : undefined
 
-    if (!pub) {
+    if (!context) {
       throw new out.MathError(
-        "Cannot dump functions into global scope because neither `global` nor `window` exist in the current context!"
+        "Cannot dump functions into global scope because none of `globalThis`, `global`, `window`, or `self` exist in the current context!"
       )
     }
 
     Object.keys(out).forEach(key => {
       try {
-        Object.defineProperty(pub, key, {
+        Object.defineProperty(context, key, {
           configurable: false,
           enumerable: true,
           writable: false,
           value: out[key],
         })
       } catch (e) {
-        pub[key] = out[key]
+        context[key] = out[key]
       }
     })
   },
