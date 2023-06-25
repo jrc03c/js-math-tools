@@ -1,4 +1,4 @@
-const { copy } = require("./copy")
+const { copy, decycle } = require("./copy")
 const { DataFrame, Series } = require("./dataframe")
 const arrayTypes = require("./helpers/array-types")
 const isEqual = require("./is-equal")
@@ -52,10 +52,6 @@ test("tests that values can be copied correctly", () => {
     const c = copy(v)
     expect(isACopy(v, c)).toBe(true)
   })
-
-  const selfReferencer = [2, 3, 4]
-  selfReferencer.push(selfReferencer)
-  expect(isACopy(selfReferencer, copy(selfReferencer))).toBe(false)
 })
 
 test("tests that typed arrays are copied correctly", () => {
@@ -79,8 +75,20 @@ test("tests that typed arrays are copied correctly", () => {
   })
 })
 
+test("tests that decycling works as expected", () => {
+  const x = [2, 3, 4]
+  x.push(x)
+  const yTrue = [2, 3, 4, '<reference to "/">']
+  const yPred = decycle(x)
+  expect(isEqual(yPred, yTrue)).toBe(true)
+})
+
 test("tests that symbols-as-keys are copied as well", () => {
-  const xTrue = { [Symbol.for("hello")]: "world" }
-  const xPred = copy(xTrue)
-  expect(isEqual(xPred, xTrue))
+  const aTrue = { [Symbol.for("hello")]: "world" }
+  const aPred = copy(aTrue)
+  expect(isEqual(aPred, aTrue))
+
+  const bTrue = { [Symbol.for("@hello")]: "@world" }
+  const bPred = decycle(bTrue)
+  expect(isEqual(bPred, bTrue)).toBe(true)
 })

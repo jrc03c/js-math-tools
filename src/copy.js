@@ -96,7 +96,7 @@ function decycle(x) {
         Object.keys(x)
           .concat(Object.getOwnPropertySymbols(x))
           .forEach(key => {
-            x[key] = helper(x[key], checked, currentPath + "/" + key)
+            x[key] = helper(x[key], checked, currentPath + "/" + key.toString())
           })
 
         return x
@@ -106,14 +106,7 @@ function decycle(x) {
     }
   }
 
-  const orig = (() => {
-    try {
-      return structuredClone(x)
-    } catch (e) {
-      return x
-    }
-  })()
-
+  const orig = x
   let out = helper(orig)
 
   if (isDataFrame(x)) {
