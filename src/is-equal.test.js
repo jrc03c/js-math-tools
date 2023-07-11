@@ -61,4 +61,7 @@ test("tests equality of primitives", () => {
   const b3 = {}
   expect(isEqual(b1, b2)).toBe(true)
   expect(isEqual(b2, b3)).toBe(false)
+
+  expect(isEqual(new Date(), {})).toBe(false)
+  expect(isEqual({}, new Date())).toBe(false)
 })
