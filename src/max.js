@@ -15,7 +15,16 @@ function max(arr) {
   )
 
   try {
-    return Math.max(...flatten(arr))
+    arr = flatten(arr)
+    let highest = -Infinity
+
+    for (const v of arr) {
+      if (v > highest) {
+        highest = v
+      }
+    }
+
+    return highest
   } catch (e) {
     return NaN
   }

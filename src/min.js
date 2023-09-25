@@ -15,7 +15,16 @@ function min(arr) {
   )
 
   try {
-    return Math.min(...flatten(arr))
+    arr = flatten(arr)
+    let lowest = Infinity
+
+    for (const v of arr) {
+      if (v < lowest) {
+        lowest = v
+      }
+    }
+
+    return lowest
   } catch (e) {
     return NaN
   }
