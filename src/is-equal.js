@@ -42,6 +42,10 @@ function isEqual(a, b) {
           return false
         }
 
+        if (a instanceof RegExp && b instanceof RegExp) {
+          return a.toString() === b.toString()
+        }
+
         if (isArray(a) !== isArray(b)) {
           return false
         }

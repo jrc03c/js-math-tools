@@ -24,6 +24,7 @@ test("tests equality of primitives", () => {
     null,
     undefined,
     Symbol.for("Hello, world!"),
+    new RegExp("Hello, world!"),
     [2, 3, 4],
     [
       [2, 3, 4],
@@ -64,4 +65,12 @@ test("tests equality of primitives", () => {
 
   expect(isEqual(new Date(), {})).toBe(false)
   expect(isEqual({}, new Date())).toBe(false)
+
+  const c1 = new RegExp("foo")
+  const c2 = new RegExp("bar")
+  expect(isEqual(c1, c2)).toBe(false)
+  expect(isEqual(c1, c1)).toBe(true)
+  expect(isEqual(c2, c2)).toBe(true)
+  expect(isEqual(c1, copy(c1))).toBe(true)
+  expect(isEqual(c2, copy(c2))).toBe(true)
 })
