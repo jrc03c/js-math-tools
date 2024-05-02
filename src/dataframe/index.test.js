@@ -530,3 +530,9 @@ test("tests that DataFrames cannot be created by arrays or objects containing ar
     new DataFrame([normal(10), normal(15)])
   }).toThrow()
 })
+
+test("tests that DataFrames can be turned back into regular objects correctly", () => {
+  const xTrue = { a: normal(100), b: normal(100), c: normal(100) }
+  const xPred = new DataFrame(xTrue).toObject()
+  expect(isEqual(xTrue, xPred)).toBe(true)
+})

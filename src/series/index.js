@@ -35,29 +35,28 @@ module.exports = function (DataFrame) {
     }
 
     constructor(data) {
-      const self = this
-      self.name = "data"
+      this.name = "data"
 
-      Object.defineProperty(self, "_symbol", {
+      Object.defineProperty(this, "_symbol", {
         configurable: false,
         enumerable: false,
         writable: false,
         value: SERIES_SYMBOL,
       })
 
-      Object.defineProperty(self, "_values", {
+      Object.defineProperty(this, "_values", {
         value: [],
         configurable: true,
         enumerable: false,
         writable: true,
       })
 
-      Object.defineProperty(self, "values", {
+      Object.defineProperty(this, "values", {
         configurable: true,
         enumerable: true,
 
         get() {
-          return self._values
+          return this._values
         },
 
         set(x) {
@@ -70,33 +69,33 @@ module.exports = function (DataFrame) {
             "The new array of values must be 1-dimensional!"
           )
 
-          if (dataShape[0] < self._index.length) {
-            self._index = self._index.slice(0, dataShape[0])
-          } else if (dataShape[0] > self._index.length) {
-            self._index = self._index.concat(
-              range(self._index.length, dataShape[0]).map(i => {
+          if (dataShape[0] < this._index.length) {
+            this._index = this._index.slice(0, dataShape[0])
+          } else if (dataShape[0] > this._index.length) {
+            this._index = this._index.concat(
+              range(this._index.length, dataShape[0]).map(i => {
                 return "item" + leftPad(i, (x.length - 1).toString().length)
               })
             )
           }
 
-          self._values = x
+          this._values = x
         },
       })
 
-      Object.defineProperty(self, "_index", {
+      Object.defineProperty(this, "_index", {
         value: [],
         configurable: true,
         enumerable: false,
         writable: true,
       })
 
-      Object.defineProperty(self, "index", {
+      Object.defineProperty(this, "index", {
         configurable: true,
         enumerable: true,
 
         get() {
-          return self._index
+          return this._index
         },
 
         set(x) {
@@ -106,7 +105,7 @@ module.exports = function (DataFrame) {
           )
 
           assert(
-            x.length === self.shape[0],
+            x.length === this.shape[0],
             "The new index must be the same length as the old index!"
           )
 
@@ -119,15 +118,15 @@ module.exports = function (DataFrame) {
             assert(isString(value), "All of the row names must be strings!")
           })
 
-          self._index = x
+          this._index = x
         },
       })
 
       if (data) {
         if (data instanceof Series) {
-          self.name = data.name
-          self.values = copy(data.values)
-          self.index = copy(data.index)
+          this.name = data.name
+          this.values = copy(data.values)
+          this.index = copy(data.index)
         } else if (isArray(data)) {
           const dataShape = shape(data)
 
@@ -136,7 +135,7 @@ module.exports = function (DataFrame) {
             "When passing an array into the constructor of a Series, the array must be 1-dimensional!"
           )
 
-          self.values = data
+          this.values = data
         } else if (data instanceof Object) {
           const keys = Object.keys(data)
             .concat(Object.getOwnPropertySymbols(data))
@@ -155,30 +154,26 @@ module.exports = function (DataFrame) {
             "When passing an object into the constructor of a Series, the object must have only 1 key-value pair, where the key is the name of the data and the value is the 1-dimensional array of values!"
           )
 
-          self.name = name
-          self.values = values.slice()
+          this.name = name
+          this.values = values.slice()
         }
       }
     }
 
     get shape() {
-      const self = this
-      return shape(self.values)
+      return shape(this.values)
     }
 
     get length() {
-      const self = this
-      return self.shape[0]
+      return this.shape[0]
     }
 
     get isEmpty() {
-      const self = this
-      return self.values.filter(v => !isUndefined(v)).length === 0
+      return this.values.filter(v => !isUndefined(v)).length === 0
     }
 
     clear() {
-      const self = this
-      const out = self.copy()
+      const out = this.copy()
 
       out.values.forEach((v, i) => {
         out.values[i] = undefined
@@ -188,43 +183,36 @@ module.exports = function (DataFrame) {
     }
 
     get(indices) {
-      const self = this
-      return seriesGet(self, indices)
+      return seriesGet(this, indices)
     }
 
     getSubsetByNames(indices) {
-      const self = this
-      return seriesGetSubsetByNames(Series, self, indices)
+      return seriesGetSubsetByNames(Series, this, indices)
     }
 
     getSubsetByIndices(indices) {
-      const self = this
-      return seriesGetSubsetByIndices(self, indices)
+      return seriesGetSubsetByIndices(this, indices)
     }
 
     loc(indices) {
-      const self = this
-      return self.getSubsetByNames(indices)
+      return this.getSubsetByNames(indices)
     }
 
     iloc(indices) {
-      const self = this
-      return self.getSubsetByIndices(indices)
+      return this.getSubsetByIndices(indices)
     }
 
     reverse() {
-      const self = this
-      const out = new Series(reverse(self.values))
-      out.index = reverse(self.index)
-      out.name = self.name
+      const out = new Series(reverse(this.values))
+      out.index = reverse(this.index)
+      out.name = this.name
       return out
     }
 
     resetIndex() {
-      const self = this
-      const out = self.copy()
+      const out = this.copy()
 
-      out.index = range(0, self.shape[0]).map(i => {
+      out.index = range(0, this.shape[0]).map(i => {
         return "item" + leftPad(i, (out.index.length - 1).toString().length)
       })
 
@@ -232,93 +220,77 @@ module.exports = function (DataFrame) {
     }
 
     copy() {
-      const self = this
       const out = new Series()
-      out._values = copy(self.values)
-      out._index = copy(self.index)
-      out.name = self.name
+      out._values = copy(this.values)
+      out._index = copy(this.index)
+      out.name = this.name
       return out
     }
 
     append(x) {
-      const self = this
-      return seriesAppend(Series, self, x)
+      return seriesAppend(Series, this, x)
     }
 
     apply(fn) {
-      const self = this
-      return seriesApply(self, fn)
+      return seriesApply(this, fn)
     }
 
     concat(x) {
-      const self = this
-      return self.append(x)
+      return this.append(x)
     }
 
     dropMissing(condition, threshold) {
-      const self = this
-      return seriesDropMissing(self, condition, threshold)
+      return seriesDropMissing(this, condition, threshold)
     }
 
     dropNaN() {
-      const self = this
-      return seriesDropNaN(Series, self)
+      return seriesDropNaN(Series, this)
     }
 
     toObject() {
-      const self = this
-      return seriesToObject(self)
+      return seriesToObject(this)
     }
 
     print() {
-      const self = this
-      return seriesPrint(self)
+      return seriesPrint(this)
     }
 
     shuffle() {
-      const self = this
-      return seriesShuffle(self)
+      return seriesShuffle(this)
     }
 
     sort(direction) {
-      const self = this
-      return seriesSort(Series, self, direction)
+      return seriesSort(Series, this, direction)
     }
 
     sortByIndex() {
-      const self = this
-      return seriesSortByIndex(Series, self)
+      return seriesSortByIndex(Series, this)
     }
 
     filter(fn) {
-      const self = this
-      return seriesFilter(Series, self, fn)
+      return seriesFilter(Series, this, fn)
     }
 
     toDataFrame() {
-      const self = this
-      const out = new DataFrame(transpose([self.values]))
-      out.columns = [self.name]
-      out.index = self.index
+      const out = new DataFrame(transpose([this.values]))
+      out.columns = [this.name]
+      out.index = this.index
       return out
     }
 
     transpose() {
-      const self = this
-      const out = self.copy()
+      const out = this.copy()
       out.values = reverse(out.values)
       out.index = reverse(out.index)
       return out
     }
 
     getDummies() {
-      const self = this
-      return self.toDataFrame().getDummies()
+      return this.toDataFrame().getDummies()
     }
 
     oneHotEncode() {
-      const self = this
-      return self.getDummies()
+      return this.getDummies()
     }
   }
 

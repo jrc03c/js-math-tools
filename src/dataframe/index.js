@@ -20,6 +20,7 @@ const dfSort = require("./df-sort")
 const dfToDetailedObject = require("./df-to-detailed-object")
 const dfToJSON = require("./df-to-json")
 const dfToJSONString = require("./df-to-json-string")
+const dfToObject = require("./df-to-object")
 const flatten = require("../flatten")
 const isArray = require("../is-array")
 const isObject = require("../is-object")
@@ -51,35 +52,33 @@ class DataFrame {
   }
 
   constructor(data) {
-    const self = this
-
-    Object.defineProperty(self, "_symbol", {
+    Object.defineProperty(this, "_symbol", {
       configurable: false,
       enumerable: false,
       writable: false,
       value: DATAFRAME_SYMBOL,
     })
 
-    Object.defineProperty(self, "_values", {
+    Object.defineProperty(this, "_values", {
       value: [],
       configurable: true,
       enumerable: false,
       writable: true,
     })
 
-    Object.defineProperty(self, "values", {
+    Object.defineProperty(this, "values", {
       configurable: true,
       enumerable: true,
 
       get() {
         if (
-          self._values.length === 0 ||
-          (!isUndefined(self._values[0]) && self._values[0].length === 0)
+          this._values.length === 0 ||
+          (!isUndefined(this._values[0]) && this._values[0].length === 0)
         ) {
           return [[]]
         }
 
-        return self._values
+        return this._values
       },
 
       set(x) {
@@ -92,43 +91,43 @@ class DataFrame {
           "The new array of values must be 2-dimensional!"
         )
 
-        if (dataShape[0] < self._index.length) {
-          self._index = self._index.slice(0, dataShape[0])
-        } else if (dataShape[0] > self._index.length) {
-          self._index = self._index.concat(
-            range(self._index.length, dataShape[0]).map(i => {
+        if (dataShape[0] < this._index.length) {
+          this._index = this._index.slice(0, dataShape[0])
+        } else if (dataShape[0] > this._index.length) {
+          this._index = this._index.concat(
+            range(this._index.length, dataShape[0]).map(i => {
               return "row" + leftPad(i, (dataShape[0] - 1).toString().length)
             })
           )
         }
 
-        if (dataShape[1] < self._columns.length) {
-          self._columns = self._columns.slice(0, dataShape[1])
-        } else if (dataShape[1] > self._columns.length) {
-          self._columns = self._columns.concat(
-            range(self._columns.length, dataShape[1]).map(i => {
+        if (dataShape[1] < this._columns.length) {
+          this._columns = this._columns.slice(0, dataShape[1])
+        } else if (dataShape[1] > this._columns.length) {
+          this._columns = this._columns.concat(
+            range(this._columns.length, dataShape[1]).map(i => {
               return "col" + leftPad(i, (dataShape[1] - 1).toString().length)
             })
           )
         }
 
-        self._values = x
+        this._values = x
       },
     })
 
-    Object.defineProperty(self, "_columns", {
+    Object.defineProperty(this, "_columns", {
       value: [],
       configurable: true,
       enumerable: false,
       writable: true,
     })
 
-    Object.defineProperty(self, "columns", {
+    Object.defineProperty(this, "columns", {
       configurable: true,
       enumerable: true,
 
       get() {
-        return self._columns
+        return this._columns
       },
 
       set(x) {
@@ -138,7 +137,7 @@ class DataFrame {
         )
 
         assert(
-          self.isEmpty || x.length === self.shape[1],
+          this.isEmpty || x.length === this.shape[1],
           "The new columns list must be the same length as the old columns list!"
         )
 
@@ -178,23 +177,23 @@ class DataFrame {
           return v
         })
 
-        self._columns = x
+        this._columns = x
       },
     })
 
-    Object.defineProperty(self, "_index", {
+    Object.defineProperty(this, "_index", {
       value: [],
       configurable: true,
       enumerable: false,
       writable: true,
     })
 
-    Object.defineProperty(self, "index", {
+    Object.defineProperty(this, "index", {
       configurable: true,
       enumerable: true,
 
       get() {
-        return self._index
+        return this._index
       },
 
       set(x) {
@@ -204,7 +203,7 @@ class DataFrame {
         )
 
         assert(
-          self.isEmpty || x.length === self.shape[0],
+          this.isEmpty || x.length === this.shape[0],
           "The new index must be the same length as the old index!"
         )
 
@@ -244,7 +243,7 @@ class DataFrame {
           return v
         })
 
-        self._index = x
+        this._index = x
       },
     })
 
@@ -255,9 +254,9 @@ class DataFrame {
 
     if (data) {
       if (data instanceof DataFrame) {
-        self.values = copy(data.values)
-        self.columns = copy(data.columns)
-        self.index = copy(data.index)
+        this.values = copy(data.values)
+        this.columns = copy(data.columns)
+        this.index = copy(data.index)
       } else if (isArray(data)) {
         const dataShape = shape(data)
 
@@ -271,9 +270,9 @@ class DataFrame {
           "The 2-dimensional array passed into the constructor of a DataFrame must not contain sub-arrays (i.e., rows) of different lengths!"
         )
 
-        self.values = data
+        this.values = data
       } else {
-        self._columns = Object.keys(data)
+        this._columns = Object.keys(data)
           .concat(Object.getOwnPropertySymbols(data))
           .map(v => v.toString())
 
@@ -281,7 +280,7 @@ class DataFrame {
         let lastColName = null
         let lastColLength = null
 
-        self._columns.forEach(col => {
+        this._columns.forEach(col => {
           if (isUndefined(lastColLength)) {
             lastColName = col
             lastColLength = data[col].length
@@ -297,11 +296,11 @@ class DataFrame {
           temp.push(values)
         })
 
-        self._values = transpose(temp)
+        this._values = transpose(temp)
 
-        const dataShape = shape(self.values)
+        const dataShape = shape(this.values)
 
-        self._index = range(0, dataShape[0]).map(i => {
+        this._index = range(0, dataShape[0]).map(i => {
           return "row" + leftPad(i, (dataShape[0] - 1).toString().length)
         })
       }
@@ -309,197 +308,165 @@ class DataFrame {
   }
 
   get shape() {
-    const self = this
-    return shape(self.values)
+    return shape(this.values)
   }
 
   get length() {
-    const self = this
-    return self.shape[0]
+    return this.shape[0]
   }
 
   get width() {
-    const self = this
-    return self.shape[1]
+    return this.shape[1]
   }
 
   get rows() {
-    const self = this
-    return self.index
+    return this.index
   }
 
   set rows(rows) {
-    const self = this
-    self.index = rows
+    this.index = rows
   }
 
   get isEmpty() {
-    const self = this
-    return flatten(self.values).length === 0
+    return flatten(this.values).length === 0
   }
 
   clear() {
-    const self = this
-    const out = new DataFrame(ndarray(self.shape))
-    out.columns = self.columns.slice()
-    out.index = self.index.slice()
+    const out = new DataFrame(ndarray(this.shape))
+    out.columns = this.columns.slice()
+    out.index = this.index.slice()
     return out
   }
 
   get(rows, cols) {
-    const self = this
-
     if (arguments.length === 0) {
-      return self
+      return this
     }
 
     if (arguments.length === 1) {
       try {
-        return self.get(null, rows)
+        return this.get(null, rows)
       } catch (e) {
-        return self.get(rows, null)
+        return this.get(rows, null)
       }
     }
 
-    return dfGet(self, rows, cols)
+    return dfGet(this, rows, cols)
   }
 
   getSubsetByNames(rows, cols) {
-    const self = this
-    return dfGetSubsetByNames(DataFrame, Series, self, rows, cols)
+    return dfGetSubsetByNames(DataFrame, Series, this, rows, cols)
   }
 
   getSubsetByIndices(rowIndices, colIndices) {
-    const self = this
-    return dfGetSubsetByIndices(self, rowIndices, colIndices)
+    return dfGetSubsetByIndices(this, rowIndices, colIndices)
   }
 
   getDummies(columns) {
-    const self = this
-    return dfGetDummies(DataFrame, self, columns)
+    return dfGetDummies(DataFrame, this, columns)
   }
 
   oneHotEncode(columns) {
-    const self = this
-    return dfGetDummies(DataFrame, self, columns)
+    return dfGetDummies(DataFrame, this, columns)
   }
 
   transpose() {
-    const self = this
-    const out = new DataFrame(transpose(self.values))
-    out.columns = self.index.slice()
-    out.index = self.columns.slice()
+    const out = new DataFrame(transpose(this.values))
+    out.columns = this.index.slice()
+    out.index = this.columns.slice()
     return out
   }
 
   get T() {
-    const self = this
-    return self.transpose()
+    return this.transpose()
   }
 
   resetIndex(shouldSkipCopying) {
-    const self = this
-    return dfResetIndex(self, shouldSkipCopying)
+    return dfResetIndex(this, shouldSkipCopying)
   }
 
   copy() {
-    const self = this
-    return dfCopy(DataFrame, self)
+    return dfCopy(DataFrame, this)
   }
 
   assign(p1, p2) {
-    const self = this
-    return dfAssign(DataFrame, Series, self, p1, p2)
+    return dfAssign(DataFrame, Series, this, p1, p2)
   }
 
   apply(fn, axis) {
-    const self = this
-    return dfApply(DataFrame, Series, self, fn, axis)
+    return dfApply(DataFrame, Series, this, fn, axis)
   }
 
   dropMissing(axis, condition, threshold) {
-    const self = this
-    return dfDropMissing(DataFrame, Series, self, axis, condition, threshold)
+    return dfDropMissing(DataFrame, Series, this, axis, condition, threshold)
   }
 
   dropNaN(axis, condition, threshold) {
-    const self = this
-    return dfDropNaN(DataFrame, self, axis, condition, threshold)
+    return dfDropNaN(DataFrame, this, axis, condition, threshold)
   }
 
   drop(rows, cols) {
-    const self = this
-    return dfDrop(DataFrame, Series, self, rows, cols)
+    return dfDrop(DataFrame, Series, this, rows, cols)
   }
 
   dropColumns(columns) {
-    const self = this
-    return self.drop(null, columns)
+    return this.drop(null, columns)
   }
 
   dropRows(rows) {
-    const self = this
-    return self.drop(rows, null)
+    return this.drop(rows, null)
   }
 
   toDetailedObject(axis) {
-    const self = this
-    return dfToDetailedObject(self, axis)
+    return dfToDetailedObject(this, axis)
+  }
+
+  toObject() {
+    return dfToObject(this)
   }
 
   toJSONString(axis) {
-    const self = this
-    return dfToJSONString(self, axis)
+    return dfToJSONString(this, axis)
   }
 
   saveAsJSON(filename, axis) {
-    const self = this
-    return dfToJSON(self, filename, axis)
+    return dfToJSON(this, filename, axis)
   }
 
   print() {
-    const self = this
-    return dfPrint(DataFrame, Series, self)
+    return dfPrint(DataFrame, Series, this)
   }
 
   sort(cols, directions) {
-    const self = this
-    return dfSort(self, cols, directions)
+    return dfSort(this, cols, directions)
   }
 
   sortByIndex() {
-    const self = this
-    return self.sort()
+    return this.sort()
   }
 
   filter(fn, axis) {
-    const self = this
-    return dfFilter(DataFrame, Series, self, fn, axis)
+    return dfFilter(DataFrame, Series, this, fn, axis)
   }
 
   shuffle(axis) {
-    const self = this
-    return dfShuffle(self, axis)
+    return dfShuffle(this, axis)
   }
 
   append(x, axis) {
-    const self = this
-    return dfAppend(self, x, axis)
+    return dfAppend(this, x, axis)
   }
 
   concat(x, axis) {
-    const self = this
-    return self.append(x, axis)
+    return this.append(x, axis)
   }
 
   join(x, axis) {
-    const self = this
-    return self.append(x, axis)
+    return this.append(x, axis)
   }
 
   toString() {
-    const self = this
-    return JSON.stringify(self)
+    return JSON.stringify(this)
   }
 }
 

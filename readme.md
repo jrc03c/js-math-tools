@@ -489,9 +489,13 @@ However, the nesting can be reversed (putting the column names at the shallowest
 
 Writes the `DataFrame` to disk at `path` in JSON format. See the `DataFrame.toJSONString` method for more info about the structure of the object written to disk and the meaning of the `axis` value. In a browser, only a filename need be passed as `path` since the file will just be downloaded in whatever way the browser usually downloads files. In Node, however, a filesystem path (relative or absolute) must be passed as `path`.
 
-### `DataFrame.toObject(axis=0)`
+### `DataFrame.toDetailedObject(axis=0)`
 
 Returns an object in the format described above in the `DataFrame.toJSONString` method. See that method for more info about the structure of the returned object and the meaning of the `axis` value.
+
+### `DataFrame.toObject()`
+
+Returns an object in which they keys are column names and the values are the arrays of values associated with each column name.
 
 ### `DataFrame.transpose()`
 
