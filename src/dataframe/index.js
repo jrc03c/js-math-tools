@@ -17,9 +17,9 @@ const dfPrint = require("./df-print")
 const dfResetIndex = require("./df-reset-index")
 const dfShuffle = require("./df-shuffle")
 const dfSort = require("./df-sort")
+const dfToDetailedObject = require("./df-to-detailed-object")
 const dfToJSON = require("./df-to-json")
 const dfToJSONString = require("./df-to-json-string")
-const dfToObject = require("./df-to-object")
 const flatten = require("../flatten")
 const isArray = require("../is-array")
 const isObject = require("../is-object")
@@ -442,9 +442,9 @@ class DataFrame {
     return self.drop(rows, null)
   }
 
-  toObject(axis) {
+  toDetailedObject(axis) {
     const self = this
-    return dfToObject(self, axis)
+    return dfToDetailedObject(self, axis)
   }
 
   toJSONString(axis) {

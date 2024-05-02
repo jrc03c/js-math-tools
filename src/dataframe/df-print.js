@@ -93,7 +93,7 @@ function dfPrint(DataFrame, Series, df) {
     temp.index = temp.index.map(row => truncate(row, maxLength))
   }
 
-  console.table(temp.toObject())
+  console.table(temp.toDetailedObject())
   console.log("Shape:", df.shape, "\n")
   return df
 }

@@ -1,13 +1,13 @@
 const assert = require("../assert")
 const isUndefined = require("../is-undefined")
 
-function dfToObject(df, axis) {
+function dfToDetailedObject(df, axis) {
   if (isUndefined(axis)) {
     axis = 0
   } else {
     assert(
       axis === 0 || axis === 1,
-      "The axis parameter of the `toObject` method must be undefined, 0, or 1. An axis of 0 indicates that the returned object should be organized first by rows and then by columns. An axis of 1 indicates that the returned object should be organized first by columns and then by rows."
+      "The axis parameter of the `toDetailedObject` method must be undefined, 0, or 1. An axis of 0 indicates that the returned object should be organized first by rows and then by columns. An axis of 1 indicates that the returned object should be organized first by columns and then by rows."
     )
   }
 
@@ -42,4 +42,4 @@ function dfToObject(df, axis) {
   return out
 }
 
-module.exports = dfToObject
+module.exports = dfToDetailedObject
