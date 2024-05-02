@@ -520,3 +520,13 @@ test("tests DataFrame dimensions", () => {
   expect(x.length).toBe(100)
   expect(x.width).toBe(25)
 })
+
+test("tests that DataFrames cannot be created by arrays or objects containing arrays of different lengths", () => {
+  expect(() => {
+    new DataFrame({ a: normal(10), b: normal(15) })
+  }).toThrow()
+
+  expect(() => {
+    new DataFrame([normal(10), normal(15)])
+  }).toThrow()
+})

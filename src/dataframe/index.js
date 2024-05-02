@@ -27,6 +27,7 @@ const isUndefined = require("../is-undefined")
 const leftPad = require("../helpers/left-pad")
 const ndarray = require("../ndarray")
 const range = require("../range")
+const set = require("../set")
 const shape = require("../shape")
 const transpose = require("../transpose")
 
@@ -265,6 +266,11 @@ class DataFrame {
           "The `data` array passed into the constructor of a DataFrame must be 2-dimensional!"
         )
 
+        assert(
+          set(data.map(row => row.length)).length === 1,
+          "The 2-dimensional array passed into the constructor of a DataFrame must not contain sub-arrays (i.e., rows) of different lengths!"
+        )
+
         self.values = data
       } else {
         self._columns = Object.keys(data)
@@ -272,8 +278,21 @@ class DataFrame {
           .map(v => v.toString())
 
         const temp = []
+        let lastColName = null
+        let lastColLength = null
 
         self._columns.forEach(col => {
+          if (isUndefined(lastColLength)) {
+            lastColName = col
+            lastColLength = data[col].length
+          }
+
+          assert(
+            data[col].length === lastColLength,
+            `The object passed into the DataFrame constructor contains arrays of different lengths! The key "${lastColName}" points to an array containing ${lastColLength} items, and the key "${col}" points to an array containing ${data[col].length} items.`
+          )
+
+          lastColLength = data[col].length
           const values = data[col]
           temp.push(values)
         })
