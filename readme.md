@@ -1,3 +1,7 @@
+> ⚠️ **NOTE:** ⚠️ This project is being merged into a monorepo [here](https://github.com/jrc03c/monorepo/tree/main/packages/js-math-tools). This repo will soon be archived.
+
+---
+
 # Introduction
 
 **js-math-tools** is a little library of (you guessed it) math tools for JS. It was built completely from scratch and has no other dependencies (though it does have some dependencies for bundling, linting, testing, etc.).
